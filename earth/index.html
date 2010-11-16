@@ -3,17 +3,31 @@
 <html>
 <head>
     <title>Earth</title>
-    <script type="text/javascript" src="../lib/scenejs.js"></script>
     <link href="../web/style.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../lib/modernizr-1.6.min.js"></script>
+    <script type="text/javascript" src="../lib/scenejs.js"></script>
+    
+    <script type="text/javascript">
+      window.onload=function() {
+        if (Modernizr.webgl){
+        } else {
+          var msg =  'You need a newer browser to see the WebGL visualization. '
+              msg += 'See: <a href="http://learningwebgl.com/blog/?p=11">Getting Started with WebGL</a>';
+          var notice = document.getElementById('notice');
+          notice.innerHTML = msg;
+        }
+      }
+    </script>
 
 </head>
 <div id="container">
     <div id="header">
         <div id="header-nav">
-
+          </div>
         </div>
         <div id="header-inner">
             <h1><a href="http://scenejs.org">SceneJS</a> : Earth</h1>
+            <div id="notice">
         </div>
     </div>
     <div id="content">
