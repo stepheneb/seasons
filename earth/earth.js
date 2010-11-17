@@ -13,7 +13,7 @@ SceneJS.createNode({
    nodes: [
        {
            type: "lookAt",
-           eye : { x: 0, y: 2, z: -22},
+           eye : { x: 0, y: 0.5, z: -22},
            look : { x : 0.0, y : -1.0, z : 0 },
            up : { x: 0.0, y: 1.0, z: 0.0 },
 
@@ -23,9 +23,9 @@ SceneJS.createNode({
                    optics: {
                        type: "perspective",
                        fovy : 60.0,
-                       aspect : 1.47,
+                       aspect : 1.43,
                        near : 0.10,
-                       far : 1000.0
+                       far : 100000.0
                    },
                    
                    nodes: [
@@ -41,15 +41,15 @@ SceneJS.createNode({
                        {
                            type: "light",
                            mode:                   "dir",
-                           color:                  { r: 0.5, g: 0.5, b: 0.5 },
+                           color:                  { r: 2.0, g: 2.0, b: 2.0 },
                            diffuse:                true,
-                           specular:               true,
-                           dir:                    { x: 1.0, y: 1.0, z: -1.0 }
+                           specular:               false,
+                           dir:                    { x: 1.0, y: 0.0, z: 0.0 }
                        },
                        {
                            type: "light",
                            mode:                   "dir",
-                           color:                  { r: 0.5, g: 0.5, b: 0.5 },
+                           color:                  { r: 0.1, g: 0.1, b: 0.1 },
                            diffuse:                true,
                            specular:               true,
                            dir:                    { x: 0.0, y: 1.0, z: -1.0 }
@@ -57,7 +57,7 @@ SceneJS.createNode({
                        {
                            type: "light",
                            mode:                   "dir",
-                           color:                  { r: 0.5, g: 0.5, b: 0.5 },
+                           color:                  { r: 0.1, g: 0.1, b: 0.1 },
                            diffuse:                true,
                            specular:               true,
                            dir:                    { x: -1.0, y: 0.0, z: -1.0 }
@@ -94,7 +94,7 @@ SceneJS.createNode({
                                           */
                                          layers: [
                                              { 
-                                               uri:"images/earth2.jpg",
+                                               uri:"images/earth3.jpg",
                                                
                                                minFilter: "linear",
                                                magFilter: "linear",
@@ -127,7 +127,7 @@ SceneJS.createNode({
                                                /* Texture scale factors
                                                 */
                                                scale : {
-                                                   x: 1.0,
+                                                   x: -1.0,
                                                    y: 1.0
                                                }
                                                 
@@ -152,7 +152,7 @@ SceneJS.createNode({
                                                          type: "translate",
                                                          x: 0,
                                                          y: 0,
-                                                         z: -12 ,
+                                                         z: -19,
 
                                                          nodes: [
 
@@ -162,9 +162,23 @@ SceneJS.createNode({
                                                                 x: 1.0,
                                                                 y: 1.0,
                                                                 z: 1.0,
+                                                                
                                                                 nodes: [
+                                                                
                                                                     {
-                                                                        type: "sphere"
+                                                                      
+                                                                      type: "rotate",
+                                                                      id: 'spin',
+                                                                      angle: 0,
+                                                                      x: 0.23,
+                                                                      y: 1.0,
+                                                                      z: 0.0,
+                                                                      
+                                                                      nodes: [
+                                                                          {
+                                                                            type: "sphere"
+                                                                          }
+                                                                      ]
                                                                     }
                                                                 ]
                                                             }
@@ -177,7 +191,22 @@ SceneJS.createNode({
                                    ]
                                }
                            ]
-                       }
+                       },
+
+                      // Interpolates the Earth spin - this node could be anywhere in the scene
+                      {
+                          type: "interpolator",
+                          target: "spin",
+                          targetProperty: "angle",
+                           keys: [0.0, 1000],
+                           // Seconds
+                           values: [0.0, 20000]        // Values (spin degrees)
+                          // 
+                          // keys: [0.0, 1,2,3,4,5,6,7,8,9],
+                          // // Seconds
+                          // values: [0.0, 10, 20, 30, 40, 50, 60, 70, 80 ,90]        // Values (spin degrees)
+
+                      }
                    ]
                }
            ]
@@ -237,8 +266,8 @@ canvas.addEventListener('mouseup', mouseUp, true);
 
 window.render = function() {
 
-    SceneJS.withNode("pitch").set("angle", pitch);
-    SceneJS.withNode("yaw").set("angle", yaw);
+    // SceneJS.withNode("pitch").set("angle", pitch);
+    // SceneJS.withNode("yaw").set("angle", yaw);
 
     SceneJS.withNode("theScene").render();
 
