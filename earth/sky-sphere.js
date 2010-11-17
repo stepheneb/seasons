@@ -75,14 +75,14 @@ var skySphere = SceneJS.createNode({
         },
 
         // Interpolates the milky way spin - this node could be anywhere in the scene
-        {
-            type: "interpolator",
-            target: "milkyway-spin",
-            targetProperty: "angle",
-            keys: [0.0, 1000],
-            // Seconds
-            values: [0.0, 2000]        // Values (spin degrees)
-
-        }
+        // {
+        //     type: "interpolator",
+        //     target: "milkyway-spin",
+        //     targetProperty: "angle",
+        //     keys: [0.0, 1000],
+        //     // Seconds
+        //     values: [0.0, 2000]        // Values (spin degrees)
+        // 
+        // }
     ]
 });
