@@ -99,6 +99,12 @@ SceneJS.createNode({
                                             * component, with animated scaling.
                                             */
                                             layers: [
+
+                                                { 
+                                                    uri:"images/lat-long-grid-invert-1440x720-15.png",
+                                                    blendMode: "add",
+                                                },
+                                                
                                                 { 
                                                     uri:"images/earth3.jpg",
 
