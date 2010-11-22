@@ -80,36 +80,9 @@ SceneJS.createNode({
                                     nodes: [
                                         
                                         {
-                                            type: "translate",
-                                            x: 0,
-                                            y: 0,
-                                            z: 0,
-
-                                            nodes: [
-
-                                                {
-
-                                                    type: "scale",
-                                                    x: 5.0,
-                                                    y: 300.0,
-                                                    z: 5.0,
-
-                                                    nodes: [
-                                                        {
-
-                                                            type: "rotate",
-                                                            angle: 0,
-                                                            x: 0.42,
-                                                            y: 1.0,
-                                                            z: 0.0,
-
-                                                            nodes: [ { type: "sphere" } ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
+                                            type : "instance",
+                                            target :"earth-axis"
                                         },
-                                        
 
                                         /** Textures images are loaded asynchronously and won't render
                                         * immediately. On first traversal, they start loading their image,
@@ -227,14 +200,9 @@ SceneJS.createNode({
                             type: "interpolator",
                             target: "spin",
                             targetProperty: "angle",
+                            // over 1000 seconds rotate 360 degrees 20 times
                             keys: [0.0, 1000],
-                            // Seconds
-                            values: [0.0, 20000]        // Values (spin degrees)
-                            // 
-                            // keys: [0.0, 1,2,3,4,5,6,7,8,9],
-                            // // Seconds
-                            // values: [0.0, 10, 20, 30, 40, 50, 60, 70, 80 ,90]        // Values (spin degrees)
-
+                            values: [0.0, 360.0*50]
                         }
                     ]
                 }
@@ -251,13 +219,6 @@ var pitch = 0;
 var lastX;
 var lastY;
 var dragging = false;
-
-var texAngle = 0.0;
-var texScale = 1.0;
-
-/* For texture animation
- */
-var timeLast = (new Date()).getTime();
 
 var canvas = document.getElementById("theCanvas");
 
@@ -295,13 +256,10 @@ canvas.addEventListener('mouseup', mouseUp, true);
 
 window.render = function() {
 
-    // SceneJS.withNode("pitch").set("angle", pitch);
-    // SceneJS.withNode("yaw").set("angle", yaw);
+    SceneJS.withNode("pitch").set("angle", pitch);
+    SceneJS.withNode("yaw").set("angle", yaw);
 
     SceneJS.withNode("theScene").render();
-
-    texAngle += 0.4;
-    texScale = (texScale + 0.01) % 10.0;
 
 };
 
@@ -313,5 +271,5 @@ SceneJS.bind("reset", function() {
     window.clearInterval(pInterval);
 });
 
-var pInterval = setInterval("window.render()", 10);
+var pInterval = setInterval("window.render()", 20);
 
