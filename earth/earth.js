@@ -238,13 +238,17 @@ function mouseUp() {
     dragging = false;
 }
 
+function mouseOut() {
+    dragging = false;
+}
+
 /* On a mouse drag, we'll re-render the scene, passing in
  * incremented angles in each time.
  */
 function mouseMove(event) {
     if (dragging) {
-        yaw += (event.clientX - lastX) * 0.1;
-        pitch += (event.clientY - lastY) * -0.1;
+        // yaw += (event.clientX - lastX) * 0.1;
+        pitch += (event.clientY - lastY) * -0.2;
 
         SceneJS.withNode("yaw").set("angle", yaw);
         SceneJS.withNode("pitch").set("angle", pitch);
@@ -259,6 +263,7 @@ function mouseMove(event) {
 canvas.addEventListener('mousedown', mouseDown, true);
 canvas.addEventListener('mousemove', mouseMove, true);
 canvas.addEventListener('mouseup', mouseUp, true);
+canvas.addEventListener('mouseout', mouseOut, true);
 
 window.render = function() {
 
