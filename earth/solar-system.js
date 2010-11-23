@@ -84,7 +84,7 @@ SceneJS.createNode({
                                 
                                         {
                                             type: "quaternion",
-                                            id: "earthQuaternion",
+                                            id: "earthRotationalAxisQuaternion",
                                             x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
                                     
                                             rotations: [ { x : 0, y : 0, z : 1, angle : -23.5 } ],
@@ -129,7 +129,7 @@ SceneJS.createNode({
             nodes: [
                 {
                     type: "lookAt",
-                    eye : { x: 0,                      y: earth_diameter_km, z: earth_diameter_km * -5 },
+                    eye : { x: 0,                      y: earth_diameter_km, z: earth_diameter_km * -4.5 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
@@ -171,11 +171,48 @@ SceneJS.createNode({
                 },
                 {
                     type: "lookAt",
-                    eye : { x: 0, y:                   earth_diameter_km, z: earth_diameter_km * 5 },
+                    eye : { x: 0, y:                   earth_diameter_km, z: earth_diameter_km * 4.5 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
+                
+                {
+                    type: "lookAt",
+                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * 4 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt",
+                    eye : { x: earth_diameter_km * 4, y: earth_diameter_km, z: earth_diameter_km * 2 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt",
+                    eye : { x: earth_diameter_km * 4.5, y: earth_diameter_km, z: earth_diameter_km * 0 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                
+                {
+                    type: "lookAt",
+                    eye : { x: earth_diameter_km * 4, y: earth_diameter_km, z: earth_diameter_km * -2 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt",
+                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -4 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                }
             ]
         }
     ]
@@ -227,7 +264,7 @@ function mouseMove(event) {
 }
 
 function mouseClick() {
-    activeView = (activeView + 1) % 7;
+    activeView = (activeView + 1) % 12;
 
     SceneJS.withNode("mySelector").set("selection", [activeView]);
 
