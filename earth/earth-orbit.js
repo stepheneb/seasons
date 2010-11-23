@@ -1,15 +1,12 @@
 var earthOrbit = SceneJS.createNode({
-
-    type: "library",
-    
+    type: "library",    
     nodes: [
         {
-            id: "earth-orbit",
+            id: "earthOrbit",
             type: "translate",
             x: 0,
             y: 0,
             z: 0,
-
             nodes: [ 
                 { 
                     type: "geometry",
