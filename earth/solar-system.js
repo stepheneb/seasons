@@ -41,6 +41,13 @@ SceneJS.createNode({
                             target :"sun"
                         },
 
+
+                        // Integrate our earth orbit, which is defined in earth-orbit.js
+                        {
+                            type : "instance",
+                            target :"earthOrbit"
+                        },
+
                         {
                             type: "light",
                             mode:                   "dir",
