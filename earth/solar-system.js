@@ -171,7 +171,7 @@ SceneJS.createNode({
                 },
                 {
                     type: "lookAt",
-                    eye : { x: 0, y:                   earth_diameter_km, z: earth_diameter_km * 4.5 },
+                    eye : { x: 0,                      y: earth_diameter_km, z: earth_diameter_km * 4.5 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]

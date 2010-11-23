@@ -12,8 +12,8 @@ var earth = SceneJS.createNode({
     layers: [
 
         { 
-            uri:"images/lat-long-grid-invert-1440x720-15.png",
-            blendMode: "add",
+            uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+            blendMode: "add"
         },
 
         { 
