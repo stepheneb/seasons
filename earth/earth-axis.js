@@ -22,7 +22,7 @@ var earthAxis = SceneJS.createNode({
                     type: "rotate",
                     id: 'gnomon-spin',
                     angle: 0,
-                    x: 0.42,
+                    x: 0.0,
                     y: 1.0,
                     z: 0.0,
 

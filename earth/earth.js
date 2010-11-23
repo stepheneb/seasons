@@ -80,113 +80,124 @@ SceneJS.createNode({
                                     nodes: [
                                         
                                         {
-                                            type : "instance",
-                                            target :"earth-axis"
-                                        },
-
-                                        /** Textures images are loaded asynchronously and won't render
-                                        * immediately. On first traversal, they start loading their image,
-                                        * which they collect on a subsequent traversal.
-                                        */
-                                        {
-                                            type: "texture",
-
-                                            id: "earthTexture",
-
-                                            /* A texture can have multiple layers, each applying an
-                                            * image to a different material reflection component.
-                                            * This layer applies the Zod image to the diffuse
-                                            * component, with animated scaling.
-                                            */
-                                            layers: [
-
-                                                { 
-                                                    uri:"images/lat-long-grid-invert-1440x720-15.png",
-                                                    blendMode: "add",
-                                                },
-                                                
-                                                { 
-                                                    uri:"images/earth3.jpg",
-
-                                                    minFilter: "linear",
-                                                    magFilter: "linear",
-                                                    wrapS: "repeat",
-                                                    wrapT: "repeat",
-                                                    isDepth: false,
-                                                    depthMode:"luminance",
-                                                    depthCompareMode: "compareRToTexture",
-                                                    depthCompareFunc: "lequal",
-                                                    flipY: false,
-                                                    width: 1,
-                                                    height: 1,
-                                                    internalFormat:"lequal",
-                                                    sourceFormat:"alpha",
-                                                    sourceType: "unsignedByte",
-                                                    applyTo:"baseColor",
-                                                    blendMode: "multiply",
-
-                                                    /* Texture rotation angle in degrees
-                                                     */
-                                                    rotate: 180.0,
-
-                                                    /* Texture translation offset
-                                                     */
-                                                    translate : {
-                                                        x: 0,
-                                                        y: 0
-                                                    },
-
-                                                    /* Texture scale factors
-                                                     */
-                                                    scale : {
-                                                        x: -1.0,
-                                                        y: 1.0
-                                                    }
-
-                                                }
-                                            ],
- 
+                                            type: "quaternion",
+                                            id: "myQuaternion",
+                                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+                                            
+                                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.5 } ],
+                                            // nodes: [ { type: "sphere" } ]
+                                            
+                                            
                                             nodes: [
-   
-                                                /* Specify the amounts of ambient, diffuse and specular
-                                                 * lights our object reflects
-                                                 */
+
                                                 {
-                                                    type: "material",
-                                                    baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
-                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
-                                                    specular:       0.0,
-                                                    shine:          2.0,
-   
+                                                    type : "instance",
+                                                    target :"earth-axis"
+                                                },
+
+                                                /** Textures images are loaded asynchronously and won't render
+                                                * immediately. On first traversal, they start loading their image,
+                                                * which they collect on a subsequent traversal.
+                                                */
+                                                {
+                                                    type: "texture",
+
+                                                    id: "earthTexture",
+
+                                                    /* A texture can have multiple layers, each applying an
+                                                    * image to a different material reflection component.
+                                                    * This layer applies the Zod image to the diffuse
+                                                    * component, with animated scaling.
+                                                    */
+                                                    layers: [
+
+                                                        { 
+                                                            uri:"images/lat-long-grid-invert-1440x720-15.png",
+                                                            blendMode: "add",
+                                                        },
+                                                
+                                                        { 
+                                                            uri:"images/earth3.jpg",
+
+                                                            minFilter: "linear",
+                                                            magFilter: "linear",
+                                                            wrapS: "repeat",
+                                                            wrapT: "repeat",
+                                                            isDepth: false,
+                                                            depthMode:"luminance",
+                                                            depthCompareMode: "compareRToTexture",
+                                                            depthCompareFunc: "lequal",
+                                                            flipY: false,
+                                                            width: 1,
+                                                            height: 1,
+                                                            internalFormat:"lequal",
+                                                            sourceFormat:"alpha",
+                                                            sourceType: "unsignedByte",
+                                                            applyTo:"baseColor",
+                                                            blendMode: "multiply",
+
+                                                            /* Texture rotation angle in degrees
+                                                             */
+                                                            rotate: 180.0,
+
+                                                            /* Texture translation offset
+                                                             */
+                                                            translate : {
+                                                                x: 0,
+                                                                y: 0
+                                                            },
+
+                                                            /* Texture scale factors
+                                                             */
+                                                            scale : {
+                                                                x: -1.0,
+                                                                y: 1.0
+                                                            }
+                                                        }
+
+                                                    ],
+ 
                                                     nodes: [
    
+                                                        /* Specify the amounts of ambient, diffuse and specular
+                                                         * lights our object reflects
+                                                         */
                                                         {
-                                                            type: "translate",
-                                                            x: 0,
-                                                            y: 0,
-                                                            z: 0,
+                                                            type: "material",
+                                                            baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+                                                            specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                            specular:       0.0,
+                                                            shine:          2.0,
    
                                                             nodes: [
-  
+   
                                                                 {
-    
-                                                                    type: "scale",
-                                                                    x: 200.0,
-                                                                    y: 200.0,
-                                                                    z: 200.0,
-                                                                
+                                                                    type: "translate",
+                                                                    x: 0,
+                                                                    y: 0,
+                                                                    z: 0,
+   
                                                                     nodes: [
-                                                                
+  
                                                                         {
-                                                                      
-                                                                            type: "rotate",
-                                                                            id: 'spin',
-                                                                            angle: 0,
-                                                                            x: 0.42,
-                                                                            y: 1.0,
-                                                                            z: 0.0,
-
-                                                                            nodes: [ { type: "sphere" } ]
+    
+                                                                            type: "scale",
+                                                                            x: 200.0,
+                                                                            y: 200.0,
+                                                                            z: 200.0,
+                                                                
+                                                                            nodes: [
+                                                                
+                                                                                {
+                                                                                                                                          
+                                                                                    type: "rotate",
+                                                                                    id: 'spin',
+                                                                                    angle: 0,
+                                                                                    y: 1.0,
+                                                                    
+                                                                                    nodes: [ { type: "sphere" } ]
+                                                                                }
+                                                                            ]
                                                                         }
                                                                     ]
                                                                 }
@@ -207,6 +218,8 @@ SceneJS.createNode({
                             target: "spin",
                             targetProperty: "angle",
                             // over 1000 seconds rotate 360 degrees 20 times
+                            // keys: [0.0, 5],
+                            // values: [0.0, 45]
                             keys: [0.0, 1000],
                             values: [0.0, 360.0*50]
                         }
