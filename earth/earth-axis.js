@@ -11,9 +11,9 @@ var earthAxis = SceneJS.createNode({
         {
 
             type: "scale",
-            x: 5.0,
-            y: 250.0,
-            z: 5.0,
+            x: earth_diameter_km * 0.02,
+            y: earth_diameter_km * 1.2,
+            z: earth_diameter_km * 0.02,
 
             nodes: [
         

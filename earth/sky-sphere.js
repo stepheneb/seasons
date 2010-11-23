@@ -10,9 +10,9 @@ var skySphere = SceneJS.createNode({
         {
             // id: "sky-sphere",
             type: "scale",
-            x: 10000.0,
-            y: 10000.0,
-            z: 10000.0,
+            x: milky_way_apparent_radius,
+            y: milky_way_apparent_radius,
+            z: milky_way_apparent_radius,
             nodes: [
 
                 // Starry texture
