@@ -205,7 +205,6 @@ SceneJS.createNode({
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
-                
                 {
                     type: "lookAt",
                     eye : { x: earth_diameter_km * 4, y: earth_diameter_km, z: earth_diameter_km * -2 },
@@ -218,6 +217,34 @@ SceneJS.createNode({
                     eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -4 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt",
+                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -20 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt",
+                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -40 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt",
+                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -60 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt",
+                    eye : { x: earth_orbital_radius_km, y: earth_orbital_radius_km * 1.8, z: 0 },
+                    look : { x : earth_orbital_radius_km, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 0.0, z: 1.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 }
             ]
@@ -271,7 +298,7 @@ function mouseMove(event) {
 }
 
 function mouseClick() {
-    activeView = (activeView + 1) % 12;
+    activeView = (activeView + 1) % 16;
 
     SceneJS.withNode("mySelector").set("selection", [activeView]);
 
