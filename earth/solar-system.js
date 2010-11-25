@@ -286,6 +286,43 @@ var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
 
+var tilt = document.getElementById("tilt");
+
+function tiltMouseClick() {
+  var new_tilt = this.value;
+  SceneJS.Message.sendMessage({ 
+    command: "update", 
+    target: "earthRotationalAxisQuaternion", 
+    set: { rotation: { x : 0, y : 0, z : 1, angle : new_tilt } }
+  });
+  if (new_tilt === -23.4) {
+      SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [5]);
+  } else {
+      SceneJS.withNode("earthTextureSelector").set("selection", [11]);
+  };
+  if (earth_surface.value === 'terrain') {
+      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
+  } else {
+      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+  }
+}
+
+tilt.addEventListener('click', tiltMouseClick, true);
+
+var earth_surface = document.getElementById("earth_surface");
+
+function earthSurfaceMouseClick() {
+  var new_surface = this.value;
+  if (new_surface === 'terrain') {
+      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
+  } else {
+      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+  }
+}
+
+earth_surface.addEventListener('click', earthSurfaceMouseClick, true);
+
+
 function mouseDown(event) {
     lastX = event.clientX;
     lastY = event.clientY;

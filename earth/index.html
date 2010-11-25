@@ -11,49 +11,76 @@
       window.onload=function() {
         if (Modernizr.webgl){
         } else {
-          var msg =  'You need a newer browser to see the WebGL visualization. '
-              msg += 'See: <a href="http://learningwebgl.com/blog/?p=11">Getting Started with WebGL</a>';
-          var notice = document.getElementById('notice');
-          notice.innerHTML = msg;
+          var header = document.getElementById('header-inner');
+          var title = document.getElementById('title');
+          var webgl_notice = document.createElement('h3');
+          var msg =  "You'll need a beta-release of FireFox, Chrome, or Safari to interact with the WebGL visualization:"
+              msg += " <a href='http://learningwebgl.com/blog/?p=11'>Getting Started with WebGL</a>";
+          webgl_notice.innerHTML = msg;
+          header.insertBefore(webgl_notice, title.nextElementSibling);
         }
       }
     </script>
 
 </head>
 <div id="container">
-    <div id="header-inner">
-        <h1><a href="http://scenejs.org">SceneJS</a> : Earth</h1>
-        <p>
-          June 21, summer in the northern hemisphere. Click the mouse to to rotate your view around Earth.
-          The code's on <a href="https://github.com/stepheneb/seasons">github</a>.</p>
-        <div id="notice"></div>
+  <div id="header-inner">
+    <h1 id="title"><a href="http://scenejs.org">SceneJS</a> : Earth</h1>
+    <ul class="horiz">
+      <li>
+        Time of year: 
+        <select id="tilt" name="tilt">
+          <option value="-23.4">June 21</option>
+          <option value="23.4">December 21</option>
+        </select>
+      </li>
+      <li>
+        Earth Surface:
+        <select id="earth_surface" name="earth_surface">
+          <option value="terrain">Terrain</option>
+          <option value="temperature">Mean Monthly Temperature</option>
+        </select>
+      </li>
+      <li>
+        <img src="images/color-map-minus30-to-30-500px.png" alt="color map for temperature"/>
+      </li>
+    </ul>
+  </div>
+  <div id="content">
+    <canvas id="theCanvas" width="1030" height="700">
+      <p>This example requires a browser that supports the
+        <a href="http://www.w3.org/html/wg/html5/">HTML5</a>&lt;canvas&gt; feature.
+      </p>
+    </canvas>
+    <div id="info">
+      <h2>Earth</h2>
+      <p>
+        Earth texture from <a href="http://www.esa.int/esaEO/SEMGSY2IU7E_index_1.html">the European Space Agency/Envisat</a>.<br/>
+        The Milky Way galaxy texture from <a href="http://www.gigagalaxyzoom.org/image_milkyway.html">Gigagalaxy Zoom: Milky Way Panorama</a>, by ESO/S. Brunier.<br/>          
+      </p>
+      <p>
+        Starts with the Earth in it's June 21 orbital orientation ... summer in the northern hemisphere. Click the mouse to to rotate your view around Earth.
+      </p>
+      <p>Some of the JavaScript source code:</p>
+      <ul>
+        <li><a target="_other" href="solar-system.js">solar-system.js</a></li>
+        <li><a target="_other" href="earth.js">earth.js</a></li>
+        <li><a target="_other" href="sun.js">sun.js</a></li>
+      </ul>
+      <p>
+        View the rest of the code on <a href="https://github.com/stepheneb/seasons">github</a>.
+      </p>
     </div>
-    <div id="content">
-      <canvas id="theCanvas" width="1030" height="700">
-          <p>This example requires a browser that supports the
-              <a href="http://www.w3.org/html/wg/html5/">HTML5</a>&lt;canvas&gt; feature.
-          </p>
-      </canvas>
-      <div id="info">
-        <h2>Earth</h2>
-        <p>
-          Earth texture from <a href="http://www.esa.int/esaEO/SEMGSY2IU7E_index_1.html">the European Space Agency/Envisat</a>.<br/>
-          The Milky Way galaxy texture from <a href="http://www.gigagalaxyzoom.org/image_milkyway.html">Gigagalaxy Zoom: Milky Way Panorama</a>, by ESO/S. Brunier.<br/>          
-        </p>
-        <br/>
-        <ul>
-            <li><a target="_other" href="earth.js">Scene source code</a></li>
-        </ul>
-      </div>
-      <div id="log">
-        <h3>Log</h3>
-        <div id="theLoggingDiv"></div>
-      </div>
+    <div id="log">
+      <h3>Log</h3>
+      <div id="theLoggingDiv"></div>
     </div>
+  </div>
 </div>
 <script type="text/javascript" src="solar-system-data.js"></script>
 <script type="text/javascript" src="sky-sphere.js"></script>
 <script type="text/javascript" src="earth-axis.js"></script>
+<script type="text/javascript" src="earth-sphere.js"></script>
 <script type="text/javascript" src="sun.js"></script>
 <script type="text/javascript" src="earth.js"></script>
 <script type="text/javascript" src="earth-orbit.js"></script>
