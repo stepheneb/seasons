@@ -286,20 +286,36 @@ var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
 
-var tilt = document.getElementById("tilt");
+// Time of year
+// Inclination of Earths orbit with respect to the orbital plane
 
-function tiltMouseClick() {
-  var new_tilt = this.value;
+var time_of_year = document.getElementById("time_of_year");
+var color_map = document.getElementById("temperature-color-map");
+color_map.style.display='none';
+
+var seasonal_rotations = {};
+seasonal_rotations.jun = { x :  0,  y : 0,  z : -1,  angle : 23.44 };
+seasonal_rotations.sep = { x :  1,  y : 0,  z :  0,  angle : 23.44 };
+seasonal_rotations.dec = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
+seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
+
+function setTemperatureTexture(month) {
+    switch (month) {
+        case 'jun' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [5]); break;
+        case 'sep' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [8]); break;
+        case 'dec' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [11]); break;
+        case 'mar' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [2]); break;
+    };    
+}
+
+function timeOfYearMouseClick() {
+  var month = this.value;
   SceneJS.Message.sendMessage({ 
     command: "update", 
     target: "earthRotationalAxisQuaternion", 
-    set: { rotation: { x : 0, y : 0, z : 1, angle : new_tilt } }
+    set: { rotation: seasonal_rotations[month] }
   });
-  if (new_tilt === -23.4) {
-      SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [5]);
-  } else {
-      SceneJS.withNode("earthTextureSelector").set("selection", [11]);
-  };
+  setTemperatureTexture(month);
   if (earth_surface.value === 'terrain') {
       SceneJS.withNode("earthTextureSelector").set("selection", [1]);
   } else {
@@ -307,7 +323,9 @@ function tiltMouseClick() {
   }
 }
 
-tilt.addEventListener('click', tiltMouseClick, true);
+time_of_year.addEventListener('click', timeOfYearMouseClick, true);
+
+// Texture mapping onto the Earth's surface
 
 var earth_surface = document.getElementById("earth_surface");
 
@@ -315,13 +333,30 @@ function earthSurfaceMouseClick() {
   var new_surface = this.value;
   if (new_surface === 'terrain') {
       SceneJS.withNode("earthTextureSelector").set("selection", [1]);
+      color_map.style.display='none';
   } else {
       SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+      setTemperatureTexture(time_of_year.value);
+      color_map.style.display='inline';  
   }
 }
 
 earth_surface.addEventListener('click', earthSurfaceMouseClick, true);
 
+// Orbital Path Indicator
+
+var orbital_path = document.getElementById("orbital_path");
+
+function orbitalPathMouseClick() {
+  var new_surface = this.value;
+  if (orbital_path.value === 'on') {
+      SceneJS.withNode("earthOrbitSelector").set("selection", [1]);
+  } else {
+      SceneJS.withNode("earthOrbitSelector").set("selection", [0]);
+  }
+}
+
+orbital_path.addEventListener('click', orbitalPathMouseClick, true);
 
 function mouseDown(event) {
     lastX = event.clientX;

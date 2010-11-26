@@ -58,20 +58,25 @@ var earth = SceneJS.createNode({
                             type: "selector",
                             selection: [0],
                             nodes: [
-                            
+                                
+                                // selection [0], January
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-01.png", blendMode: "multiply" }
+                                        
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
                                     
                                 },
                                 
+                                // selection [1], February
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-02.png", blendMode: "multiply" }
                                     ],
@@ -79,9 +84,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
                                 
+                                // selection [2], March
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
                                     ],
@@ -89,9 +96,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
 
+                                // selection [3], April
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-04.png", blendMode: "multiply" }
                                     ],
@@ -99,9 +108,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
 
+                                // selection [4], May
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-05.png", blendMode: "multiply" }
                                     ],
@@ -109,9 +120,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
 
+                                // selection [5], June
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
                                     ],
@@ -119,9 +132,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
 
+                                // selection [6], July
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-07.png", blendMode: "multiply" }
                                     ],
@@ -129,9 +144,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
 
+                                // selection [7], August
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-08.png", blendMode: "multiply" }
                                     ],
@@ -139,9 +156,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
 
+                                // selection [8], September
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
                                     ],
@@ -149,9 +168,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
 
+                                // selection [9], October
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-10.png", blendMode: "multiply" }
                                     ],
@@ -159,9 +180,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
 
+                                // selection [10], NOvember
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-11.png", blendMode: "multiply" }
                                     ],
@@ -169,9 +192,11 @@ var earth = SceneJS.createNode({
                                     
                                 },
 
+                                // selection [11], December
                                 {
                                     type: "texture",
                                     layers: [
+                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
                                     ],

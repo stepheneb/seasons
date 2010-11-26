@@ -142,25 +142,38 @@ h4 {
 }
 
 #header-inner ul.horiz {
-    padding: 20px 20px 15px 0px;
+    padding: 10px 10px 10px 0px;
     font-size: 120%;
     text-align: left;
 }
 
 #header-inner ul.horiz li {
-    vertical-align: top;
     display: inline;
     list-style-type: none;
-    line-height: 1.4em;
+    line-height: 1.8em;
     margin-left: 5px;
     font-weight: bold;
     color: #5E9E00;
 }
 
-#header-inner select {
-    vertical-align: top;
+#header-inner ul.horiz img {
+    vertical-align: text-top;
 }
 
+#header-inner select {
+}
+
+#header-inner input {
+}
+
+.checkbox, .radio {
+  width: 19px;
+  height: 25px;
+  padding: 0 5px 0 0;
+  display: block;
+  clear: left;
+  float: left;
+}
 .normal-width {
     width: 80%;
 }

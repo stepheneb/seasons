@@ -28,22 +28,27 @@
     <h1 id="title"><a href="http://scenejs.org">SceneJS</a> : Earth</h1>
     <ul class="horiz">
       <li>
-        Time of year: 
-        <select id="tilt" name="tilt">
-          <option value="-23.4">June 21</option>
-          <option value="23.4">December 21</option>
+        <label for="time_of_year">Time of year:</label> 
+        <select id="time_of_year" name="time_of_year">
+          <option value="jun">June 21</option>
+          <option value="sep">September 21</option>
+          <option value="dec">December 21</option>
+          <option value="mar">March 21</option>
         </select>
       </li>
       <li>
-        Earth Surface:
+        <label for="earth_surface">Earth Surface:</label>
         <select id="earth_surface" name="earth_surface">
           <option value="terrain">Terrain</option>
           <option value="temperature">Mean Monthly Temperature</option>
         </select>
       </li>
-      <li>
+      <li id="temperature-color-map">
         <img src="images/color-map-minus30-to-30-500px.png" alt="color map for temperature"/>
       </li>
+    </ul>
+    <ul class="horiz">
+      <li><label for="orbital_path">Orbital path: </label><input id="orbital_path" type="checkbox" checked="checked" /></li>
     </ul>
   </div>
   <div id="content">
