@@ -18,6 +18,13 @@
               msg += " <a href='http://learningwebgl.com/blog/?p=11'>Getting Started with WebGL</a>";
           webgl_notice.innerHTML = msg;
           header.insertBefore(webgl_notice, title.nextElementSibling);
+
+          var canvas = document.getElementById('theCanvas');
+          var no_webgl_image = document.createElement('img');
+          no_webgl_image.src='images/static-earth-no-webgl.jpg';
+          no_webgl_image.width = canvas.width;
+          no_webgl_image.height = canvas.height;
+          canvas.parentNode.replaceChild(no_webgl_image, canvas);
         }
       }
     </script>
