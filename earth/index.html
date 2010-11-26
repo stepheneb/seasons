@@ -13,10 +13,9 @@
         } else {
           var header = document.getElementById('header-inner');
           var title = document.getElementById('title');
+          var getting_webgl = document.getElementById('getting-webgl');
           var webgl_notice = document.createElement('h3');
-          var msg =  "You'll need a beta-release of FireFox, Chrome, or Safari to interact with the WebGL visualization:"
-              msg += " <a href='http://learningwebgl.com/blog/?p=11'>Getting Started with WebGL</a>";
-          webgl_notice.innerHTML = msg;
+          webgl_notice.innerHTML = getting_webgl.innerHTML;
           header.insertBefore(webgl_notice, title.nextElementSibling);
 
           var canvas = document.getElementById('theCanvas');
@@ -70,6 +69,11 @@
         The visualization starts with the Earth in it's June 21 orbital orientation ... summer in the northern hemisphere. 
         Click the mouse to to rotate your view around Earth. The orbital path indicator is not working correctly when your point-of-view is near the Earth.
         You can select four different times of year and display either a terrain map or a map of monthly mean temperatures.
+      </p>
+      <h2>Getting a WebGL-enabled browser</h2>
+      <p id="getting-webgl">
+        You'll need a beta-release of FireFox, Chrome, or Safari to interact with the WebGL visualization:  
+        <a href='http://learningwebgl.com/blog/?p=11'>Getting Started with WebGL</a>.
       </p>
       <h2>Credits</h2>
       <p>
