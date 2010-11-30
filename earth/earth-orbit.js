@@ -59,6 +59,7 @@ var earthOrbit = SceneJS.createNode({
                                 
                                         {
                                             type: "geometry",
+                                            id: "earthOrbitGeometry",
                                             primitive: "line-loop",
 
                                             positions: [
