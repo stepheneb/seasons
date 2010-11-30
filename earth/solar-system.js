@@ -28,7 +28,8 @@ SceneJS.createNode({
                     },
 
                     nodes: [
-
+                    
+                        
                         // Integrate our sky sphere, which is defined in sky-sphere.js
                         {
                             type : "instance",
@@ -40,7 +41,6 @@ SceneJS.createNode({
                             type : "instance",
                             target :"sun"
                         },
-
 
                         // Integrate our earth orbit, which is defined in earth-orbit.js
                         {
@@ -72,6 +72,32 @@ SceneJS.createNode({
                             specular:               true,
                             dir:                    { x: -1.0, y: 0.0, z: -1.0 }
                         },
+
+                        {
+                            type: "material",
+                            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                            specular:       1.0,
+                            shine:          2.0,
+
+                            nodes: [
+
+                                {
+                                    type: "geometry",
+                                    primitive: "line-loop",
+
+                                    positions: [
+                                         0.0,                       0.0,    0.0,
+                                         earth_orbital_radius_km,   0.0,    0.0
+                                    ],
+
+                                    indices : [ 0, 1 ]
+
+                                }
+                            ]
+                        },
+
+                        
 
                         {
                             type: "rotate",
