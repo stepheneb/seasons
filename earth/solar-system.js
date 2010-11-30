@@ -207,65 +207,72 @@ SceneJS.createNode({
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_diameter_km * 4, y: earth_diameter_km, z: earth_diameter_km * -2 },
+                    eye : { x: earth_orbital_radius_km * 0.0003, y: earth_orbital_radius_km * 0.0003, z: earth_orbital_radius_km * -0.0003 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -4 },
+                    eye : { x: earth_orbital_radius_km * -0.000, y: earth_orbital_radius_km * 0.0003, z: earth_orbital_radius_km * -0.0003 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -20 },
+                    eye : { x: earth_orbital_radius_km * -0.0003, y: earth_orbital_radius_km * 0.0003, z: earth_orbital_radius_km * -0.0003 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -40 },
+                    eye : { x: earth_orbital_radius_km * -0.001, y: earth_orbital_radius_km * 0.001, z: earth_orbital_radius_km * -0.001 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -60 },
+                    eye : { x: earth_orbital_radius_km * -0.003, y: earth_orbital_radius_km * 0.003, z: earth_orbital_radius_km * -0.003 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -100 },
+                    eye : { x: earth_orbital_radius_km * -0.01, y: earth_orbital_radius_km * 0.01, z: earth_orbital_radius_km * -0.01 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -160 },
+                    eye : { x: earth_orbital_radius_km * -0.03, y: earth_orbital_radius_km * 0.03, z: earth_orbital_radius_km * -0.03 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * -300 },
+                    eye : { x: earth_orbital_radius_km * -0.1, y: earth_orbital_radius_km * 0.1, z: earth_orbital_radius_km * -0.1 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_orbital_radius_km, y: earth_orbital_radius_km * 1.8, z: 0 },
-                    look : { x : earth_orbital_radius_km, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 0.0, z: 1.0 },
+                    eye : { x: earth_orbital_radius_km * -0.3, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -0.3 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt",
+                    eye : { x: earth_orbital_radius_km * -1.0, y: earth_orbital_radius_km * 1.0, z: earth_orbital_radius_km * -1.0 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 }
             ]
@@ -393,7 +400,7 @@ function mouseMove(event) {
 }
 
 function mouseClick() {
-    activeView = (activeView + 1) % 19;
+    activeView = (activeView + 1) % 21;
 
     SceneJS.withNode("mySelector").set("selection", [activeView]);
 
