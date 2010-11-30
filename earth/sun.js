@@ -27,7 +27,7 @@ var sun = SceneJS.createNode({
                             y: sun_diameter_km,
                             z: sun_diameter_km,
 
-                            nodes: [ { type: "sphere" } ]
+                            nodes: [ { type: "sphere", slices: 60, rings: 60 } ]
                         }
                     ]
                 }
