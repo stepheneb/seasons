@@ -21,7 +21,7 @@ SceneJS.createNode({
                     id: "theCamera",
                     optics: {
                         type: "perspective",
-                        fovy : 70.0,
+                        fovy : 45.0,
                         aspect : 1.43,
                         near : 0.10,
                         far : milky_way_apparent_radius * 1.1,
