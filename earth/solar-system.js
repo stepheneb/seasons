@@ -233,21 +233,28 @@ SceneJS.createNode({
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * 0.0003, y: earth_orbital_radius_km * 0.0003, z: earth_orbital_radius_km * -0.0003 },
+                    eye : { x: earth_orbital_radius_km * 0.0003, y: earth_orbital_radius_km * 0.0001, z: earth_orbital_radius_km * -0.0003 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.000, y: earth_orbital_radius_km * 0.0003, z: earth_orbital_radius_km * -0.0003 },
+                    eye : { x: earth_orbital_radius_km * -0.000, y: earth_orbital_radius_km * 0.0001, z: earth_orbital_radius_km * -0.0005 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.0003, y: earth_orbital_radius_km * 0.0003, z: earth_orbital_radius_km * -0.0003 },
+                    eye : { x: earth_orbital_radius_km * -0.0004, y: earth_orbital_radius_km * 0.0001, z: earth_orbital_radius_km * -0.0004 },
+                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt",
+                    eye : { x: earth_orbital_radius_km * -0.0006, y: earth_orbital_radius_km * 0.0003, z: earth_orbital_radius_km * -0.0006 },
                     look : { x : 0.0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
