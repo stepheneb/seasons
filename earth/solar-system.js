@@ -325,6 +325,8 @@ var dragging = false;
 var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
+var earth_surface = document.getElementById("earth_surface");
+var orbital_path = document.getElementById("orbital_path");
 
 // Time of year changes inclination of Earths orbit with respect to the orbital plane
 
@@ -367,8 +369,6 @@ time_of_year.onchange();
 
 // Texture mapping onto the Earth's surface
 
-var earth_surface = document.getElementById("earth_surface");
-
 function earthSurfaceChange() {
   var new_surface = this.value;
   if (new_surface === 'terrain') {
@@ -386,11 +386,8 @@ earth_surface.onchange();
 
 // Orbital Path Indicator
 
-var orbital_path = document.getElementById("orbital_path");
-
 function orbitalPathChange() {
-  var new_surface = this.value;
-  if (orbital_path.value === 'on') {
+  if (orbital_path.checked) {
       SceneJS.withNode("earthOrbitSelector").set("selection", [1]);
   } else {
       SceneJS.withNode("earthOrbitSelector").set("selection", [0]);
