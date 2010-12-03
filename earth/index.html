@@ -54,9 +54,7 @@
           var header = document.getElementById('header-inner');
           var title = document.getElementById('title');
           var getting_webgl = document.getElementById('getting-webgl');
-          var webgl_notice = document.createElement('h3');
-          webgl_notice.innerHTML = getting_webgl.innerHTML;
-          header.insertBefore(webgl_notice, title.nextElementSibling);
+          header.insertBefore(getting_webgl, title.nextElementSibling);
           myRequire("../lib/videojs/video.js", function () {
             VideoJS.setupAllWhenReady();
             var canvas = document.getElementById('theCanvas');
@@ -113,7 +111,7 @@
         You can select four different times of year and display either a terrain map or a map of monthly mean temperatures.
       </p>
       <h2>Getting a WebGL-enabled browser</h2>
-        <div id="getting-webgl">
+      <div id="getting-webgl">
         <p>
           You need a <a href='http://learningwebgl.com/blog/?p=11'>WebGL-enabled</a> browser to explore this visualization.
         </p>
