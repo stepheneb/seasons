@@ -58,9 +58,9 @@
           while (nextElement.nodeType != 1) {nextElement = nextElement.nextSibling };
           header.insertBefore(getting_webgl, nextElement);
           myRequire("../lib/videojs/video.js", function () {
-            VideoJS.setupAllWhenReady();
             var canvas = document.getElementById('theCanvas');
             document.getElementById('webglCanvasContainer').innerHTML = earthVideoStr;
+            VideoJS.setupAllWhenReady();
           });
         };
       }
