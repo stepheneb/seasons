@@ -54,7 +54,9 @@
           var header = document.getElementById('header-inner');
           var title = document.getElementById('title');
           var getting_webgl = document.getElementById('getting-webgl').cloneNode(true);
-          header.insertBefore(getting_webgl, title.nextElementSibling());
+          nextElement = title.nextSibling;
+          while (nextElement.nodeType != 1) {nextElement = nextElement.nextSibling };
+          header.insertBefore(getting_webgl, nextElement);
           myRequire("../lib/videojs/video.js", function () {
             VideoJS.setupAllWhenReady();
             var canvas = document.getElementById('theCanvas');
