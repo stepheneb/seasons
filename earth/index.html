@@ -4,11 +4,15 @@
 <head>
     <title>Earth</title>
     <link href="../web/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets/video-js.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="../lib/modernizr-1.6.min.js"></script>
     <script type="text/javascript" src="../lib/scenejs/scenejs.js"></script>
+    <script type="text/javascript" src="../lib/videojs/video.js"></script>
+    <script type="text/javascript" src="../lib/earth-video.js"></script>
     
     <script type="text/javascript">
       window.onload=function() {
+        VideoJS.setupAllWhenReady();
         if (Modernizr.webgl){
         } else {
           var header = document.getElementById('header-inner');
@@ -17,13 +21,8 @@
           var webgl_notice = document.createElement('h3');
           webgl_notice.innerHTML = getting_webgl.innerHTML;
           header.insertBefore(webgl_notice, title.nextElementSibling);
-
           var canvas = document.getElementById('theCanvas');
-          var no_webgl_image = document.createElement('img');
-          no_webgl_image.src='images/static-earth-no-webgl.jpg';
-          no_webgl_image.width = canvas.width;
-          no_webgl_image.height = canvas.height;
-          canvas.parentNode.replaceChild(no_webgl_image, canvas);
+          document.getElementById('webglCanvasContainer').innerHTML = earthVideoStr;
         }
       }
     </script>
@@ -58,11 +57,13 @@
     </ul>
   </div>
   <div id="content">
-    <canvas id="theCanvas" width="1030" height="700">
-      <p>This example requires a browser that supports the
-        <a href="http://www.w3.org/html/wg/html5/">HTML5</a>&lt;canvas&gt; feature.
-      </p>
-    </canvas>
+    <div id="webglCanvasContainer">
+      <canvas id="theCanvas" width="1030" height="700">
+        <p>This example requires a browser that supports the
+          <a href="http://www.w3.org/html/wg/html5/">HTML5</a>&lt;canvas&gt; feature.
+        </p>
+      </canvas>
+    </div>
     <div id="info">
       <h2>Earth</h2>
       <p>
@@ -72,8 +73,7 @@
       </p>
       <h2>Getting a WebGL-enabled browser</h2>
       <p id="getting-webgl">
-        You'll need a beta-release of FireFox, Chrome, or Safari to interact with the WebGL visualization:  
-        <a href='http://learningwebgl.com/blog/?p=11'>Getting Started with WebGL</a>.
+        You need a browser with <a href='http://learningwebgl.com/blog/?p=11'>WebGL</a> to interact with this visualization. Beta releases of <a href="http://www.mozilla.com/en-US/firefox/beta/">FireFox</a>, <a href="http://build.chromium.org/f/chromium/continuous">Chromium</a>, or <a href="http://nightly.webkit.org/">Safari</a> will work.
       </p>
       <h2>Credits</h2>
       <p>
@@ -101,10 +101,11 @@
         View the rest of the code on <a href="https://github.com/stepheneb/seasons">github</a>.
       </p>
     </div>
+    <p>
     <div id="log">
       <h3>SceneJS Log</h3>
       <div id="theLoggingDiv"></div>
-    </div>
+    </div>    
   </div>
 </div>
 <script type="text/javascript" src="solar-system-data.js"></script>
