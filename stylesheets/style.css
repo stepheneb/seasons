@@ -131,6 +131,14 @@ h4 {
     padding-top: 0px;
 }
 
+#header-inner p {
+    color: #444444 !important;
+    padding-bottom: 5px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 1.0em;
+    line-height: 1.5em;
+}
+
 #header-inner h1 {
     color: #cc6600;
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
