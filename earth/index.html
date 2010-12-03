@@ -53,7 +53,7 @@
           controls.style['display']='none';
           var header = document.getElementById('header-inner');
           var title = document.getElementById('title');
-          var getting_webgl = document.getElementById('getting-webgl');
+          var getting_webgl = document.getElementById('getting-webgl').cloneNode(true);
           header.insertBefore(getting_webgl, title.nextElementSibling);
           myRequire("../lib/videojs/video.js", function () {
             VideoJS.setupAllWhenReady();
