@@ -5,6 +5,9 @@
     <title>Earth</title>
     <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
     <link href="../stylesheets/video-js.css" rel="stylesheet" type="text/css"/>
+    
+    <script type="text/javascript" src="solar-system-data.js"></script>
+
     <script type="text/javascript" src="../lib/modernizr-1.6.min.js"></script>
     <script type="text/javascript">
 
@@ -38,14 +41,19 @@
       window.onload=function() {
         if (Modernizr.webgl){
           myRequire("../lib/scenejs/scenejs.js", function () {
-            myLoadScript("solar-system-data.js");
-            myLoadScript("sky-sphere.js");
-            myLoadScript("earth-axis.js");
-            myLoadScript("earth-sphere.js");
-            myLoadScript("sun.js");
-            myLoadScript("earth.js");
-            myLoadScript("earth-orbit.js");
-            myLoadScript("solar-system.js");
+            myRequire("sky-sphere.js", function () {
+              myRequire("earth-axis.js", function () {
+                myRequire("earth-sphere.js", function () {
+                  myRequire("sun.js", function () {
+                    myRequire("earth.js", function () {
+                      myRequire("earth-orbit.js", function () {
+                        myRequire("solar-system.js", function () { });                        
+                      });
+                    });
+                  });
+                });
+              });
+            });
           });
         } else {
           controls = document.getElementById('simulation-controls');
@@ -73,9 +81,10 @@
             earthVideoStr += "title=\"No video playback capabilities.\" \/>";
             earthVideoStr += "<\/object>";
             earthVideoStr += "<\/video>";
-            earthVideoStr += "<p class=\"vjs-no-video\">Playing a video of the Earth visualization with an <a href=\"http:\/\/videojs.com\">HTML5 Video Player<\/a>";
-            earthVideoStr += " because this browser doesn't support WebGL.<\/p>";
+            earthVideoStr += "<p class=\"vjs-no-video\"><\/p>";
             earthVideoStr += "<\/div>";
+            earthVideoStr += "<p><center><em>Playing a video of the Earth visualization with an <a href=\"http:\/\/videojs.com\">HTML5 Video Player<\/a>";
+           earthVideoStr += " because this browser doesn't support WebGL.<\/em><\/center><\/p>";
             earthVideoStr += "";
             var canvasContainer = document.getElementById('webglCanvasContainer');
             canvasContainer.innerHTML = earthVideoStr;
