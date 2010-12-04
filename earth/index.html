@@ -11,50 +11,53 @@
     <script type="text/javascript" src="../lib/modernizr-1.6.min.js"></script>
     <script type="text/javascript">
 
-      function myLoadScript(src) {
-        var script = document.createElement("script");
-        script.src = src;
-        document.documentElement.firstChild.appendChild(script);
-      };
-      
-      function myRequire(src, callback){
-        var script = document.getElementsByTagName('script')[0]
-        var library = document.createElement('script');
-        
-        // IE
-        library.onreadystatechange = function () {
-          if (library.readyState === 'loaded' || library.readyState == 'complete') {
-            library.onreadystatechange = null;
-            callback();
+    function myRequire(src, callback){
+      if (src.constructor == Array) {
+        var source = src;
+      } else {
+        var source = [src];
+      }
+      var script = document.createElement("script") 
+      script.type = "text/javascript";
+      // IE
+      script.onreadystatechange = function () {
+        if (script.readyState === 'loaded' || script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          source.shift();
+          if (source.length > 0) {
+            myRequire(source)
+          }
+          if (callback) {
+            callback();            
           }
         }
-        
-        // Not IE
-        library.onload = function () {
-          callback();
+      }
+      // Not IE
+      script.onload = function () {
+        source.shift();
+        if (source.length > 0) {
+          myRequire(source)
         }
-        
-        library.src = src;
-        script.parentNode.insertBefore(library, script);
-      };
+        if (callback) {
+          callback();            
+        }
+      }
+      script.src = source[0];
+      document.getElementsByTagName("head")[0].appendChild(script);
+    };
       
       window.onload=function() {
         if (Modernizr.webgl){
-          myRequire("../lib/scenejs/scenejs.js", function () {
-            myRequire("sky-sphere.js", function () {
-              myRequire("earth-axis.js", function () {
-                myRequire("earth-sphere.js", function () {
-                  myRequire("sun.js", function () {
-                    myRequire("earth.js", function () {
-                      myRequire("earth-orbit.js", function () {
-                        myRequire("solar-system.js", function () { });                        
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
+          myRequire([
+            "../lib/scenejs/scenejs.js",
+            "sky-sphere.js",
+            "earth-axis.js",
+            "earth-sphere.js",
+            "sun.js",
+            "earth.js",
+            "earth-orbit.js",
+            "solar-system.js"
+          ]);
         } else {
           controls = document.getElementById('simulation-controls');
           controls.style['display']='none';
