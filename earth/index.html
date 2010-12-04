@@ -68,6 +68,7 @@
           while (nextElement.nodeType != 1) {nextElement = nextElement.nextSibling };
           header.insertBefore(getting_webgl, nextElement);
           myRequire("../lib/videojs/video.js", function () {
+            var currentPath = location.href.replace(/index\.html$/, '');
             var earthVideoStr="";
             earthVideoStr += "<div class=\"video-js-box\">";
             earthVideoStr += "<video id=\"earth-video\" class=\"video-js\" width=\"1030\" height=\"700\" controls=\"controls\" ";
@@ -79,15 +80,16 @@
             earthVideoStr += "data=\"http:\/\/releases.flowplayer.org\/swf\/flowplayer-3.2.1.swf\">";
             earthVideoStr += "<param name=\"movie\" value=\"http:\/\/releases.flowplayer.org\/swf\/flowplayer-3.2.1.swf\" \/>";
             earthVideoStr += "<param name=\"allowfullscreen\" value=\"true\" \/>";
-            earthVideoStr += "<param name=\"flashvars\" value='config={\"playlist\":[\"images/earth-frame1.jpg\", {\"url\": \"videos/earth3.flv\",\"autoPlay\":false,\"autoBuffering\":true}]}' \/>";
-            earthVideoStr += "<img src=\"images/earth-frame1.jpg\" width=\"1030\" height=\"700\" alt=\"Poster Image\"";
+            earthVideoStr += "<param name=\"flashvars\" value='config={\"playlist\":[\"" + currentPath + "/images/earth-frame1.jpg\", "
+            earthVideoStr += "{\"url\": \"" + currentPath + "videos\/earth3.flv\",\"autoPlay\":true,\"loop\":true,\"autoBuffering\":true}]}' \/>";
+            earthVideoStr += "<img src=\"" + currentPath + "images/earth-frame1.jpg\" width=\"1030\" height=\"700\" alt=\"Poster Image\"";
             earthVideoStr += "title=\"No video playback capabilities.\" \/>";
             earthVideoStr += "<\/object>";
             earthVideoStr += "<\/video>";
             earthVideoStr += "<p class=\"vjs-no-video\"><\/p>";
             earthVideoStr += "<\/div>";
             earthVideoStr += "<p><center><em>Playing a video of the Earth visualization with an <a href=\"http:\/\/videojs.com\">HTML5 Video Player<\/a>";
-           earthVideoStr += " because this browser doesn't support WebGL.<\/em><\/center><\/p>";
+            earthVideoStr += " because this browser doesn't support WebGL.<\/em><\/center><\/p>";
             earthVideoStr += "";
             var canvasContainer = document.getElementById('webglCanvasContainer');
             canvasContainer.innerHTML = earthVideoStr;
