@@ -69,19 +69,10 @@
           header.appendChild(getting_webgl);
 
 
-          var p = document.createElement('p');
-          var str = "";
-          str += "<center><em>Play a video of the Earth visualization with an "
-          str += "<a href=\"http:\/\/videojs.com\">HTML5 Video Player</a> ";
-          str += "because this browser doesn't support WebGL.</em></center>";
-          p.innerHTML = str;
-          p.className = "videoplayernotice";
-
-          // var videoPlayerNotice = document.createElement('div');
-          // videoPlayerNotice.appendChild(p);
-          content.insertBefore(p, canvasContainer);
-
-          // header.appendChild(videoPlayerNotice);
+          var notice = document.createElement('p');
+          notice.innerHTML = "<em>Play a video of the Earth visualization with an <a href=\"http://videojs.com\">HTML5 Video Player</a> because this browser doesn't support WebGL.</em>";
+          notice.className = "videoplayernotice";
+          content.insertBefore(notice, canvasContainer);
 
           myRequire("../lib/videojs/video.js", function () {
             var currentPath = location.href.replace(/index\.html$/, '');

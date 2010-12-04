@@ -50,7 +50,7 @@ h1 {
 h2 {
     color: #cc6600 !important;
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    padding: 10px 0 10px 0;
+    padding: 15px 0 10px 0;
     font-size: 1.4em;
     font-weight: normal;
 
@@ -219,6 +219,7 @@ canvas {
 
 #content p.videoplayernotice {
     padding-bottom: 5px;
+    text-align: center;
 }
 
 #content p.videoplayernotice em {
