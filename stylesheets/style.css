@@ -107,7 +107,6 @@ h4 {
     padding: 0px 10px;
 }
 
-
 #header {
       text-align: left;;
 }
@@ -127,8 +126,7 @@ h4 {
     margin: 0 auto;
     min-height: 80px;
     width: auto;
-    padding-left: 15px;
-    padding-top: 0px;
+    padding: 0px 0px 10px 15px;
 }
 
 #header-inner p {
@@ -198,9 +196,8 @@ canvas {
     margin: 0 auto;
     border-top: 2px solid lightgray;
     border-bottom: 1px solid lightgray;
-
     background: #ffffff;
-    padding: 15px;
+    padding: 10px 15px 10px 15px;
     height: 3000px;
 }
 
@@ -218,6 +215,16 @@ canvas {
 }
 
 #content p b {
+}
+
+#content p.videoplayernotice {
+    padding-bottom: 5px;
+}
+
+#content p.videoplayernotice em {
+    float: none;
+    padding: 0 0 0 0;
+    font-style: italic;
 }
 
 #content p .code {

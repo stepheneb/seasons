@@ -5,24 +5,33 @@
     <title>Earth</title>
     <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
     <link href="../stylesheets/video-js.css" rel="stylesheet" type="text/css"/>
-    
-    <script type="text/javascript" src="solar-system-data.js"></script>
 
     <script type="text/javascript" src="../lib/modernizr-1.6.min.js"></script>
     <script type="text/javascript">
 
-    function myRequire(src, callback){
-      if (src.constructor == Array) {
-        var source = src;
-      } else {
-        var source = [src];
-      }
-      var script = document.createElement("script") 
-      script.type = "text/javascript";
-      // IE
-      script.onreadystatechange = function () {
-        if (script.readyState === 'loaded' || script.readyState == 'complete') {
-          script.onreadystatechange = null;
+      function myRequire(src, callback){
+        if (src.constructor == Array) {
+          var source = src;
+        } else {
+          var source = [src];
+        }
+        var script = document.createElement("script") 
+        script.type = "text/javascript";
+        // IE
+        script.onreadystatechange = function () {
+          if (script.readyState === 'loaded' || script.readyState == 'complete') {
+            script.onreadystatechange = null;
+            source.shift();
+            if (source.length > 0) {
+              myRequire(source)
+            }
+            if (callback) {
+              callback();            
+            }
+          }
+        }
+        // Not IE
+        script.onload = function () {
           source.shift();
           if (source.length > 0) {
             myRequire(source)
@@ -31,25 +40,15 @@
             callback();            
           }
         }
-      }
-      // Not IE
-      script.onload = function () {
-        source.shift();
-        if (source.length > 0) {
-          myRequire(source)
-        }
-        if (callback) {
-          callback();            
-        }
-      }
-      script.src = source[0];
-      document.getElementsByTagName("head")[0].appendChild(script);
-    };
+        script.src = source[0];
+        document.getElementsByTagName("head")[0].appendChild(script);
+      };
       
       window.onload=function() {
         if (Modernizr.webgl){
           myRequire([
             "../lib/scenejs/scenejs.js",
+            "solar-system-data.js",
             "sky-sphere.js",
             "earth-axis.js",
             "earth-sphere.js",
@@ -59,14 +58,31 @@
             "solar-system.js"
           ]);
         } else {
-          controls = document.getElementById('simulation-controls');
+          var content = document.getElementById('content');
+          var canvasContainer = document.getElementById('webglCanvasContainer');
+          var controls = document.getElementById('simulation-controls');
+
           controls.style['display']='none';
+
           var header = document.getElementById('header-inner');
-          var title = document.getElementById('title');
           var getting_webgl = document.getElementById('getting-webgl').cloneNode(true);
-          nextElement = title.nextSibling;
-          while (nextElement.nodeType != 1) {nextElement = nextElement.nextSibling };
-          header.insertBefore(getting_webgl, nextElement);
+          header.appendChild(getting_webgl);
+
+
+          var p = document.createElement('p');
+          var str = "";
+          str += "<center><em>Play a video of the Earth visualization with an "
+          str += "<a href=\"http:\/\/videojs.com\">HTML5 Video Player</a> ";
+          str += "because this browser doesn't support WebGL.</em></center>";
+          p.innerHTML = str;
+          p.className = "videoplayernotice";
+
+          // var videoPlayerNotice = document.createElement('div');
+          // videoPlayerNotice.appendChild(p);
+          content.insertBefore(p, canvasContainer);
+
+          // header.appendChild(videoPlayerNotice);
+
           myRequire("../lib/videojs/video.js", function () {
             var currentPath = location.href.replace(/index\.html$/, '');
             var earthVideoStr="";
@@ -88,10 +104,7 @@
             earthVideoStr += "<\/video>";
             earthVideoStr += "<p class=\"vjs-no-video\"><\/p>";
             earthVideoStr += "<\/div>";
-            earthVideoStr += "<p><center><em>Play a video of the Earth visualization with an <a href=\"http:\/\/videojs.com\">HTML5 Video Player<\/a>";
-            earthVideoStr += " because this browser doesn't support WebGL.<\/em><\/center><\/p>";
             earthVideoStr += "";
-            var canvasContainer = document.getElementById('webglCanvasContainer');
             canvasContainer.innerHTML = earthVideoStr;
             VideoJS.setupAllWhenReady();
           });
