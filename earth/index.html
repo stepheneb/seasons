@@ -110,6 +110,14 @@
     <div id="simulation-controls"> 
       <ul class="horiz">
         <li>
+          <label for="reference_frame">Reference frame:</label> 
+          <select id="reference_frame" name="reference_frame">
+            <option value="earth">In space around the Earth</option>
+            <option value="orbit">Orbit around the Sun</option>
+            <option value="surface">Surface of the Earth</option>
+          </select>
+        </li>
+        <li>
           <label for="time_of_year">Time of year:</label> 
           <select id="time_of_year" name="time_of_year">
             <option value="jun">June 21</option>
@@ -187,7 +195,6 @@
         View the rest of the code on <a href="https://github.com/stepheneb/seasons">github</a>.
       </p>
     </div>
-    <p>
     <div id="log">
       <h3>SceneJS Log</h3>
       <div id="theLoggingDiv"></div>

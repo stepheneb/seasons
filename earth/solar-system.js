@@ -303,8 +303,12 @@ SceneJS.createNode({
                 },
                 {
                     type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -1.0, y: earth_orbital_radius_km * 1.0, z: earth_orbital_radius_km * -1.0 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    x: -earth_orbital_radius_km,
+                    y: 0,
+                    z: 0,
+                    
+                    eye : { x: -earth_orbital_radius_km * 1.1, y: earth_orbital_radius_km * 1.0, z: earth_orbital_radius_km * -1.0 },
+                    look : { x : earth_orbital_radius_km, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 }
@@ -325,6 +329,7 @@ var dragging = false;
 var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
+var reference_frame = document.getElementById("reference_frame");
 var earth_surface = document.getElementById("earth_surface");
 var orbital_path = document.getElementById("orbital_path");
 
@@ -396,6 +401,28 @@ function orbitalPathChange() {
 
 orbital_path.onchange = orbitalPathChange;
 orbital_path.onchange();
+
+// Reference Frame
+
+function referenceFrameChange() {
+   switch(this.value) {
+       case 'earth':
+        SceneJS.withNode("mySelector").set("selection", [0]);
+        break;
+
+       case "orbit":
+        SceneJS.withNode("mySelector").set("selection", [20]);
+        break;
+
+       case "surface":
+        SceneJS.withNode("mySelector").set("selection", [5]);
+        break;
+  }
+  SceneJS.withNode("theScene").render();
+}
+
+reference_frame.onchange = referenceFrameChange;
+reference_frame.onchange();
 
 function mouseDown(event) {
     lastX = event.clientX;
