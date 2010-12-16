@@ -112,7 +112,7 @@ SceneJS.createNode({
                                                                 {
                                                                     type: "texture",
                                                                     layers: [
-                                                                        { uri:"images/earth-continental-outline-edges-invert-copy.png", blendMode: "multiply" },
+                                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                                         { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
                                                                     ],
