@@ -10,7 +10,7 @@ var earthSphere = SceneJS.createNode({
         {
             id : "earth-sphere",
             type: "material",
-            baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+            baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
             specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
             specular:       0.0,
             shine:          2.0,
