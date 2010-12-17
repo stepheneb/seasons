@@ -1,0 +1,14 @@
+# ffmpeg 0.6
+
+ffmpeg -i earth3.mov -b 1000k -r 20 -loop_output 0 earth3.flv
+ffmpeg -i earth3.mov -b 1000k -r 20 -loop_output 0 earth3.mp4
+ffmpeg -i earth3.mov -b 1000k -r 20 -loop_output 0 earth3.webm
+ffmpeg -i earth3.mov -b 1000k -r 20 -loop_output 0 earth3.ogv
+
+
+# iPhone 3G
+ffmpeg -i earth3.mov -s 1030x584 -padtop 58 -padbottom 58 tmp.mov
+ffmpeg -i tmp.mov -vcodec h264 -b 50000 -r 15 -s qcif earth3a.3gp
+
+# iPhone 3G
+ffmpeg -i earth3.mov -s 480x326  -f mp4 earth3.m4v
