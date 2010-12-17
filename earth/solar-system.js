@@ -14,7 +14,7 @@ SceneJS.createNode({
 
         {
             type: "library",
-    
+
             nodes: [
                 {
                     type: "camera",
@@ -155,160 +155,31 @@ SceneJS.createNode({
         },
         
         {
-            
             type: "selector",
-            id: "mySelector",
+            id: "locationSelector",
             selection: [0],
             nodes: [
                 {
-                    type: "lookAt",
-                    eye : { x: 0,                      y: earth_diameter_km, z: earth_diameter_km * -4.5 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
+                    type: "lookAt", 
+                    id: "earthLookAt",
+                    eye : { x: 0, y: 0, z: earth_diameter_km * -3 },
+                    look : { x : 0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 },
                 {
-                    type: "lookAt",
-                    eye : { x: earth_diameter_km * -2, y: earth_diameter_km, z: earth_diameter_km * -4 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_diameter_km * -4, y: earth_diameter_km, z: earth_diameter_km * -2 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_diameter_km * -5, y: earth_diameter_km, z: earth_diameter_km * 0 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_diameter_km * -4, y: earth_diameter_km, z: earth_diameter_km * 2 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_diameter_km * -2, y: earth_diameter_km, z: earth_diameter_km * 4 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: 0,                      y: earth_diameter_km, z: earth_diameter_km * 4.5 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                
-                {
-                    type: "lookAt",
-                    eye : { x: earth_diameter_km * 2, y: earth_diameter_km, z: earth_diameter_km * 4 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_diameter_km * 4, y: earth_diameter_km, z: earth_diameter_km * 2 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_diameter_km * 4.5, y: earth_diameter_km, z: earth_diameter_km * 0 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * 0.0003, y: earth_orbital_radius_km * 0.0001, z: earth_orbital_radius_km * -0.0003 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.000, y: earth_orbital_radius_km * 0.0001, z: earth_orbital_radius_km * -0.0005 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.0004, y: earth_orbital_radius_km * 0.0001, z: earth_orbital_radius_km * -0.0004 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.0006, y: earth_orbital_radius_km * 0.0003, z: earth_orbital_radius_km * -0.0006 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.001, y: earth_orbital_radius_km * 0.001, z: earth_orbital_radius_km * -0.001 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.003, y: earth_orbital_radius_km * 0.003, z: earth_orbital_radius_km * -0.003 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.01, y: earth_orbital_radius_km * 0.01, z: earth_orbital_radius_km * -0.01 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.03, y: earth_orbital_radius_km * 0.03, z: earth_orbital_radius_km * -0.03 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.1, y: earth_orbital_radius_km * 0.1, z: earth_orbital_radius_km * -0.1 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    eye : { x: earth_orbital_radius_km * -0.3, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -0.3 },
-                    look : { x : 0.0, y : 0.0, z : 0.0 },
-                    up : { x: 0.0, y: 1.0, z: 0.0 },
-                    nodes: [ { type: "instance", target: "theCamera" } ]
-                },
-                {
-                    type: "lookAt",
-                    x: -earth_orbital_radius_km,
-                    y: 0,
-                    z: 0,
-                    
-                    eye : { x: -earth_orbital_radius_km * 1.1, y: earth_orbital_radius_km * 1.0, z: earth_orbital_radius_km * -1.0 },
+                    type: "lookAt", 
+                    id: "sunLookAt",
+                    eye : { x: earth_orbital_radius_km, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 },
                     look : { x : earth_orbital_radius_km, y : 0.0, z : 0.0 },
+                    up : { x: 0.0, y: 1.0, z: 0.0 },
+                    nodes: [ { type: "instance", target: "theCamera" } ]
+                },
+                {
+                    type: "lookAt", 
+                    id: "lowEarthOrbitLookAt",
+                    eye : { x: 0, y: 0, z: earth_diameter_km * -1.3 },
+                    look : { x : 0, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
                     nodes: [ { type: "instance", target: "theCamera" } ]
                 }
@@ -407,15 +278,21 @@ orbital_path.onchange();
 function referenceFrameChange() {
    switch(this.value) {
        case 'earth':
-        SceneJS.withNode("mySelector").set("selection", [0]);
+        SceneJS.withNode("locationSelector").set("selection", [0]);
         break;
 
        case "orbit":
-        SceneJS.withNode("mySelector").set("selection", [20]);
+        SceneJS.withNode("locationSelector").set("selection", [1]);
+        orbital_path.checked = true;
+        orbital_path.onchange();
+        break;
+
+       case "loworbit":
+        SceneJS.withNode("locationSelector").set("selection", [2]);
         break;
 
        case "surface":
-        SceneJS.withNode("mySelector").set("selection", [5]);
+        SceneJS.withNode("locationSelector").set("selection", [2]);
         break;
   }
   SceneJS.withNode("theScene").render();
@@ -443,28 +320,39 @@ function mouseOut() {
  */
 function mouseMove(event) {
     if (dragging) {
-        // yaw += (event.clientX - lastX) * 0.1;
-        // pitch += (event.clientY - lastY) * -0.2;
-
-        SceneJS.withNode("yaw").set("angle", yaw);
-        SceneJS.withNode("pitch").set("angle", pitch);
-
-        SceneJS.withNode("theScene").render();
+        var selection, eye, eye4, eye4dup, neweye, up_down, up_downQ, left_right, left_rightQ, f, up_down_axis, angle;
+        yaw = (event.clientX - lastX);
+        pitch = (event.clientY - lastY);
 
         lastX = event.clientX;
         lastY = event.clientY;
+
+        selection = SceneJS.withNode("locationSelector").get("selection")[0];
+        
+        lookAt = SceneJS.withNode("locationSelector").node(selection);
+        eye = lookAt.get("eye");
+        eye4 = [eye.x, eye.y, eye.z, 1];
+
+        left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : yaw * -0.2 });
+        left_right = left_rightQ.getMatrix();
+        neweye = SceneJS._math_mulMat4v4(left_right, eye4);
+        console.log("drag   yaw: " + yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+        eye4 = SceneJS._math_dupMat4(neweye);
+        f = 1.0 / SceneJS._math_lenVec4(eye4);
+        eye4dup = SceneJS._math_dupMat4(eye4);
+        up_down_axis = SceneJS._math_mulVec4Scalar(eye4dup, f);
+        up_downQ = new SceneJS.Quaternion({ x : up_down_axis[2], y : 0, z : up_down_axis[0], angle : pitch * -0.2 });
+        angle = up_downQ.getRotation().angle;
+        up_down = up_downQ.getMatrix();
+        console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
+
+        lookAt.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
+        SceneJS.withNode("theScene").render();
+        eye = lookAt.get("eye");
+        console.log("");
+
     }
 }
-
-function mouseClick() {
-    activeView = (activeView + 1) % 21;
-
-    SceneJS.withNode("mySelector").set("selection", [activeView]);
-
-    SceneJS.withNode("theScene").render();
-}
-
-canvas.addEventListener('click', mouseClick, true);
 
 canvas.addEventListener('mousedown', mouseDown, true);
 canvas.addEventListener('mousemove', mouseMove, true);
@@ -472,12 +360,7 @@ canvas.addEventListener('mouseup', mouseUp, true);
 canvas.addEventListener('mouseout', mouseOut, true);
 
 window.render = function() {
-
-    SceneJS.withNode("pitch").set("angle", pitch);
-    SceneJS.withNode("yaw").set("angle", yaw);
-
     SceneJS.withNode("theScene").render();
-
 };
 
 SceneJS.bind("error", function() {
