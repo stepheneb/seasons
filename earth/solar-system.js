@@ -97,45 +97,23 @@ SceneJS.createNode({
                             ]
                         },
 
-                        
-
                         {
-                            type: "rotate",
-                            id: "pitch",
-                            angle: 0.0,
-                            x : 1.0,
+                            type: "quaternion",
+                            id: "earthRotationalAxisQuaternion",
+                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+                    
+                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.5 } ],
 
                             nodes: [
 
                                 {
-                                    type: "rotate",
-                                    id: "yaw",
-                                    angle: 0.0,
-                                    y : 1.0,
-                            
-                                    nodes: [
-                                
-                                        {
-                                            type: "quaternion",
-                                            id: "earthRotationalAxisQuaternion",
-                                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-                                    
-                                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.5 } ],
+                                    type : "instance",
+                                    target :"earth-axis"
+                                },
 
-                                            nodes: [
-
-                                                {
-                                                    type : "instance",
-                                                    target :"earth-axis"
-                                                },
-
-                                                {
-                                                    type : "instance",
-                                                    target :"earth"
-                                                }
-                                            ]
-                                        }
-                                    ]
+                                {
+                                    type : "instance",
+                                    target :"earth"
                                 }
                             ]
                         },
