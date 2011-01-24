@@ -36,6 +36,7 @@ var skySphere = SceneJS.createNode({
                             specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
                             specular:       0.0,
                             shine:          0.0,
+                            emit:           1.0,
                             nodes: [
 
                                 // Tilt the milky way a little bit

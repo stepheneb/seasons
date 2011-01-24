@@ -11,6 +11,7 @@ var sun = SceneJS.createNode({
             specularColor:  { r: 1.0, g: 0.95, b: 0.6 },
             specular:       2.0,
             shine:          2.0,
+            emit:           1.0,
     
             nodes: [
 

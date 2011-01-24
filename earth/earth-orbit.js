@@ -46,6 +46,7 @@ var earthOrbit = SceneJS.createNode({
                             specularColor:      { r: 0.1, g: 0.7, b: 1.0 },
                             specular:           1.0,
                             shine:              1.0,
+                            emit:               1.0,
                     
                             nodes: [
                             
