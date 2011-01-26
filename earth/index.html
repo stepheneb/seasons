@@ -19,7 +19,6 @@
           <select id="reference_frame" name="reference_frame">
             <option value="orbit">Orbit around the Sun</option>
             <option value="earth" selected="true">In space around the Earth</option>
-            <option value="low-orbit">Low Earth orbit</option>
             <option value="surface">Surface of the Earth</option>
           </select>
         </li>
@@ -45,6 +44,7 @@
       </ul>
       <ul class="horiz">
         <li><label for="orbital_path">Orbital path: </label><input id="orbital_path" type="checkbox" value="false" /></li>
+        <li><label for="orbital_path">Earth rotation: </label><input id="earth_rotation" type="checkbox" value="false" /></li>
       </ul>
     </div>
   </div>
@@ -153,6 +153,7 @@
     if (webGLEnabled){
       myRequire([
         "../lib/scenejs/scenejs.js",
+        "../lib/scenejs/utils/query/scenejs-query-node-pos.js",
         "solar-system-data.js",
         "sky-sphere.js",
         "earth-axis.js",

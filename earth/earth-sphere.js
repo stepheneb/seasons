@@ -37,11 +37,11 @@ var earthSphere = SceneJS.createNode({
                                 {
 
                                     type: "rotate",
-                                    id: 'spin',
+                                    id: 'earth-rotation',
                                     angle: 0,
                                     y: 1.0,
 
-                                    nodes: [ { type: "sphere" } ]
+                                    nodes: [ { type: "sphere", id: "esphere" } ]
                                 }
                             ]
                         }

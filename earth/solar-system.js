@@ -117,17 +117,6 @@ SceneJS.createNode({
                                     target :"earth"
                                 }
                             ]
-                        },
-
-                        // Interpolates the Earth spin - this node could be anywhere in the scene
-                        {
-                            type: "interpolator",
-                            id: "interpolator",
-                            target: "spin",
-                            targetProperty: "angle",
-                            // over 1000 seconds rotate 360 degrees 20 times
-                            keys: [0.0, 1000],
-                            values: [0.0, 360.0*50]
                         }
                     ]
                 }
@@ -157,9 +146,14 @@ var dragging = false;
 var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
+
+var query = new SceneJS.utils.query.QueryNodePos({canvasWidth : canvas.clientWidth,canvasHeight : canvas.clientHeight});
+
 var reference_frame = document.getElementById("reference_frame");
 var earth_surface = document.getElementById("earth_surface");
 var orbital_path = document.getElementById("orbital_path");
+var earth_rotation = document.getElementById("earth_rotation");
+
 
 // Time of year changes inclination of Earths orbit with respect to the orbital plane
 
@@ -230,6 +224,19 @@ function orbitalPathChange() {
 orbital_path.onchange = orbitalPathChange;
 orbital_path.onchange();
 
+// Earth Rotation
+
+// function earthRotationChange() {
+//   if (earth_rotation.checked) {
+//       SceneJS.withNode("earth-rotation").set("angle", 180);
+//   } else {
+//       SceneJS.withNode("earth-rotation").set("angle", 0);
+//   }
+// }
+// 
+// earth_rotation.onchange = earthRotationChange;
+// earth_rotation.onchange();
+
 // Reference Frame
 
 function referenceFrameChange() {
@@ -243,6 +250,7 @@ function referenceFrameChange() {
         break;
  
        case 'earth':
+        earth_rotation.checked=true
         look.set("eye",  { x: 0, y: 0, z: earth_diameter_km * -3 } );
         look.set("look", { x : 0, y : 0.0, z : 0.0 } );
         orbital_path.checked = true;
@@ -255,8 +263,9 @@ function referenceFrameChange() {
         break;
 
        case "surface":
-        look.set("eye",  { x: 0, y: 0, z: earth_diameter_km * -3 });
-        look.set("look", { x : 0, y : 0.0, z : 0.0 } );
+        earth_rotation.checked=false
+        look.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
+        look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
         break;
   }
   SceneJS.withNode("theScene").render();
@@ -327,6 +336,10 @@ canvas.addEventListener('mouseout', mouseOut, true);
 
 window.render = function() {
     SceneJS.withNode("theScene").render();
+    if (earth_rotation.checked) {
+        var earth_angle = SceneJS.withNode("earth-rotation").get("angle");
+        SceneJS.withNode("earth-rotation").set("angle", earth_angle+0.2);
+    }
 };
 
 SceneJS.bind("error", function() {
@@ -338,4 +351,3 @@ SceneJS.bind("reset", function() {
 });
 
 var pInterval = setInterval("window.render()", 20);
-
