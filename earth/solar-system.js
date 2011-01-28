@@ -338,7 +338,7 @@ window.render = function() {
     SceneJS.withNode("theScene").render();
     if (earth_rotation.checked) {
         var earth_angle = SceneJS.withNode("earth-rotation").get("angle");
-        SceneJS.withNode("earth-rotation").set("angle", earth_angle+0.2);
+        SceneJS.withNode("earth-rotation").set("angle", earth_angle+0.15);
     }
 };
 
@@ -350,4 +350,4 @@ SceneJS.bind("reset", function() {
     window.clearInterval(pInterval);
 });
 
-var pInterval = setInterval("window.render()", 20);
+var pInterval = setInterval("window.render()", 30);
