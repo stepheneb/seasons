@@ -1,8 +1,3 @@
-/**
- * adapted from SceneJS Examples
- *
- */
-
 SceneJS.createNode({
     
     type: "scene",
@@ -42,10 +37,16 @@ SceneJS.createNode({
                             target :"sun"
                         },
 
-                        // Integrate our earth orbit, which is defined in earth-orbit.js
+                        // Integrate our earth circular orbit, which is defined in earth-orbit.js
                         {
                             type : "instance",
                             target :"earthCircleOrbit"
+                        },
+
+                        // Integrate our earth elliptical orbit, which is defined in earth-orbit.js
+                        {
+                            type : "instance",
+                            target :"earthEllipseOrbit"
                         },
 
                         {
@@ -82,18 +83,10 @@ SceneJS.createNode({
                             emit:           1.0,
 
                             nodes: [
-
+                            
                                 {
-                                    type: "geometry",
-                                    primitive: "line-loop",
-
-                                    positions: [
-                                         0.0,                       0.0,    0.0,
-                                         earth_orbital_radius_km,   0.0,    0.0
-                                    ],
-
-                                    indices : [ 0, 1 ]
-
+                                    type : "instance",
+                                    target :"earth-circle-orbit-sun-line"
                                 }
                             ]
                         },
@@ -149,17 +142,10 @@ var canvas = document.getElementById("theCanvas");
 
 var query = new SceneJS.utils.query.QueryNodePos({canvasWidth : canvas.clientWidth,canvasHeight : canvas.clientHeight});
 
-var reference_frame = document.getElementById("reference_frame");
-var earth_surface = document.getElementById("earth_surface");
-var orbital_path = document.getElementById("orbital_path");
-var earth_rotation = document.getElementById("earth_rotation");
-
-
-// Time of year changes inclination of Earths orbit with respect to the orbital plane
+var circle_orbital_path = document.getElementById("circle-orbital-path");
+var ellipse_orbital_path = document.getElementById("ellipse-orbital-path");
 
 var time_of_year = document.getElementById("time_of_year");
-var color_map = document.getElementById("temperature-color-map");
-color_map.style.display='none';
 
 var seasonal_rotations = {};
 seasonal_rotations.jun = { x :  0,  y : 0,  z : -1,  angle : 23.44 };
@@ -167,112 +153,77 @@ seasonal_rotations.sep = { x :  1,  y : 0,  z :  0,  angle : 23.44 };
 seasonal_rotations.dec = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
 seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
 
-function setTemperatureTexture(month) {
-    switch (month) {
-        case 'jun' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [5]); break;
-        case 'sep' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [8]); break;
-        case 'dec' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [11]); break;
-        case 'mar' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [2]); break;
-    };    
-}
+var earth_postion = SceneJS.withNode("earth-position");
+var earth_sun_line_geometry = SceneJS.withNode("earth-circle-orbit-sun-line-geometry");
+
 
 function timeOfYearChange() {
   var month = this.value;
-  SceneJS.Message.sendMessage({ 
-    command: "update", 
-    target: "earthRotationalAxisQuaternion", 
-    set: { rotation: seasonal_rotations[month] }
-  });
-  setTemperatureTexture(month);
-  if (earth_surface.value === 'terrain') {
-      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
-  } else {
-      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+  var new_location = earth_circle_location_by_month(month);
+  earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
+  switch(month) {
+       case "jun":
+       SceneJS.withNode("earth-circle-orbit-sun-line-selector").set("selection", [1]);
+       break;
+       case "sep":
+       SceneJS.withNode("earth-circle-orbit-sun-line-selector").set("selection", [2]);
+       break;
+       case "dec":
+       SceneJS.withNode("earth-circle-orbit-sun-line-selector").set("selection", [3]);
+       break;
+       case "mar":
+       SceneJS.withNode("earth-circle-orbit-sun-line-selector").set("selection", [4]);
+       break;
   }
+  // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
 }
 
 time_of_year.onchange = timeOfYearChange;
 time_of_year.onchange();
 
-// Texture mapping onto the Earth's surface
+// Orbital Paths Indicators
 
-function earthSurfaceChange() {
-  var new_surface = this.value;
-  if (new_surface === 'terrain') {
-      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
-      color_map.style.display='none';
-  } else {
-      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
-      setTemperatureTexture(time_of_year.value);
-      color_map.style.display='inline';  
-  }
-}
-
-earth_surface.onchange = earthSurfaceChange;
-earth_surface.onchange();
-
-// Orbital Path Indicator
-
-function orbitalPathChange() {
-  if (orbital_path.checked) {
+function circleOrbitalPathChange() {
+  if (circle_orbital_path.checked) {
       SceneJS.withNode("earthCircleOrbitSelector").set("selection", [1]);
   } else {
       SceneJS.withNode("earthCircleOrbitSelector").set("selection", [0]);
   }
 }
 
-orbital_path.onchange = orbitalPathChange;
-orbital_path.onchange();
+circle_orbital_path.onchange = circleOrbitalPathChange;
+circle_orbital_path.onchange();
 
-// Earth Rotation
+function ellipseOrbitalPathChange() {
+  if (ellipse_orbital_path.checked) {
+      SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [1]);
+  } else {
+      SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [0]);
+  }
+}
 
-// function earthRotationChange() {
-//   if (earth_rotation.checked) {
-//       SceneJS.withNode("earth-rotation").set("angle", 180);
-//   } else {
-//       SceneJS.withNode("earth-rotation").set("angle", 0);
-//   }
-// }
-// 
-// earth_rotation.onchange = earthRotationChange;
-// earth_rotation.onchange();
+ellipse_orbital_path.onchange = ellipseOrbitalPathChange;
+ellipse_orbital_path.onchange();
 
-// Reference Frame
+// Perspective Frame
 
-function referenceFrameChange() {
+function perspectiveChange() {
     var look = SceneJS.withNode("lookAt")
     switch(this.value) {
-       case "orbit":
-        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
-        look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
-        orbital_path.checked = true;
-        orbital_path.onchange();
-        break;
- 
-       case 'earth':
-        earth_rotation.checked=true
-        look.set("eye",  { x: 0, y: 0, z: earth_diameter_km * -3 } );
-        look.set("look", { x : 0, y : 0.0, z : 0.0 } );
-        orbital_path.checked = true;
-        orbital_path.onchange();
-        break;
-
-       case "low-orbit":
-        look.set("eye",  { x: 0, y: 0, z: earth_diameter_km * -1.3 } );
-        look.set("look",{ x : 0, y : 0.0, z : 0.0 } );
-        break;
-
-       case "surface":
-        earth_rotation.checked=false
-        look.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
+       case "top":
+        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 3, z: earth_orbital_radius_km * 0.3 } );
         look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
         break;
+      case "side":
+       look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+       look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+       break;
   }
   SceneJS.withNode("theScene").render();
 }
 
-reference_frame.onchange = referenceFrameChange;
-reference_frame.onchange();
+perspective.onchange = perspectiveChange;
+perspective.onchange();
 
 function mouseDown(event) {
     lastX = event.clientX;
@@ -334,12 +285,10 @@ canvas.addEventListener('mousemove', mouseMove, true);
 canvas.addEventListener('mouseup', mouseUp, true);
 canvas.addEventListener('mouseout', mouseOut, true);
 
+SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+
 window.render = function() {
     SceneJS.withNode("theScene").render();
-    if (earth_rotation.checked) {
-        var earth_angle = SceneJS.withNode("earth-rotation").get("angle");
-        SceneJS.withNode("earth-rotation").set("angle", earth_angle+0.15);
-    }
 };
 
 SceneJS.bind("error", function() {

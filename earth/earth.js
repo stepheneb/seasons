@@ -39,7 +39,7 @@ var earth = SceneJS.createNode({
                     nodes: [
 
                         {
-                            type: "scale", x: earth_diameter_km, y: earth_diameter_km, z: earth_diameter_km,
+                            type: "scale", x: sun_diameter_km, y: sun_diameter_km, z: sun_diameter_km,
                             
                             nodes: [ { type: "sphere"  } ]
                         }

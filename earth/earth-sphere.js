@@ -19,6 +19,7 @@ var earthSphere = SceneJS.createNode({
 
                 {
                     type: "translate",
+                    id: "earth-position",
                     x: 0,
                     y: 0,
                     z: 0,
