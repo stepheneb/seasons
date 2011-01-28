@@ -684,16 +684,6 @@ function mouseOut() {
     dragging = false;
 }
 
-function rotateEye(angle, radius)
-{
-  var eyeCfg = {
-    x: (Math.sin(angle)) * radius,
-    y: Math.cos(angle) * -radius,
-    z: 7.0
-  };
-  SceneJS.withNode("SceneLookAt").set("eye", eyeCfg);
-}
-
 /* On a mouse drag, we'll re-render the scene, passing in
  * incremented angles in each time.
  */
@@ -706,7 +696,7 @@ function mouseMove(event) {
         lastX = event.clientX;
         lastY = event.clientY;
 
-        look = SceneJS.withNode("lookAt");
+        look = SceneJS.withNode("secondLookAt");
         eye = look.get("eye");
         eye4 = [eye.x, eye.y, eye.z, 1];
 
