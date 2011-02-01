@@ -30,18 +30,8 @@
             <option value="temperature">Mean Monthly Temperature</option>
           </select>
         </li>
-      </ul>
-      <ul class="horiz">
-        <li>
-          <label for="perspective">Choose view:</label> 
-          <select id="perspective" name="perspective">
-            <option value="top" selected="true">Top</option>
-            <option value="side">Side</option>
-          </select>
-        </li>
-        <li>
-          <label for="circle-orbital-path">Circular orbital path: </label>
-          <input id="circle-orbital-path" type="checkbox" value="selected" />
+        <li id="temperature-color-map">
+          <img src="images/color-map-minus30-to-30-400px.png" alt="color map for temperature"/>
         </li>
       </ul>
     </div>
@@ -50,37 +40,42 @@
     <div id="webglCanvasContainer">
       <ul class="hlist">
         <li>
+          <div class="glCanvasQuarterFrame">
             <p>View: Sun-Earth System</p>
-            <canvas id="theCanvas1" width="500" height="350">
-                <p>This example requires a browser that supports the
-                    <a href="http://www.w3.org/html/wg/html5/">HTML5</a>
-                    &lt;canvas&gt; feature.</p>
+            <canvas id="theCanvas1">
             </canvas>
+            <ul class="hlist">
+              <li>
+                <label for="perspective">Choose view:</label> 
+                <select id="perspective" name="perspective">
+                  <option value="top" selected="true">Top</option>
+                  <option value="side">Side</option>
+                </select>
+              </li>
+              <li>
+                <label for="circle-orbital-path">Circular orbital path: </label>
+                <input id="circle-orbital-path" type="checkbox" value="selected" />
+              </li>
+            </ul>
+          </div>
         </li>
         <li>
-            <canvas id="theCanvas2" width="500" height="350">
-                <p>This example requires a browser that supports the
-                    <a href="http://www.w3.org/html/wg/html5/">HTML5</a>
-                    &lt;canvas&gt; feature.</p>
-            </canvas>
         </li>
       </ul>
       <ul class="hlist">
         <li>
-          <!-- <p>View: Earth from Space - side view</p> -->
-            <canvas id="theCanvas3" width="500" height="350">
-                <p>This example requires a browser that supports the
-                    <a href="http://www.w3.org/html/wg/html5/">HTML5</a>
-                    &lt;canvas&gt; feature.</p>
+          <div class="glCanvasQuarterFrame">
+            <p>View: Earth from Space - side view</p>
+            <canvas id="theCanvas3">
             </canvas>
+          </div>
         </li>
         <li>
-          <!-- <p>View: Earth from Space - top view</p> -->
-            <canvas id="theCanvas4" width="500" height="350">
-                <p>This example requires a browser that supports the
-                    <a href="http://www.w3.org/html/wg/html5/">HTML5</a>
-                    &lt;canvas&gt; feature.</p>
+          <div class="glCanvasQuarterFrame">
+            <p>View: Earth from Space - top view</p>
+            <canvas id="theCanvas4">
             </canvas>
+          </div>
         </li>
       </ul>
     </div>

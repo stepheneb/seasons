@@ -692,15 +692,6 @@ seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
 
 function setTemperatureTexture(month) {
     switch (month) {
-        case 'mar' : SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [0]); break;
-        case 'jun' : SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [1]); break;
-        case 'sep' : SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [2]); break;
-        case 'dec' : SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [3]); break;
-    };    
-}
-
-function setTemperatureTexture(month) {
-    switch (month) {
         case 'mar' : 
             SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [0]); 
             SceneJS.withNode("earthTemperatureTextureSelector2").set("selection", [0]); 

@@ -276,7 +276,7 @@ SceneJS.createNode({
                                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                         { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere2"  } ]
+                                                    nodes: [ { type : "instance", target : "earth-sphere3"  } ]
 
                                                 },
 
@@ -288,7 +288,7 @@ SceneJS.createNode({
                                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                         { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere2"  } ]
+                                                    nodes: [ { type : "instance", target : "earth-sphere3"  } ]
 
                                                 },
 
@@ -300,7 +300,7 @@ SceneJS.createNode({
                                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                         { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere2"  } ]
+                                                    nodes: [ { type : "instance", target : "earth-sphere3"  } ]
 
                                                 },
 
@@ -313,7 +313,7 @@ SceneJS.createNode({
                                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                         { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere2"  } ]
+                                                    nodes: [ { type : "instance", target : "earth-sphere3"  } ]
 
                                                 }                                
                                             ]
@@ -601,7 +601,7 @@ SceneJS.createNode({
                                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                         { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere2"  } ]
+                                                    nodes: [ { type : "instance", target : "earth-sphere4"  } ]
 
                                                 },
 
@@ -613,7 +613,7 @@ SceneJS.createNode({
                                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                         { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere2"  } ]
+                                                    nodes: [ { type : "instance", target : "earth-sphere4"  } ]
 
                                                 },
 
@@ -625,7 +625,7 @@ SceneJS.createNode({
                                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                         { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere2"  } ]
+                                                    nodes: [ { type : "instance", target : "earth-sphere4"  } ]
 
                                                 },
 
@@ -638,7 +638,7 @@ SceneJS.createNode({
                                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                         { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere2"  } ]
+                                                    nodes: [ { type : "instance", target : "earth-sphere4"  } ]
 
                                                 }                                
                                             ]
@@ -827,22 +827,18 @@ var earth_sun_line_geometry = SceneJS.withNode("earth-circle-orbit-sun-line-geom
 function setTemperatureTexture(month) {
     switch (month) {
         case 'mar' : 
-            SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [0]); 
             SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [0]); 
             SceneJS.withNode("earthTemperatureTextureSelector4").set("selection", [0]); 
             break;
         case 'jun' : 
-            SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [1]); 
             SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [1]); 
             SceneJS.withNode("earthTemperatureTextureSelector4").set("selection", [1]); 
             break;
         case 'sep' : 
-            SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [2]); 
             SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [2]); 
             SceneJS.withNode("earthTemperatureTextureSelector4").set("selection", [2]); 
             break;
         case 'dec' : 
-            SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [3]); 
             SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [3]); 
             SceneJS.withNode("earthTemperatureTextureSelector4").set("selection", [3]); 
             break;
@@ -868,19 +864,36 @@ function timeOfYearChange() {
   });
   setTemperatureTexture(month);
   if (earth_surface.value === 'terrain') {
-      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
       SceneJS.withNode("earthTextureSelector3").set("selection", [1]);
       SceneJS.withNode("earthTextureSelector4").set("selection", [1]);
   } else {
-      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
-      SceneJS.withNode("earthTextureSelector3").set("selection", [1]);
-      SceneJS.withNode("earthTextureSelector4").set("selection", [1]);
+      SceneJS.withNode("earthTextureSelector3").set("selection", [0]);
+      SceneJS.withNode("earthTextureSelector4").set("selection", [0]);
   }
   // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
 }
 
 time_of_year.onchange = timeOfYearChange;
 time_of_year.onchange();
+
+// Texture mapping onto the Earth's surface
+
+function earthSurfaceChange() {
+  var new_surface = this.value;
+  if (new_surface === 'terrain') {
+      SceneJS.withNode("earthTextureSelector3").set("selection", [1]);
+      SceneJS.withNode("earthTextureSelector4").set("selection", [1]);
+      color_map.style.display='none';
+  } else {
+      SceneJS.withNode("earthTextureSelector3").set("selection", [0]);
+      SceneJS.withNode("earthTextureSelector4").set("selection", [0]);
+      setTemperatureTexture(time_of_year.value);
+      color_map.style.display='inline';  
+  }
+}
+
+earth_surface.onchange = earthSurfaceChange;
+earth_surface.onchange();
 
 // Orbital Paths Indicators
 
@@ -909,7 +922,7 @@ function perspectiveChange() {
        look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
        break;
   }
-  // SceneJS.withNode("theScene1").render();
+  SceneJS.withNode("theScene1").render();
 }
 
 perspective.onchange = perspectiveChange;
@@ -963,7 +976,7 @@ function mouseMove1(event) {
         console.log("drag pitch1: " + pitch1 + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
 
         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        // SceneJS.withNode("theScene1").render();
+        SceneJS.withNode("theScene1").render();
         eye = look.get("eye");
         console.log("");
 

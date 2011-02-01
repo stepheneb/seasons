@@ -201,19 +201,64 @@ canvas {
 }
 
 .glCanvasQuarterFrame {
-    width: 400px;
+    width: 480px;
+    margin-left: 5px;
+    padding: 2px;
+/*    border: 1px solid lightgray;*/
+}
+
+#content .glCanvasQuarterFrame canvas {
+    width: 480px;
+    height: 350px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: black;
+}
+
+#content .glCanvasQuarterFrame p {
+    color: #444444 !important;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 1.0em;
+    line-height: 1.5em;
+}
+
+#content .glCanvasQuarterFrame ul.hlist  {
+    line-height: 1.0em;
+    color: #444444 !important;    
+    margin-top: 0px;
+    margin-bottom: 2px;
+    padding-top: 0px;
+    padding-bottom: 2px;
+    display: inline-block;
+    list-style-type: none;
+}
+
+#content .glCanvasQuarterFrame ul.hlist li  {
+    line-height: 1.0em;
+    color: #444444 !important;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    display: inline-block;
+    list-style-type: none;
 }
 
 #webglCanvasContainer ul.hlist li  {
     line-height: 1.4em;
     color: #444444 !important;    
-    margin: 10px;
-    display: inline;
+    display: inline-block;
     list-style-type: none;
 }
 
 #webglCanvasContainer p {
-    width: 500px;
+    color: #444444 !important;
+    padding-bottom: 5px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 1.0em;
+    line-height: 1.5em;
 }
 
 #content p {
@@ -259,8 +304,8 @@ canvas {
 }
 
 #content ul {
-    padding-top: 0px;
-
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 #content ul li {
@@ -271,9 +316,10 @@ canvas {
 
 #content ul.hlist li  {
     line-height: 1.4em;
-    color: #444444 !important;    
+    color: #444444 !important;
     margin-left: 5px;
-    display: inline;
+    margin-bottom: 5px;
+    display: inline-block;
     list-style-type: none;
 }
 
