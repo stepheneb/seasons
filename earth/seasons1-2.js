@@ -792,13 +792,28 @@ var canvas1 = document.getElementById("theCanvas1");
 var canvas3 = document.getElementById("theCanvas3");
 var canvas4 = document.getElementById("theCanvas4");
 
+function setAspectRatio(camera, canvas) {
+    var optics = SceneJS.withNode(camera).get("optics");
+    optics.aspect = canvas.clientWidth/canvas.clientHeight;
+    SceneJS.withNode(camera).set("optics", optics);
+    dragging1 = false;
+}
+
+setAspectRatio("theCamera1", canvas1);
+setAspectRatio("theCamera3", canvas3);
+setAspectRatio("theCamera4", canvas4);
+
 var earth_surface = document.getElementById("earth_surface");
 var perspective = document.getElementById("perspective");
 
 var circle_orbital_path = document.getElementById("circle-orbital-path");
 var ellipse_orbital_path = document.getElementById("ellipse-orbital-path");
 
+// Time of year changes inclination of Earths orbit with respect to the orbital plane
+
 var time_of_year = document.getElementById("time_of_year");
+var color_map = document.getElementById("temperature-color-map");
+color_map.style.display='none';
 
 var seasonal_rotations = {};
 seasonal_rotations.jun = { x :  0,  y : 0,  z : -1,  angle : 23.44 };
