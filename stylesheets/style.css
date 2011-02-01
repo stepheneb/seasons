@@ -186,7 +186,6 @@ h4 {
 
 canvas {
     padding-bottom: 15px;
-    border-bottom: 2px solid lightgray;
     margin-bottom: 10px;
 }
 
@@ -199,6 +198,22 @@ canvas {
     background: #ffffff;
     padding: 10px 15px 10px 15px;
     height: 3000px;
+}
+
+.glCanvasQuarterFrame {
+    width: 400px;
+}
+
+#webglCanvasContainer ul.hlist li  {
+    line-height: 1.4em;
+    color: #444444 !important;    
+    margin: 10px;
+    display: inline;
+    list-style-type: none;
+}
+
+#webglCanvasContainer p {
+    width: 500px;
 }
 
 #content p {

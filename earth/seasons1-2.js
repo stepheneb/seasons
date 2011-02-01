@@ -1,23 +1,3 @@
-/**
- * adapted from SceneJS Examples
- *
- */
-
-var earth_diameter_km_actual = 12742.0;
-var earth_orbital_radius_km_actual = 150000000.0;
-
-var factor = 0.001
-
-var earth_diameter_km = earth_diameter_km_actual * factor;
-var earth_orbital_radius_km = earth_orbital_radius_km_actual * factor;
-var milky_way_apparent_radius = earth_orbital_radius_km * 10;
-
-var earth_x_pos = 0;
-
-/*----------------------------------------------------------------------
- * Canvas 1
- *---------------------------------------------------------------------*/
-
 SceneJS.createNode({
     
     type: "scene",
@@ -31,10 +11,143 @@ SceneJS.createNode({
             type: "library",
 
             nodes: [
-
                 {
                     type: "camera",
                     id: "theCamera1",
+                    optics: {
+                        type: "perspective",
+                        fovy : 45.0,
+                        aspect : 1.43,
+                        near : 0.10,
+                        far : milky_way_apparent_radius * 1.1,
+                    },
+
+                    nodes: [
+                    
+                        
+                        // Integrate our sky sphere, which is defined in sky-sphere.js
+                        {
+                            type : "instance",
+                            target :"sky-sphere"
+                        },
+
+                        // Integrate our sun, which is defined in sun.js
+                        {
+                            type : "instance",
+                            target :"sun"
+                        },
+
+                        // Integrate our earth circular orbit, which is defined in earth-orbit.js
+                        {
+                            type : "instance",
+                            target :"earthCircleOrbit"
+                        },
+
+                        // Integrate our earth elliptical orbit, which is defined in earth-orbit.js
+                        {
+                            type : "instance",
+                            target :"earthEllipseOrbit"
+                        },
+
+                        {
+                            type: "light",
+                            mode:                   "dir",
+                            color:                  { r: 3.0, g: 3.0, b: 3.0 },
+                            diffuse:                true,
+                            specular:               true,
+                            dir:                    { x: 1.0, y: 0.0, z: 0.0 }
+                        },
+                        {
+                            type: "light",
+                            mode:                   "dir",
+                            color:                  { r: 0.1, g: 0.1, b: 0.1 },
+                            diffuse:                true,
+                            specular:               true,
+                            dir:                    { x: 0.0, y: 1.0, z: -1.0 }
+                        },
+                        {
+                            type: "light",
+                            mode:                   "dir",
+                            color:                  { r: 0.1, g: 0.1, b: 0.1 },
+                            diffuse:                true,
+                            specular:               true,
+                            dir:                    { x: -1.0, y: 0.0, z: -1.0 }
+                        },
+
+                        {
+                            type: "material",
+                            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                            specular:       1.0,
+                            shine:          2.0,
+                            emit:           1.0,
+
+                            nodes: [
+                            
+                                {
+                                    type : "instance",
+                                    target :"earth-circle-orbit-sun-line"
+                                }
+                            ]
+                        },
+
+                        {
+                            type: "quaternion",
+                            id: "earthRotationalAxisQuaternion1",
+                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+                    
+                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.5 } ],
+
+                            nodes: [
+
+                                {
+                                    type : "instance",
+                                    target :"earth-axis"
+                                },
+
+                                {
+                                    type : "instance",
+                                    target :"earth"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+
+        {
+            type: "lookAt", 
+            id: "lookAt1",
+            eye : { x: 0, y: 0, z: earth_diameter_km * -3 },
+            look : { x : 0, y : 0.0, z : 0.0 },
+            up : { x: 0.0, y: 1.0, z: 0.0 },
+            nodes: [ { type: "instance", target: "theCamera1" } ]
+        }
+    ]
+});
+
+/*----------------------------------------------------------------------
+ * Canvas 1
+ *---------------------------------------------------------------------*/
+
+SceneJS.createNode({
+    
+    type: "scene",
+    id: "theScene3",
+    canvasId: "theCanvas3",
+    loggingElementId: "theLoggingDiv3",
+    
+    nodes: [
+
+        {
+            type: "library",
+
+            nodes: [
+
+                {
+                    type: "camera",
+                    id: "theCamera3",
                     optics: {
                         type: "perspective",
                         fovy : 50.0,
@@ -48,7 +161,7 @@ SceneJS.createNode({
                         // First simulate the milky-way with a stationary background sphere
                         {
                             type: "stationary",    
-                            id: "sky-sphere1",
+                            id: "sky-sphere3",
 
                             nodes: [
 
@@ -134,7 +247,7 @@ SceneJS.createNode({
 
                         {
                             type: "quaternion",
-                            id: "earthRotationalAxisQuaternion1",
+                            id: "earthRotationalAxisQuaternion3",
                             x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
 
                             rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
@@ -144,12 +257,12 @@ SceneJS.createNode({
                                 {
 
                                     type: "selector",
-                                    id: "earthTextureSelector1",
+                                    id: "earthTextureSelector3",
                                     selection: [1],
                                     nodes: [
 
                                         {
-                                            id: "earthTemperatureTextureSelector1",
+                                            id: "earthTemperatureTextureSelector3",
                                             type: "selector",
                                             selection: [0],
                                             nodes: [
@@ -208,7 +321,7 @@ SceneJS.createNode({
 
                                         {
 
-                                            id: "earth-terrain-texture1",
+                                            id: "earth-terrain-texture3",
                                             type: "texture",
                                             layers: [
 
@@ -263,7 +376,7 @@ SceneJS.createNode({
                                                  * lights our object reflects
                                                  */
                                                 {
-                                                    id : "earth-sphere1",
+                                                    id : "earth-sphere3",
                                                     type: "material",
                                                     baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
                                                     specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
@@ -292,7 +405,7 @@ SceneJS.createNode({
                                                                         {
 
                                                                             type: "rotate",
-                                                                            id: 'spin1',
+                                                                            id: 'spin3',
                                                                             angle: 0,
                                                                             y: 1.0,
 
@@ -324,7 +437,7 @@ SceneJS.createNode({
         },
         {
             type: "lookAt", 
-            id: "lookAt1",
+            id: "lookAt3",
             eye : { x: earth_x_pos, y: 0, z: earth_diameter_km * -3 },
             look : { x : earth_x_pos, y : 0.0, z : 0.0 },
             up : { x: 0.0, y: 1.0, z: 0.0 },
@@ -333,7 +446,7 @@ SceneJS.createNode({
         
                 { 
                     type: "instance", 
-                    target: "theCamera1"
+                    target: "theCamera3"
                 } 
             ]
         }
@@ -341,15 +454,15 @@ SceneJS.createNode({
 });
 
 /*----------------------------------------------------------------------
- * Canvas 2
+ * Canvas 4
  *---------------------------------------------------------------------*/
 
 SceneJS.createNode({
     
     type: "scene",
-    id: "theScene2",
-    canvasId: "theCanvas2",
-    loggingElementId: "theLoggingDiv2",
+    id: "theScene4",
+    canvasId: "theCanvas4",
+    loggingElementId: "theLoggingDiv4",
     
     nodes: [
 
@@ -360,7 +473,7 @@ SceneJS.createNode({
 
                 {
                     type: "camera",
-                    id: "theCamera2",
+                    id: "theCamera4",
                     optics: {
                         type: "perspective",
                         fovy : 50.0,
@@ -374,7 +487,7 @@ SceneJS.createNode({
                         // First simulate the milky-way with a stationary background sphere
                         {
                             type: "stationary",    
-                            id: "sky-sphere2",
+                            id: "sky-sphere4",
 
                             nodes: [
 
@@ -459,7 +572,7 @@ SceneJS.createNode({
 
                         {
                             type: "quaternion",
-                            id: "earthRotationalAxisQuaternion2",
+                            id: "earthRotationalAxisQuaternion4",
                             x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
 
                             rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
@@ -469,12 +582,12 @@ SceneJS.createNode({
                                 {
 
                                     type: "selector",
-                                    id: "earthTextureSelector2",
+                                    id: "earthTextureSelector4",
                                     selection: [1],
                                     nodes: [
 
                                         {
-                                            id: "earthTemperatureTextureSelector2",
+                                            id: "earthTemperatureTextureSelector4",
                                             type: "selector",
                                             selection: [0],
                                             nodes: [
@@ -533,7 +646,7 @@ SceneJS.createNode({
 
                                         {
 
-                                            id: "earth-terrain-texture2",
+                                            id: "earth-terrain-texture4",
                                             type: "texture",
                                             layers: [
 
@@ -588,7 +701,7 @@ SceneJS.createNode({
                                                  * lights our object reflects
                                                  */
                                                 {
-                                                    id : "earth-sphere2",
+                                                    id : "earth-sphere4",
                                                     type: "material",
                                                     baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
                                                     specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
@@ -617,7 +730,7 @@ SceneJS.createNode({
                                                                         {
 
                                                                             type: "rotate",
-                                                                            id: 'spin2',
+                                                                            id: 'spin4',
                                                                             angle: 0,
                                                                             y: 1.0,
 
@@ -641,7 +754,7 @@ SceneJS.createNode({
         },
         {
             type: "lookAt", 
-            id: "lookAt2",
+            id: "lookAt4",
             eye : { x: earth_x_pos, y: earth_diameter_km * 3, z: 0 },
             look : { x : earth_x_pos, y : 0.0, z : 0.0 },
             up : { x: 0.0, y: 0.0, z: 1.0 },
@@ -650,39 +763,42 @@ SceneJS.createNode({
         
                 { 
                     type: "instance", 
-                    target: "theCamera2"
+                    target: "theCamera4"
                 } 
             ]
         }
     ]
 });
 
+
+
+
 /*----------------------------------------------------------------------
  * Scene rendering loop and mouse handler stuff follows
  *---------------------------------------------------------------------*/
-
 var yaw1 = 0;
 var pitch1 = 0;
 var lastX1;
 var lastY1;
 var dragging1 = false;
 
-var yaw2 = 0;
-var pitch2 = 0;
-var lastX2;
-var lastY2;
-var dragging2 = false;
+var yaw3 = 0;
+var pitch3 = 0;
+var lastX3;
+var lastY3;
+var dragging3 = false;
 
 var canvas1 = document.getElementById("theCanvas1");
-var canvas2 = document.getElementById("theCanvas2");
+var canvas3 = document.getElementById("theCanvas3");
+var canvas4 = document.getElementById("theCanvas4");
 
 var earth_surface = document.getElementById("earth_surface");
+var perspective = document.getElementById("perspective");
 
-// Time of year changes inclination of Earths orbit with respect to the orbital plane
+var circle_orbital_path = document.getElementById("circle-orbital-path");
+var ellipse_orbital_path = document.getElementById("ellipse-orbital-path");
 
 var time_of_year = document.getElementById("time_of_year");
-var color_map = document.getElementById("temperature-color-map");
-color_map.style.display='none';
 
 var seasonal_rotations = {};
 seasonal_rotations.jun = { x :  0,  y : 0,  z : -1,  angle : 23.44 };
@@ -690,32 +806,30 @@ seasonal_rotations.sep = { x :  1,  y : 0,  z :  0,  angle : 23.44 };
 seasonal_rotations.dec = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
 seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
 
-function setTemperatureTexture(month) {
-    switch (month) {
-        case 'mar' : SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [0]); break;
-        case 'jun' : SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [1]); break;
-        case 'sep' : SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [2]); break;
-        case 'dec' : SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [3]); break;
-    };    
-}
+var earth_postion = SceneJS.withNode("earth-position");
+var earth_sun_line_geometry = SceneJS.withNode("earth-circle-orbit-sun-line-geometry");
 
 function setTemperatureTexture(month) {
     switch (month) {
         case 'mar' : 
-            SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [0]); 
-            SceneJS.withNode("earthTemperatureTextureSelector2").set("selection", [0]); 
+            SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [0]); 
+            SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [0]); 
+            SceneJS.withNode("earthTemperatureTextureSelector4").set("selection", [0]); 
             break;
         case 'jun' : 
-            SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [1]); 
-            SceneJS.withNode("earthTemperatureTextureSelector2").set("selection", [1]); 
+            SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [1]); 
+            SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [1]); 
+            SceneJS.withNode("earthTemperatureTextureSelector4").set("selection", [1]); 
             break;
         case 'sep' : 
-            SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [2]); 
-            SceneJS.withNode("earthTemperatureTextureSelector2").set("selection", [2]); 
+            SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [2]); 
+            SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [2]); 
+            SceneJS.withNode("earthTemperatureTextureSelector4").set("selection", [2]); 
             break;
         case 'dec' : 
-            SceneJS.withNode("earthTemperatureTextureSelector1").set("selection", [3]); 
-            SceneJS.withNode("earthTemperatureTextureSelector2").set("selection", [3]); 
+            SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [3]); 
+            SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [3]); 
+            SceneJS.withNode("earthTemperatureTextureSelector4").set("selection", [3]); 
             break;
     };    
 }
@@ -729,40 +843,62 @@ function timeOfYearChange() {
   });
   SceneJS.Message.sendMessage({ 
     command: "update", 
-    target: "earthRotationalAxisQuaternion2", 
+    target: "earthRotationalAxisQuaternion3", 
+    set: { rotation: seasonal_rotations[month] }
+  });
+  SceneJS.Message.sendMessage({ 
+    command: "update", 
+    target: "earthRotationalAxisQuaternion4", 
     set: { rotation: seasonal_rotations[month] }
   });
   setTemperatureTexture(month);
   if (earth_surface.value === 'terrain') {
-      SceneJS.withNode("earthTextureSelector1").set("selection", [1]);
-      SceneJS.withNode("earthTextureSelector2").set("selection", [1]);
+      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
+      SceneJS.withNode("earthTextureSelector3").set("selection", [1]);
+      SceneJS.withNode("earthTextureSelector4").set("selection", [1]);
   } else {
-      SceneJS.withNode("earthTextureSelector1").set("selection", [0]);
-      SceneJS.withNode("earthTextureSelector2").set("selection", [0]);
+      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+      SceneJS.withNode("earthTextureSelector3").set("selection", [1]);
+      SceneJS.withNode("earthTextureSelector4").set("selection", [1]);
   }
+  // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
 }
 
 time_of_year.onchange = timeOfYearChange;
 time_of_year.onchange();
 
-// Texture mapping onto the Earth's surface
+// Orbital Paths Indicators
 
-function earthSurfaceChange() {
-  var new_surface = this.value;
-  if (new_surface === 'terrain') {
-      SceneJS.withNode("earthTextureSelector1").set("selection", [1]);
-      SceneJS.withNode("earthTextureSelector2").set("selection", [1]);
-      color_map.style.display='none';
+function circleOrbitalPathChange() {
+  if (circle_orbital_path.checked) {
+      SceneJS.withNode("earthCircleOrbitSelector").set("selection", [1]);
   } else {
-      SceneJS.withNode("earthTextureSelector1").set("selection", [0]);
-      SceneJS.withNode("earthTextureSelector2").set("selection", [0]);
-      setTemperatureTexture(time_of_year.value);
-      color_map.style.display='inline';  
+      SceneJS.withNode("earthCircleOrbitSelector").set("selection", [0]);
   }
 }
 
-earth_surface.onchange = earthSurfaceChange;
-earth_surface.onchange();
+circle_orbital_path.onchange = circleOrbitalPathChange;
+circle_orbital_path.onchange();
+
+// Perspective Frame
+
+function perspectiveChange() {
+    var look = SceneJS.withNode("lookAt1")
+    switch(this.value) {
+       case "top":
+        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 3, z: earth_orbital_radius_km * 0.3 } );
+        look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        break;
+      case "side":
+       look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+       look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+       break;
+  }
+  // SceneJS.withNode("theScene1").render();
+}
+
+perspective.onchange = perspectiveChange;
+perspective.onchange();
 
 function mouseDown1(event) {
     lastX1 = event.clientX;
@@ -798,7 +934,7 @@ function mouseMove1(event) {
         left_right = left_rightQ.getMatrix();
 
         neweye = SceneJS._math_mulMat4v4(left_right, eye4);
-        // console.log("drag   yaw1: " + yaw1 + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+        console.log("drag   yaw1: " + yaw1 + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
 
         eye4 = SceneJS._math_dupMat4(neweye);
         f = 1.0 / SceneJS._math_lenVec4(eye4);
@@ -809,67 +945,12 @@ function mouseMove1(event) {
         up_down = up_downQ.getMatrix();
 
         neweye = SceneJS._math_mulMat4v4(up_down, eye4);
-        // console.log("drag pitch1: " + pitch1 + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
+        console.log("drag pitch1: " + pitch1 + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
 
         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        SceneJS.withNode("theScene1").render();
+        // SceneJS.withNode("theScene1").render();
         eye = look.get("eye");
-        // console.log("");
-
-    }
-}
-
-function mouseDown2(event) {
-    lastX2 = event.clientX;
-    lastY2 = event.clientY;
-    dragging2 = true;
-}
-
-function mouseUp2() {
-    dragging2 = false;
-}
-
-function mouseOut2() {
-    dragging2 = false;
-}
-
-/* On a mouse drag, we'll re-render the scene, passing in
- * incremented angles in each time.
- */
-function mouseMove2(event) {
-    if (dragging2) {
-        var look, eye, eye4, eye4dup, neweye, up_down, up_downQ, left_right, left_rightQ, f, up_down_axis, angle;
-        yaw2 = (event.clientX - lastX2);
-        pitch2 = (event.clientY - lastY2);
-
-        lastX2 = event.clientX;
-        lastY2 = event.clientY;
-
-        look = SceneJS.withNode("lookAt2");
-        eye = look.get("eye");
-        eye4 = [eye.x, eye.y, eye.z, 1];
-
-        left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : yaw2 * -0.2 });
-        left_right = left_rightQ.getMatrix();
-
-        neweye = SceneJS._math_mulMat4v4(left_right, eye4);
-        // console.log("drag   yaw2: " + yaw2 + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
-
-        eye4 = SceneJS._math_dupMat4(neweye);
-        f = 1.0 / SceneJS._math_lenVec4(eye4);
-        eye4dup = SceneJS._math_dupMat4(eye4);
-        up_down_axis = SceneJS._math_mulVec4Scalar(eye4dup, f);
-        up_downQ = new SceneJS.Quaternion({ x : up_down_axis[2], y : 0, z : up_down_axis[0], angle : pitch2 * -0.2 });
-        angle = up_downQ.getRotation().angle;
-        up_down = up_downQ.getMatrix();
-
-        neweye = SceneJS._math_mulMat4v4(up_down, eye4);
-        // console.log("drag pitch2: " + pitch2 + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
-
-        look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        SceneJS.withNode("theScene2").render();
-        eye = look.get("eye");
-        // console.log("");
+        console.log("");
 
     }
 }
@@ -879,14 +960,16 @@ canvas1.addEventListener('mousemove', mouseMove1, true);
 canvas1.addEventListener('mouseup', mouseUp1, true);
 canvas1.addEventListener('mouseout', mouseOut1, true);
 
-// canvas2.addEventListener('mousedown', mouseDown2, true);
-// canvas2.addEventListener('mousemove', mouseMove2, true);
-// canvas2.addEventListener('mouseup', mouseUp2, true);
-// canvas2.addEventListener('mouseout', mouseOut2, true);
+// SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+// SceneJS.withNode("earthTextureSelector3").set("selection", [0]);
+// SceneJS.withNode("earthTextureSelector4").set("selection", [0]);
+
+SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [1]);
 
 window.render = function() {
     SceneJS.withNode("theScene1").render();
-    SceneJS.withNode("theScene2").render();
+    SceneJS.withNode("theScene3").render();
+    SceneJS.withNode("theScene4").render();
 };
 
 SceneJS.bind("error", function() {
