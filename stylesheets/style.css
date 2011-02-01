@@ -254,6 +254,14 @@ canvas {
     margin-left: 20px;
 }
 
+#content ul.hlist li  {
+    line-height: 1.4em;
+    color: #444444 !important;    
+    margin-left: 5px;
+    display: inline;
+    list-style-type: none;
+}
+
 #content p.intro {
     margin: auto;
     color: #CC6600 !important;
