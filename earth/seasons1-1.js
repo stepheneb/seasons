@@ -219,7 +219,7 @@ function perspectiveChange() {
        look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
        break;
   }
-  SceneJS.withNode("theScene").render();
+  SceneJS.withNode("theScene").start();
 }
 
 perspective.onchange = perspectiveChange;
@@ -273,7 +273,7 @@ function mouseMove(event) {
         console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
 
         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        SceneJS.withNode("theScene").render();
+        SceneJS.withNode("theScene").start();
         eye = look.get("eye");
         console.log("");
 
@@ -288,7 +288,7 @@ canvas.addEventListener('mouseout', mouseOut, true);
 SceneJS.withNode("earthTextureSelector").set("selection", [0]);
 
 window.render = function() {
-    SceneJS.withNode("theScene").render();
+    SceneJS.withNode("theScene").start();
 };
 
 SceneJS.bind("error", function() {

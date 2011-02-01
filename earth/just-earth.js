@@ -452,7 +452,7 @@ function mouseMove(event) {
         // console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
 
         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        SceneJS.withNode("theScene").render();
+        SceneJS.withNode("theScene").start();
         eye = look.get("eye");
         // console.log("");
 
@@ -466,7 +466,7 @@ canvas.addEventListener('mouseout', mouseOut, true);
 
 window.render = function() {
 
-    SceneJS.withNode("theScene").render();
+    SceneJS.withNode("theScene").start();
 
 };
 

@@ -268,7 +268,7 @@ function referenceFrameChange() {
         look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
         break;
   }
-  SceneJS.withNode("theScene").render();
+  SceneJS.withNode("theScene").start();
 }
 
 reference_frame.onchange = referenceFrameChange;
@@ -322,7 +322,7 @@ function mouseMove(event) {
         console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
 
         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        SceneJS.withNode("theScene").render();
+        SceneJS.withNode("theScene").start();
         eye = look.get("eye");
         console.log("");
 
@@ -335,7 +335,7 @@ canvas.addEventListener('mouseup', mouseUp, true);
 canvas.addEventListener('mouseout', mouseOut, true);
 
 window.render = function() {
-    SceneJS.withNode("theScene").render();
+    SceneJS.withNode("theScene").start();
     if (earth_rotation.checked) {
         var earth_angle = SceneJS.withNode("earth-rotation").get("angle");
         SceneJS.withNode("earth-rotation").set("angle", earth_angle+0.15);
