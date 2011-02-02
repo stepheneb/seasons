@@ -50,6 +50,11 @@ SceneJS.createNode({
                         },
 
                         {
+                            type   : "instance",
+                            target : "orbit-grid"
+                        },
+
+                        {
                             type: "light",
                             mode:                   "dir",
                             color:                  { r: 3.0, g: 3.0, b: 3.0 },
@@ -85,10 +90,11 @@ SceneJS.createNode({
                             nodes: [
                             
                                 {
-                                    type : "instance",
-                                    target :"earth-circle-orbit-sun-line"
+                                    type   : "instance",
+                                    target : "earth-circle-orbit-sun-line"
                                 }
-                            ]
+                                
+                              ]
                         },
 
                         {
@@ -119,9 +125,9 @@ SceneJS.createNode({
         {
             type: "lookAt", 
             id: "lookAt",
-            eye : { x: 0, y: 0, z: earth_diameter_km * -3 },
-            look : { x : 0, y : 0.0, z : 0.0 },
-            up : { x: 0.0, y: 1.0, z: 0.0 },
+            eye : { x: 0, y: earth_orbital_radius_km * 3, z: earth_orbital_radius_km * 0.3 },
+            look : { x : earth_orbital_radius_km, y : 0.0, z : 0.0 },
+            up : { x: 0.0, y: 0.0, z: 1.0 },
             nodes: [ { type: "instance", target: "theCamera" } ]
         }
     ]
@@ -136,16 +142,21 @@ var lastX;
 var lastY;
 var dragging = false;
 
-var activeView = 0;
-
 var canvas = document.getElementById("theCanvas");
 
-var query = new SceneJS.utils.query.QueryNodePos({canvasWidth : canvas.clientWidth,canvasHeight : canvas.clientHeight});
+function setAspectRatio(camera, canvas) {
+    var optics = SceneJS.withNode(camera).get("optics");
+    optics.aspect = canvas.clientWidth/canvas.clientHeight;
+    SceneJS.withNode(camera).set("optics", optics);
+}
+
+setAspectRatio("theCamera", canvas);
 
 var circle_orbital_path = document.getElementById("circle-orbital-path");
-var ellipse_orbital_path = document.getElementById("ellipse-orbital-path");
+var orbital_grid = document.getElementById("orbital-grid");
 
-var time_of_year = document.getElementById("time_of_year");
+var time_of_year_buttons = document.getElementById("radio-time-of-year");
+var perspective_buttons  = document.getElementById("radio-perspective");
 
 var seasonal_rotations = {};
 seasonal_rotations.jun = { x :  0,  y : 0,  z : -1,  angle : 23.44 };
@@ -156,9 +167,12 @@ seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
 var earth_postion = SceneJS.withNode("earth-position");
 var earth_sun_line_geometry = SceneJS.withNode("earth-circle-orbit-sun-line-geometry");
 
+var choose_month = document.getElementById("choose-month");
 
 function timeOfYearChange() {
-  var month = this.value;
+  var month;
+  for(var i = 0; i < this.elements.length; i++)
+      if (this.elements[i].checked) month = this.elements[i].value;
   var new_location = earth_circle_location_by_month(month);
   earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
   switch(month) {
@@ -178,8 +192,8 @@ function timeOfYearChange() {
   // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
 }
 
-time_of_year.onchange = timeOfYearChange;
-time_of_year.onchange();
+choose_month.onchange = timeOfYearChange;
+choose_month.onchange();
 
 // Orbital Paths Indicators
 
@@ -194,36 +208,47 @@ function circleOrbitalPathChange() {
 circle_orbital_path.onchange = circleOrbitalPathChange;
 circle_orbital_path.onchange();
 
-function ellipseOrbitalPathChange() {
-  if (ellipse_orbital_path.checked) {
-      SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [1]);
+SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [1]);
+
+// Orbital Grid
+
+function orbitalGridChange() {
+  if (orbital_grid.checked) {
+      SceneJS.withNode("orbit-grid-selector").set("selection", [1]);
   } else {
-      SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [0]);
+      SceneJS.withNode("orbit-grid-selector").set("selection", [0]);
   }
 }
 
-ellipse_orbital_path.onchange = ellipseOrbitalPathChange;
-ellipse_orbital_path.onchange();
+orbital_grid.onchange = orbitalGridChange;
+orbital_grid.onchange();
 
 // Perspective Frame
 
+var choose_view = document.getElementById("choose-view");
+
 function perspectiveChange() {
     var look = SceneJS.withNode("lookAt")
-    switch(this.value) {
-       case "top":
+    var selection;
+    for(var i = 0; i < this.elements.length; i++)
+        if (this.elements[i].checked) selection = this.elements[i].value;
+    switch(selection) {
+        case "top":
         look.set("eye",  { x: 0, y: earth_orbital_radius_km * 3, z: earth_orbital_radius_km * 0.3 } );
-        look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        look.set("look", { x: earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        look.set("up",  { x: 0.0, y: 0.0, z: 1.0 } );
         break;
-      case "side":
-       look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
-       look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
-       break;
+        case "side":
+        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+        look.set("look", { x: earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
+        break;
   }
   SceneJS.withNode("theScene").start();
 }
 
-perspective.onchange = perspectiveChange;
-perspective.onchange();
+choose_view.onchange = perspectiveChange;
+choose_view.onchange();
 
 function mouseDown(event) {
     lastX = event.clientX;
@@ -285,7 +310,7 @@ canvas.addEventListener('mousemove', mouseMove, true);
 canvas.addEventListener('mouseup', mouseUp, true);
 canvas.addEventListener('mouseout', mouseOut, true);
 
-SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+SceneJS.withNode("earthTextureSelector").set("selection", [1]);
 
 window.render = function() {
     SceneJS.withNode("theScene").start();

@@ -200,6 +200,29 @@ canvas {
     height: 3000px;
 }
 
+
+#content fieldset {
+    overflow: auto;
+    text-align: left;
+    margin: 0 auto;
+    padding: 10px 15px 10px 15px;
+}
+
+.glCanvasFullFrame {
+    width: 840px;
+    margin-left: 20px;
+    padding: 2px;
+/*    border: 1px solid lightgray;*/
+}
+
+#content .glCanvasFullFrame canvas {
+    width: 840px;
+    height: 600px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: black;
+}
+
 .glCanvasQuarterFrame {
     width: 480px;
     margin-left: 5px;
@@ -317,7 +340,7 @@ canvas {
 #content ul.hlist li  {
     line-height: 1.4em;
     color: #444444 !important;
-    margin-left: 5px;
+    margin-left: 10px;
     margin-bottom: 5px;
     display: inline-block;
     list-style-type: none;
