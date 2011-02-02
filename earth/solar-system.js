@@ -147,8 +147,6 @@ var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
 
-var query = new SceneJS.utils.query.QueryNodePos({canvasWidth : canvas.clientWidth,canvasHeight : canvas.clientHeight});
-
 var reference_frame = document.getElementById("reference_frame");
 var earth_surface = document.getElementById("earth_surface");
 var orbital_path = document.getElementById("orbital_path");
