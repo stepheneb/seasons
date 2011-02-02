@@ -807,7 +807,6 @@ var earth_surface = document.getElementById("earth_surface");
 var perspective = document.getElementById("perspective");
 
 var circle_orbital_path = document.getElementById("circle-orbital-path");
-var ellipse_orbital_path = document.getElementById("ellipse-orbital-path");
 
 // Time of year changes inclination of Earths orbit with respect to the orbital plane
 
