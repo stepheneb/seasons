@@ -154,6 +154,7 @@ function setAspectRatio(camera, canvas) {
 
 var circle_orbital_path = document.getElementById("circle-orbital-path");
 var orbital_grid = document.getElementById("orbital-grid");
+var orbit_grid_selector = SceneJS.withNode("orbit-grid-selector");
 
 var time_of_year_buttons = document.getElementById("radio-time-of-year");
 var perspective_buttons  = document.getElementById("radio-perspective");
@@ -219,9 +220,9 @@ SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [1]);
 
 function orbitalGridChange() {
   if (orbital_grid.checked) {
-      SceneJS.withNode("orbit-grid-selector").set("selection", [1]);
+      orbit_grid_selector.set("selection", [1]);
   } else {
-      SceneJS.withNode("orbit-grid-selector").set("selection", [0]);
+      orbit_grid_selector.set("selection", [0]);
   }
 }
 

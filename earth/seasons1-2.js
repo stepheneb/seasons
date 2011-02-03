@@ -50,6 +50,12 @@ SceneJS.createNode({
                         },
 
                         {
+                            type   : "instance",
+                            target : "orbit-grid"
+                        },
+
+
+                        {
                             type: "light",
                             mode:                   "dir",
                             color:                  { r: 3.0, g: 3.0, b: 3.0 },
@@ -806,6 +812,10 @@ var earth_surface = document.getElementById("earth_surface");
 var perspective = document.getElementById("perspective");
 
 var circle_orbital_path = document.getElementById("circle-orbital-path");
+var orbital_grid = document.getElementById("orbital-grid");
+var orbit_grid_selector = SceneJS.withNode("orbit-grid-selector");
+
+var time_of_year_buttons = document.getElementById("radio-time-of-year");
 
 // Time of year changes inclination of Earths orbit with respect to the orbital plane
 
@@ -820,7 +830,9 @@ seasonal_rotations.dec = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
 seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
 
 var earth_postion = SceneJS.withNode("earth-position");
-var earth_sun_line_geometry = SceneJS.withNode("earth-circle-orbit-sun-line-geometry");
+
+var earth_sun_line_rotation = SceneJS.withNode("earth-sun-line-rotation");
+var earth_sun_line_translation = SceneJS.withNode("earth-sun-line-translation");
 
 function setTemperatureTexture(month) {
     switch (month) {
@@ -868,7 +880,24 @@ function timeOfYearChange() {
       SceneJS.withNode("earthTextureSelector3").set("selection", [0]);
       SceneJS.withNode("earthTextureSelector4").set("selection", [0]);
   }
-  // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
+  switch(month) {
+       case "jun":
+       earth_sun_line_rotation.set("angle", 90);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: earth_orbital_radius_km / 2 });
+       break;
+       case "sep":
+       earth_sun_line_rotation.set("angle", 0);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km * 1.5, y: 0.0, z: 0 });
+       break;
+       case "dec":
+       earth_sun_line_rotation.set("angle", 270);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: -earth_orbital_radius_km / 2 });
+       break;
+       case "mar":
+       earth_sun_line_rotation.set("angle", 180);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2, y: 0.0, z: 0 });
+       break;
+  }
 }
 
 time_of_year.onchange = timeOfYearChange;
@@ -906,25 +935,45 @@ function circleOrbitalPathChange() {
 circle_orbital_path.onchange = circleOrbitalPathChange;
 circle_orbital_path.onchange();
 
+// Orbital Grid
+
+function orbitalGridChange() {
+  if (orbital_grid.checked) {
+      orbit_grid_selector.set("selection", [1]);
+  } else {
+      orbit_grid_selector.set("selection", [0]);
+  }
+}
+
+orbital_grid.onchange = orbitalGridChange;
+orbital_grid.onchange();
+
 // Perspective Frame
+
+var choose_view = document.getElementById("choose-view");
+var view_selection;
 
 function perspectiveChange() {
     var look = SceneJS.withNode("lookAt1")
-    switch(this.value) {
-       case "top":
-        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 3, z: earth_orbital_radius_km * 0.3 } );
-        look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+    for(var i = 0; i < this.elements.length; i++)
+        if (this.elements[i].checked) view_selection = this.elements[i].value;
+    switch(view_selection) {
+        case "top":
+        look.set("eye",  { x: earth_orbital_radius_km, y: earth_orbital_radius_km * 3, z: 0 } );
+        look.set("look", { x: earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        look.set("up",  { x: 0.0, y: 0.0, z: 1.0 } );
         break;
-      case "side":
-       look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
-       look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
-       break;
+        case "side":
+        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+        look.set("look", { x: earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
+        break;
   }
-  SceneJS.withNode("theScene1").render();
+  SceneJS.withNode("theScene1").start();
 }
 
-perspective.onchange = perspectiveChange;
-perspective.onchange();
+choose_view.onchange = perspectiveChange;
+choose_view.onchange();
 
 function mouseDown1(event) {
     lastX1 = event.clientX;

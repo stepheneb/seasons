@@ -12,7 +12,7 @@
 <div id="container">
   <div id="header-inner">
     <h1 id="title">Seasons 1.2: Investigating Sun-Earth distance and temperature</h1>
-    <div id="simulation-controls"> 
+    <div id="simulation-controls">       
       <ul class="horiz">
         <li>
           <label for="time_of_year">Choose month:</label> 
@@ -46,15 +46,22 @@
             </canvas>
             <ul class="hlist">
               <li>
-                <label for="perspective">Choose view:</label> 
-                <select id="perspective" name="perspective">
-                  <option value="top">Top</option>
-                  <option value="side" selected="true">Side</option>
-                </select>
+                <form id="choose-view">
+                  <fieldset>
+                    <legend>Choose view: </legend>
+                    <label><input type="radio" name="view" value="top" checked> Top</input></label>
+                    <label><input type="radio" name="view" value="side"> Side</input></label>
+                  </fieldset>
+                </form>
               </li>
               <li>
-                <label for="circle-orbital-path">Circular orbital path: </label>
-                <input id="circle-orbital-path" type="checkbox" value="selected" />
+                <form id="show-me">
+                  <fieldset>
+                    <legend>Show me: </legend>
+                    <label><input id="circle-orbital-path" type="checkbox" value="selected" /> Circular orbital path</label>
+                    <label><input id="orbital-grid" type="checkbox"/> Orbital grid: </label>
+                  </fieldset>
+                </form>  
               </li>
             </ul>
           </div>
@@ -159,6 +166,7 @@
         "earth.js",
         "earth-orbit.js",
         "earth-sun-line.js",
+        "orbit-grid.js",
         "seasons1-2.js"
       ]);
     } else {
