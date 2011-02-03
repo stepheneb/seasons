@@ -269,6 +269,27 @@ canvas {
     list-style-type: none;
 }
 
+#content .glCanvasQuarterFrame fieldset  {
+    line-height: 1.2em;
+    color: #444444 !important;
+    margin-top: 5px;
+    padding: 0.9em 0.5em 0.9em 0.5em;
+    font-size: 90%;
+    display: inline-block;
+    list-style-type: none;
+}
+
+#content .glCanvasQuarterFrame label  {
+    margin: 2px 5px 2px 5px;
+}
+
+/*#content .glCanvasQuarterFrame legend  {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+*/
 #webglCanvasContainer ul.hlist li  {
     line-height: 1.4em;
     color: #444444 !important;    
