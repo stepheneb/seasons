@@ -796,7 +796,6 @@ function setAspectRatio(camera, canvas) {
     var optics = SceneJS.withNode(camera).get("optics");
     optics.aspect = canvas.clientWidth/canvas.clientHeight;
     SceneJS.withNode(camera).set("optics", optics);
-    dragging1 = false;
 }
 
 setAspectRatio("theCamera1", canvas1);
@@ -1008,3 +1007,14 @@ SceneJS.bind("reset", function() {
 });
 
 var pInterval = setInterval("window.render()", 30);
+
+var zBufferDepth = 0;
+
+SceneJS.withNode("theScene").bind("loading-status", 
+    function(event) {
+        if (zBufferDepth == 0) {
+            zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
+            var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
+            SceneJS._loggingModule.info(mesg);            
+        }
+    });

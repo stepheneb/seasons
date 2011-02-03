@@ -17,8 +17,8 @@ SceneJS.createNode({
                     optics: {
                         type: "perspective",
                         fovy : 45.0,
-                        aspect : 1.43,
-                        near : 0.10,
+                        aspect : 1.365,
+                        near : earth_diameter_km,
                         far : milky_way_apparent_radius * 10,
                     },
 
@@ -99,7 +99,7 @@ SceneJS.createNode({
 
                         {
                             type: "quaternion",
-                            id: "earthRotationalAxisQuaternion",
+                            id: "x",
                             x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
                     
                             rotations: [ { x : 0, y : 0, z : 1, angle : -23.5 } ],
@@ -150,7 +150,7 @@ function setAspectRatio(camera, canvas) {
     SceneJS.withNode(camera).set("optics", optics);
 }
 
-setAspectRatio("theCamera", canvas);
+// setAspectRatio("theCamera", canvas);
 
 var circle_orbital_path = document.getElementById("circle-orbital-path");
 var orbital_grid = document.getElementById("orbital-grid");
@@ -226,15 +226,15 @@ orbital_grid.onchange();
 // Perspective Frame
 
 var choose_view = document.getElementById("choose-view");
+var view_selection;
 
 function perspectiveChange() {
     var look = SceneJS.withNode("lookAt")
-    var selection;
     for(var i = 0; i < this.elements.length; i++)
-        if (this.elements[i].checked) selection = this.elements[i].value;
-    switch(selection) {
+        if (this.elements[i].checked) view_selection = this.elements[i].value;
+    switch(view_selection) {
         case "top":
-        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 3, z: earth_orbital_radius_km * 0.3 } );
+        look.set("eye",  { x: earth_orbital_radius_km, y: earth_orbital_radius_km * 3, z: 0 } );
         look.set("look", { x: earth_orbital_radius_km, y : 0.0, z : 0.0 } );
         look.set("up",  { x: 0.0, y: 0.0, z: 1.0 } );
         break;
@@ -325,3 +325,14 @@ SceneJS.bind("reset", function() {
 });
 
 var pInterval = setInterval("window.render()", 30);
+
+var zBufferDepth = 0;
+
+SceneJS.withNode("theScene").bind("loading-status", 
+    function(event) {
+        if (zBufferDepth == 0) {
+            zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
+            var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
+            SceneJS._loggingModule.info(mesg);            
+        }
+    });

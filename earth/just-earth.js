@@ -480,3 +480,13 @@ SceneJS.bind("reset", function() {
 
 var pInterval = setInterval("window.render()", 20);
 
+var zBufferDepth = 0;
+
+SceneJS.withNode("theScene").bind("loading-status", 
+    function(event) {
+        if (zBufferDepth == 0) {
+            zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
+            var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
+            SceneJS._loggingModule.info(mesg);            
+        }
+    });

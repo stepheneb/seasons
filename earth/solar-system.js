@@ -266,7 +266,7 @@ function referenceFrameChange() {
         look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
         break;
   }
-  SceneJS.withNode("theScene").start();
+  // SceneJS.withNode("theScene").start();
 }
 
 reference_frame.onchange = referenceFrameChange;
@@ -320,7 +320,7 @@ function mouseMove(event) {
         console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
 
         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        SceneJS.withNode("theScene").start();
+        // SceneJS.withNode("theScene").start();
         eye = look.get("eye");
         console.log("");
 
@@ -349,3 +349,14 @@ SceneJS.bind("reset", function() {
 });
 
 var pInterval = setInterval("window.render()", 30);
+
+var zBufferDepth = 0;
+
+SceneJS.withNode("theScene").bind("loading-status", 
+    function(event) {
+        if (zBufferDepth == 0) {
+            zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
+            var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
+            SceneJS._loggingModule.info(mesg);            
+        }
+    });
