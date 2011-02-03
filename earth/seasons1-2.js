@@ -811,7 +811,7 @@ setAspectRatio("theCamera4", canvas4);
 var earth_surface = document.getElementById("earth_surface");
 var perspective = document.getElementById("perspective");
 
-var circle_orbital_path = document.getElementById("circle-orbital-path");
+// var circle_orbital_path = document.getElementById("circle-orbital-path");
 var orbital_grid = document.getElementById("orbital-grid");
 var orbit_grid_selector = SceneJS.withNode("orbit-grid-selector");
 
@@ -932,8 +932,9 @@ function circleOrbitalPathChange() {
   }
 }
 
-circle_orbital_path.onchange = circleOrbitalPathChange;
-circle_orbital_path.onchange();
+SceneJS.withNode("earthCircleOrbitSelector").set("selection", [0])
+// circle_orbital_path.onchange = circleOrbitalPathChange;
+// circle_orbital_path.onchange();
 
 // Orbital Grid
 
