@@ -14,80 +14,42 @@ var earthSunLine = SceneJS.createNode({
             emit:           1.0,
 
             nodes: [
-            
+                            
                 {
+                    type: "translate", // Example translation
+                    id: "earth-sun-line-translation",
+                    x: earth_orbital_radius_km,
+                    y: 0.0,
+                    z: earth_orbital_radius_km / 2,
 
-                    type: "selector",
-                    id: "earth-circle-orbit-sun-line-selector",
-                    selection: [1],
-                    nodes: [ 
+                    nodes : [
 
-                        {  },
-                
-                        // 1: jun
-                        
                         {
-                            type: "geometry",
-                            id: "earth-circle-orbit-sun-line-geometry",
-                            primitive: "line-loop",
 
-                            positions: [
-                                 0.0,                       0.0,    0.0,
-                                 earth_orbital_radius_km,   0.0,    0.0
-                            ],
+                            type: "rotate",
+                            id: "earth-sun-line-rotation",
+                            angle: 270.0,
+                            y : 1.0,
 
-                            indices : [ 0, 1 ]
+                            nodes: [
 
-                        },
-                        
-                        // 2: sep
-                        
-                        {
-                            type: "geometry",
-                            id: "earth-circle-orbit-sun-line-geometry",
-                            primitive: "line-loop",
+                                {
+                                    type: "scale",  // Example scaling
+                                    x: earth_orbital_radius_km / 2,
+                                    y: earth_diameter_km*50,
+                                    z: earth_diameter_km*10,
 
-                            positions: [
-                                 229470.5437029441, 0, 127218.05172049465,
-                                 earth_orbital_radius_km,   0.0,    0.0
-                            ],
-
-                            indices : [ 0, 1 ]
-
-                        },
-                        
-                        // 3: dec
-                        
-                        {
-                            type: "geometry",
-                            id: "earth-circle-orbit-sun-line-geometry",
-                            primitive: "line-loop",
-
-                            positions: [
-                                 284801.1698540929, 0, 65792.43578077952,
-                                 earth_orbital_radius_km,   0.0,    0.0
-                            ],
-
-                            indices : [ 0, 1 ]
-
-                        },
-                        
-                        // 4: mar
-                        
-                        {
-                            type: "geometry",
-                            id: "earth-circle-orbit-sun-line-geometry",
-                            primitive: "line-loop",
-
-                            positions: [
-                                 299184.6856101384, 0, -15618.245080807495,
-                                 earth_orbital_radius_km,   0.0,    0.0
-                            ],
-
-                            indices : [ 0, 1 ]
-
+                                    nodes: [
+                                        
+                                        { 
+                                        
+                                            type: "box",
+                                        
+                                        },
+                                    ]
+                                }
+                            ]
                         }
-
                     ]
                 }
             ]

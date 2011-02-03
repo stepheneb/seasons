@@ -165,7 +165,8 @@ seasonal_rotations.dec = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
 seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
 
 var earth_postion = SceneJS.withNode("earth-position");
-var earth_sun_line_geometry = SceneJS.withNode("earth-circle-orbit-sun-line-geometry");
+var earth_sun_line_rotation = SceneJS.withNode("earth-sun-line-rotation");
+var earth_sun_line_translation = SceneJS.withNode("earth-sun-line-translation");
 
 var choose_month = document.getElementById("choose-month");
 
@@ -177,16 +178,20 @@ function timeOfYearChange() {
   earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
   switch(month) {
        case "jun":
-       SceneJS.withNode("earth-circle-orbit-sun-line-selector").set("selection", [1]);
+       earth_sun_line_rotation.set("angle", 90);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: earth_orbital_radius_km / 2 });
        break;
        case "sep":
-       SceneJS.withNode("earth-circle-orbit-sun-line-selector").set("selection", [2]);
+       earth_sun_line_rotation.set("angle", 0);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km * 1.5, y: 0.0, z: 0 });
        break;
        case "dec":
-       SceneJS.withNode("earth-circle-orbit-sun-line-selector").set("selection", [3]);
+       earth_sun_line_rotation.set("angle", 270);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: -earth_orbital_radius_km / 2 });
        break;
        case "mar":
-       SceneJS.withNode("earth-circle-orbit-sun-line-selector").set("selection", [4]);
+       earth_sun_line_rotation.set("angle", 180);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2, y: 0.0, z: 0 });
        break;
   }
   // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
