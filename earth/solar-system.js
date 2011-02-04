@@ -166,7 +166,12 @@ function setAspectRatio(camera, canvas) {
 
 setAspectRatio("theCamera", canvas);
 
-var reference_frame = document.getElementById("reference_frame");
+var choose_look_at = document.getElementById("choose-look-at");
+var look_at_selection;
+for(var i = 0; i < choose_look_at.elements.length; i++)
+    if (choose_look_at.elements[i].checked) look_at_selection = choose_look_at.elements[i].value;
+
+var look_at = SceneJS.withNode("lookAt")
 
 var orbital_path = document.getElementById("orbital_path");
 var earth_rotation = document.getElementById("earth_rotation");
@@ -215,7 +220,6 @@ function earthSurfaceChange() {
 
 choose_earth_surface.onchange = earthSurfaceChange;
 choose_earth_surface.onchange();
-
 
 var earth_postion = SceneJS.withNode("earth-position");
 var earth_axis_position = SceneJS.withNode("earth-axis-position");
@@ -316,7 +320,7 @@ orbital_path.onchange();
 
 function circleOrbitalPathChange() {
   if (circle_orbital_path.checked) {
-      switch(reference_frame.value) {
+      switch(look_at_selection) {
          case "orbit":
           SceneJS.withNode("earthCircleOrbitSelector").set("selection", [2]);
           break;
@@ -338,7 +342,7 @@ SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [2]);
 
 function orbitalGridChange() {
   if (orbital_grid.checked) {
-      switch(reference_frame.value) {
+      switch(look_at_selection) {
          case "orbit":
           orbit_grid_selector.set("selection", [2]);
           break;
@@ -368,10 +372,6 @@ orbital_grid.onchange();
 // earth_rotation.onchange();
 
 // Reference Frame
-
-var choose_look_at = document.getElementById("choose-look-at");
-var look_at = SceneJS.withNode("lookAt")
-var look_at_selection;
 
 function chooseLookAt() {
   for(var i = 0; i < this.elements.length; i++)
