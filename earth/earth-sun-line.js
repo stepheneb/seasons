@@ -37,7 +37,7 @@ var earthSunLine = SceneJS.createNode({
                                     type: "scale",  // Example scaling
                                     x: earth_orbital_radius_km / 2,
                                     y: earth_diameter_km*50,
-                                    z: earth_diameter_km*10,
+                                    z: earth_diameter_km*50,
 
                                     nodes: [
                                         
