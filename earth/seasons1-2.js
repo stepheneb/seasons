@@ -134,7 +134,7 @@ SceneJS.createNode({
 });
 
 /*----------------------------------------------------------------------
- * Canvas 1
+ * Canvas 3
  *---------------------------------------------------------------------*/
 
 SceneJS.createNode({
@@ -249,6 +249,46 @@ SceneJS.createNode({
                             diffuse:                true,
                             specular:               true,
                             dir:                    { x: -1.0, y: 0.0, z: -1.0 }
+                        },
+                        
+                        {
+                            type: "translate",
+                            x: earth_orbital_radius_km,
+                            y: 0,
+                            z: 0,
+                            
+                            nodes: [ 
+                            
+                                {
+                                    type: "scale",
+                                    x: 1,
+                                    y: 1,
+                                    z: 1,
+                                    nodes: [ 
+                                        { 
+
+                                            type: "material",
+
+                                            baseColor:          { r: 0.1, g: 0.7, b: 1.0 },
+                                            specularColor:      { r: 0.1, g: 0.7, b: 1.0 },
+                                            specular:           1.0,
+                                            shine:              1.0,
+                                            emit:               1.0,
+
+                                            nodes: [
+                                
+                                                {                                    
+                                                    type: "disk", 
+                                                    radius: earth_orbital_radius_km,
+                                                    inner_radius : earth_orbital_radius_km - 0.2,
+                                                    height: earth_diameter_km / 50,
+                                                    rings: 360
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         },
 
                         {
@@ -429,14 +469,14 @@ SceneJS.createNode({
                                 }
                             ]
                         },
-                        // {
-                        //     type: "interpolator",
-                        //     target: "spin1",
-                        //     targetProperty: "angle",
-                        //     // over 1600 seconds rotate 360 degrees 20 times
-                        //     keys: [0.0, 1600],
-                        //     values: [0.0, 360.0*50]
-                        // }
+                        {
+                            type: "interpolator",
+                            target: "spin3",
+                            targetProperty: "angle",
+                            // over 1600 seconds rotate 360 degrees 20 times
+                            keys: [0.0, 1600],
+                            values: [0.0, 360.0*50]
+                        }
                     ]
                 }
             ]
@@ -444,8 +484,8 @@ SceneJS.createNode({
         {
             type: "lookAt", 
             id: "lookAt3",
-            eye : { x: earth_x_pos, y: 0, z: earth_diameter_km * -3 },
-            look : { x : earth_x_pos, y : 0.0, z : 0.0 },
+            eye : { x: earth_x_pos, y: 3, z: earth_diameter_km * -3 },
+            look : { x : earth_x_pos, y : 0, z : 0.0 },
             up : { x: 0.0, y: 1.0, z: 0.0 },
 
             nodes: [ 
@@ -574,6 +614,46 @@ SceneJS.createNode({
                             diffuse:                true,
                             specular:               true,
                             dir:                    { x: -1.0, y: 0.0, z: -1.0 }
+                        },
+                        
+                        {
+                            type: "translate",
+                            x: earth_orbital_radius_km,
+                            y: 0,
+                            z: 0,
+                            
+                            nodes: [ 
+                            
+                                {
+                                    type: "scale",
+                                    x: 1,
+                                    y: 1,
+                                    z: 1,
+                                    nodes: [ 
+                                        { 
+
+                                            type: "material",
+
+                                            baseColor:          { r: 0.1, g: 0.7, b: 1.0 },
+                                            specularColor:      { r: 0.1, g: 0.7, b: 1.0 },
+                                            specular:           1.0,
+                                            shine:              1.0,
+                                            emit:               1.0,
+
+                                            nodes: [
+                                
+                                                {                                    
+                                                    type: "disk", 
+                                                    radius: earth_orbital_radius_km,
+                                                    inner_radius : earth_orbital_radius_km - 0.2,
+                                                    height: earth_diameter_km / 50,
+                                                    rings: 360
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         },
 
                         {
@@ -753,6 +833,14 @@ SceneJS.createNode({
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            type: "interpolator",
+                            target: "spin4",
+                            targetProperty: "angle",
+                            // over 1600 seconds rotate 360 degrees 20 times
+                            keys: [0.0, 1600],
+                            values: [0.0, 360.0*50]
                         }
                     ]
                 }
@@ -855,13 +943,18 @@ function setTemperatureTexture(month) {
     };    
 }
 
-function timeOfYearChange() {
-  var month = this.value;
-  SceneJS.Message.sendMessage({ 
-    command: "update", 
-    target: "earthRotationalAxisQuaternion1", 
-    set: { rotation: seasonal_rotations[month] }
-  });
+var choose_month = document.getElementById("choose-month");
+var month;
+for(var i = 0; i < choose_month.elements.length; i++)
+    if (choose_month.elements[i].checked) month = choose_month.elements[i].value;
+
+function chooseMonthChange() {
+  for(var i = 0; i < this.elements.length; i++)
+      if (this.elements[i].checked) month = this.elements[i].value;
+  var new_location = earth_circle_location_by_month(month);
+  // earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
+  // earth_axis_position.set({ x: new_location[0], y: 0, z: new_location[2] });
+
   SceneJS.Message.sendMessage({ 
     command: "update", 
     target: "earthRotationalAxisQuaternion3", 
@@ -880,6 +973,7 @@ function timeOfYearChange() {
       SceneJS.withNode("earthTextureSelector3").set("selection", [0]);
       SceneJS.withNode("earthTextureSelector4").set("selection", [0]);
   }
+
   switch(month) {
        case "jun":
        earth_sun_line_rotation.set("angle", 90);
@@ -898,10 +992,59 @@ function timeOfYearChange() {
        earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2, y: 0.0, z: 0 });
        break;
   }
+  
 }
 
-time_of_year.onchange = timeOfYearChange;
-time_of_year.onchange();
+choose_month.onchange = chooseMonthChange;
+choose_month.onchange();
+
+// function timeOfYearChange() {
+//   var month = this.value;
+//   SceneJS.Message.sendMessage({ 
+//     command: "update", 
+//     target: "earthRotationalAxisQuaternion1", 
+//     set: { rotation: seasonal_rotations[month] }
+//   });
+//   SceneJS.Message.sendMessage({ 
+//     command: "update", 
+//     target: "earthRotationalAxisQuaternion3", 
+//     set: { rotation: seasonal_rotations[month] }
+//   });
+//   SceneJS.Message.sendMessage({ 
+//     command: "update", 
+//     target: "earthRotationalAxisQuaternion4", 
+//     set: { rotation: seasonal_rotations[month] }
+//   });
+//   setTemperatureTexture(month);
+//   if (earth_surface.value === 'terrain') {
+//       SceneJS.withNode("earthTextureSelector3").set("selection", [1]);
+//       SceneJS.withNode("earthTextureSelector4").set("selection", [1]);
+//   } else {
+//       SceneJS.withNode("earthTextureSelector3").set("selection", [0]);
+//       SceneJS.withNode("earthTextureSelector4").set("selection", [0]);
+//   }
+//   switch(month) {
+//        case "jun":
+//        earth_sun_line_rotation.set("angle", 90);
+//        earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: earth_orbital_radius_km / 2 });
+//        break;
+//        case "sep":
+//        earth_sun_line_rotation.set("angle", 0);
+//        earth_sun_line_translation.set({ x: earth_orbital_radius_km * 1.5, y: 0.0, z: 0 });
+//        break;
+//        case "dec":
+//        earth_sun_line_rotation.set("angle", 270);
+//        earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: -earth_orbital_radius_km / 2 });
+//        break;
+//        case "mar":
+//        earth_sun_line_rotation.set("angle", 180);
+//        earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2, y: 0.0, z: 0 });
+//        break;
+//   }
+// }
+// 
+// time_of_year.onchange = timeOfYearChange;
+// time_of_year.onchange();
 
 // Texture mapping onto the Earth's surface
 
@@ -914,7 +1057,7 @@ function earthSurfaceChange() {
   } else {
       SceneJS.withNode("earthTextureSelector3").set("selection", [0]);
       SceneJS.withNode("earthTextureSelector4").set("selection", [0]);
-      setTemperatureTexture(time_of_year.value);
+      setTemperatureTexture(month);
       color_map.style.display='inline';  
   }
 }
@@ -926,7 +1069,7 @@ earth_surface.onchange();
 
 function circleOrbitalPathChange() {
   if (circle_orbital_path.checked) {
-      SceneJS.withNode("earthCircleOrbitSelector").set("selection", [1]);
+      SceneJS.withNode("earthCircleOrbitSelector").set("selection", [2]);
   } else {
       SceneJS.withNode("earthCircleOrbitSelector").set("selection", [0]);
   }
@@ -940,7 +1083,7 @@ SceneJS.withNode("earthCircleOrbitSelector").set("selection", [0])
 
 function orbitalGridChange() {
   if (orbital_grid.checked) {
-      orbit_grid_selector.set("selection", [1]);
+      orbit_grid_selector.set("selection", [2]);
   } else {
       orbit_grid_selector.set("selection", [0]);
   }
@@ -1040,7 +1183,7 @@ canvas1.addEventListener('mouseout', mouseOut1, true);
 // SceneJS.withNode("earthTextureSelector3").set("selection", [0]);
 // SceneJS.withNode("earthTextureSelector4").set("selection", [0]);
 
-SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [1]);
+SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [2]);
 
 window.render = function() {
     SceneJS.withNode("theScene1").render();
@@ -1060,10 +1203,10 @@ var pInterval = setInterval("window.render()", 30);
 
 var zBufferDepth = 0;
 
-SceneJS.withNode("theScene").bind("loading-status", 
+SceneJS.withNode("theScene1").bind("loading-status", 
     function(event) {
         if (zBufferDepth == 0) {
-            zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
+            zBufferDepth = SceneJS.withNode("theScene1").get("ZBufferDepth");
             var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
             SceneJS._loggingModule.info(mesg);            
         }

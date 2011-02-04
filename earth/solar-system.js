@@ -48,6 +48,17 @@ SceneJS.createNode({
                             target :"earthCircleOrbit"
                         },
 
+                        // Integrate our earth elliptical orbit, which is defined in earth-orbit.js
+                        {
+                            type : "instance",
+                            target :"earthEllipseOrbit"
+                        },
+
+                        {
+                            type   : "instance",
+                            target : "orbit-grid"
+                        },
+
                         {
                             type: "light",
                             mode:                   "dir",
@@ -147,17 +158,25 @@ var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
 
+function setAspectRatio(camera, canvas) {
+    var optics = SceneJS.withNode(camera).get("optics");
+    optics.aspect = canvas.clientWidth/canvas.clientHeight;
+    SceneJS.withNode(camera).set("optics", optics);
+}
+
+setAspectRatio("theCamera", canvas);
+
 var reference_frame = document.getElementById("reference_frame");
-var earth_surface = document.getElementById("earth_surface");
+
 var orbital_path = document.getElementById("orbital_path");
 var earth_rotation = document.getElementById("earth_rotation");
 
+var circle_orbital_path = document.getElementById("circle-orbital-path");
+var orbital_grid = document.getElementById("orbital-grid");
+var orbit_grid_selector = SceneJS.withNode("orbit-grid-selector");
 
-// Time of year changes inclination of Earths orbit with respect to the orbital plane
-
-var time_of_year = document.getElementById("time_of_year");
-var color_map = document.getElementById("temperature-color-map");
-color_map.style.display='none';
+// var color_map = document.getElementById("temperature-color-map");
+// color_map.style.display='none';
 
 var seasonal_rotations = {};
 seasonal_rotations.jun = { x :  0,  y : 0,  z : -1,  angle : 23.44 };
@@ -174,53 +193,166 @@ function setTemperatureTexture(month) {
     };    
 }
 
-function timeOfYearChange() {
-  var month = this.value;
+// Texture mapping onto the Earth's surface
+
+var choose_earth_surface = document.getElementById("choose-earth-surface");
+var earth_surface;
+for(var i = 0; i < choose_earth_surface.elements.length; i++)
+    if (choose_earth_surface.elements[i].checked) earth_surface = choose_earth_surface.elements[i].value;
+
+function earthSurfaceChange() {
+    for(var i = 0; i < this.elements.length; i++)
+        if (this.elements[i].checked) earth_surface = this.elements[i].value;
+    if (earth_surface === 'terrain') {
+        SceneJS.withNode("earthTextureSelector").set("selection", [1]);
+        // color_map.style.display='none';
+    } else {
+        SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+        setTemperatureTexture(month);
+        // color_map.style.display='inline';  
+    }
+}
+
+choose_earth_surface.onchange = earthSurfaceChange;
+choose_earth_surface.onchange();
+
+
+var earth_postion = SceneJS.withNode("earth-position");
+var earth_axis_position = SceneJS.withNode("earth-axis-position");
+
+var earth_sun_line_rotation = SceneJS.withNode("earth-sun-line-rotation");
+var earth_sun_line_translation = SceneJS.withNode("earth-sun-line-translation");
+
+var choose_month = document.getElementById("choose-month");
+var month;
+for(var i = 0; i < choose_month.elements.length; i++)
+    if (choose_month.elements[i].checked) month = choose_month.elements[i].value;
+
+function chooseMonthChange() {
+  for(var i = 0; i < this.elements.length; i++)
+      if (this.elements[i].checked) month = this.elements[i].value;
+  var new_location = earth_circle_location_by_month(month);
+  // earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
+  // earth_axis_position.set({ x: new_location[0], y: 0, z: new_location[2] });
+  switch(month) {
+       case "jun":
+       earth_sun_line_rotation.set("angle", 90);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: earth_orbital_radius_km / 2 });
+       break;
+       case "sep":
+       earth_sun_line_rotation.set("angle", 0);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km * 1.5, y: 0.0, z: 0 });
+       break;
+       case "dec":
+       earth_sun_line_rotation.set("angle", 270);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: -earth_orbital_radius_km / 2 });
+       break;
+       case "mar":
+       earth_sun_line_rotation.set("angle", 180);
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2, y: 0.0, z: 0 });
+       break;
+  }
   SceneJS.Message.sendMessage({ 
     command: "update", 
     target: "earthRotationalAxisQuaternion", 
     set: { rotation: seasonal_rotations[month] }
   });
   setTemperatureTexture(month);
-  if (earth_surface.value === 'terrain') {
+  if (earth_surface === 'terrain') {
       SceneJS.withNode("earthTextureSelector").set("selection", [1]);
   } else {
       SceneJS.withNode("earthTextureSelector").set("selection", [0]);
   }
+  
+  // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
 }
 
-time_of_year.onchange = timeOfYearChange;
-time_of_year.onchange();
+choose_month.onchange = chooseMonthChange;
+choose_month.onchange();
 
-// Texture mapping onto the Earth's surface
+// Time of year changes inclination of Earths orbit with respect to the orbital plane
 
-function earthSurfaceChange() {
-  var new_surface = this.value;
-  if (new_surface === 'terrain') {
-      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
-      color_map.style.display='none';
-  } else {
-      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
-      setTemperatureTexture(time_of_year.value);
-      color_map.style.display='inline';  
-  }
-}
-
-earth_surface.onchange = earthSurfaceChange;
-earth_surface.onchange();
+// var time_of_year = document.getElementById("time_of_year");
+// 
+// function timeOfYearChange() {
+//   var month = this.value;
+//   SceneJS.Message.sendMessage({ 
+//     command: "update", 
+//     target: "earthRotationalAxisQuaternion", 
+//     set: { rotation: seasonal_rotations[month] }
+//   });
+//   setTemperatureTexture(month);
+//   if (earth_surface.value === 'terrain') {
+//       SceneJS.withNode("earthTextureSelector").set("selection", [1]);
+//   } else {
+//       SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+//   }
+// }
+// 
+// time_of_year.onchange = timeOfYearChange;
+// time_of_year.onchange();
 
 // Orbital Path Indicator
 
 function orbitalPathChange() {
   if (orbital_path.checked) {
-      SceneJS.withNode("earthCircleOrbitSelector").set("selection", [1]);
+      switch(look_at_selection) {
+         case "orbit":
+          SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [2]);
+          break;
+         case 'earth':
+          SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [1]);
+          break;
+      }
   } else {
-      SceneJS.withNode("earthCircleOrbitSelector").set("selection", [0]);
+      SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [0]);
   }
 }
 
 orbital_path.onchange = orbitalPathChange;
 orbital_path.onchange();
+
+// Orbital Paths Indicators
+
+function circleOrbitalPathChange() {
+  if (circle_orbital_path.checked) {
+      switch(reference_frame.value) {
+         case "orbit":
+          SceneJS.withNode("earthCircleOrbitSelector").set("selection", [2]);
+          break;
+         case 'earth':
+          SceneJS.withNode("earthCircleOrbitSelector").set("selection", [1]);
+          break;
+      }
+  } else {
+      SceneJS.withNode("earthCircleOrbitSelector").set("selection", [0]);
+  }
+}
+
+circle_orbital_path.onchange = circleOrbitalPathChange;
+circle_orbital_path.onchange();
+
+SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [2]);
+
+// Orbital Grid
+
+function orbitalGridChange() {
+  if (orbital_grid.checked) {
+      switch(reference_frame.value) {
+         case "orbit":
+          orbit_grid_selector.set("selection", [2]);
+          break;
+         case 'earth':
+          orbit_grid_selector.set("selection", [1]);
+          break;
+      }
+  } else {
+      orbit_grid_selector.set("selection", [0]);
+  }
+}
+
+orbital_grid.onchange = orbitalGridChange;
+orbital_grid.onchange();
 
 // Earth Rotation
 
@@ -237,40 +369,77 @@ orbital_path.onchange();
 
 // Reference Frame
 
-function referenceFrameChange() {
-    var look = SceneJS.withNode("lookAt")
-    switch(this.value) {
-       case "orbit":
-        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
-        look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
-        orbital_path.checked = true;
-        orbital_path.onchange();
-        break;
- 
-       case 'earth':
-        earth_rotation.checked=true
-        look.set("eye",  { x: 0, y: 0, z: earth_diameter_km * -3 } );
-        look.set("look", { x : 0, y : 0.0, z : 0.0 } );
-        orbital_path.checked = true;
-        orbital_path.onchange();
-        break;
+var choose_look_at = document.getElementById("choose-look-at");
+var look_at = SceneJS.withNode("lookAt")
+var look_at_selection;
 
-       case "low-orbit":
-        look.set("eye",  { x: 0, y: 0, z: earth_diameter_km * -1.3 } );
-        look.set("look",{ x : 0, y : 0.0, z : 0.0 } );
-        break;
+function chooseLookAt() {
+  for(var i = 0; i < this.elements.length; i++)
+      if (this.elements[i].checked) look_at_selection = this.elements[i].value;
+  // var new_location = earth_circle_location_by_month(month);
+  // earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
+  // earth_axis_position.set({ x: new_location[0], y: 0, z: new_location[2] });
+  
+  // reference_frame.value = look_at_selection;
+  switch(look_at_selection) {
+     case "orbit":
+      look_at.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+      look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+      orbital_path.checked = true;
+      break;
 
-       case "surface":
-        earth_rotation.checked=false
-        look.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
-        look.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
-        break;
+     case 'earth':
+      earth_rotation.checked=true
+      look_at.set("eye",  { x: 0, y: 1, z: earth_diameter_km * -3 } );
+      look_at.set("look", { x : 0, y : 0.0, z : 0.0 } );
+      orbital_path.checked = true;
+      break;
+
+     case "surface":
+      earth_rotation.checked=false
+      look_at.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
+      look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+      break;
   }
-  // SceneJS.withNode("theScene").start();
+  orbital_path.onchange();
+  orbitalGridChange();
 }
 
-reference_frame.onchange = referenceFrameChange;
-reference_frame.onchange();
+choose_look_at.onchange = chooseLookAt;
+choose_look_at.onchange();
+// 
+// function referenceFrameChange() {
+//     switch(this.value) {
+//        case "orbit":
+//         look_at.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+//         look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+//         break;
+//  
+//        case 'earth':
+//         earth_rotation.checked=true
+//         look_at.set("eye",  { x: 0, y: 1, z: earth_diameter_km * -3 } );
+//         look_at.set("look", { x : 0, y : 0.0, z : 0.0 } );
+//         orbital_path.checked = true;
+//         break;
+// 
+//        case "low-orbit":
+//         look_at.set("eye",  { x: 0, y: 0, z: earth_diameter_km * -1.3 } );
+//         look_at.set("look",{ x : 0, y : 0.0, z : 0.0 } );
+//         break;
+// 
+//        case "surface":
+//         earth_rotation.checked=false
+//         look_at.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
+//         look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+//         break;
+//   }
+//   orbital_path.onchange();
+//   orbitalGridChange();
+//   // SceneJS.withNode("theScene").start();
+// }
+// 
+// reference_frame.onchange = referenceFrameChange;
+// reference_frame.onchange();
 
 function mouseDown(event) {
     lastX = event.clientX;

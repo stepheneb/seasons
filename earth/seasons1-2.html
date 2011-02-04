@@ -15,15 +15,6 @@
     <div id="simulation-controls">       
       <ul class="horiz">
         <li>
-          <label for="time_of_year">Choose month:</label> 
-          <select id="time_of_year" name="time_of_year">
-            <option value="jun">June 21</option>
-            <option value="sep">September 21</option>
-            <option value="dec">December 21</option>
-            <option value="mar">March 21</option>
-          </select>
-        </li>
-        <li>
           <label for="earth_surface">Earth Surface:</label>
           <select id="earth_surface" name="earth_surface">
             <option value="terrain">Terrain</option>
@@ -61,6 +52,17 @@
                     <label><input id="orbital-grid" type="checkbox"/> Orbital grid: </label>
                   </fieldset>
                 </form>  
+              </li>
+              <li>
+                <form id="choose-month">
+                  <fieldset>
+                    <legend>Choose month</legend>
+                    <label><input type="radio" name="month" value="jun" checked> Jun 21</input></label>
+                    <label><input type="radio" name="month" value="sep"> Sep 21</input></label>
+                    <label><input type="radio" name="month" value="dec"> Dec 21</input></label>
+                    <label><input type="radio" name="month" value="mar"> Mar 21</input></label>
+                  </fieldset>
+                </form>
               </li>
             </ul>
           </div>

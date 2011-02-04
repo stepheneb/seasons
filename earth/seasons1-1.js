@@ -78,6 +78,14 @@ SceneJS.createNode({
                             specular:               true,
                             dir:                    { x: -1.0, y: 0.0, z: -1.0 }
                         },
+                        {
+                            type: "light",
+                            mode:                   "dir",
+                            color:                  { r: 3.0, g: 3.0, b: 3.0 },
+                            diffuse:                true,
+                            specular:               true,
+                            dir:                    { x: 1.0, y: 0.0, z: 1.0 }
+                        },
 
                         {
                             type: "material",
@@ -150,7 +158,7 @@ function setAspectRatio(camera, canvas) {
     SceneJS.withNode(camera).set("optics", optics);
 }
 
-// setAspectRatio("theCamera", canvas);
+setAspectRatio("theCamera", canvas);
 
 var circle_orbital_path = document.getElementById("circle-orbital-path");
 var orbital_grid = document.getElementById("orbital-grid");
@@ -205,7 +213,7 @@ choose_month.onchange();
 
 function circleOrbitalPathChange() {
   if (circle_orbital_path.checked) {
-      SceneJS.withNode("earthCircleOrbitSelector").set("selection", [1]);
+      SceneJS.withNode("earthCircleOrbitSelector").set("selection", [2]);
   } else {
       SceneJS.withNode("earthCircleOrbitSelector").set("selection", [0]);
   }
@@ -214,13 +222,13 @@ function circleOrbitalPathChange() {
 circle_orbital_path.onchange = circleOrbitalPathChange;
 circle_orbital_path.onchange();
 
-SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [1]);
+SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [2]);
 
 // Orbital Grid
 
 function orbitalGridChange() {
   if (orbital_grid.checked) {
-      orbit_grid_selector.set("selection", [1]);
+      orbit_grid_selector.set("selection", [2]);
   } else {
       orbit_grid_selector.set("selection", [0]);
   }

@@ -13,48 +13,64 @@
   <div id="header-inner">
     <h1 id="title"><a href="http://scenejs.org">SceneJS</a> : Earth</h1>
     <div id="simulation-controls"> 
-      <ul class="horiz">
-        <li>
-          <label for="reference_frame">Reference frame:</label> 
-          <select id="reference_frame" name="reference_frame">
-            <option value="orbit">Orbit around the Sun</option>
-            <option value="earth" selected="true">In space around the Earth</option>
-            <option value="surface">Surface of the Earth</option>
-          </select>
-        </li>
-        <li>
-          <label for="time_of_year">Time of year:</label> 
-          <select id="time_of_year" name="time_of_year">
-            <option value="jun">June 21</option>
-            <option value="sep">September 21</option>
-            <option value="dec">December 21</option>
-            <option value="mar">March 21</option>
-          </select>
-        </li>
-        <li>
-          <label for="earth_surface">Earth Surface:</label>
-          <select id="earth_surface" name="earth_surface">
-            <option value="terrain">Terrain</option>
-            <option value="temperature">Mean Monthly Temperature</option>
-          </select>
-        </li>
-        <li id="temperature-color-map">
-          <img src="images/color-map-minus30-to-30-500px.png" alt="color map for temperature"/>
-        </li>
-      </ul>
-      <ul class="horiz">
-        <li><label for="orbital_path">Orbital path: </label><input id="orbital_path" type="checkbox" value="false" /></li>
-        <li><label for="orbital_path">Earth rotation: </label><input id="earth_rotation" type="checkbox" value="false" /></li>
-      </ul>
     </div>
   </div>
   <div id="content">
     <div id="webglCanvasContainer">
+      <ul class="hlist">
+        <li>
+          <form id="choose-look-at">
+            <fieldset>
+              <legend>Look at</legend>
+              <label><input type="radio" name="look-at" value="orbit"> Orbit</input></label>
+              <label><input type="radio" name="look-at" value="earth" checked> Earth</input></label>
+              <label><input type="radio" name="look-at" value="surface" disabled> Surface</input></label>
+            </fieldset>
+          </form>
+        </li>
+        <li>
+          <form id="choose-month">
+            <fieldset>
+              <legend>Choose month</legend>
+              <label><input type="radio" name="month" value="jun" checked> Jun 21</input></label>
+              <label><input type="radio" name="month" value="sep"> Sep 21</input></label>
+              <label><input type="radio" name="month" value="dec"> Dec 21</input></label>
+              <label><input type="radio" name="month" value="mar"> Mar 21</input></label>
+            </fieldset>
+          </form>
+        </li>
+        <li>
+          <form id="show-me">
+            <fieldset>
+              <legend>Show me</legend>
+              <label><input id="orbital_path" type="checkbox" value="false" /> Orbital path</label>
+              <label><input id="earth_rotation" type="checkbox" value="false" /> Earth rotation</label>
+              <label><input id="circle-orbital-path" type="checkbox" value="selected" /> Circular orbital path</label>
+              <label><input id="orbital-grid" type="checkbox"/> Orbital grid: </label>
+            </fieldset>
+          </form>  
+        </li>
+      </ul>
+      </ul>
       <canvas id="theCanvas" width="1030" height="700">
         <p>This example requires a browser that supports the
           <a href="http://learningwebgl.com/cookbook/index.php/WebGL:_Frequently_Asked_Questions">WebGL</a>&lt;canvas&gt; feature.
         </p>
       </canvas>
+      <ul class="hlist">
+        <li>
+          <form id="choose-earth-surface">
+            <fieldset>
+              <legend>Earth surface</legend>
+              <label><input type="radio" name="earth-surface" value="terrain" checked> Terrain</input></label>
+              <label><input type="radio" name="earth-surface" value="temperature"> Temperature</input></label>
+              <label id="temperature-color-mapx">
+                <img src="images/color-map-minus30-to-30-400px.png" alt="color map for temperature"/>
+              </label>        
+            </fieldset>
+          </form>
+        </li>
+      </ul>
     </div>
     <div id="info">
       <h2>Earth</h2>
@@ -156,6 +172,8 @@
         "sun.js",
         "earth.js",
         "earth-orbit.js",
+        "earth-sun-line.js",
+        "orbit-grid.js",
         "solar-system.js"
       ]);
     } else {
