@@ -144,8 +144,13 @@ SceneJS.createNode({
 /*----------------------------------------------------------------------
  * Scene rendering loop and mouse handler stuff follows
  *---------------------------------------------------------------------*/
-var yaw = 0;
-var pitch = 0;
+
+var earth_yaw = normalized_initial_earth_eye.x;
+var earth_pitch = normalized_initial_earth_eye.y;
+
+var sun_yaw =   initial_sun_eye.x;
+var sun_pitch = initial_sun_eye.y;
+
 var lastX;
 var lastY;
 var dragging = false;
@@ -283,36 +288,42 @@ function mouseOut() {
  */
 function mouseMove(event) {
     if (dragging) {
-        var look, eye, eye4, eye4dup, neweye, up_down, up_downQ, left_right, left_rightQ, f, up_down_axis, angle;
-        yaw = (event.clientX - lastX);
-        pitch = (event.clientY - lastY);
+        var look, eye, eye4, eye4dup, neweye;
 
+        var up_downQ, up_downQM, left_rightQ, left_rightQM;
+
+        var f, up_down_axis, angle, new_yaw, new_pitch;
+        
+        new_yaw = (event.clientX - lastX) * -0.2;
+        new_pitch = (event.clientY - lastY) * 0.2;
+        
         lastX = event.clientX;
         lastY = event.clientY;
 
         look = SceneJS.withNode("lookAt");
-        eye = look.get("eye");
-        eye4 = [eye.x, eye.y, eye.z, 1];
 
-        left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : yaw * -0.2 });
-        left_right = left_rightQ.getMatrix();
+        sun_yaw += new_yaw;
+        sun_pitch += new_pitch;
+        eye4 = [initial_sun_eye.x, initial_sun_eye.y, initial_sun_eye.z, 1];
 
-        neweye = SceneJS._math_mulMat4v4(left_right, eye4);
-        console.log("drag   yaw: " + yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+        left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : sun_yaw });
+        left_rightQM = left_rightQ.getMatrix();
+
+        neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
+        console.log("dragging: yaw: " + sun_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
 
         eye4 = SceneJS._math_dupMat4(neweye);
-        f = 1.0 / SceneJS._math_lenVec4(eye4);
         eye4dup = SceneJS._math_dupMat4(eye4);
-        up_down_axis = SceneJS._math_mulVec4Scalar(eye4dup, f);
-        up_downQ = new SceneJS.Quaternion({ x : up_down_axis[2], y : 0, z : up_down_axis[0], angle : pitch * -0.2 });
-        angle = up_downQ.getRotation().angle;
-        up_down = up_downQ.getMatrix();
 
-        neweye = SceneJS._math_mulMat4v4(up_down, eye4);
-        console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
+        up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : sun_pitch });
+        up_downQM = up_downQ.getMatrix();
+
+        neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
+
+        console.log("dragging: pitch: " + sun_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
 
         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        SceneJS.withNode("theScene").start();
+        // SceneJS.withNode("theScene").start();
         eye = look.get("eye");
         console.log("");
 
