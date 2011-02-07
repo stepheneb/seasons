@@ -13,7 +13,10 @@ var milky_way_apparent_radius = earth_orbital_radius_km * 10;
 var earth_x_pos = -earth_orbital_radius_km;
 var sun_x_pos = 0;
 
-var initial_earth_eye = { x: 0, y: 10, z: earth_diameter_km * -3 }
+var normalized_initial_earth_eye = { x: 0, y: 10, z: earth_diameter_km * -3 }
+
+var initial_earth_eye = { x: earth_x_pos, y: 10, z: earth_diameter_km * -3 }
+
 var initial_sun_eye = { x: sun_x_pos, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 }
 
 var deg2rad = Math.PI/180;

@@ -125,8 +125,8 @@ SceneJS.createNode({
         {
             type: "lookAt", 
             id: "lookAt1",
-            eye : { x: 0, y: 0, z: earth_diameter_km * -3 },
-            look : { x : 0, y : 0.0, z : 0.0 },
+            eye : initial_earth_eye,
+            look : { x : earth_x_pos, y : 0.0, z : 0.0 },
             up : { x: 0.0, y: 1.0, z: 0.0 },
             nodes: [ { type: "instance", target: "theCamera1" } ]
         }
@@ -253,7 +253,7 @@ SceneJS.createNode({
                         
                         {
                             type: "translate",
-                            x: earth_orbital_radius_km,
+                            x: sun_x_pos,
                             y: 0,
                             z: 0,
                             
@@ -292,150 +292,150 @@ SceneJS.createNode({
                         },
 
                         {
-                            type: "quaternion",
-                            id: "earthRotationalAxisQuaternion3",
-                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-
-                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
-
+                            type: "translate",
+                            x: earth_x_pos,
+                            y: 0,
+                            z: 0,
+                        
                             nodes: [
 
                                 {
+                                    type: "quaternion",
+                                    id: "earthRotationalAxisQuaternion3",
+                                    x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
 
-                                    type: "selector",
-                                    id: "earthTextureSelector3",
-                                    selection: [1],
+                                    rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
+
                                     nodes: [
 
                                         {
-                                            id: "earthTemperatureTextureSelector3",
+
                                             type: "selector",
-                                            selection: [0],
+                                            id: "earthTextureSelector3",
+                                            selection: [1],
                                             nodes: [
 
-
-                                                // selection [0], March
                                                 {
-                                                    type: "texture",
-                                                    layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
-                                                    ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere3"  } ]
+                                                    id: "earthTemperatureTextureSelector3",
+                                                    type: "selector",
+                                                    selection: [0],
+                                                    nodes: [
 
+
+                                                        // selection [0], March
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere3"  } ]
+
+                                                        },
+
+                                                        // selection [1], June
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere3"  } ]
+                                                
+                                                        },
+
+                                                        // selection [2], September
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere3"  } ]
+
+                                                        },
+
+
+                                                        // selection [3], December
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere3"  } ]
+
+                                                        }                                
+                                                    ]
                                                 },
 
-                                                // selection [1], June
                                                 {
+
+                                                    id: "earth-terrain-texture3",
                                                     type: "texture",
                                                     layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
+
+                                                        { 
+                                                           uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+                                                           blendMode: "add",
+
+                                                        },
+                                                        { 
+                                                            uri:"images/earth3.jpg",
+
+                                                            minFilter: "linear",
+                                                            magFilter: "linear",
+                                                            wrapS: "repeat",
+                                                            wrapT: "repeat",
+                                                            isDepth: false,
+                                                            depthMode:"luminance",
+                                                            depthCompareMode: "compareRToTexture",
+                                                            depthCompareFunc: "lequal",
+                                                            flipY: false,
+                                                            width: 1,
+                                                            height: 1,
+                                                            internalFormat:"lequal",
+                                                            sourceFormat:"alpha",
+                                                            sourceType: "unsignedByte",
+                                                            applyTo:"baseColor",
+                                                            blendMode: "multiply",
+
+                                                            /* Texture rotation angle in degrees
+                                                             */
+                                                            rotate: 180.0,
+
+                                                            /* Texture translation offset
+                                                             */
+                                                            translate : {
+                                                                x: 0,
+                                                                y: 0
+                                                            },
+
+                                                            /* Texture scale factors
+                                                             */
+                                                            scale : {
+                                                                x: -1.0,
+                                                                y: 1.0
+                                                            }
+                                                        }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere3"  } ]
-
-                                                },
-
-                                                // selection [2], September
-                                                {
-                                                    type: "texture",
-                                                    layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
-                                                    ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere3"  } ]
-
-                                                },
-
-
-                                                // selection [3], December
-                                                {
-                                                    type: "texture",
-                                                    layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
-                                                    ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere3"  } ]
-
-                                                }                                
-                                            ]
-                                        },
-
-                                        {
-
-                                            id: "earth-terrain-texture3",
-                                            type: "texture",
-                                            layers: [
-
-                                                { 
-                                                   uri:"images/lat-long-grid-invert-units-1440x720-15.png",
-                                                   blendMode: "add",
-
-                                                },
-                                                { 
-                                                    uri:"images/earth3.jpg",
-
-                                                    minFilter: "linear",
-                                                    magFilter: "linear",
-                                                    wrapS: "repeat",
-                                                    wrapT: "repeat",
-                                                    isDepth: false,
-                                                    depthMode:"luminance",
-                                                    depthCompareMode: "compareRToTexture",
-                                                    depthCompareFunc: "lequal",
-                                                    flipY: false,
-                                                    width: 1,
-                                                    height: 1,
-                                                    internalFormat:"lequal",
-                                                    sourceFormat:"alpha",
-                                                    sourceType: "unsignedByte",
-                                                    applyTo:"baseColor",
-                                                    blendMode: "multiply",
-
-                                                    /* Texture rotation angle in degrees
-                                                     */
-                                                    rotate: 180.0,
-
-                                                    /* Texture translation offset
-                                                     */
-                                                    translate : {
-                                                        x: 0,
-                                                        y: 0
-                                                    },
-
-                                                    /* Texture scale factors
-                                                     */
-                                                    scale : {
-                                                        x: -1.0,
-                                                        y: 1.0
-                                                    }
-                                                }
-                                            ],
-
-                                            nodes: [
-
-                                                /* Specify the amounts of ambient, diffuse and specular
-                                                 * lights our object reflects
-                                                 */
-                                                {
-                                                    id : "earth-sphere3",
-                                                    type: "material",
-                                                    baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
-                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
-                                                    specular:       0.0,
-                                                    shine:          2.0,
 
                                                     nodes: [
 
+                                                        /* Specify the amounts of ambient, diffuse and specular
+                                                         * lights our object reflects
+                                                         */
                                                         {
-                                                            type: "translate",
-                                                            x: earth_x_pos,
-                                                            y: 0,
-                                                            z: 0,
+                                                            id : "earth-sphere3",
+                                                            type: "material",
+                                                            baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+                                                            specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                            specular:       0.0,
+                                                            shine:          2.0,
 
                                                             nodes: [
 
@@ -469,6 +469,7 @@ SceneJS.createNode({
                                 }
                             ]
                         },
+
                         {
                             type: "interpolator",
                             target: "spin3",
@@ -484,7 +485,7 @@ SceneJS.createNode({
         {
             type: "lookAt", 
             id: "lookAt3",
-            eye : { x: earth_x_pos, y: 3, z: earth_diameter_km * -3 },
+            eye : initial_earth_eye,
             look : { x : earth_x_pos, y : 0, z : 0.0 },
             up : { x: 0.0, y: 1.0, z: 0.0 },
 
@@ -618,7 +619,7 @@ SceneJS.createNode({
                         
                         {
                             type: "translate",
-                            x: earth_orbital_radius_km,
+                            x: sun_x_pos,
                             y: 0,
                             z: 0,
                             
@@ -657,154 +658,154 @@ SceneJS.createNode({
                         },
 
                         {
-                            type: "quaternion",
-                            id: "earthRotationalAxisQuaternion4",
-                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-
-                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
+                            type: "translate",
+                            x: earth_x_pos,
+                            y: 0,
+                            z: 0,
 
                             nodes: [
 
                                 {
+                                    type: "quaternion",
+                                    id: "earthRotationalAxisQuaternion4",
+                                    x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
 
-                                    type: "selector",
-                                    id: "earthTextureSelector4",
-                                    selection: [1],
+                                    rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
+
                                     nodes: [
-
+                                
                                         {
-                                            id: "earthTemperatureTextureSelector4",
+
                                             type: "selector",
-                                            selection: [0],
+                                            id: "earthTextureSelector4",
+                                            selection: [1],
                                             nodes: [
 
-
-                                                // selection [0], March
                                                 {
-                                                    type: "texture",
-                                                    layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
-                                                    ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere4"  } ]
+                                                    id: "earthTemperatureTextureSelector4",
+                                                    type: "selector",
+                                                    selection: [0],
+                                                    nodes: [
 
+
+                                                        // selection [0], March
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere4"  } ]
+
+                                                        },
+
+                                                        // selection [1], June
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere4"  } ]
+
+                                                        },
+
+                                                        // selection [2], September
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere4"  } ]
+
+                                                        },
+
+
+                                                        // selection [3], December
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere4"  } ]
+
+                                                        }                                
+                                                    ]
                                                 },
 
-                                                // selection [1], June
                                                 {
+
+                                                    id: "earth-terrain-texture4",
                                                     type: "texture",
                                                     layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
+
+                                                        { 
+                                                           uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+                                                           blendMode: "add",
+
+                                                        },
+                                                        { 
+                                                            uri:"images/earth3.jpg",
+
+                                                            minFilter: "linear",
+                                                            magFilter: "linear",
+                                                            wrapS: "repeat",
+                                                            wrapT: "repeat",
+                                                            isDepth: false,
+                                                            depthMode:"luminance",
+                                                            depthCompareMode: "compareRToTexture",
+                                                            depthCompareFunc: "lequal",
+                                                            flipY: false,
+                                                            width: 1,
+                                                            height: 1,
+                                                            internalFormat:"lequal",
+                                                            sourceFormat:"alpha",
+                                                            sourceType: "unsignedByte",
+                                                            applyTo:"baseColor",
+                                                            blendMode: "multiply",
+
+                                                            /* Texture rotation angle in degrees
+                                                             */
+                                                            rotate: 180.0,
+
+                                                            /* Texture translation offset
+                                                             */
+                                                            translate : {
+                                                                x: 0,
+                                                                y: 0
+                                                            },
+
+                                                            /* Texture scale factors
+                                                             */
+                                                            scale : {
+                                                                x: -1.0,
+                                                                y: 1.0
+                                                            }
+                                                        }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere4"  } ]
-
-                                                },
-
-                                                // selection [2], September
-                                                {
-                                                    type: "texture",
-                                                    layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
-                                                    ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere4"  } ]
-
-                                                },
-
-
-                                                // selection [3], December
-                                                {
-                                                    type: "texture",
-                                                    layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
-                                                    ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere4"  } ]
-
-                                                }                                
-                                            ]
-                                        },
-
-                                        {
-
-                                            id: "earth-terrain-texture4",
-                                            type: "texture",
-                                            layers: [
-
-                                                { 
-                                                   uri:"images/lat-long-grid-invert-units-1440x720-15.png",
-                                                   blendMode: "add",
-
-                                                },
-                                                { 
-                                                    uri:"images/earth3.jpg",
-
-                                                    minFilter: "linear",
-                                                    magFilter: "linear",
-                                                    wrapS: "repeat",
-                                                    wrapT: "repeat",
-                                                    isDepth: false,
-                                                    depthMode:"luminance",
-                                                    depthCompareMode: "compareRToTexture",
-                                                    depthCompareFunc: "lequal",
-                                                    flipY: false,
-                                                    width: 1,
-                                                    height: 1,
-                                                    internalFormat:"lequal",
-                                                    sourceFormat:"alpha",
-                                                    sourceType: "unsignedByte",
-                                                    applyTo:"baseColor",
-                                                    blendMode: "multiply",
-
-                                                    /* Texture rotation angle in degrees
-                                                     */
-                                                    rotate: 180.0,
-
-                                                    /* Texture translation offset
-                                                     */
-                                                    translate : {
-                                                        x: 0,
-                                                        y: 0
-                                                    },
-
-                                                    /* Texture scale factors
-                                                     */
-                                                    scale : {
-                                                        x: -1.0,
-                                                        y: 1.0
-                                                    }
-                                                }
-                                            ],
-
-                                            nodes: [
-
-                                                /* Specify the amounts of ambient, diffuse and specular
-                                                 * lights our object reflects
-                                                 */
-                                                {
-                                                    id : "earth-sphere4",
-                                                    type: "material",
-                                                    baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
-                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
-                                                    specular:       0.0,
-                                                    shine:          2.0,
 
                                                     nodes: [
 
+                                                        /* Specify the amounts of ambient, diffuse and specular
+                                                         * lights our object reflects
+                                                         */
                                                         {
-                                                            type: "translate",
-                                                            x: earth_x_pos,
-                                                            y: 0,
-                                                            z: 0,
+                                                            id : "earth-sphere4",
+                                                            type: "material",
+                                                            baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+                                                            specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                            specular:       0.0,
+                                                            shine:          2.0,
 
                                                             nodes: [
 
-                                                                {
+                                                               {
 
                                                                     type: "scale",
                                                                     x: earth_diameter_km,
@@ -977,74 +978,27 @@ function chooseMonthChange() {
   switch(month) {
        case "jun":
        earth_sun_line_rotation.set("angle", 90);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: earth_orbital_radius_km / 2 });
+       earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
        break;
        case "sep":
        earth_sun_line_rotation.set("angle", 0);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km * 1.5, y: 0.0, z: 0 });
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
        break;
        case "dec":
        earth_sun_line_rotation.set("angle", 270);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: -earth_orbital_radius_km / 2 });
+       earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
        break;
        case "mar":
        earth_sun_line_rotation.set("angle", 180);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2, y: 0.0, z: 0 });
+       earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
        break;
-  }
+    }
   
 }
 
 choose_month.onchange = chooseMonthChange;
 choose_month.onchange();
 
-// function timeOfYearChange() {
-//   var month = this.value;
-//   SceneJS.Message.sendMessage({ 
-//     command: "update", 
-//     target: "earthRotationalAxisQuaternion1", 
-//     set: { rotation: seasonal_rotations[month] }
-//   });
-//   SceneJS.Message.sendMessage({ 
-//     command: "update", 
-//     target: "earthRotationalAxisQuaternion3", 
-//     set: { rotation: seasonal_rotations[month] }
-//   });
-//   SceneJS.Message.sendMessage({ 
-//     command: "update", 
-//     target: "earthRotationalAxisQuaternion4", 
-//     set: { rotation: seasonal_rotations[month] }
-//   });
-//   setTemperatureTexture(month);
-//   if (earth_surface.value === 'terrain') {
-//       SceneJS.withNode("earthTextureSelector3").set("selection", [1]);
-//       SceneJS.withNode("earthTextureSelector4").set("selection", [1]);
-//   } else {
-//       SceneJS.withNode("earthTextureSelector3").set("selection", [0]);
-//       SceneJS.withNode("earthTextureSelector4").set("selection", [0]);
-//   }
-//   switch(month) {
-//        case "jun":
-//        earth_sun_line_rotation.set("angle", 90);
-//        earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: earth_orbital_radius_km / 2 });
-//        break;
-//        case "sep":
-//        earth_sun_line_rotation.set("angle", 0);
-//        earth_sun_line_translation.set({ x: earth_orbital_radius_km * 1.5, y: 0.0, z: 0 });
-//        break;
-//        case "dec":
-//        earth_sun_line_rotation.set("angle", 270);
-//        earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: -earth_orbital_radius_km / 2 });
-//        break;
-//        case "mar":
-//        earth_sun_line_rotation.set("angle", 180);
-//        earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2, y: 0.0, z: 0 });
-//        break;
-//   }
-// }
-// 
-// time_of_year.onchange = timeOfYearChange;
-// time_of_year.onchange();
 
 // Texture mapping onto the Earth's surface
 
@@ -1076,8 +1030,6 @@ function circleOrbitalPathChange() {
 }
 
 SceneJS.withNode("earthCircleOrbitSelector").set("selection", [0])
-// circle_orbital_path.onchange = circleOrbitalPathChange;
-// circle_orbital_path.onchange();
 
 // Orbital Grid
 
@@ -1103,13 +1055,13 @@ function perspectiveChange() {
         if (this.elements[i].checked) view_selection = this.elements[i].value;
     switch(view_selection) {
         case "top":
-        look.set("eye",  { x: earth_orbital_radius_km, y: earth_orbital_radius_km * 3, z: 0 } );
-        look.set("look", { x: earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        look.set("eye",  { x: sun_x_pos, y: earth_orbital_radius_km * 3, z: 0 } );
+        look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
         look.set("up",  { x: 0.0, y: 0.0, z: 1.0 } );
         break;
         case "side":
-        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
-        look.set("look", { x: earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        look.set("eye",  { x: sun_x_pos, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+        look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
         look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
         break;
   }

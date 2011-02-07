@@ -123,7 +123,7 @@ SceneJS.createNode({
         {
             type: "lookAt", 
             id: "lookAt",
-            eye : initial_earth_eye,
+            eye : normalized_initial_earth_eye,
             look : { x : 0, y : 0.0, z : 0.0 },
             up : { x: 0.0, y: 1.0, z: 0.0 },
             nodes: [ { type: "instance", target: "theCamera" } ]
@@ -135,8 +135,8 @@ SceneJS.createNode({
  * Scene rendering loop and mouse handler stuff follows
  *---------------------------------------------------------------------*/
 
-var earth_yaw = initial_earth_eye.x;
-var earth_pitch = initial_earth_eye.y;
+var earth_yaw = normalized_initial_earth_eye.x;
+var earth_pitch = normalized_initial_earth_eye.y;
 
 var sun_yaw =   initial_sun_eye.x;
 var sun_pitch = initial_sun_eye.y;
@@ -376,14 +376,14 @@ function chooseLookAt() {
   // reference_frame.value = look_at_selection;
   switch(look_at_selection) {
      case "orbit":
-      look_at.set("eye",  { x: sun_x_pos, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+      look_at.set("eye",  initial_sun_eye );
       look_at.set("look", { x : sun_x_pos, y : 0.0, z : 0.0 } );
       orbital_path.checked = true;
       break;
 
      case 'earth':
       earth_rotation.checked=true
-      look_at.set("eye",  { x: earth_x_pos, y: 10, z: earth_diameter_km * -3 } );
+      look_at.set("eye",  initial_earth_eye );
       look_at.set("look", { x : earth_x_pos, y : 0.0, z : 0.0 } );
       orbital_path.checked = true;
       break;
@@ -501,7 +501,7 @@ function mouseMove(event) {
             case 'earth':
                 earth_yaw   += new_yaw;
                 earth_pitch += new_pitch;
-                eye4 = [initial_earth_eye.x, initial_earth_eye.y, initial_earth_eye.z, 1];
+                eye4 = [normalized_initial_earth_eye.x, normalized_initial_earth_eye.y, normalized_initial_earth_eye.z, 1];
 
                 left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : earth_yaw });
                 left_rightQM = left_rightQ.getMatrix();

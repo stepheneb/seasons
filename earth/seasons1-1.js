@@ -188,19 +188,19 @@ function timeOfYearChange() {
   switch(month) {
        case "jun":
        earth_sun_line_rotation.set("angle", 90);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: earth_orbital_radius_km / 2 });
+       earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
        break;
        case "sep":
        earth_sun_line_rotation.set("angle", 0);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km * 1.5, y: 0.0, z: 0 });
+       earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
        break;
        case "dec":
        earth_sun_line_rotation.set("angle", 270);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: -earth_orbital_radius_km / 2 });
+       earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
        break;
        case "mar":
        earth_sun_line_rotation.set("angle", 180);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2, y: 0.0, z: 0 });
+       earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
        break;
   }
   // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
@@ -248,13 +248,13 @@ function perspectiveChange() {
         if (this.elements[i].checked) view_selection = this.elements[i].value;
     switch(view_selection) {
         case "top":
-        look.set("eye",  { x: earth_orbital_radius_km, y: earth_orbital_radius_km * 3, z: 0 } );
-        look.set("look", { x: earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        look.set("eye",  { x: sun_x_pos, y: earth_orbital_radius_km * 3, z: 0 } );
+        look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
         look.set("up",  { x: 0.0, y: 0.0, z: 1.0 } );
         break;
         case "side":
-        look.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
-        look.set("look", { x: earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        look.set("eye",  { x: sun_x_pos, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+        look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
         look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
         break;
   }
