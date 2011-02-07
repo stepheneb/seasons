@@ -6,7 +6,7 @@ var earthAxis = SceneJS.createNode({
         {
             id: "earth-axis-position",
             type: "translate",
-            x: 0,
+            x: earth_x_pos,
             y: 0,
             z: 0,
 

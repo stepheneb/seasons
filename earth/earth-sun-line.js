@@ -18,9 +18,9 @@ var earthSunLine = SceneJS.createNode({
                 {
                     type: "translate", // Example translation
                     id: "earth-sun-line-translation",
-                    x: earth_orbital_radius_km,
+                    x: earth_x_pos,
                     y: 0.0,
-                    z: earth_orbital_radius_km / 2,
+                    z: earth_x_pos / 2,
 
                     nodes : [
 

@@ -44,7 +44,7 @@ var orbitGrid = SceneJS.createNode({
             
                 {
                     type: "translate",
-                    x: earth_orbital_radius_km,
+                    x: sun_x_pos,
                     y: 0,
                     z: 0,
 

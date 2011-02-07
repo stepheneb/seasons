@@ -83,24 +83,25 @@ SceneJS.createNode({
                             specular:               true,
                             dir:                    { x: -1.0, y: 0.0, z: -1.0 }
                         },
+                        
 
                         {
                             type: "material",
-                            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
-                            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                            baseColor:      { r: 1.0, g: 0.3, b: 0.6 },
+                            specularColor:  { r: 1.0, g: 0.3, b: 0.6 },
                             specular:       1.0,
                             shine:          2.0,
                             emit:           1.0,
 
                             nodes: [
-
+                            
                                 {
                                     type: "geometry",
                                     primitive: "line-loop",
 
                                     positions: [
-                                         0.0,                       0.0,    0.0,
-                                         earth_orbital_radius_km,   0.0,    0.0
+                                         sun_x_pos,     0.0,    0.0,
+                                         earth_x_pos,   0.0,    0.0
                                     ],
 
                                     indices : [ 0, 1 ]
@@ -109,25 +110,10 @@ SceneJS.createNode({
                             ]
                         },
 
+
                         {
-                            type: "quaternion",
-                            id: "earthRotationalAxisQuaternion",
-                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-                    
-                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.5 } ],
-
-                            nodes: [
-
-                                {
-                                    type : "instance",
-                                    target :"earth-axis"
-                                },
-
-                                {
-                                    type : "instance",
-                                    target :"earth"
-                                }
-                            ]
+                            type : "instance",
+                            target :"earth"
                         }
                     ]
                 }
@@ -137,7 +123,7 @@ SceneJS.createNode({
         {
             type: "lookAt", 
             id: "lookAt",
-            eye : { x: 0, y: 0, z: earth_diameter_km * -3 },
+            eye : initial_earth_eye,
             look : { x : 0, y : 0.0, z : 0.0 },
             up : { x: 0.0, y: 1.0, z: 0.0 },
             nodes: [ { type: "instance", target: "theCamera" } ]
@@ -148,8 +134,13 @@ SceneJS.createNode({
 /*----------------------------------------------------------------------
  * Scene rendering loop and mouse handler stuff follows
  *---------------------------------------------------------------------*/
-var yaw = 0;
-var pitch = 0;
+
+var earth_yaw = initial_earth_eye.x;
+var earth_pitch = initial_earth_eye.y;
+
+var sun_yaw =   initial_sun_eye.x;
+var sun_pitch = initial_sun_eye.y;
+
 var lastX;
 var lastY;
 var dragging = false;
@@ -223,6 +214,8 @@ choose_earth_surface.onchange();
 
 var earth_postion = SceneJS.withNode("earth-position");
 var earth_axis_position = SceneJS.withNode("earth-axis-position");
+
+var earth_scale = SceneJS.withNode("earth-scale");
 
 var earth_sun_line_rotation = SceneJS.withNode("earth-sun-line-rotation");
 var earth_sun_line_translation = SceneJS.withNode("earth-sun-line-translation");
@@ -383,15 +376,15 @@ function chooseLookAt() {
   // reference_frame.value = look_at_selection;
   switch(look_at_selection) {
      case "orbit":
-      look_at.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
-      look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+      look_at.set("eye",  { x: sun_x_pos, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+      look_at.set("look", { x : sun_x_pos, y : 0.0, z : 0.0 } );
       orbital_path.checked = true;
       break;
 
      case 'earth':
       earth_rotation.checked=true
-      look_at.set("eye",  { x: 0, y: 1, z: earth_diameter_km * -3 } );
-      look_at.set("look", { x : 0, y : 0.0, z : 0.0 } );
+      look_at.set("eye",  { x: earth_x_pos, y: 10, z: earth_diameter_km * -3 } );
+      look_at.set("look", { x : earth_x_pos, y : 0.0, z : 0.0 } );
       orbital_path.checked = true;
       break;
 
@@ -441,6 +434,12 @@ choose_look_at.onchange();
 // reference_frame.onchange = referenceFrameChange;
 // reference_frame.onchange();
 
+
+var upQM    = new SceneJS.Quaternion({ x : 1, y : 0, z : 0, angle :  15 }).getMatrix();
+var downQM  = new SceneJS.Quaternion({ x : 1, y : 0, z : 0, angle : -15 }).getMatrix();
+var rightQM = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle :  15 }).getMatrix();
+var leftQM  = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : -15 }).getMatrix();
+
 function mouseDown(event) {
     lastX = event.clientX;
     lastY = event.clientY;
@@ -460,33 +459,70 @@ function mouseOut() {
  */
 function mouseMove(event) {
     if (dragging) {
-        var look, eye, eye4, eye4dup, neweye, up_down, up_downQ, left_right, left_rightQ, f, up_down_axis, angle;
-        yaw = (event.clientX - lastX);
-        pitch = (event.clientY - lastY);
 
+        var look, eye, eye4, eye4dup, neweye;
+
+        var up_downQ, up_downQM, left_rightQ, left_rightQM;
+
+        var f, up_down_axis, angle, new_yaw, new_pitch;
+        
+        new_yaw = (event.clientX - lastX) * -0.2;
+        new_pitch = (event.clientY - lastY) * 0.2;
+        
         lastX = event.clientX;
         lastY = event.clientY;
 
         look = SceneJS.withNode("lookAt");
-        eye = look.get("eye");
-        eye4 = [eye.x, eye.y, eye.z, 1];
 
-        left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : yaw * -0.2 });
-        left_right = left_rightQ.getMatrix();
+        switch(look_at_selection) {
+            case "orbit":
+                sun_yaw += new_yaw;
+                sun_pitch += new_pitch;
+                eye4 = [initial_sun_eye.x, initial_sun_eye.y, initial_sun_eye.z, 1];
 
-        neweye = SceneJS._math_mulMat4v4(left_right, eye4);
-        console.log("drag   yaw: " + yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+                left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : sun_yaw });
+                left_rightQM = left_rightQ.getMatrix();
 
-        eye4 = SceneJS._math_dupMat4(neweye);
-        f = 1.0 / SceneJS._math_lenVec4(eye4);
-        eye4dup = SceneJS._math_dupMat4(eye4);
-        up_down_axis = SceneJS._math_mulVec4Scalar(eye4dup, f);
-        up_downQ = new SceneJS.Quaternion({ x : up_down_axis[2], y : 0, z : up_down_axis[0], angle : pitch * -0.2 });
-        angle = up_downQ.getRotation().angle;
-        up_down = up_downQ.getMatrix();
+                neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
+                console.log("dragging: yaw: " + sun_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
 
-        neweye = SceneJS._math_mulMat4v4(up_down, eye4);
-        console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
+                eye4 = SceneJS._math_dupMat4(neweye);
+                eye4dup = SceneJS._math_dupMat4(eye4);
+
+                up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : sun_pitch });
+                up_downQM = up_downQ.getMatrix();
+
+                neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
+
+                console.log("dragging: pitch: " + sun_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
+
+            break;
+
+            case 'earth':
+                earth_yaw   += new_yaw;
+                earth_pitch += new_pitch;
+                eye4 = [initial_earth_eye.x, initial_earth_eye.y, initial_earth_eye.z, 1];
+
+                left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : earth_yaw });
+                left_rightQM = left_rightQ.getMatrix();
+
+                neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
+                console.log("dragging: yaw: " + earth_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+
+                eye4 = SceneJS._math_dupMat4(neweye);
+                eye4dup = SceneJS._math_dupMat4(eye4);
+
+                up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : earth_pitch });
+                up_downQM = up_downQ.getMatrix();
+
+                neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
+
+                console.log("dragging: pitch: " + earth_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
+
+                neweye[0] = neweye[0] + earth_x_pos;
+            break;
+        }
+
 
         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
         // SceneJS.withNode("theScene").start();

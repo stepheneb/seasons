@@ -280,7 +280,7 @@ SceneJS.createNode({
                                                 {                                    
                                                     type: "disk", 
                                                     radius: earth_orbital_radius_km,
-                                                    inner_radius : earth_orbital_radius_km - 0.2,
+                                                    innerRadius : earth_orbital_radius_km - 0.2,
                                                     height: earth_diameter_km / 50,
                                                     rings: 360
                                                 }
@@ -645,7 +645,7 @@ SceneJS.createNode({
                                                 {                                    
                                                     type: "disk", 
                                                     radius: earth_orbital_radius_km,
-                                                    inner_radius : earth_orbital_radius_km - 0.2,
+                                                    innerRadius : earth_orbital_radius_km - 0.2,
                                                     height: earth_diameter_km / 50,
                                                     rings: 360
                                                 }

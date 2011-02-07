@@ -17,7 +17,7 @@ var sun = SceneJS.createNode({
 
                 {
                     type: "translate",
-                    x: earth_orbital_radius_km,
+                    x: sun_x_pos,
                     y: 0,
                     z: 0,
 
@@ -28,7 +28,8 @@ var sun = SceneJS.createNode({
                             y: sun_diameter_km,
                             z: sun_diameter_km,
 
-                            nodes: [ { type: "sphere", slices: 60, rings: 60 } ]
+                            nodes: [  { type: "sphere", slices: 60, rings: 60 } ]
+
                         }
                     ]
                 }
