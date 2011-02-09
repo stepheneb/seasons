@@ -256,38 +256,46 @@ SceneJS.createNode({
                             x: sun_x_pos,
                             y: 0,
                             z: 0,
-                            
                             nodes: [ 
-                            
                                 {
                                     type: "scale",
                                     x: 1,
                                     y: 1,
                                     z: 1,
                                     nodes: [ 
-                                        { 
 
-                                            type: "material",
+                                        {
+                                            type: "node",
 
-                                            baseColor:          { r: 0.1, g: 0.7, b: 1.0 },
-                                            specularColor:      { r: 0.1, g: 0.7, b: 1.0 },
-                                            specular:           1.0,
-                                            shine:              1.0,
-                                            emit:               1.0,
+                                            flags: {
+                                                transparent: true
+                                            },
 
                                             nodes: [
-                                
-                                                {                                    
-                                                    type: "disk", 
-                                                    radius: earth_orbital_radius_km,
-                                                    innerRadius : earth_orbital_radius_km - 0.2,
-                                                    height: earth_diameter_km / 50,
-                                                    rings: 360
+
+                                                { 
+
+                                                    type: "material",
+
+                                                    baseColor:          { r: 0.1, g: 0.8, b: 2.0 },
+                                                    specularColor:      { r: 0.1, g: 0.8, b: 2.0 },
+                                                    specular:           1.0,
+                                                    shine:              2.0,
+                                                    emit:               2.0,
+                                                    alpha:              0.4,
+
+                                                    nodes: [
+
+                                                        {
+                                                            type: "instance",
+                                                            target: "earth-in-space-elliptical-orbital-path"
+                                                        }
+                                                    ]
                                                 }
                                             ]
                                         }
                                     ]
-                                }
+                                } 
                             ]
                         },
 
@@ -617,45 +625,104 @@ SceneJS.createNode({
                             dir:                    { x: -1.0, y: 0.0, z: -1.0 }
                         },
                         
+                        // {
+                        //     type   : "instance",
+                        //     target : "earth-circle-orbit-sun-line"
+                        // },
+                        
+                        // Integrate our earth elliptical orbit, which is defined in earth-orbit.js
+                        // {
+                        //     type : "instance",
+                        //     target :"earthEllipseOrbit"
+                        // },
+
                         {
                             type: "translate",
                             x: sun_x_pos,
                             y: 0,
                             z: 0,
-                            
                             nodes: [ 
-                            
                                 {
                                     type: "scale",
                                     x: 1,
                                     y: 1,
                                     z: 1,
                                     nodes: [ 
-                                        { 
 
-                                            type: "material",
+                                        {
+                                            type: "node",
 
-                                            baseColor:          { r: 0.1, g: 0.7, b: 1.0 },
-                                            specularColor:      { r: 0.1, g: 0.7, b: 1.0 },
-                                            specular:           1.0,
-                                            shine:              1.0,
-                                            emit:               1.0,
+                                            flags: {
+                                                transparent: true
+                                            },
 
                                             nodes: [
-                                
-                                                {                                    
-                                                    type: "disk", 
-                                                    radius: earth_orbital_radius_km,
-                                                    innerRadius : earth_orbital_radius_km - 0.2,
-                                                    height: earth_diameter_km / 50,
-                                                    rings: 360
+
+                                                { 
+
+                                                    type: "material",
+
+                                                    baseColor:          { r: 0.1, g: 0.8, b: 2.0 },
+                                                    specularColor:      { r: 0.1, g: 0.8, b: 2.0 },
+                                                    specular:           1.0,
+                                                    shine:              2.0,
+                                                    emit:               2.0,
+                                                    alpha:              0.4,
+
+                                                    nodes: [
+
+                                                        {
+                                                            type: "instance",
+                                                            target: "earth-in-space-elliptical-orbital-path"
+                                                        }
+                                                    ]
                                                 }
                                             ]
                                         }
                                     ]
-                                }
+                                } 
                             ]
                         },
+                        
+                        // {
+                        //     type: "translate",
+                        //     x: sun_x_pos,
+                        //     y: 0,
+                        //     z: 0,
+                        //     
+                        //     nodes: [ 
+                        //     
+                        //         {
+                        //             type: "scale",
+                        //             x: 1,
+                        //             y: 1,
+                        //             z: 1,
+                        //             nodes: [ 
+                        //                 { 
+                        // 
+                        //                     type: "material",
+                        // 
+                        //                     baseColor:          { r: 0.1, g: 0.7, b: 1.0 },
+                        //                     specularColor:      { r: 0.1, g: 0.7, b: 1.0 },
+                        //                     specular:           1.0,
+                        //                     shine:              1.0,
+                        //                     emit:               1.0,
+                        // 
+                        //                     nodes: [
+                        //         
+                        //                         {                                    
+                        //                             type: "disk", 
+                        //                             radius: earth_orbital_radius_km,
+                        //                             innerRadius : earth_orbital_radius_km - 0.2,
+                        //                             height: earth_diameter_km / 50,
+                        //                             rings: 360
+                        //                         }
+                        //                     ]
+                        //                 }
+                        //             ]
+                        //         }
+                        //     ]
+                        // },
 
                         {
                             type: "translate",
@@ -954,6 +1021,9 @@ var month;
 for(var i = 0; i < choose_month.elements.length; i++)
     if (choose_month.elements[i].checked) month = choose_month.elements[i].value;
 
+
+
+
 function chooseMonthChange() {
   for(var i = 0; i < this.elements.length; i++)
       if (this.elements[i].checked) month = this.elements[i].value;
@@ -981,22 +1051,25 @@ function chooseMonthChange() {
   }
 
   switch(month) {
-       case "jun":
-       earth_sun_line_rotation.set("angle", 90);
-       earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
-       break;
-       case "sep":
-       earth_sun_line_rotation.set("angle", 0);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
-       break;
-       case "dec":
-       earth_sun_line_rotation.set("angle", 270);
-       earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
-       break;
-       case "mar":
-       earth_sun_line_rotation.set("angle", 180);
-       earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
-       break;
+      case "jun":
+      earth_sun_line_rotation.set("angle", 180);
+      earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+      break;
+
+      case "sep":
+      earth_sun_line_rotation.set("angle", 90);
+      earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
+      break;
+
+      case "dec":
+      earth_sun_line_rotation.set("angle", 0);
+      earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+      break;
+
+      case "mar":
+      earth_sun_line_rotation.set("angle", 270);
+      earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
+      break;
     }
   
 }
@@ -1060,16 +1133,19 @@ function perspectiveChange() {
         if (this.elements[i].checked) view_selection = this.elements[i].value;
     switch(view_selection) {
         case "top":
-        look.set("eye",  { x: sun_x_pos, y: earth_orbital_radius_km * 3, z: 0 } );
+        look.set("eye",  initial_sun_eye_top );
         look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
-        look.set("up",  { x: 0.0, y: 0.0, z: 1.0 } );
+        look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
         break;
+
         case "side":
-        look.set("eye",  { x: sun_x_pos, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
+        look.set("eye",  initial_sun_eye_side );
         look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
         look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
         break;
   }
+  sun_yaw =   0;
+  sun_pitch = 0;
   SceneJS.withNode("theScene1").start();
 }
 
@@ -1111,7 +1187,15 @@ function mouseMove1(event) {
 
         sun_yaw += new_yaw;
         sun_pitch += new_pitch;
-        eye4 = [initial_sun_eye.x, initial_sun_eye.y, initial_sun_eye.z, 1];
+
+        switch(view_selection) {
+            case "top":
+                eye4 = [initial_sun_eye_top.x, initial_sun_eye_top.y, initial_sun_eye_top.z, 1];
+                break;
+            case "side":
+                eye4 = [initial_sun_eye_side.x, initial_sun_eye_side.y, initial_sun_eye_side.z, 1];
+                break;
+        }
 
         left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : sun_yaw });
         left_rightQM = left_rightQ.getMatrix();
