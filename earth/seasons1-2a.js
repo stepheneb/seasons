@@ -703,26 +703,79 @@ var earth3_milkyway_rotation = SceneJS.withNode("earth3-milkyway-rotation");
 
 function setTemperatureTexture(month) {
     switch (month) {
+    case 'mar' : 
+        SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [0]);
+        break;
+        
+    case 'jun' : 
+        SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [1]);
+        break;
+
+    case 'sep' : 
+        SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [2]); 
+        break;
+
+    case 'dec' : 
+        SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [3]); 
+        break;
+    };    
+}
+
+var earth3_milkyway_rotation = SceneJS.withNode("earth3-milkyway-rotation");
+
+function setMilkyWayRotation(month) {
+    switch (month) {
         case 'mar' : 
-            SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [0]);
             earth3_milkyway_rotation.set("angle", 270);            
             break;
-            
+
         case 'jun' : 
-            SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [1]);
             earth3_milkyway_rotation.set("angle", 0);
             break;
 
         case 'sep' : 
-            SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [2]); 
             earth3_milkyway_rotation.set("angle", 90);
             break;
 
         case 'dec' : 
-            SceneJS.withNode("earthTemperatureTextureSelector3").set("selection", [3]); 
             earth3_milkyway_rotation.set("angle", 180);
             break;
-    };    
+    };
+}
+
+
+var earth_sun_line_rotation = SceneJS.withNode("earth-sun-line-rotation");
+var earth_sun_line_translation = SceneJS.withNode("earth-sun-line-translation");
+var earth_sun_line_selector = SceneJS.withNode("earthSunLineSelector");
+
+function earth_sun_line(month, view) {
+    var new_location = earth_circle_location_by_month(month);
+    switch(view) {
+        case "orbit":
+        switch(month) {
+            case "jun":
+            earth_sun_line_rotation.set("angle", 180);
+            earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+            break;
+            case "sep":
+            earth_sun_line_rotation.set("angle", 90);
+            earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
+            break;
+            case "dec":
+            earth_sun_line_rotation.set("angle", 0);
+            earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+            break;
+            case "mar":
+            earth_sun_line_rotation.set("angle", 270);
+            earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
+            break;
+        }
+        SceneJS.Message.sendMessage({ 
+          command: "update", 
+          target: "earthRotationalAxisQuaternion", 
+          set: { rotation: seasonal_rotations[month] }
+        });
+    }
 }
 
 var choose_month = document.getElementById("choose-month");
@@ -741,6 +794,7 @@ function chooseMonthChange() {
     set: { rotation: seasonal_rotations[month] }
   });
   setTemperatureTexture(month);
+  setMilkyWayRotation(month);
   if (earth_surface.value === 'terrain') {
       SceneJS.withNode("earthTextureSelector3").set("selection", [1]);
   } else {

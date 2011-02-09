@@ -233,7 +233,6 @@ function setMilkyWayRotation(month) {
         case "surface":
         break;
     }
-
 }
 
 // Texture mapping onto the Earth's surface
