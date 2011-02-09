@@ -64,45 +64,57 @@ var earthCircleOrbit = SceneJS.createNode({
                     y: 1,
                     z: 1,
                     nodes: [ 
-                        { 
                     
-                            type: "material",
-                    
-                            baseColor:          { r: 1.0, g: 0.8, b: 0.1 },
-                            specularColor:      { r: 1.0, g: 0.8, b: 0.1 },
-                            specular:           0.5,
-                            shine:              2.0,
-                            emit:               1.0,
-                    
+                        {
+                            type: "node",
+                            
+                            flags: {
+                                transparent: true
+                            },
+                            
                             nodes: [
+                                { 
+                    
+                                    type: "material",
+                    
+                                    baseColor:          { r: 1.0, g: 0.8, b: 0.1 },
+                                    specularColor:      { r: 1.0, g: 0.8, b: 0.1 },
+                                    specular:           1.0,
+                                    shine:              2.0,
+                                    emit:               2.0,
+                                    alpha:              0.4,
+                    
+                                    nodes: [
                             
-                                {
+                                        {
 
-                                    type: "selector",
-                                    id: "earthCircleOrbitSelector",
-                                    selection: [1],
-                                    nodes: [ 
+                                            type: "selector",
+                                            id: "earthCircleOrbitSelector",
+                                            selection: [1],
+                                            nodes: [ 
 
-                                        {  },
+                                                {  },
                                         
-                                        {
+                                                {
                             
-                                            type: "disk", 
-                                            id: "earth-in-space-circular-orbital-path" ,                                         
-                                            radius: earth_orbital_radius_km,
-                                            innerRadius : earth_orbital_radius_km - 0.2,
-                                            height: earth_diameter_km / 49,
-                                            rings: 360
-                                        },
+                                                    type: "disk", 
+                                                    id: "earth-in-space-circular-orbital-path" ,                                         
+                                                    radius: earth_orbital_radius_km,
+                                                    innerRadius : earth_orbital_radius_km - 0.2,
+                                                    height: earth_diameter_km / 49,
+                                                    rings: 360
+                                                },
                                     
-                                        {
+                                                {
                             
-                                            type: "disk",                                           
-                                            id: "sun-earth-circular-orbital-path" ,                                         
-                                            radius: earth_orbital_radius_km,
-                                            innerRadius : earth_orbital_radius_km - (earth_diameter_km * 50),
-                                            height: earth_diameter_km * 99,
-                                            rings: 360
+                                                    type: "disk",                                           
+                                                    id: "sun-earth-circular-orbital-path" ,                                         
+                                                    radius: earth_orbital_radius_km,
+                                                    innerRadius : earth_orbital_radius_km - (earth_diameter_km * 50),
+                                                    height: earth_diameter_km * 99,
+                                                    rings: 360
+                                                }
+                                            ]
                                         }
                                     ]
                                 }
@@ -180,48 +192,61 @@ var earthEllipseOrbit = SceneJS.createNode({
                     y: 1,
                     z: 1,
                     nodes: [ 
-                        { 
                     
-                            type: "material",
-
-                            baseColor:          { r: 0.1, g: 0.8, b: 2.0 },
-                            specularColor:      { r: 0.1, g: 0.8, b: 2.0 },
-                            specular:           1.0,
-                            shine:              2.0,
-                            emit:               2.0,
-
-                            nodes: [
+                        {
+                            type: "node",
                             
-                                {
+                            flags: {
+                                transparent: true
+                            },
+                            
+                            nodes: [
 
-                                    type: "selector",
-                                    id: "earthEllipseOrbitSelector",
-                                    selection: [2],
-                                    nodes: [ 
+                                { 
+                    
+                                    type: "material",
 
-                                        {  },
+                                    baseColor:          { r: 0.1, g: 0.8, b: 2.0 },
+                                    specularColor:      { r: 0.1, g: 0.8, b: 2.0 },
+                                    specular:           1.0,
+                                    shine:              2.0,
+                                    emit:               2.0,
+                                    alpha:              0.4,
 
+                                    nodes: [
+                            
                                         {
+
+                                            type: "selector",
+                                            id: "earthEllipseOrbitSelector",
+                                            selection: [2],
+                                            nodes: [ 
+
+                                                {  },
+
+                                                {
                                                                     
-                                            type: "disk", 
-                                            id: "earth-in-space-elliptical-orbital-path" ,                                         
-                                            radius: earth_orbital_radius_km,
-                                            semiMajorAxis: earthOrbitData.semiMajorAxis,
-                                            innerRadius : earth_orbital_radius_km - 0.2,
-                                            height: earth_diameter_km / 50,
-                                            rings: 360
-                                        },
+                                                    type: "disk", 
+                                                    id: "earth-in-space-elliptical-orbital-path" ,                                         
+                                                    radius: earth_orbital_radius_km,
+                                                    semiMajorAxis: earthOrbitData.semiMajorAxis,
+                                                    innerRadius : earth_orbital_radius_km - 0.4,
+                                                    height: earth_diameter_km / 50,
+                                                    rings: 360
+                                                },
                                                                             
-                                        {
+                                                {
                                                                     
-                                            type: "disk",                                           
-                                            id: "sun-earth-elliptical-orbital-path" ,                                         
-                                            radius: earth_orbital_radius_km,
-                                            semiMajorAxis: earthOrbitData.semiMajorAxis,
-                                            innerRadius : earth_orbital_radius_km - (earth_diameter_km * 50),
-                                            height: earth_diameter_km * 50,
-                                            rings: 360
-                                        }                                        
+                                                    type: "disk",                                           
+                                                    id: "sun-earth-elliptical-orbital-path" ,                                         
+                                                    radius: earth_orbital_radius_km,
+                                                    semiMajorAxis: earthOrbitData.semiMajorAxis,
+                                                    innerRadius : earth_orbital_radius_km - (earth_diameter_km * 50),
+                                                    height: earth_diameter_km * 50,
+                                                    rings: 360
+                                                }                                        
+                                            ]
+                                        }
                                     ]
                                 }
                             ]
