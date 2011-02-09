@@ -942,6 +942,82 @@ function mouseMove1(event) {
         // SceneJS.withNode("theScene").start();
         eye = look.get("eye");
         console.log("");
+        
+        //
+        //
+        
+        look3 = SceneJS.withNode("lookAt3");
+        
+        var look_at_selection = "earth";
+
+        switch(look_at_selection) {
+            case "orbit":
+            sun_yaw += new_yaw;
+            sun_pitch += new_pitch;
+            eye4 = [initial_sun_eye.x, initial_sun_eye.y, initial_sun_eye.z, 1];
+
+            left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : sun_yaw });
+            left_rightQM = left_rightQ.getMatrix();
+
+            neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
+            console.log("dragging: yaw: " + sun_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+
+            eye4 = SceneJS._math_dupMat4(neweye);
+            eye4dup = SceneJS._math_dupMat4(eye4);
+
+            up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : sun_pitch });
+            up_downQM = up_downQ.getMatrix();
+
+            neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
+
+            console.log("dragging: pitch: " + sun_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
+            break;
+
+            case 'earth':
+            earth_yaw3   += new_yaw;
+            earth_pitch3 += new_pitch;
+            
+            
+            switch(view_selection) {
+                case "top":
+                    eye4 = [normalized_initial_earth_eye_top.x, 
+                        normalized_initial_earth_eye_top.y, 
+                        normalized_initial_earth_eye_top.z, 1];
+                    break;
+                case "side":
+                    eye4 = [normalized_initial_earth_eye_side.x, 
+                        normalized_initial_earth_eye_side.y, 
+                        normalized_initial_earth_eye_side.z, 1];
+                    break;
+            }
+            
+            eye4 = [normalized_initial_earth_eye.x, normalized_initial_earth_eye.y, normalized_initial_earth_eye.z, 1];
+
+            left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : earth_yaw3 });
+            left_rightQM = left_rightQ.getMatrix();
+
+            neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
+            console.log("dragging: yaw: " + earth_yaw3 + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+
+            eye4 = SceneJS._math_dupMat4(neweye);
+            eye4dup = SceneJS._math_dupMat4(eye4);
+
+            up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : earth_pitch3 });
+            up_downQM = up_downQ.getMatrix();
+
+            neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
+
+            console.log("dragging: pitch: " + earth_pitch3 + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
+
+            neweye[0] = neweye[0] + earth_x_pos;
+            break;
+        }
+
+        look3.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
+        // SceneJS.withNode("theScene").start();
+        eye = look3.get("eye");
+        console.log("");
+        
     }
 }
 
