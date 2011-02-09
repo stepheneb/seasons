@@ -31,12 +31,24 @@ SceneJS.createNode({
                     
                         
                         // Integrate our sky sphere, which is defined in sky-sphere.js
-                        {
-                            type : "instance",
-                            target :"sky-sphere"
-                        },
 
+                        {
+                            type: "rotate",
+                            id: "earth-milkyway-rotation",
+                            angle: 0,
+                            y: 1.0,
+                            
+                            nodes: [
+                                
+                                {
+                                    type : "instance",
+                                    target :"sky-sphere"
+                                }
+                            ]
+                        },
+                        
                         // Integrate our sun, which is defined in sun.js
+
                         {
                             type : "instance",
                             target :"sun"
@@ -168,11 +180,60 @@ seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
 
 function setTemperatureTexture(month) {
     switch (month) {
-        case 'jun' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [5]); break;
-        case 'sep' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [8]); break;
-        case 'dec' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [11]); break;
-        case 'mar' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [2]); break;
+    case 'mar' : 
+        SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [5]);
+        earth_milkyway_rotation.set("angle", 270);            
+        break;
+        
+    case 'jun' : 
+        SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [8]);
+        earth_milkyway_rotation.set("angle", 0);
+        break;
+
+    case 'sep' : 
+        SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [11]); 
+        earth_milkyway_rotation.set("angle", 90);
+        break;
+
+    case 'dec' : 
+        SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [2]); 
+        earth_milkyway_rotation.set("angle", 180);
+        break;
     };    
+}
+
+var earth_milkyway_rotation = SceneJS.withNode("earth-milkyway-rotation");
+
+function setMilkyWayRotation(month) {
+    switch(look_at_selection) {
+        case "orbit":
+        earth_milkyway_rotation.set("angle", 0);
+        break;
+
+        case 'earth':
+        switch (month) {
+            case 'mar' : 
+                earth_milkyway_rotation.set("angle", 270);            
+                break;
+
+            case 'jun' : 
+                earth_milkyway_rotation.set("angle", 0);
+                break;
+
+            case 'sep' : 
+                earth_milkyway_rotation.set("angle", 90);
+                break;
+
+            case 'dec' : 
+                earth_milkyway_rotation.set("angle", 180);
+                break;
+        };
+        break;
+
+        case "surface":
+        break;
+    }
+
 }
 
 // Texture mapping onto the Earth's surface
@@ -256,11 +317,17 @@ function chooseMonthChange() {
         if (this.elements[i].checked) month = this.elements[i].value;
     earth_sun_line(month, look_at_selection);
     setTemperatureTexture(month);
+    SceneJS.Message.sendMessage({ 
+      command: "update", 
+      target: "earthRotationalAxisQuaternion", 
+      set: { rotation: seasonal_rotations[month] }
+    });
     if (earth_surface === 'terrain') {
         SceneJS.withNode("earthTextureSelector").set("selection", [1]);
     } else {
         SceneJS.withNode("earthTextureSelector").set("selection", [0]);
     }
+    setMilkyWayRotation(month);
 }
 
 choose_month.onchange = chooseMonthChange;
@@ -358,6 +425,7 @@ function chooseLookAt() {
         earth_sun_line_selector.set("selection", [0]);
         setFieldOfView("theCamera", 40.0);
         choose_month.onchange();
+        setMilkyWayRotation(month);
         break;
 
         case 'earth':
@@ -367,12 +435,14 @@ function chooseLookAt() {
         orbital_path.checked = true;
         earth_sun_line_selector.set("selection", [1]);
         setFieldOfView("theCamera", 45.0);
+        setMilkyWayRotation(month);
         break;
 
         case "surface":
         earth_rotation.checked=false
         look_at.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
         look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        setMilkyWayRotation(month);
         break;
     }
     orbital_path.onchange();
