@@ -46,18 +46,8 @@ var skySphere = SceneJS.createNode({
                                     angle: 45.0,
                                     nodes: [
 
-                                        // Milky way spin
                                         {
-                                            type: "rotate",
-                                            id: "milkyway-spin",
-                                            y: 1,
-                                            angle: 0.0,
-                                            nodes: [
-                                                // Sphere geometry
-                                                {
-                                                    type: "sphere"
-                                                }
-                                            ]
+                                            type: "sphere"
                                         }
                                     ]
                                 }

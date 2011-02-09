@@ -9,8 +9,8 @@ var earthSunLine = SceneJS.createNode({
             id: "earth-circle-orbit-sun-line",
             baseColor:      { r: 1.0, g: 0.3, b: 0.1 },
             specularColor:  { r: 1.0, g: 0.3, b: 0.1 },
-            specular:       1.0,
-            shine:          2.0,
+            specular:       5.0,
+            shine:          5.0,
             emit:           1.0,
 
             nodes: [
@@ -45,8 +45,8 @@ var earthSunLine = SceneJS.createNode({
 
                                             type: "scale",
                                             x: earth_orbital_radius_km / 2,
-                                            y: earth_diameter_km * 20,
-                                            z: earth_diameter_km * 40,
+                                            y: earth_diameter_km * 100,
+                                            z: earth_diameter_km * 50,
 
                                             nodes: [
 

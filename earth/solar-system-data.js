@@ -13,13 +13,23 @@ var milky_way_apparent_radius = earth_orbital_radius_km * 10;
 var earth_x_pos = -earth_orbital_radius_km;
 var sun_x_pos = 0;
 
-var normalized_initial_earth_eye = { x: 0, y: earth_diameter_km / 10, z: earth_diameter_km * -3 };
+var earth_view_small_offset = earth_diameter_km / 5;
+var earth_view_large_offset = earth_diameter_km * 3;
 
-var initial_earth_eye = { x: earth_x_pos, y: earth_diameter_km / 10, z: earth_diameter_km * -3 };
+var initial_earth_eye =      { x: earth_x_pos + earth_view_small_offset, y: earth_view_small_offset, z: -earth_view_large_offset };
+var initial_earth_eye_side = initial_earth_eye;
+var initial_earth_eye_top =  { x: earth_x_pos, y: earth_view_large_offset, z: -earth_view_small_offset };
 
-var initial_sun_eye = { x: sun_x_pos, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -3.0 };
+var normalized_initial_earth_eye =      { x: 0, y: earth_view_small_offset, z: -earth_view_large_offset };
+var normalized_initial_earth_eye_side = normalized_initial_earth_eye;
+var normalized_initial_earth_eye_top =  { x: 0, y: earth_view_large_offset, z: -earth_view_small_offset };
+
+var sun_view_small_offset = earth_orbital_radius_km * 0.3;
+var sun_view_large_offset =  earth_orbital_radius_km * 3.0;
+
+var initial_sun_eye = { x: sun_x_pos, y: sun_view_small_offset, z: -sun_view_large_offset };
 var initial_sun_eye_side = initial_sun_eye;
-var initial_sun_eye_top = { x: sun_x_pos, y: earth_orbital_radius_km * 3, z: earth_orbital_radius_km / -25 }
+var initial_sun_eye_top = { x: sun_x_pos, y: sun_view_large_offset, z: -sun_view_small_offset }
 
 var deg2rad = Math.PI/180;
 var min2rad = Math.PI/(180*60);
