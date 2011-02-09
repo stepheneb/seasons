@@ -84,33 +84,11 @@ SceneJS.createNode({
                             dir:                    { x: -1.0, y: 0.0, z: -1.0 }
                         },
                         
-
                         {
-                            type: "material",
-                            baseColor:      { r: 1.0, g: 0.3, b: 0.6 },
-                            specularColor:  { r: 1.0, g: 0.3, b: 0.6 },
-                            specular:       1.0,
-                            shine:          2.0,
-                            emit:           1.0,
-
-                            nodes: [
-                            
-                                {
-                                    type: "geometry",
-                                    primitive: "line-loop",
-
-                                    positions: [
-                                         sun_x_pos,     0.0,    0.0,
-                                         earth_x_pos,   0.0,    0.0
-                                    ],
-
-                                    indices : [ 0, 1 ]
-
-                                }
-                            ]
+                            type   : "instance",
+                            target : "earth-circle-orbit-sun-line"
                         },
-
-
+                        
                         {
                             type : "instance",
                             target :"earth"
@@ -157,12 +135,20 @@ function setAspectRatio(camera, canvas) {
 
 setAspectRatio("theCamera", canvas);
 
+function setFieldOfView(camera, fovy) {
+    var optics = SceneJS.withNode(camera).get("optics");
+    optics.fovy = fovy;
+    SceneJS.withNode(camera).set("optics", optics);
+}
+
 var choose_look_at = document.getElementById("choose-look-at");
 var look_at_selection;
-for(var i = 0; i < choose_look_at.elements.length; i++)
-    if (choose_look_at.elements[i].checked) look_at_selection = choose_look_at.elements[i].value;
-
-var look_at = SceneJS.withNode("lookAt")
+for(var i = 0; i < choose_look_at.elements.length; i++) {
+    if (choose_look_at.elements[i].checked) {
+        look_at_selection = choose_look_at.elements[i].value;
+    }
+}
+var look_at = SceneJS.withNode("lookAt");
 
 var orbital_path = document.getElementById("orbital_path");
 var earth_rotation = document.getElementById("earth_rotation");
@@ -193,12 +179,18 @@ function setTemperatureTexture(month) {
 
 var choose_earth_surface = document.getElementById("choose-earth-surface");
 var earth_surface;
-for(var i = 0; i < choose_earth_surface.elements.length; i++)
-    if (choose_earth_surface.elements[i].checked) earth_surface = choose_earth_surface.elements[i].value;
+for(var i = 0; i < choose_earth_surface.elements.length; i++) {
+    if (choose_earth_surface.elements[i].checked) {
+        earth_surface = choose_earth_surface.elements[i].value;
+    }
+}
 
 function earthSurfaceChange() {
-    for(var i = 0; i < this.elements.length; i++)
-        if (this.elements[i].checked) earth_surface = this.elements[i].value;
+    for(var i = 0; i < this.elements.length; i++) {
+        if (this.elements[i].checked) {
+            earth_surface = this.elements[i].value;        
+        }
+    }
     if (earth_surface === 'terrain') {
         SceneJS.withNode("earthTextureSelector").set("selection", [1]);
         // color_map.style.display='none';
@@ -219,77 +211,60 @@ var earth_scale = SceneJS.withNode("earth-scale");
 
 var earth_sun_line_rotation = SceneJS.withNode("earth-sun-line-rotation");
 var earth_sun_line_translation = SceneJS.withNode("earth-sun-line-translation");
+var earth_sun_line_selector = SceneJS.withNode("earthSunLineSelector");
+
+function earth_sun_line(month, view) {
+    var new_location = earth_circle_location_by_month(month);
+    switch(view) {
+        case "orbit":
+        switch(month) {
+            case "jun":
+            earth_sun_line_rotation.set("angle", 180);
+            earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+            break;
+            case "sep":
+            earth_sun_line_rotation.set("angle", 90);
+            earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
+            break;
+            case "dec":
+            earth_sun_line_rotation.set("angle", 0);
+            earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+            break;
+            case "mar":
+            earth_sun_line_rotation.set("angle", 270);
+            earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
+            break;
+        }
+        SceneJS.Message.sendMessage({ 
+          command: "update", 
+          target: "earthRotationalAxisQuaternion", 
+          set: { rotation: seasonal_rotations[month] }
+        });
+    }
+}
 
 var choose_month = document.getElementById("choose-month");
 var month;
-for(var i = 0; i < choose_month.elements.length; i++)
-    if (choose_month.elements[i].checked) month = choose_month.elements[i].value;
+for(var i = 0; i < choose_month.elements.length; i++) {
+    if (choose_month.elements[i].checked) {
+        month = choose_month.elements[i].value;    
+    }
+}
 
 function chooseMonthChange() {
-  for(var i = 0; i < this.elements.length; i++)
-      if (this.elements[i].checked) month = this.elements[i].value;
-  var new_location = earth_circle_location_by_month(month);
-  // earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
-  // earth_axis_position.set({ x: new_location[0], y: 0, z: new_location[2] });
-  switch(month) {
-       case "jun":
-       earth_sun_line_rotation.set("angle", 90);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: earth_orbital_radius_km / 2 });
-       break;
-       case "sep":
-       earth_sun_line_rotation.set("angle", 0);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km * 1.5, y: 0.0, z: 0 });
-       break;
-       case "dec":
-       earth_sun_line_rotation.set("angle", 270);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km, y: 0.0, z: -earth_orbital_radius_km / 2 });
-       break;
-       case "mar":
-       earth_sun_line_rotation.set("angle", 180);
-       earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2, y: 0.0, z: 0 });
-       break;
-  }
-  SceneJS.Message.sendMessage({ 
-    command: "update", 
-    target: "earthRotationalAxisQuaternion", 
-    set: { rotation: seasonal_rotations[month] }
-  });
-  setTemperatureTexture(month);
-  if (earth_surface === 'terrain') {
-      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
-  } else {
-      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
-  }
-  
-  // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
+    for(var i = 0; i < this.elements.length; i++)
+        if (this.elements[i].checked) month = this.elements[i].value;
+    earth_sun_line(month, look_at_selection);
+    setTemperatureTexture(month);
+    if (earth_surface === 'terrain') {
+        SceneJS.withNode("earthTextureSelector").set("selection", [1]);
+    } else {
+        SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+    }
 }
 
 choose_month.onchange = chooseMonthChange;
 choose_month.onchange();
-
-// Time of year changes inclination of Earths orbit with respect to the orbital plane
-
-// var time_of_year = document.getElementById("time_of_year");
-// 
-// function timeOfYearChange() {
-//   var month = this.value;
-//   SceneJS.Message.sendMessage({ 
-//     command: "update", 
-//     target: "earthRotationalAxisQuaternion", 
-//     set: { rotation: seasonal_rotations[month] }
-//   });
-//   setTemperatureTexture(month);
-//   if (earth_surface.value === 'terrain') {
-//       SceneJS.withNode("earthTextureSelector").set("selection", [1]);
-//   } else {
-//       SceneJS.withNode("earthTextureSelector").set("selection", [0]);
-//   }
-// }
-// 
-// time_of_year.onchange = timeOfYearChange;
-// time_of_year.onchange();
-
-// Orbital Path Indicator
 
 function orbitalPathChange() {
   if (orbital_path.checked) {
@@ -367,73 +342,45 @@ orbital_grid.onchange();
 // Reference Frame
 
 function chooseLookAt() {
-  for(var i = 0; i < this.elements.length; i++)
-      if (this.elements[i].checked) look_at_selection = this.elements[i].value;
-  // var new_location = earth_circle_location_by_month(month);
-  // earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
-  // earth_axis_position.set({ x: new_location[0], y: 0, z: new_location[2] });
-  
-  // reference_frame.value = look_at_selection;
-  switch(look_at_selection) {
-     case "orbit":
-      look_at.set("eye",  initial_sun_eye );
-      look_at.set("look", { x : sun_x_pos, y : 0.0, z : 0.0 } );
-      orbital_path.checked = true;
-      break;
+    for(var i = 0; i < this.elements.length; i++) {
+        if (this.elements[i].checked) look_at_selection = this.elements[i].value;
+    }
+    // var new_location = earth_circle_location_by_month(month);
+    // earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
+    // earth_axis_position.set({ x: new_location[0], y: 0, z: new_location[2] });
 
-     case 'earth':
-      earth_rotation.checked=true
-      look_at.set("eye",  initial_earth_eye );
-      look_at.set("look", { x : earth_x_pos, y : 0.0, z : 0.0 } );
-      orbital_path.checked = true;
-      break;
+    // reference_frame.value = look_at_selection;
+    switch(look_at_selection) {
+        case "orbit":
+        look_at.set("eye",  initial_sun_eye );
+        look_at.set("look", { x : sun_x_pos, y : 0.0, z : 0.0 } );
+        orbital_path.checked = true;
+        earth_sun_line_selector.set("selection", [0]);
+        setFieldOfView("theCamera", 40.0);
+        choose_month.onchange();
+        break;
 
-     case "surface":
-      earth_rotation.checked=false
-      look_at.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
-      look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
-      break;
-  }
-  orbital_path.onchange();
-  orbitalGridChange();
+        case 'earth':
+        earth_rotation.checked=true
+        look_at.set("eye",  initial_earth_eye );
+        look_at.set("look", { x : earth_x_pos, y : 0.0, z : 0.0 } );
+        orbital_path.checked = true;
+        earth_sun_line_selector.set("selection", [1]);
+        setFieldOfView("theCamera", 45.0);
+        break;
+
+        case "surface":
+        earth_rotation.checked=false
+        look_at.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
+        look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
+        break;
+    }
+    orbital_path.onchange();
+    orbitalGridChange();
 }
 
 choose_look_at.onchange = chooseLookAt;
 choose_look_at.onchange();
-// 
-// function referenceFrameChange() {
-//     switch(this.value) {
-//        case "orbit":
-//         look_at.set("eye",  { x: 0, y: earth_orbital_radius_km * 0.3, z: earth_orbital_radius_km * -2.5 } );
-//         look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
-//         break;
-//  
-//        case 'earth':
-//         earth_rotation.checked=true
-//         look_at.set("eye",  { x: 0, y: 1, z: earth_diameter_km * -3 } );
-//         look_at.set("look", { x : 0, y : 0.0, z : 0.0 } );
-//         orbital_path.checked = true;
-//         break;
-// 
-//        case "low-orbit":
-//         look_at.set("eye",  { x: 0, y: 0, z: earth_diameter_km * -1.3 } );
-//         look_at.set("look",{ x : 0, y : 0.0, z : 0.0 } );
-//         break;
-// 
-//        case "surface":
-//         earth_rotation.checked=false
-//         look_at.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
-//         look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
-//         break;
-//   }
-//   orbital_path.onchange();
-//   orbitalGridChange();
-//   // SceneJS.withNode("theScene").start();
-// }
-// 
-// reference_frame.onchange = referenceFrameChange;
-// reference_frame.onchange();
-
 
 var upQM    = new SceneJS.Quaternion({ x : 1, y : 0, z : 0, angle :  15 }).getMatrix();
 var downQM  = new SceneJS.Quaternion({ x : 1, y : 0, z : 0, angle : -15 }).getMatrix();
@@ -476,50 +423,49 @@ function mouseMove(event) {
 
         switch(look_at_selection) {
             case "orbit":
-                sun_yaw += new_yaw;
-                sun_pitch += new_pitch;
-                eye4 = [initial_sun_eye.x, initial_sun_eye.y, initial_sun_eye.z, 1];
+            sun_yaw += new_yaw;
+            sun_pitch += new_pitch;
+            eye4 = [initial_sun_eye.x, initial_sun_eye.y, initial_sun_eye.z, 1];
 
-                left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : sun_yaw });
-                left_rightQM = left_rightQ.getMatrix();
+            left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : sun_yaw });
+            left_rightQM = left_rightQ.getMatrix();
 
-                neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
-                console.log("dragging: yaw: " + sun_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+            neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
+            console.log("dragging: yaw: " + sun_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
 
-                eye4 = SceneJS._math_dupMat4(neweye);
-                eye4dup = SceneJS._math_dupMat4(eye4);
+            eye4 = SceneJS._math_dupMat4(neweye);
+            eye4dup = SceneJS._math_dupMat4(eye4);
 
-                up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : sun_pitch });
-                up_downQM = up_downQ.getMatrix();
+            up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : sun_pitch });
+            up_downQM = up_downQ.getMatrix();
 
-                neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
+            neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
 
-                console.log("dragging: pitch: " + sun_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
-
+            console.log("dragging: pitch: " + sun_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
             break;
 
             case 'earth':
-                earth_yaw   += new_yaw;
-                earth_pitch += new_pitch;
-                eye4 = [normalized_initial_earth_eye.x, normalized_initial_earth_eye.y, normalized_initial_earth_eye.z, 1];
+            earth_yaw   += new_yaw;
+            earth_pitch += new_pitch;
+            eye4 = [normalized_initial_earth_eye.x, normalized_initial_earth_eye.y, normalized_initial_earth_eye.z, 1];
 
-                left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : earth_yaw });
-                left_rightQM = left_rightQ.getMatrix();
+            left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : earth_yaw });
+            left_rightQM = left_rightQ.getMatrix();
 
-                neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
-                console.log("dragging: yaw: " + earth_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+            neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
+            console.log("dragging: yaw: " + earth_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
 
-                eye4 = SceneJS._math_dupMat4(neweye);
-                eye4dup = SceneJS._math_dupMat4(eye4);
+            eye4 = SceneJS._math_dupMat4(neweye);
+            eye4dup = SceneJS._math_dupMat4(eye4);
 
-                up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : earth_pitch });
-                up_downQM = up_downQ.getMatrix();
+            up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : earth_pitch });
+            up_downQM = up_downQ.getMatrix();
 
-                neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
+            neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
 
-                console.log("dragging: pitch: " + earth_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
+            console.log("dragging: pitch: " + earth_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
 
-                neweye[0] = neweye[0] + earth_x_pos;
+            neweye[0] = neweye[0] + earth_x_pos;
             break;
         }
 
