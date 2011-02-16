@@ -1431,6 +1431,9 @@ model2d.displayTemperature = function(canvas, model) {
     var xAspect = canvas.clientWidth / 100;
     var yAspect = canvas.clientHeight / 100;
     
+    var cellSizeX = xAspect + 1;
+    var cellSizeY = yAspect + 1;
+    
     var columns = model.nx;
     var rows = model.ny;
     var ycols, ycols_plus_x;
@@ -1443,7 +1446,7 @@ model2d.displayTemperature = function(canvas, model) {
             ctx.fillStyle = 'hsl(' + temp + ',100%, 50%)';
             ctx.strokeStyle = 'hsl(' + temp + ',100%, 50%)';
             // ctx.fillStyle = 'rgb(' + temp + ','+ temp + ',' + temp + ')';
-            ctx.fillRect (x * xAspect, y * yAspect, 6, 5);
+            ctx.fillRect (x * xAspect, y * yAspect, cellSizeX, cellSizeY);
         }
     }
 }
