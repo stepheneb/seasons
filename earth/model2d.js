@@ -388,9 +388,12 @@ model2d.HeatSolver2D.prototype.solve = function(convective, t) {
             for (j = 1; j < ny1; j++) {
                 jinx = inx + j;
                 if (isNaN(tb[jinx])) {
+
                     jinx_minus_nx = jinx - nx;
                     jinx_plus_nx = jinx + nx;
                     jinx_minus_1 = jinx - 1;
+                    jinx_plus_1 = jinx + 1;
+
                     sij = this.capacity[jinx] * this.density[jinx] * invTimeStep;
                     rij = this.conductivity[jinx];
                     axij = hx * (rij + conductivity[jinx_minus_nx]);
@@ -398,7 +401,7 @@ model2d.HeatSolver2D.prototype.solve = function(convective, t) {
                     ayij = hy * (rij + conductivity[jinx_minus_1]);
                     byij = hy * (rij + conductivity[jinx_minus_1]);
                     t[jinx] = (t0[jinx] * sij + q[jinx] + axij * t[jinx_minus_nx] + bxij
-                            * t[jinx_plus_nx] + ayij * t[jinx_minus_1] + byij * t[jinx_plus_nx]) /
+                            * t[jinx_plus_nx] + ayij * t[jinx_minus_1] + byij * t[jinx_plus_1]) /
                             (sij + axij + bxij + ayij + byij);
                 } else {
                     t[jinx] = tb[jinx];
