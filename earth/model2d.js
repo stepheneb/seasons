@@ -35,7 +35,26 @@ model2d.NX = 100;
 model2d.NY = 100;
 model2d.ARRAY_SIZE = model2d.NX * model2d.NY;
 
-model2d.Model2D = function() {
+model2d.Model2D = function(options) {
+    if (!options) {
+        options = {};
+    }
+    if (!options.model) {
+        options.model = {};
+    }
+    var measurementInterval = options.model.measurement_interval || 100;
+    this.viewUpdateInterval = options.model.view_update_interval || 20;
+    this.sunny = options.model.sunny || true;
+    this.sun_angle = options.model.sun_angle || 1.5707964;
+    this.solarPowerDensity = options.model.solar_power_density || 20000;
+    this.solarRayCount = options.model.solar_ray_count || 24;
+    this.olarRaySpeed = options.model.solar_ray_speed || 0.001;
+    this.photonEmissionInterval = options.model.photon_emission_interval || 5;
+    this.convective = options.model.convective || true;
+    this.backgroundConductivity = options.model.background_conductivity || 0.1;
+    this.thermalBuoyancy = options.model.thermal_buoyancy || 0.00025;
+    this.buoyancyApproximation =options.model.buoyancy_approximation || 1;
+
     
     this.BUOYANCY_AVERAGE_ALL = 0;
     this.BUOYANCY_AVERAGE_COLUMN = 1;
@@ -47,6 +66,8 @@ model2d.Model2D = function() {
     this.backgroundDensity = model2d.AIR_DENSITY;
     this.backgroundTemperature = 10.0;
 
+
+    this.parts = [];
     // private List<Thermometer> thermometers;
     // 
     // private List<Part> parts;
@@ -56,10 +77,6 @@ model2d.Model2D = function() {
     // private FluidSolver2D fluidSolver;
     // private HeatSolver2D heatSolver;
 
-    // boolean
-    this.sunny;
-    
-    this.photonEmissionInterval = 20;
 
     this.nx = model2d.NX;
     this.ny = model2d.NY;
@@ -76,9 +93,11 @@ model2d.Model2D = function() {
     // booleans
     this.running;
     this.notifyReset;
-    
-    this.viewUpdateInterval = 20;
-    this.measurementInterval = 100;
+
+
+
+
+
 
     // optimization flags (booleans)
     this.hasPartPower;
