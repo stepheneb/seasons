@@ -122,7 +122,7 @@ model2d.Model2D = function() {
     // specific heat capacity array
     this.capacity = new Float32Array(model2d.ARRAY_SIZE);
     for (i = 0; i < model2d.ARRAY_SIZE; i++) {
-        this.capacity[i] = this.backgroundCapacity;
+        this.capacity[i] = 0;
     }
     
     // density array
@@ -373,6 +373,9 @@ model2d.HeatSolver2D.prototype.solve = function(convective, t) {
     var inx_minus_nx;
     
     var conductivity = this.conductivity;
+    var capacity = this.capacity;
+    var density = this.density;
+
     var tb = this.tb;
     var t0 = this.t0;
     var q = this.q;
@@ -394,8 +397,8 @@ model2d.HeatSolver2D.prototype.solve = function(convective, t) {
                     jinx_minus_1 = jinx - 1;
                     jinx_plus_1 = jinx + 1;
 
-                    sij = this.capacity[jinx] * this.density[jinx] * invTimeStep;
-                    rij = this.conductivity[jinx];
+                    sij = capacity[jinx] * density[jinx] * invTimeStep;
+                    rij = conductivity[jinx];
                     axij = hx * (rij + conductivity[jinx_minus_nx]);
                     bxij = hx * (rij + conductivity[jinx_plus_nx]);
                     ayij = hy * (rij + conductivity[jinx_minus_1]);
