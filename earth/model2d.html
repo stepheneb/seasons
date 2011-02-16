@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Seasons 1.2a: Investigating Sun-Earth distance and temperature</title>
+    <link href="../stylesheets/style.css"        rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets/video-js.css"     rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets//flotr-style.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="../lib/modernizr-1.6.js"></script>
+
+    <script type="text/javascript" src="../lib/sprintf.js"></script>
+
+    <script type="text/javascript" src="../lib/flotr/lib/prototype.js"></script>
+    
+    <!--[if IE]>
+      <script type="text/javascript" src="../lib/flotr/lib/excanvas.js"></script>
+      <script type="text/javascript" src="../lib/flotr/lib/base64.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../lib/flotr/lib/canvas2image.js"></script>
+    <script type="text/javascript" src="../lib/flotr/lib/canvastext.js"></script>
+    <script type="text/javascript" src="../lib/flotr/flotr.debug-0.2.0-test.js"></script>
+    <script src="../lib/ace/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="../lib/ace/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../lib/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script> -->
+    
+</head>
+<div id="container">
+  <div id="header-inner">
+    <h1 id="title">Energy2D: JavaScript</h1>
+    <div id="simulation-controls">       
+    </div>
+  </div>
+  <div id="content">
+    <div id="webglCanvasContainer">
+      <ul class="hlist">
+        <li>
+          <div class="glCanvasQuarterFrame">
+            <p>Energy2D Model</p>
+            <canvas id="theCanvas1">
+            </canvas>
+            <ul class="hlist">
+              <li>
+                <form id="step-model">
+                  <fieldset>
+                    <legend>Step: </legend>
+                    <label><input type="radio" name="step" value="stop"> Stop</input></label>
+                    <label><input type="radio" name="step" value="step" checked> Step</input></label>
+                    <label><input type="radio" name="step" value="go"> Go</input></label>
+                    <!-- <label><input type="radio" name="step" value="reset"> Reset</input></label> -->
+                  </fieldset>
+                </form>
+              </li>
+              <li id="step-count">0</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="editorQuarterFrame">
+            Model Script:
+            <div class="editorFrame" id="editor">notes ...</div>
+          </div>
+        </li>
+      </ul>
+      <ul class="hlist">
+        <li>
+        </li>
+        <li>
+        </li>
+      </ul>
+    </div>
+    <div id="info">
+      <p>Temperature Data Array:</p>
+      <pre id="tdata" style="font-size:80%"></pre>
+  </div>
+</div>
+<script type="text/javascript">
+
+  function myRequire(src, callback){
+    if (src.constructor == Array) {
+      var libraries = src;
+    } else {
+      var libraries = [src];
+    }
+    var script = document.createElement("script") 
+    script.type = "text/javascript";
+    // IE
+    script.onreadystatechange = function () {
+      if (script.readyState === 'loaded' || script.readyState == 'complete') {
+        script.onreadystatechange = null;
+        libraries.shift();
+        if (libraries.length > 0) {
+          myRequire(libraries)
+        }
+        if (callback) {
+          callback();            
+        }
+      }
+    }
+    // Not IE
+    script.onload = function () {
+      libraries.shift();
+      if (libraries.length > 0) {
+        myRequire(libraries)
+      }
+      if (callback) {
+        callback();            
+      }
+    }
+    script.src = libraries[0];
+    document.getElementsByTagName("head")[0].appendChild(script);
+  };
+  
+  window.onload=function() {
+    var webGLEnabled = Modernizr.webgl;
+    // webGLEnabled = false;
+    if (webGLEnabled){
+      myRequire([
+        "model2d.js",
+      ], function() {
+        var model = new model2d.Model2D();
+
+        model2d.addHotSpot(model, 50.0);
+
+        var step_model = document.getElementById("step-model");
+        var step_count = document.getElementById("step-count");
+        var canvas =     document.getElementById("theCanvas1");
+        var tdata =      document.getElementById("tdata");
+        var run_mode;
+
+        window.renderModelStep = function() {
+            model.nextStep();
+            step_count.innerHTML = model.indexOfStep;
+            model2d.displayTemperature(canvas, model);
+            model2d.displayTemperatureTable(tdata, model);
+        }
+        
+        window.paintInterval;
+        
+        function runModelStep() {
+          for(var i = 0; i < this.elements.length; i++)
+              if (this.elements[i].checked) run_mode = this.elements[i].value;
+          
+          
+          switch(run_mode) {
+            case "go":
+              paintInterval = setInterval("renderModelStep()", 30);
+              break;
+            case "step":
+              window.clearInterval(window.paintInterval);
+              renderModelStep();
+              this.elements[0].checked = true;
+              break;
+            case "stop":
+              if (window.paintInterval) {
+                window.clearInterval(paintInterval);
+              }
+              break;
+            case "reset":
+              if (window.paintInterval) {
+                window.clearInterval(paintInterval);
+              }
+              var model = new model2d.Model2D();
+              model.reset;
+              // model = new model2d.Model2D();
+              renderModelStep;
+              break;
+          }
+        }
+        
+        step_model.onchange = runModelStep;
+        step_model.onchange();
+        
+      });
+    } else {
+      var content = document.getElementById('content');
+      var canvasContainer = document.getElementById('webglCanvasContainer');
+      var controls = document.getElementById('simulation-controls');
+
+      controls.style['display']='none';
+
+      var header = document.getElementById('header-inner');
+      var getting_webgl = document.getElementById('getting-webgl').cloneNode(true);
+      header.appendChild(getting_webgl);
+
+
+      var notice = document.createElement('p');
+      notice.innerHTML = "<em>Play a video of the Earth visualization with an <a href=\"http://videojs.com\">HTML5 Video Player</a> because this browser doesn't support WebGL.</em>";
+      notice.className = "videoplayernotice";
+      content.insertBefore(notice, canvasContainer);
+
+      myRequire("../lib/videojs/video.js", function () {
+        var currentPath = location.href.replace(/index\.html$/, '');
+        var earthVideoStr="";
+        earthVideoStr += "<div class=\"video-js-box\">";
+        earthVideoStr += "<video id=\"earth-video\" class=\"video-js\" width=\"1030\" height=\"700\" controls=\"controls\" ";
+        earthVideoStr += "preload=\"auto\" poster=\"images\/earth-frame1-mixed.jpg\">";
+        earthVideoStr += "<source src=\"videos\/earth3.mp4\" type='video\/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"' \/>";
+        earthVideoStr += "<source src=\"videos\/earth3.webm\" type='video\/webm; codecs=\"vp8, vorbis\"' \/>";
+        earthVideoStr += "<source src=\"videos\/earth3.ogv\" type='video\/ogg; codecs=\"theora, vorbis\"' \/>";
+        earthVideoStr += "<object id=\"flash_fallback_1\" class=\"vjs-flash-fallback\" width=\"1030\" height=\"700\" type=\"application\/x-shockwave-flash\"";
+        earthVideoStr += "data=\"http:\/\/releases.flowplayer.org\/swf\/flowplayer-3.2.1.swf\">";
+        earthVideoStr += "<param name=\"movie\" value=\"http:\/\/releases.flowplayer.org\/swf\/flowplayer-3.2.1.swf\" \/>";
+        earthVideoStr += "<param name=\"allowfullscreen\" value=\"true\" \/>";
+        earthVideoStr += "<param name=\"flashvars\" value='config={\"playlist\":[\"" + currentPath + "/images/earth-frame1-mixed.jpg\", "
+        earthVideoStr += "{\"url\": \"" + currentPath + "videos\/earth3.flv\",\"autoPlay\":false,\"loop\":false,\"autoBuffering\":true}]}' \/>";
+        earthVideoStr += "<img src=\"" + currentPath + "images/earth-frame1-mixed.jpg\" width=\"1030\" height=\"700\" alt=\"Poster Image\"";
+        earthVideoStr += "title=\"No video playback capabilities.\" \/>";
+        earthVideoStr += "<\/object>";
+        earthVideoStr += "<\/video>";
+        earthVideoStr += "<p class=\"vjs-no-video\"><\/p>";
+        earthVideoStr += "<\/div>";
+        earthVideoStr += "";
+        canvasContainer.innerHTML = earthVideoStr;
+        VideoJS.setupAllWhenReady();
+      });
+    };
+  }
+</script>
+</body>
+</html>
