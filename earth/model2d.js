@@ -207,7 +207,7 @@ model2d.Model2D.prototype.nextStep = function() {
         if (this.indexOfStep % this.photonEmissionInterval == 0) {
             this.refreshPowerArray();
             if (this.sunny)
-                this.raySolver.sunShine(photons, parts);
+                this.raySolver.sunShine(this.photons, this.parts);
             this.raySolver.radiate(this);
         }
         this.raySolver.solve(this);
@@ -1230,6 +1230,17 @@ model2d.RaySolver2D.prototype.setGridCellSize = function(deltaX, deltaY) {
     this.deltaY = deltaY;
 };
 
+// loat x, float y, List<Part> parts
+model2d.RaySolver2D.prototype.isContained = function(x, y, parts) {
+    var parts_length = parts.length;
+    for (i = 0; i < parts_length; i++) {
+        if (parts[i].contains(x, y)) {
+            return true;
+        }
+    } 
+    return false;
+};
+
 // float sunAngle
 model2d.RaySolver2D.prototype.setSunAngle = function(sunAngle) {
     this.sunAngle = Math.PI - sunAngle;
@@ -1317,62 +1328,68 @@ model2d.RaySolver2D.prototype.sunShine = function(photons, parts) {
 
 // float dx, float dy, List<Photon> photons, List<Part> parts
 model2d.RaySolver2D.prototype.shootAtAngle = function(dx, dy, photons, parts) {
-  var m = this.lx / dx;
-  var n = this.ly / dy;
-  var x, y;
-  if (this.sunAngle >= 0 && this.sunAngle < 0.5 * Math.PI) {
-    y = 0;
-    for (i = 1; i <= m; i++) {
-      x = dx * i;
-      if (!this.isContained(x, y, parts))
-        photons.push(new Photon(x, y, thisrayPower, thissunAngle, thisraySpeed));
+    var lx = this.lx;
+    var ly = this.ly;
+    var sunAngle = this.sunAngle;
+    var rayPower = this.rayPower;
+    var raySpeed = this.raySpeed;
+    var m = this.lx / dx;
+    var n = this.ly / dy;
+    var x, y;
+    return;
+    if (this.sunAngle >= 0 && this.sunAngle < 0.5 * Math.PI) {
+        y = 0;
+        for (i = 1; i <= m; i++) {
+            x = dx * i;
+            if (!this.isContained(x, y, parts))
+            photons.push(new model2d.Photon(x, y, rayPower, sunAngle, raySpeed));
+        }
+        x = 0;
+        for (i = 0; i <= n; i++) {
+            y = dy * i;
+            if (!this.isContained(x, y, parts))
+            photons.push(new model2d.Photon(x, y, rayPower, sunAngle, raySpeed));
+        }
+    } else if (sunAngle < 0 && sunAngle >= -0.5 * Math.PI) {
+        y = ly;
+        for (i = 1; i <= m; i++) {
+            x = dx * i;
+            if (!this.isContained(x, y, parts))
+            photons.push(new model2d.Photon(x, y, rayPower, sunAngle, raySpeed));
+        }
+        x = 0;
+        for (i = 0; i <= n; i++) {
+            y = ly - dy * i;
+            if (!this.isContained(x, y, parts))
+            photons.push(new model2d.Photon(x, y, rayPower, sunAngle, raySpeed));
+        }
+    } else if (sunAngle < Math.PI + 0.001 && sunAngle >= 0.5 * Math.PI) {
+        y = 0;
+        for (i = 0; i <= m; i++) {
+            x = lx - dx * i;
+            if (!this.isContained(x, y, parts))
+            photons.push(new model2d.Photon(x, y, rayPower, sunAngle, raySpeed));
+        }
+        x = lx;
+        for (i = 1; i <= n; i++) {
+            y = dy * i;
+            if (!this.isContained(x, y, parts))
+            photons.push(new model2d.Photon(x, y, rayPower, sunAngle, raySpeed));
+        }
+    } else if (sunAngle >= -Math.PI && sunAngle < -0.5 * Math.PI) {
+        y = ly;
+        for (i = 0; i <= m; i++) {
+            x = lx - dx * i;
+            if (!this.isContained(x, y, parts))
+            photons.push(new model2d.Photon(x, y, thisr.ayPower, sunAngle, raySpeed));
+        }
+        x = lx;
+        for (i = 1; i <= n; i++) {
+            y = ly - dy * i;
+            if (!this.isContained(x, y, parts))
+            photons.push(new model2d.Photon(x, y, rayPower, sunAngle, raySpeed));
+        }
     }
-    x = 0;
-    for (i = 0; i <= n; i++) {
-      y = dy * i;
-      if (!this.isContained(x, y, parts))
-        photons.push(new Photon(x, y, thisrayPower, thissunAngle, thisraySpeed));
-    }
-  } else if (sunAngle < 0 && sunAngle >= -0.5 * Math.PI) {
-    y = ly;
-    for (i = 1; i <= m; i++) {
-      x = dx * i;
-      if (!this.isContained(x, y, parts))
-        photons.push(new Photon(x, y, thisrayPower, thissunAngle, thisraySpeed));
-    }
-    x = 0;
-    for (i = 0; i <= n; i++) {
-      y = ly - dy * i;
-      if (!this.isContained(x, y, parts))
-        photons.push(new Photon(x, y, thisrayPower, thissunAngle, thisraySpeed));
-    }
-  } else if (sunAngle < Math.PI + 0.001 && sunAngle >= 0.5 * Math.PI) {
-    y = 0;
-    for (i = 0; i <= m; i++) {
-      x = lx - dx * i;
-      if (!this.isContained(x, y, parts))
-       photons.push(new Photon(x, y, thisrayPower, thissunAngle, thisraySpeed));
-    }
-    x = lx;
-    for (i = 1; i <= n; i++) {
-      y = dy * i;
-      if (!this.isContained(x, y, parts))
-        photons.push(new Photon(x, y, thisrayPower, thissunAngle, thisraySpeed));
-    }
-  } else if (sunAngle >= -Math.PI && sunAngle < -0.5 * Math.PI) {
-    y = ly;
-    for (i = 0; i <= m; i++) {
-      x = lx - dx * i;
-      if (!this.isContained(x, y, parts))
-        photons.push(new Photon(x, y, thisrayPower, thissunAngle, thisraySpeed));
-    }
-    x = lx;
-    for (i = 1; i <= n; i++) {
-      y = ly - dy * i;
-      if (!this.isContained(x, y, parts))
-        photons.push(new Photon(x, y, thisrayPower, thissunAngle, thisraySpeed));
-    }
-  }
 }
 
 
@@ -1383,13 +1400,12 @@ model2d.RaySolver2D.prototype.shootAtAngle = function(dx, dy, photons, parts) {
 // *******************************************************
 
 // float x, float y, float energy, float c
-model2d.Photon = function(x, y, c) {
+model2d.Photon = function(x, y, energy, angle, c) {
     this.x = x;
     this.y = y;
     this.energy = energy;
     this.c = c;
-    this.vx = null;
-    this.vy = null;
+    this.setAngle(angle);
 }
 
 
