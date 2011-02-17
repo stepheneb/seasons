@@ -172,6 +172,34 @@ h4 {
 #header-inner input {
 }
 
+
+.transparent-ui {
+    opacity: .6;
+}
+
+.label-container {
+    z-index: 0;
+}
+
+#earth-info-label {
+    position: absolute;
+    width: 240px;
+    font: 1.1em monospace;
+    clear: both;
+    padding: 8px;
+    overflow: hidden;
+    background: blue;
+    color: white;
+    z-index: 2;
+    margin: 0 auto;
+    border: 1px solid;
+    text-align: left;
+    -webkit-box-shadow: #444 5px 5px 2px;
+    border-bottom-left-radius: 5px 5px;
+    border-bottom-right-radius: 5px 5px;
+    border-top-left-radius: 5px 5px;
+    border-top-right-radius: 5px 5px;
+}
 .checkbox, .radio {
   width: 19px;
   height: 25px;
@@ -187,6 +215,10 @@ h4 {
 canvas {
     padding-bottom: 15px;
     margin-bottom: 10px;
+}
+
+canvas:hover {
+    cursor: move;    
 }
 
 #content {
@@ -223,11 +255,40 @@ canvas {
     background-color: black;
 }
 
+#content .glCanvasFullFrame canvas:hover {
+    cursor: move;    
+}
+
+.quarterFrame {
+    width: 480px;
+    border: 1px solid lightgray;*/
+}
+
+.editorQuarterFrame {
+    width: 460px;
+    height: 460px;
+    margin-left: 5px;
+    padding: 2px;
+}
+
+.editorFrame {
+    width: 460px;
+    height: 360px;
+}
+
 .glCanvasQuarterFrame {
     width: 480px;
     margin-left: 5px;
     padding: 2px;
 /*    border: 1px solid lightgray;*/
+}
+
+.glGraphQuarterFrame {
+    width: 480px;
+    height: 350px;
+    margin-left: 5px;
+    padding: 2px;
+/*    border: 1px solid lightgray;*/*/
 }
 
 #content .glCanvasQuarterFrame canvas {
@@ -236,6 +297,10 @@ canvas {
     margin-top: 5px;
     margin-bottom: 5px;
     background-color: black;
+}
+
+#content .glCanvasQuarterFrame canvas:hover {
+    cursor: move;    
 }
 
 #content .glCanvasQuarterFrame p {
@@ -378,7 +443,7 @@ canvas {
     color: #444444 !important;
     margin-left: 10px;
     margin-bottom: 5px;
-    display: inline-block;
+    display: inline-table;
     list-style-type: none;
 }
 

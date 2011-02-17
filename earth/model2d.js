@@ -324,6 +324,31 @@ model2d.getMin = function(array) {
     return Math.min.apply( Math, array );
 };
 
+// FloatxxArray[] array
+model2d.getMaxTypedArray = function(array) {
+    var max = Number.MIN_VALUE;
+    var length = array.length;
+    var test;
+    for(i = 0; i < length; i++) {
+        test = array[i];
+        max = test > max ? test : max
+    }
+    return max;
+};
+
+// FloatxxArray[] array
+model2d.getMinTypedArray = function(array) {
+    var min = Number.MAX_VALUE;
+    var length = array.length;
+    var test;
+    for(i = 0; i < length; i++) {
+        test = array[i];
+        min = test < min ? test : min
+    }
+    return min;
+};
+
+
 model2d.getAverage = function(array) {
     var acc = 0;
     var length = array.length;
@@ -1461,6 +1486,49 @@ model2d.addHotSpot = function(model, temp) {
     }
 }
 
+
+var colorDivs = [];
+
+model2d.setupColorDivs = function() {
+    var i;
+    for (i = 0; i < 256; i++) {
+        colorDivs[i] = '<div class="cp' + i + '"></div>'
+    }
+
+    var hue;
+    var cssColorRules = [];
+    for (i = 0; i < 256; i++) {
+        hue = Math.abs(i - 255);
+        cssColorRules[i] = '.cp' + i + ' { background-color:hsl(' + hue + ',100%,50%); width:5px; height:4px; margin:0px; display:inline-block }'
+    }
+
+    for (i = 0; i < cssColorRules.length; i++) {
+        document.styleSheets[0].insertRule(cssColorRules[i], 0)
+    }
+}
+
+model2d.displayTemperatureColorDivs = function(destination, model) {
+    var columns = model.nx;
+    var rows = model.ny;
+    var ycols, ycols_plus_x;
+    var t = model.t;
+    var min = model2d.getMinTypedArray(t);
+    var max = model2d.getMaxTypedArray(t);
+    var scale = 255/(max - min);
+    var temp;
+    var colorDivsStr = "";
+    for (y = 0; y < rows; y++) {
+        ycols = y * rows;
+        for (x = 0; x < columns; x++) {
+            ycols_plus_x = ycols + x;
+            temp = t[ycols_plus_x];
+            colorDivsStr += colorDivs[Math.round(scale * temp - min)]
+        }
+        colorDivsStr += '\n';
+    }
+    destination.innerHTML = colorDivsStr;
+}
+
 model2d.displayTemperature = function(canvas, model) {
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = "rgb(0,0,0)";
@@ -1475,18 +1543,25 @@ model2d.displayTemperature = function(canvas, model) {
     var cellSizeX = xAspect + 1;
     var cellSizeY = yAspect + 1;
     
+    var hue;
+    
     var columns = model.nx;
     var rows = model.ny;
     var ycols, ycols_plus_x;
+
+    var t = model.t;
+    var min = model2d.getMinTypedArray(t);
+    var max = model2d.getMaxTypedArray(t);
+    var scale = 255/(max - min);
     var temp;
     for (y = 0; y < rows; y++) {
         ycols = y * rows;
         for (x = 0; x < columns; x++) {
             ycols_plus_x = ycols + x;
-            temp = model.t[ycols_plus_x] * 5 + 20;
-            ctx.fillStyle = 'hsl(' + temp + ',100%, 50%)';
-            ctx.strokeStyle = 'hsl(' + temp + ',100%, 50%)';
-            // ctx.fillStyle = 'rgb(' + temp + ','+ temp + ',' + temp + ')';
+            temp = model.t[ycols_plus_x];
+            hue =  Math.abs(Math.round(scale * temp - min) - 255);
+            ctx.fillStyle = 'hsl(' + hue + ',100%, 50%)';
+            ctx.strokeStyle = 'hsl(' + hue + ',100%, 50%)';
             ctx.fillRect (x * xAspect, y * yAspect, cellSizeX, cellSizeY);
         }
     }
