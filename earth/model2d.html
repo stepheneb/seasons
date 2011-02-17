@@ -119,6 +119,14 @@
       </ul>
     </div>
     <div id="info">
+      <h2>Getting a WebGL-enabled browser</h2>
+      <div id="getting-webgl">
+        <p>
+          You need a <a href='http://learningwebgl.com/blog/?p=11'>WebGL-enabled</a> browser to explore this visualization.
+          Beta releases of <a href="http://www.google.com/landing/chrome/beta/">Chrome</a> for Mac OS X and Windows 
+          and the <a href="http://nightly.webkit.org/">WebKit nightly</a> beta release for Mac OS X appear to work best.
+        </p>
+      </div>
       <p>Temperature Data Array:</p>
       <pre id="tdata" style="font-size:80%"></pre>
   </div>
@@ -194,6 +202,7 @@
         
         window.renderModelStep = function() {
             sample_time = new Date();
+            model2d.addHotSpot(model, 50.0);
             model.nextStep();
             average_sample_time_ms = (average_sample_time_ms * 1.75 + (sample_time - last_sample_time) * 0.25) / 2;
             last_sample_time = sample_time;
