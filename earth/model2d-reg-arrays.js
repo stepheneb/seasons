@@ -362,6 +362,45 @@ model2d.getMinTypedArray = function(array) {
     return min;
 };
 
+// float[] array
+model2d.getMaxAnyArray = function(array) {
+    try {
+        return Math.max.apply( Math, array );
+    }
+    catch (e) {
+        if (e instanceof TypeError) {
+            var max = Number.MIN_VALUE;
+            var length = array.length;
+            var test;
+            for(i = 0; i < length; i++) {
+                test = array[i];
+                max = test > max ? test : max
+            }
+            return max;
+        }
+    }
+};
+
+// float[] array
+model2d.getMinAnyArray = function(array) {
+    try {
+        return Math.min.apply( Math, array );
+    }
+    catch (e) {
+        if (e instanceof TypeError) {
+            var min = Number.MAX_VALUE;
+            var length = array.length;
+            var test;
+            for(i = 0; i < length; i++) {
+                test = array[i];
+                min = test < min ? test : min
+            }
+            return min;
+        }
+    }
+};
+
+
 
 model2d.getAverage = function(array) {
     var acc = 0;
@@ -1512,6 +1551,7 @@ model2d.addHotSpot = function(model, temp) {
 }
 
 
+
 var colorDivs = [];
 
 model2d.setupColorDivs = function() {
@@ -1524,7 +1564,7 @@ model2d.setupColorDivs = function() {
     var cssColorRules = [];
     for (i = 0; i < 256; i++) {
         hue = Math.abs(i - 255);
-        cssColorRules[i] = '.cp' + i + ' { background-color:hsla(' + hue + ',100%,50%,0.6); width:5px; height:4px; margin:0px; display:inline-block }'
+        cssColorRules[i] = '.cp' + i + ' { background-color:hsl(' + hue + ',100%,50%); width:5px; height:4px; margin:0px; display:inline-block }'
     }
 
     for (i = 0; i < cssColorRules.length; i++) {
@@ -1537,8 +1577,8 @@ model2d.displayTemperatureColorDivs = function(destination, model) {
     var rows = model.ny;
     var ycols, ycols_plus_x;
     var t = model.t;
-    var min = model2d.getMinTypedArray(t);
-    var max = model2d.getMaxTypedArray(t);
+    var min = model2d.getMinAnyArray(t);
+    var max = model2d.getMaxAnyArray(t);
     var scale = 255/(max - min);
     var temp;
     var colorDivsStr = "";
@@ -1554,42 +1594,144 @@ model2d.displayTemperatureColorDivs = function(destination, model) {
     destination.innerHTML = colorDivsStr;
 }
 
-model2d.displayTemperature = function(canvas, model) {
+/**
+* HSV to RGB color conversion
+*
+* H runs from 0 to 360 degrees
+* S and V run from 0 to 100
+* 
+* Ported from the excellent java algorithm by Eugene Vishnevsky at:
+* http://www.cs.rit.edu/~ncs/color/t_convert.html
+* 
+* http://snipplr.com/view.php?codeview&id=14590
+*
+*/
+function hsvToRgb(h, s, v) {
+    var r, g, b;
+    var i;
+    var f, p, q, t;
+
+    // Make sure our arguments stay in-range
+    h = Math.max(0, Math.min(360, h));
+    s = Math.max(0, Math.min(100, s));
+    v = Math.max(0, Math.min(100, v));
+
+    // We accept saturation and value arguments from 0 to 100 because that's
+    // how Photoshop represents those values. Internally, however, the
+    // saturation and value are calculated from a range of 0 to 1. We make
+    // That conversion here.
+    s /= 100;
+    v /= 100;
+
+    if(s == 0) {
+        // Achromatic (grey)
+        r = g = b = v;
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    }
+
+    h /= 60; // sector 0 to 5
+    i = Math.floor(h);
+    f = h - i; // factorial part of h
+    p = v * (1 - s);
+    q = v * (1 - s * f);
+    t = v * (1 - s * (1 - f));
+
+    switch(i) {
+        case 0:
+        r = v;
+        g = t;
+        b = p;
+        break;
+
+        case 1:
+        r = q;
+        g = v;
+        b = p;
+        break;
+
+        case 2:
+        r = p;
+        g = v;
+        b = t;
+        break;
+
+        case 3:
+        r = p;
+        g = q;
+        b = v;
+        break;
+
+        case 4:
+        r = t;
+        g = p;
+        b = v;
+        break;
+
+        default: // case 5:
+        r = v;
+        g = p;
+        b = q;
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+var red_color_table   = [];
+var blue_color_table  = [];
+var green_color_table = [];
+var alpha_color_table = [];
+
+model2d.setupRGBAColorTables = function() {
+    var rgb = [];
+    for(var i = 0; i < 256; i++) {
+        rgb = hsvToRgb(i, 100, 80);
+        red_color_table[i]   = rgb[0];
+        blue_color_table[i]  = rgb[1];
+        green_color_table[i] = rgb[2];
+    }
+}
+
+model2d.displayTemperatureCanvas = function(canvas, model) {
+
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = "rgb(0,0,0)";
     ctx.globalCompositeOperation = "destination-atop";
-    
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-    
-    var xAspect = canvas.clientWidth / 100;
-    var yAspect = canvas.clientHeight / 100;
-    
-    var cellSizeX = xAspect + 1;
-    var cellSizeY = yAspect + 1;
-    
-    var hue;
-    
+
     var columns = model.nx;
     var rows = model.ny;
-    var ycols, ycols_plus_x;
+
+    canvas.style.width = canvas.clientWidth + 'px';
+    canvas.style.height = canvas.clientHeight + 'px';
+
+    canvas.width = columns;
+    canvas.height = rows;
+    
+    var hue, rgb;
+    
+
+    var ycols;
 
     var t = model.t;
-    var min = model2d.getMinTypedArray(t);
-    var max = model2d.getMaxTypedArray(t);
+    var min = model2d.getMinAnyArray(t);
+    var max = model2d.getMaxAnyArray(t);
     var scale = 255/(max - min);
     var temp;
-    for (y = 0; y < rows; y++) {
+    var imageData = ctx.getImageData(0, 0, 100, 100);
+    var data = imageData.data;
+    var pix_index = 0;
+    for (var y = 0; y < rows; y++) {
         ycols = y * rows;
-        for (x = 0; x < columns; x++) {
-            ycols_plus_x = ycols + x;
-            temp = model.t[ycols_plus_x];
+        pix_index = y * 400;
+        for (var x = 0; x < columns; x++) {
+            temp = model.t[ycols + x];
             hue =  Math.abs(Math.round(scale * temp - min) - 255);
-            ctx.fillStyle = 'hsl(' + hue + ',100%, 50%)';
-            ctx.strokeStyle = 'hsl(' + hue + ',100%, 50%)';
-            ctx.fillRect (x * xAspect, y * yAspect, cellSizeX, cellSizeY);
+            data[pix_index]     = red_color_table[hue];
+            data[pix_index + 1] = blue_color_table[hue];
+            data[pix_index + 2] = green_color_table[hue];
+            data[pix_index + 3] = 255;
+            pix_index += 4;
         }
-    }
+    };
+    ctx.putImageData(imageData, 0, 0);
 }
 
 model2d.displayTemperatureTable = function(destination, model) {
@@ -1609,7 +1751,6 @@ model2d.displayTemperatureTable = function(destination, model) {
     }
     destination.innerHTML = tableStr;
 }
-
 // export namespace
 if (root !== 'undefined') root.model2d = model2d;
 })();

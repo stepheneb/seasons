@@ -50,6 +50,9 @@ model2d.config = {
         background_conductivity: 0.1,
         thermal_buoyancy: 0.00025,
         buoyancy_approximation: 1,
+        background_density: 1,
+        
+
         boundary:{
             temperature_at_border:{
                 upper: 0,
@@ -58,6 +61,29 @@ model2d.config = {
                 right: 0
             }
         },
+
+        sensor:{
+            thermometer:[
+                {
+                    x: 0.75,
+                    y: 6
+                },
+                {
+                    x: 1.75,
+                    y: 6
+                },
+                {
+                    x: 8,
+                    y: 6
+                }
+            ]
+        },
+
+        view:{
+            minimum_temperature: 0,
+            maximum_temperature: 40,
+        },
+
         structure:{
             part:[
                 {
@@ -200,28 +226,8 @@ model2d.config = {
                 }
             ]
         }
-    },
-    sensor:{
-        thermometer:[
-            {
-                x: 0.75,
-                y: 6
-            },
-            {
-                x: 1.75,
-                y: 6
-            },
-            {
-                x: 8,
-                y: 6
-            }
-        ]
-    },
-    view:{
-        minimum_temperature: 0,
-        maximum_temperature: 40,
     }
-}
+};
 
 
 
@@ -258,6 +264,9 @@ model2d.Model2D = function(options) {
     this.backgroundDensity = model2d.AIR_DENSITY;
     this.backgroundTemperature = 10.0;
 
+    this.boundary_settings = options.model.boundary || 
+        { temperature_at_border: { upper: 0, lower: 0, left: 0, right: 0 } };
+
     this.parts = [];
 
     // private List<Thermometer> thermometers;
@@ -286,7 +295,7 @@ model2d.Model2D = function(options) {
     this.notifyReset;
 
     // optimization flags (booleans)
-    this.hasPartPower;
+    this.hasPartPower = false;
     this.radiative = true;
     this.convective = true;
 
@@ -351,7 +360,7 @@ model2d.Model2D = function(options) {
     this.heatSolver.tb = this.tb;
     this.heatSolver.fluidity = this.fluidity;
     
-    this.fluidSolver = new model2d.FluidSolver2D(this.nx, this.ny);
+    this.fluidSolver = new model2d.FluidSolver2D(this.nx, this.ny, this);
     this.fluidSolver.fluidity = this.fluidity;
     this.fluidSolver.t = this.t;
     this.fluidSolver.uWind = this.uWind;
@@ -439,46 +448,124 @@ model2d.Model2D.prototype.setSunny = function(sunny) {
 };
 
 model2d.Model2D.prototype.refreshPowerArray = function() {
-    // this.checkPartPower();
-    // float x, y;
-    // for (int i = 0; i < nx; i++) {
-    //     x = i * deltaX;
-    //     for (int j = 0; j < ny; j++) {
-    //         y = j * deltaY;
-    //         q[i][j] = 0;
-    //         if (hasPartPower) {
-    //             synchronized (parts) {
-    //                 for (Part p : parts) {
-    //                     if (p.getPower() != 0 && p.getShape().contains(x, y)) {
-    //                         // no overlap of parts will be allowed
-    //                         q[i][j] = p.getPower();
-    //                         break;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    var x, y;
+
+    var nx = this.nx;
+    var ny = this.ny;
+    var nx1 = this.nx1;
+    var ny1 = this.ny1;
+    var nx2 = this.nx2;
+    var ny2 = this.ny2;
+    
+    var deltaX = this.deltaX;
+    var deltaY = this.deltaY;
+
+    var q = this.q;
+    
+    this.checkPartPower();
+
+    for (i = 0; i < nx; i++) {
+        x = i * deltaX;
+        inx = i * nx;
+        for (j = 0; j < ny; j++) {
+            y = j * deltaY;
+            
+            jinx = inx + j;
+            // jinx_minus_nx = jinx - nx;
+            // jinx_plus_nx = jinx + nx;
+            // jinx_minus_1 = jinx - 1;
+            // jinx_plus_1 = jinx + 1;
+            
+            q[jinx] = 0;
+            if (this.hasPartPower) {
+                // synchronized (parts) {
+                //     for (Part p : parts) {
+                //         if (p.getPower() != 0 && p.getShape().contains(x, y)) {
+                //             // no overlap of parts will be allowed
+                //             q[i][j] = p.getPower();
+                //             break;
+                //         }
+                //     }
+                // }
+            }
+        }
+    }
 }
 
 model2d.Model2D.prototype.refreshTemperatureBoundaryArray = function() {
-    // float x, y;
-    // for (int i = 0; i < nx; i++) {
-    //     x = i * deltaX;
-    //     for (int j = 0; j < ny; j++) {
-    //         y = j * deltaY;
-    //         tb[i][j] = Float.NaN;
-    //         synchronized (parts) {
-    //             for (Part p : parts) {
-    //                 if (p.getConstantTemperature() && p.getShape().contains(x, y)) {
-    //                     tb[i][j] = p.getTemperature();
-    //                     break;
-    //                 }
-    //             }
+    var x, y;
+
+    var nx = this.nx;
+    var ny = this.ny;
+    var nx1 = this.nx1;
+    var ny1 = this.ny1;
+    var nx2 = this.nx2;
+    var ny2 = this.ny2;
+    
+    var inx, jinx, jinx_plus_nx, jinx_minus_nx, jinx_plus_1, jinx_minus_1;
+
+    for (i = 0; i < nx; i++) {
+        inx = i * nx;
+        x = i * deltaX;
+        for (j = 0; j < ny; j++) {
+            
+            jinx = inx + j;
+            // jinx_minus_nx = jinx - nx;
+            // jinx_plus_nx = jinx + nx;
+            // jinx_minus_1 = jinx - 1;
+            // jinx_plus_1 = jinx + 1;
+            
+            y = j * deltaY;
+            tb[jinx] = Float.NaN;
+            // synchronized (parts) {
+            //     for (Part p : parts) {
+            //         if (p.getConstantTemperature() && p.getShape().contains(x, y)) {
+            //             tb[i][j] = p.getTemperature();
+            //             break;
+            //         }
+            //     }
+            // }
+        }
+    }
+}
+
+
+model2d.Model2D.prototype.reallyReset = function() {
+    this.setInitialTemperature();
+    this.setInitialVelocity();
+    this.photons.clear();
+    this.heatSolver.reset();
+    this.fluidSolver.reset();
+};
+
+model2d.Model2D.prototype.checkPartPower = function() {
+    this.hasPartPower = false;
+    // synchronized (parts) {
+    //     for (Part p : parts) {
+    //         if (p.getPower() != 0) {
+    //             hasPartPower = true;
+    //             break;
     //         }
     //     }
     // }
-}
+};
+
+model2d.Model2D.prototype.checkPartRadiation = function() {
+    this.radiative = sunny;
+    if (!this.radiative) {
+        // synchronized (parts) {
+        //     for (Part p : parts) {
+        //         if (p.getEmissivity() > 0) {
+        //             radiative = true;
+        //             break;
+        //         }
+        //     }
+        // }
+    }
+};
+
+
+
 
 //
 // Utilities
@@ -586,18 +673,19 @@ model2d.getAverage = function(array) {
 //
 // *******************************************************
 
-model2d.HeatSolver2D = function(nx, ny, q) {
-    this.conductivity = null;
-    this.capacity = null;;
-    this.density = null;;
-    this.u = null;
-    this.v = null;
-    this.tb = null;
+model2d.HeatSolver2D = function(nx, ny, model) {
 
-    this.q = q;
+    // Float arrays
+    this.conductivity = model.conductivity;
+    this.capacity = model.capacity;
+    this.density = model.density;
+    this.u = model.u;
+    this.v = model.v;
+    this.tb = model.tb;
+    this.q = model.q;
     
-    // booleans
-    this.fluidity = null;;
+    // Boolean array
+    this.fluidity = model.fluidity;
     
     this.nx = nx;
     this.ny = ny;
@@ -611,10 +699,9 @@ model2d.HeatSolver2D = function(nx, ny, q) {
     
     // array that stores the previous temperature results
     this.t0 = new Float32Array(model2d.ARRAY_SIZE);
-    this.boundary = new model2d.DirichletHeatBoundary();
-    
-    this.q = new Float32Array(model2d.ARRAY_SIZE);
-    
+
+    this.boundary = new model2d.DirichletHeatBoundary(model.boundary_settings);
+
 };
 
 model2d.HeatSolver2D.prototype.setGridCellSize = function(deltaX, deltaY) {
@@ -747,11 +834,10 @@ model2d.HeatSolver2D.prototype.applyBoundary  = function(t) {
     var conductivity = this.conductivity;
     var deltaX = this.deltaX;
     var deltaY = this.deltaY;
-    var b;
+    var b = this.boundary;
     var tN, tS, tW, tE;
     var inx, inx_minus_nx, jinx, jinx_minus_nx, jinx_plus_nx, jinx_minus_1;
-    if (this.boundary instanceof model2d.DirichletHeatBoundary) {
-        b = new model2d.DirichletHeatBoundary(this.boundary);
+    if (b instanceof model2d.DirichletHeatBoundary) {
         tN = b.getTemperatureAtBorder(model2d.Boundary_UPPER);
         tS = b.getTemperatureAtBorder(model2d.Boundary_LOWER);
         tW = b.getTemperatureAtBorder(model2d.Boundary_LEFT);
@@ -765,8 +851,7 @@ model2d.HeatSolver2D.prototype.applyBoundary  = function(t) {
             t[j] = tW;
             t[nx1 * nx +j] = tE;
         }
-    } else if (this.boundary instanceof NeumannHeatBoundary) {
-        b = new NeumannHeatBoundary(boundary);
+    } else if (b instanceof NeumannHeatBoundary) {
         fN = b.getFluxAtBorder(model2d.Boundary_UPPER);
         fS = b.getFluxAtBorder(model2d.Boundary_LOWER);
         fW = b.getFluxAtBorder(model2d.Boundary_LEFT);
@@ -784,13 +869,16 @@ model2d.HeatSolver2D.prototype.applyBoundary  = function(t) {
     }
 };
 
-model2d.DirichletHeatBoundary = function() {
-    this.temperatureAtBorder = new Float32Array(4); // unit: centigrade
+model2d.DirichletHeatBoundary = function(settings) {
     // by default all temperatures are zero
-    this.setTemperatureAtBorder(model2d.Boundary_UPPER, 0);
-    this.setTemperatureAtBorder(model2d.Boundary_LOWER, 0);
-    this.setTemperatureAtBorder(model2d.Boundary_LEFT, 0);
-    this.setTemperatureAtBorder(model2d.Boundary_RIGHT, 0);
+    if (!settings) {
+        settings = { upper: 0, lower: 0, left: 0, right: 0 }
+    }
+    this.temperatureAtBorder = new Float32Array(4); // unit: centigrade
+    this.setTemperatureAtBorder(model2d.Boundary_UPPER, settings.upper);
+    this.setTemperatureAtBorder(model2d.Boundary_LOWER, settings.lower);
+    this.setTemperatureAtBorder(model2d.Boundary_LEFT, settings.left);
+    this.setTemperatureAtBorder(model2d.Boundary_RIGHT, settings.right);
 };
 
 model2d.DirichletHeatBoundary.prototype.getTemperatureAtBorder  = function(side) {
@@ -812,27 +900,27 @@ model2d.DirichletHeatBoundary.prototype.setTemperatureAtBorder  = function(side,
 //
 // *******************************************************
 
-model2d.FluidSolver2D = function(nx, ny) {
+model2d.FluidSolver2D = function(nx, ny, model) {
     this.i2dx = null;
     this.i2dy == null;
     this.idxsq = null;
     this.idysq = null;
-    this.deltaX = null;
-    this.deltaY = null;
+    this.deltaX = model.deltaX;
+    this.deltaY = model.deltaY;
     
     this.relaxationSteps = 5;
     this.timeStep = 0.1;
-    this.thermalBuoyancy = 0.00025;
-    this.gravity = 0;
-    this.buoyancyApproximation = 1;  // model2d.BUOYANCY_AVERAGE_COLUMN;
+    this.thermalBuoyancy = model.thermalBuoyancy;
+    this.gravity = 1;
+    this.buoyancyApproximation = model.buoyancyApproximation;  // model2d.BUOYANCY_AVERAGE_COLUMN;
     this.viscosity = 10 * model2d.AIR_VISCOSITY;
     this.timeStep = 0.1;
 
-    this.uWind = null;
-    this.vWind = null;
+    this.uWind = model.uWind;
+    this.vWind = model.vWind;
 
-    this.nx = nx;
-    this.ny = ny;
+    this.nx = model.nx;
+    this.ny = model.ny;
     this.nx1 = nx - 1;
     this.ny1 = ny - 1;
     this.nx2 = nx - 2;
@@ -847,10 +935,10 @@ model2d.FluidSolver2D = function(nx, ny) {
 model2d.FluidSolver2D.prototype.reset = function() {
     var array_size = model2d.ARRAY_SIZE;
     for (i = 0; i < array_size; i++) {
-        u0[i] = 0;
-        v0[i] = 0;
-        vorticity[i] = 0;
-        stream[i] = 0;
+        this.u0[i] = 0;
+        this.v0[i] = 0;
+        this.vorticity[i] = 0;
+        this.stream[i] = 0;
     }
 };
 
@@ -1556,9 +1644,31 @@ model2d.RaySolver2D.prototype.solve = function(model2d) {
   for (i = 0; i < photonCount; i++) {
       photon = photons[i];
       photon.move(timeStep);
+      // if (model.getPartCount() > 0) {
+      //     remove = false;
+      //     synchronized (model.getParts()) {
+      //         for (Part part : model.getParts()) {
+      //             if (Math.abs(part.getReflection() - 1) < 0.001f) {
+      //                 if (part.reflect(p, timeStep))
+      //                     break;
+      //             } else if (Math.abs(part.getAbsorption() - 1) < 0.001f) {
+      //                 if (part.absorb(p)) {
+      //                     i = Math.min(nx, Math.round(p.getX() * idx));
+      //                     j = Math.min(ny, Math.round(p.getY() * idy));
+      //                     q[i][j] = p.getEnergy() * factor;
+      //                     remove = true;
+      //                     break;
+      //                 }
+      //             }
+      //         }
+      //     }
+      //     if (remove)
+      //         it.remove();
+      // }
   }
   this.applyBoundary(photons);
 }
+
 
 
 // List<Photon> photons
@@ -1751,42 +1861,143 @@ model2d.displayTemperatureColorDivs = function(destination, model) {
     destination.innerHTML = colorDivsStr;
 }
 
-model2d.displayTemperature = function(canvas, model) {
+/**
+* HSV to RGB color conversion
+*
+* H runs from 0 to 360 degrees
+* S and V run from 0 to 100
+* 
+* Ported from the excellent java algorithm by Eugene Vishnevsky at:
+* http://www.cs.rit.edu/~ncs/color/t_convert.html
+* 
+* http://snipplr.com/view.php?codeview&id=14590
+*
+*/
+function hsvToRgb(h, s, v) {
+    var r, g, b;
+    var i;
+    var f, p, q, t;
+
+    // Make sure our arguments stay in-range
+    h = Math.max(0, Math.min(360, h));
+    s = Math.max(0, Math.min(100, s));
+    v = Math.max(0, Math.min(100, v));
+
+    // We accept saturation and value arguments from 0 to 100 because that's
+    // how Photoshop represents those values. Internally, however, the
+    // saturation and value are calculated from a range of 0 to 1. We make
+    // That conversion here.
+    s /= 100;
+    v /= 100;
+
+    if(s == 0) {
+        // Achromatic (grey)
+        r = g = b = v;
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    }
+
+    h /= 60; // sector 0 to 5
+    i = Math.floor(h);
+    f = h - i; // factorial part of h
+    p = v * (1 - s);
+    q = v * (1 - s * f);
+    t = v * (1 - s * (1 - f));
+
+    switch(i) {
+        case 0:
+        r = v;
+        g = t;
+        b = p;
+        break;
+
+        case 1:
+        r = q;
+        g = v;
+        b = p;
+        break;
+
+        case 2:
+        r = p;
+        g = v;
+        b = t;
+        break;
+
+        case 3:
+        r = p;
+        g = q;
+        b = v;
+        break;
+
+        case 4:
+        r = t;
+        g = p;
+        b = v;
+        break;
+
+        default: // case 5:
+        r = v;
+        g = p;
+        b = q;
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+var red_color_table   = [];
+var blue_color_table  = [];
+var green_color_table = [];
+var alpha_color_table = [];
+
+model2d.setupRGBAColorTables = function() {
+    var rgb = [];
+    for(var i = 0; i < 256; i++) {
+        rgb = hsvToRgb(i, 100, 80);
+        red_color_table[i]   = rgb[0];
+        blue_color_table[i]  = rgb[1];
+        green_color_table[i] = rgb[2];
+    }
+}
+
+model2d.displayTemperatureCanvas = function(canvas, model) {
+
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = "rgb(0,0,0)";
     ctx.globalCompositeOperation = "destination-atop";
-    
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-    
-    var xAspect = canvas.clientWidth / 100;
-    var yAspect = canvas.clientHeight / 100;
-    
-    var cellSizeX = xAspect + 1;
-    var cellSizeY = yAspect + 1;
-    
-    var hue;
-    
+
     var columns = model.nx;
     var rows = model.ny;
-    var ycols, ycols_plus_x;
+
+    canvas.style.width = canvas.clientWidth + 'px';
+    canvas.style.height = canvas.clientHeight + 'px';
+
+    canvas.width = columns;
+    canvas.height = rows;
+    
+    var hue, rgb;
+
+    var ycols;
 
     var t = model.t;
     var min = model2d.getMinAnyArray(t);
     var max = model2d.getMaxAnyArray(t);
     var scale = 255/(max - min);
     var temp;
-    for (y = 0; y < rows; y++) {
+    var imageData = ctx.getImageData(0, 0, 100, 100);
+    var data = imageData.data;
+    var pix_index = 0;
+    for (var y = 0; y < rows; y++) {
         ycols = y * rows;
-        for (x = 0; x < columns; x++) {
-            ycols_plus_x = ycols + x;
-            temp = model.t[ycols_plus_x];
+        pix_index = y * 400;
+        for (var x = 0; x < columns; x++) {
+            temp = model.t[ycols + x];
             hue =  Math.abs(Math.round(scale * temp - min) - 255);
-            ctx.fillStyle = 'hsl(' + hue + ',100%, 50%)';
-            ctx.strokeStyle = 'hsl(' + hue + ',100%, 50%)';
-            ctx.fillRect (x * xAspect, y * yAspect, cellSizeX, cellSizeY);
+            data[pix_index]     = red_color_table[hue];
+            data[pix_index + 1] = blue_color_table[hue];
+            data[pix_index + 2] = green_color_table[hue];
+            data[pix_index + 3] = 255;
+            pix_index += 4;
         }
-    }
+    };
+    ctx.putImageData(imageData, 0, 0);
 }
 
 model2d.displayTemperatureTable = function(destination, model) {

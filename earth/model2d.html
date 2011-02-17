@@ -56,7 +56,8 @@
       <a href=" https://developer.mozilla.org/en/JavaScript_typed_arrays">JavaScript Typed Arrays</a>
       which are only available in browsers that support WebGL (Chrome 9, recent FireFox betas, and WebKit nightlies). 
       The page starts with a fixed hot-spot in the middle. The model simulation space is a 100x100 grid,
-      (10,000 cells) the same as the Java version of Energy2D. 
+      (10,000 cells) the same as the Java version of Energy2D. Here's a version of
+      <a href="model2d-reg-arrays.html">Energy2D: JavaScript using regular JavaScript Arrays</a>.
     </p>
     <div id="simulation-controls">       
     </div>
@@ -194,23 +195,26 @@
         var colordivs =     document.getElementById("colorDivDestination");
         var run_mode;
 
+        model2d.setupRGBAColorTables();
         model2d.setupColorDivs();
         
-        var sample_time = new Date();
+        var one_before_that_sample_time = new Date();
         var last_sample_time = new Date();
+        var sample_time = new Date();
         var average_sample_time_ms = sample_time - last_sample_time;
         
         window.renderModelStep = function() {
             sample_time = new Date();
             model2d.addHotSpot(model, 50.0);
             model.nextStep();
-            average_sample_time_ms = (average_sample_time_ms * 1.75 + (sample_time - last_sample_time) * 0.25) / 2;
+            average_sample_time_ms = (average_sample_time_ms * 1.75 + (last_sample_time - one_before_that_sample_time) * 0.25) / 2;
+            one_before_that_sample_time = last_sample_time;
             last_sample_time = sample_time;
             step_count.innerHTML = 'frame: ' + model.indexOfStep + ': model step rate: ' + sprintf("%3.1f", 1/average_sample_time_ms * 1000) + ' fps';
             if (show_visualization.checked) {
               switch(display_method) {
                 case 'canvas': 
-                  model2d.displayTemperature(canvas, model);
+                  model2d.displayTemperatureCanvas(canvas, model);
                   break;
                 case 'colored-divs': 
                   model2d.displayTemperatureColorDivs(colordivs, model); 
@@ -261,7 +265,7 @@
         }
         
         step_model.onchange = runModelStep;
-        model2d.displayTemperature(canvas, model);
+        model2d.displayTemperatureCanvas(canvas, model);
         step_count.innerHTML = 'frame: ' + model.indexOfStep;
 
         step_model_color_divs.onchange = runModelStep;
