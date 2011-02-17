@@ -532,6 +532,44 @@ model2d.getMinTypedArray = function(array) {
     return min;
 };
 
+// float[] array
+model2d.getMaxAnyArray = function(array) {
+    try {
+        return Math.max.apply( Math, array );
+    }
+    catch (e) {
+        if (e instanceof TypeError) {
+            var max = Number.MIN_VALUE;
+            var length = array.length;
+            var test;
+            for(i = 0; i < length; i++) {
+                test = array[i];
+                max = test > max ? test : max
+            }
+            return max;
+        }
+    }
+};
+
+// float[] array
+model2d.getMinAnyArray = function(array) {
+    try {
+        return Math.min.apply( Math, array );
+    }
+    catch (e) {
+        if (e instanceof TypeError) {
+            var min = Number.MAX_VALUE;
+            var length = array.length;
+            var test;
+            for(i = 0; i < length; i++) {
+                test = array[i];
+                min = test < min ? test : min
+            }
+            return min;
+        }
+    }
+};
+
 
 model2d.getAverage = function(array) {
     var acc = 0;
@@ -1696,8 +1734,8 @@ model2d.displayTemperatureColorDivs = function(destination, model) {
     var rows = model.ny;
     var ycols, ycols_plus_x;
     var t = model.t;
-    var min = model2d.getMinTypedArray(t);
-    var max = model2d.getMaxTypedArray(t);
+    var min = model2d.getMinAnyArray(t);
+    var max = model2d.getMaxAnyArray(t);
     var scale = 255/(max - min);
     var temp;
     var colorDivsStr = "";
@@ -1734,8 +1772,8 @@ model2d.displayTemperature = function(canvas, model) {
     var ycols, ycols_plus_x;
 
     var t = model.t;
-    var min = model2d.getMinTypedArray(t);
-    var max = model2d.getMaxTypedArray(t);
+    var min = model2d.getMinAnyArray(t);
+    var max = model2d.getMaxAnyArray(t);
     var scale = 255/(max - min);
     var temp;
     for (y = 0; y < rows; y++) {
