@@ -35,27 +35,219 @@ model2d.NX = 100;
 model2d.NY = 100;
 model2d.ARRAY_SIZE = model2d.NX * model2d.NY;
 
-model2d.Model2D = function(options) {
-    if (!options) {
-        options = {};
+model2d.config = {
+    model:{
+        timestep: 50,
+        measurement_interval: 100,
+        viewupdate_interval: 20,
+        sunny: true,
+        sun_angle: 1.5707964,
+        solar_power_density: 20000,
+        solar_ray_count: 24,
+        solar_ray_speed: 0.001,
+        photon_emission_interval: 5,
+        convective: true,
+        background_conductivity: 0.1,
+        thermal_buoyancy: 0.00025,
+        buoyancy_approximation: 1,
+        boundary:{
+            temperature_at_border:{
+                upper: 0,
+                lower: 0,
+                left: 0,
+                right: 0
+            }
+        },
+        structure:{
+            part:[
+                {
+                    polygon:{
+                        count: 4,
+                        vertices:'8.0, 8.0, 8.5, 8.0, 8.5, 7.0, 8.0, 7.0'
+                    },
+                    thermal_conductivity: 0.08,
+                    specific_heat: 1300,
+                    density: 25,
+                    transmission: 0,
+                    reflection: 1,
+                    absorption: 1,
+                    emissivity: 0,
+                    temperature: 0,
+                    constant_temperature: false,
+                    color:'22ccff'
+                },
+                {
+                    rectangle:{
+                        x: 1,
+                        y: 7,
+                        width: 0.5,
+                        height: 1
+                    },
+                    thermal_conductivity: 0.001,
+                    specific_heat: 1300,
+                    density: 25,
+                    transmission: 0,
+                    reflection: 0,
+                    absorption: 1,
+                    emissivity: 0,
+                    temperature: 0,
+                    constant_temperature: false
+                },
+                {
+                    rectangle:{
+                        x: 1,
+                        y: 4,
+                        width: 0.5,
+                        height: 1
+                    },
+                    thermal_conductivity: 0.001,
+                    specific_heat: 1300,
+                    density: 25,
+                    transmission: 0,
+                    reflection: 0,
+                    absorption: 1,
+                    emissivity: 0,
+                    temperature: 0,
+                    constant_temperature: false
+                },
+                {
+                    polygon:{
+                        count: 6,
+                        vertices:'0.5, 3.5, 5.0, 1.0, 9.5, 3.5, 8.5, 3.5, 5.0, 1.6499996, 1.5, 3.5'
+                    },
+                    thermal_conductivity: 0.001,
+                    specific_heat: 1300,
+                    density: 25,
+                    transmission: 0,
+                    reflection: 0,
+                    absorption: 1,
+                    emissivity: 0,
+                    temperature: 0,
+                    constant_temperature: false
+                },
+                {
+                    rectangle:{
+                        x:-0.099999905,
+                        y: 8,
+                        width: 10.2,
+                        height: 2
+                    },
+                    thermal_conductivity: 0.001,
+                    specific_heat: 1300,
+                    density: 25,
+                    transmission: 0,
+                    reflection: 0,
+                    absorption: 1,
+                    emissivity: 0,
+                    temperature: 0,
+                    constant_temperature: false,
+                    color: 333333,
+                    label:'Ground'
+                },
+                {
+                    rectangle:{
+                        x: 8.5,
+                        y: 4,
+                        width: 0.5,
+                        height: 4
+                    },
+                    thermal_conductivity: 0.001,
+                    specific_heat: 1300,
+                    density: 25,
+                    transmission: 0,
+                    reflection: 0,
+                    absorption: 1,
+                    emissivity: 0,
+                    temperature: 0,
+                    constant_temperature: false,
+                    label:'Wall'
+                },
+                {
+                    rectangle:{
+                        x: 1.15,
+                        y: 5,
+                        width: 0.2,
+                        height: 2
+                    },
+                    thermal_conductivity: 0.001,
+                    specific_heat: 1300,
+                    density: 25,
+                    transmission: 1,
+                    reflection: 0,
+                    absorption: 0,
+                    emissivity: 0,
+                    temperature: 0,
+                    constant_temperature: false,
+                    color:'ffffff'
+                },
+                {
+                    rectangle:{
+                        x: 0.5,
+                        y: 3.5,
+                        width: 9,
+                        height: 0.5
+                    },
+                    thermal_conductivity: 0.001,
+                    specific_heat: 1300,
+                    density: 25,
+                    transmission: 0,
+                    reflection: 0,
+                    absorption: 1,
+                    emissivity: 0,
+                    temperature: 0,
+                    constant_temperature: false,
+                    label:'Ceiling'
+                }
+            ]
+        }
+    },
+    sensor:{
+        thermometer:[
+            {
+                x: 0.75,
+                y: 6
+            },
+            {
+                x: 1.75,
+                y: 6
+            },
+            {
+                x: 8,
+                y: 6
+            }
+        ]
+    },
+    view:{
+        minimum_temperature: 0,
+        maximum_temperature: 40,
     }
+}
+
+
+
+model2d.Model2D = function(options) {
+
+    if (!options) {
+        options = model2d.config;
+    };
+
     if (!options.model) {
         options.model = {};
-    }
-    var measurementInterval = options.model.measurement_interval || 100;
+    };
+
+    this.measurementInterval = options.model.measurement_interval || 100;
     this.viewUpdateInterval = options.model.view_update_interval || 20;
     this.sunny = options.model.sunny || true;
     this.sun_angle = options.model.sun_angle || 1.5707964;
     this.solarPowerDensity = options.model.solar_power_density || 20000;
     this.solarRayCount = options.model.solar_ray_count || 24;
-    this.olarRaySpeed = options.model.solar_ray_speed || 0.001;
+    this.solarRaySpeed = options.model.solar_ray_speed || 0.001;
     this.photonEmissionInterval = options.model.photon_emission_interval || 5;
     this.convective = options.model.convective || true;
     this.backgroundConductivity = options.model.background_conductivity || 0.1;
     this.thermalBuoyancy = options.model.thermal_buoyancy || 0.00025;
-    this.buoyancyApproximation =options.model.buoyancy_approximation || 1;
+    this.buoyancyApproximation = options.model.buoyancy_approximation || 1;
 
-    
     this.BUOYANCY_AVERAGE_ALL = 0;
     this.BUOYANCY_AVERAGE_COLUMN = 1;
 
@@ -66,8 +258,8 @@ model2d.Model2D = function(options) {
     this.backgroundDensity = model2d.AIR_DENSITY;
     this.backgroundTemperature = 10.0;
 
-
     this.parts = [];
+
     // private List<Thermometer> thermometers;
     // 
     // private List<Part> parts;
@@ -76,7 +268,6 @@ model2d.Model2D = function(options) {
     // private RaySolver2D raySolver;
     // private FluidSolver2D fluidSolver;
     // private HeatSolver2D heatSolver;
-
 
     this.nx = model2d.NX;
     this.ny = model2d.NY;
@@ -93,11 +284,6 @@ model2d.Model2D = function(options) {
     // booleans
     this.running;
     this.notifyReset;
-
-
-
-
-
 
     // optimization flags (booleans)
     this.hasPartPower;
@@ -126,7 +312,6 @@ model2d.Model2D = function(options) {
 
     // internal heat generation array
     this.q = new Float32Array(model2d.ARRAY_SIZE);
-    
     
     // wind speed
     this.uWind = new Float32Array(model2d.ARRAY_SIZE);
@@ -171,8 +356,7 @@ model2d.Model2D = function(options) {
     this.fluidSolver.t = this.t;
     this.fluidSolver.uWind = this.uWind;
     this.fluidSolver.vWind = this.vWind;
-    
-    
+
     this.raySolver = new model2d.RaySolver2D(this.lx, this.ly);
     this.raySolver.q = this.q;
 
