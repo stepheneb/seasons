@@ -35,6 +35,24 @@ model2d.NX = 100;
 model2d.NY = 100;
 model2d.ARRAY_SIZE = model2d.NX * model2d.NY;
 
+function createArray(size, fill) {
+    size = size || model2d.ARRAY_SIZE;
+    fill = fill || 0;
+    var a;
+    if (!!window.WebGLRenderingContext) {
+        a = new Float32Array(size);
+    } else {
+        a = new Array(size);
+    }
+    if (a[size-1] == fill) {
+        return a
+    } else {
+        for (var i; i < size; i++) {
+            a[i] = fill;
+        }
+    } return a;
+}
+
 model2d.config = {
     model:{
         timestep: 50,
@@ -250,7 +268,6 @@ model2d.Model2D = function(options) {
     this.solarRaySpeed = options.model.solar_ray_speed || 0.001;
     this.photonEmissionInterval = options.model.photon_emission_interval || 5;
     this.convective = options.model.convective || true;
-    this.backgroundConductivity = options.model.background_conductivity || 0.1;
     this.thermalBuoyancy = options.model.thermal_buoyancy || 0.00025;
     this.buoyancyApproximation = options.model.buoyancy_approximation || 1;
 
@@ -262,7 +279,7 @@ model2d.Model2D = function(options) {
     this.backgroundConductivity = 10 * model2d.AIR_THERMAL_CONDUCTIVITY;
     this.backgroundSpecificHeat = model2d.AIR_SPECIFIC_HEAT;
     this.backgroundDensity = model2d.AIR_DENSITY;
-    this.backgroundTemperature = 10.0;
+    this.backgroundTemperature = 0.0;
 
     this.boundary_settings = options.model.boundary || 
         { temperature_at_border: { upper: 0, lower: 0, left: 0, right: 0 } };
@@ -303,10 +320,12 @@ model2d.Model2D = function(options) {
     // private List<PropertyChangeListener> propertyChangeListeners;
 
     // temperature array
-    this.t = new Float32Array(model2d.ARRAY_SIZE);
+    
+    this.t = createArray(model2d.ARRAY_SIZE, 0)
+    // this.t = createArray(model2d.ARRAY_SIZE, 0);
 
     // internal temperature boundary array
-    this.tb = new Float32Array(model2d.ARRAY_SIZE);
+    this.tb = createArray(model2d.ARRAY_SIZE, 0)
 
     for (i = 0; i < model2d.ARRAY_SIZE; i++) {
         this.t[i] = this.backgroundTemperature;
@@ -314,38 +333,38 @@ model2d.Model2D = function(options) {
     }
     
     // velocity x-component array (m/s)
-    this.u = new Float32Array(model2d.ARRAY_SIZE);
+    this.u = createArray(model2d.ARRAY_SIZE, 0);
     
     // velocity y-component array (m/s)
-    this.v = new Float32Array(model2d.ARRAY_SIZE);
+    this.v = createArray(model2d.ARRAY_SIZE, 0);
 
     // internal heat generation array
-    this.q = new Float32Array(model2d.ARRAY_SIZE);
+    this.q = createArray(model2d.ARRAY_SIZE, 0);
     
     // wind speed
-    this.uWind = new Float32Array(model2d.ARRAY_SIZE);
-    this.vWind = new Float32Array(model2d.ARRAY_SIZE);
+    this.uWind = createArray(model2d.ARRAY_SIZE, 0);
+    this.vWind = createArray(model2d.ARRAY_SIZE, 0);
     
     // conductivity array
-    this.conductivity = new Float32Array(model2d.ARRAY_SIZE);
+    this.conductivity = createArray(model2d.ARRAY_SIZE, 0);
     for (i = 0; i < model2d.ARRAY_SIZE; i++) {
         this.conductivity[i] = this.backgroundConductivity;
     }
     
     // specific heat capacity array
-    this.capacity = new Float32Array(model2d.ARRAY_SIZE);
+    this.capacity = createArray(model2d.ARRAY_SIZE, 0);
     for (i = 0; i < model2d.ARRAY_SIZE; i++) {
         this.capacity[i] = 0;
     }
     
     // density array
-    this.density = new Float32Array(model2d.ARRAY_SIZE);
+    this.density = createArray(model2d.ARRAY_SIZE, 0);
     for (i = 0; i < model2d.ARRAY_SIZE; i++) {
         this.density[i] = this.backgroundDensity;
     }
     
     // fluid cell array
-    this.fluidity = new Float32Array(model2d.ARRAY_SIZE);
+    this.fluidity = createArray(model2d.ARRAY_SIZE, 0);
     
     // Photons
     this.photons = [];
@@ -698,7 +717,7 @@ model2d.HeatSolver2D = function(nx, ny, model) {
     this.relaxationSteps = 5;
     
     // array that stores the previous temperature results
-    this.t0 = new Float32Array(model2d.ARRAY_SIZE);
+    this.t0 = createArray(model2d.ARRAY_SIZE, 0);
 
     this.boundary = new model2d.DirichletHeatBoundary(model.boundary_settings);
 
@@ -877,7 +896,7 @@ model2d.DirichletHeatBoundary = function(boundary_settings) {
     } else {
         settings = { upper: 0, lower: 0, left: 0, right: 0 }
     }
-    this.temperatureAtBorder = new Float32Array(4); // unit: centigrade
+    this.temperatureAtBorder = createArray(4, 0); // unit: centigrade
     this.setTemperatureAtBorder(model2d.Boundary_UPPER, settings.upper);
     this.setTemperatureAtBorder(model2d.Boundary_LOWER, settings.lower);
     this.setTemperatureAtBorder(model2d.Boundary_LEFT, settings.left);
@@ -929,10 +948,10 @@ model2d.FluidSolver2D = function(nx, ny, model) {
     this.nx2 = nx - 2;
     this.ny2 = ny - 2;
     
-    this.u0 = new Float32Array(model2d.ARRAY_SIZE);
-    this.v0 = new Float32Array(model2d.ARRAY_SIZE);
-    this.vorticity = new Float32Array(model2d.ARRAY_SIZE);
-    this.stream = new Float32Array(model2d.ARRAY_SIZE);
+    this.u0 = createArray(model2d.ARRAY_SIZE, 0);
+    this.v0 = createArray(model2d.ARRAY_SIZE, 0);
+    this.vorticity = createArray(model2d.ARRAY_SIZE, 0);
+    this.stream = createArray(model2d.ARRAY_SIZE, 0);
 };
 
 model2d.FluidSolver2D.prototype.reset = function() {
@@ -1539,7 +1558,7 @@ model2d.RaySolver2D = function(lx, ly) {
     
     this.raySpeed = 0.1;
     
-    this.q = new Float32Array(model2d.ARRAY_SIZE);
+    this.q = createArray(model2d.ARRAY_SIZE, 0);
     
     this.i2dx = null;
     this.i2dy == null;
@@ -1566,10 +1585,10 @@ model2d.RaySolver2D = function(lx, ly) {
     this.nx2 = this.nx - 2;
     this.ny2 = this.ny - 2;
     
-    this.u0 = new Float32Array(model2d.ARRAY_SIZE);
-    this.v0 = new Float32Array(model2d.ARRAY_SIZE);
-    this.vorticity = new Float32Array(model2d.ARRAY_SIZE);
-    this.stream = new Float32Array(model2d.ARRAY_SIZE);
+    this.u0 = createArray(model2d.ARRAY_SIZE, 0);
+    this.v0 = createArray(model2d.ARRAY_SIZE, 0);
+    this.vorticity = createArray(model2d.ARRAY_SIZE, 0);
+    this.stream = createArray(model2d.ARRAY_SIZE, 0);
 };
 
 model2d.RaySolver2D.prototype.setSolarPowerDensity = function(solarPowerDensity) {
