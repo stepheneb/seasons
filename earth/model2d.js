@@ -709,7 +709,7 @@ model2d.HeatSolver2D.prototype.setGridCellSize = function(deltaX, deltaY) {
     this.deltaY = deltaY;
 };
 
-model2d.HeatSolver2D.prototype.solve = function(convective, t) {
+model2d.HeatSolver2D.prototype.solve = function(convective, t, q) {
     model2d.copyArray(this.t0, t);
     
     var nx = this.nx;
@@ -731,7 +731,7 @@ model2d.HeatSolver2D.prototype.solve = function(convective, t) {
 
     var tb = this.tb;
     var t0 = this.t0;
-    var q = this.q;
+    var q = q;
     
     var hx = 0.5 / (this.deltaX * this.deltaX);
     var hy = 0.5 / (this.deltaY * this.deltaY);
@@ -869,9 +869,12 @@ model2d.HeatSolver2D.prototype.applyBoundary  = function(t) {
     }
 };
 
-model2d.DirichletHeatBoundary = function(settings) {
+model2d.DirichletHeatBoundary = function(boundary_settings) {
     // by default all temperatures are zero
-    if (!settings) {
+    var settings;
+    if (boundary_settings) {
+        settings = boundary_settings.temperature_at_border;
+    } else {
         settings = { upper: 0, lower: 0, left: 0, right: 0 }
     }
     this.temperatureAtBorder = new Float32Array(4); // unit: centigrade
@@ -1840,6 +1843,9 @@ model2d.setupColorDivs = function() {
 }
 
 model2d.displayTemperatureColorDivs = function(destination, model) {
+    if (colorDivs.length == 0) {
+        model2d.setupColorDivs();
+    };
     var columns = model.nx;
     var rows = model.ny;
     var ycols, ycols_plus_x;
@@ -1950,7 +1956,7 @@ var alpha_color_table = [];
 model2d.setupRGBAColorTables = function() {
     var rgb = [];
     for(var i = 0; i < 256; i++) {
-        rgb = hsvToRgb(i, 100, 80);
+        rgb = hsvToRgb(i, 100, 90);
         red_color_table[i]   = rgb[0];
         blue_color_table[i]  = rgb[1];
         green_color_table[i] = rgb[2];
@@ -1958,7 +1964,9 @@ model2d.setupRGBAColorTables = function() {
 }
 
 model2d.displayTemperatureCanvas = function(canvas, model) {
-
+    if (red_color_table.length == 0) {
+        model2d.setupRGBAColorTables;
+    };
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = "rgb(0,0,0)";
     ctx.globalCompositeOperation = "destination-atop";

@@ -1551,7 +1551,6 @@ model2d.addHotSpot = function(model, temp) {
 }
 
 
-
 var colorDivs = [];
 
 model2d.setupColorDivs = function() {
@@ -1573,6 +1572,9 @@ model2d.setupColorDivs = function() {
 }
 
 model2d.displayTemperatureColorDivs = function(destination, model) {
+    if (colorDivs.length == 0) {
+        model2d.setupColorDivs();
+    };
     var columns = model.nx;
     var rows = model.ny;
     var ycols, ycols_plus_x;
@@ -1683,7 +1685,7 @@ var alpha_color_table = [];
 model2d.setupRGBAColorTables = function() {
     var rgb = [];
     for(var i = 0; i < 256; i++) {
-        rgb = hsvToRgb(i, 100, 80);
+        rgb = hsvToRgb(i, 100, 90);
         red_color_table[i]   = rgb[0];
         blue_color_table[i]  = rgb[1];
         green_color_table[i] = rgb[2];
@@ -1691,7 +1693,9 @@ model2d.setupRGBAColorTables = function() {
 }
 
 model2d.displayTemperatureCanvas = function(canvas, model) {
-
+    if (red_color_table.length == 0) {
+        model2d.setupRGBAColorTables;
+    };
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = "rgb(0,0,0)";
     ctx.globalCompositeOperation = "destination-atop";
@@ -1706,7 +1710,6 @@ model2d.displayTemperatureCanvas = function(canvas, model) {
     canvas.height = rows;
     
     var hue, rgb;
-    
 
     var ycols;
 
@@ -1751,6 +1754,7 @@ model2d.displayTemperatureTable = function(destination, model) {
     }
     destination.innerHTML = tableStr;
 }
+
 // export namespace
 if (root !== 'undefined') root.model2d = model2d;
 })();

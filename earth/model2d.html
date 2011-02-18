@@ -176,6 +176,9 @@
       myRequire([ "model2d.js" ],
       function() {
 
+        model2d.setupColorDivs();
+        model2d.setupRGBAColorTables();
+
         var model = new model2d.Model2D();
         model2d.addHotSpot(model, 50.0);
         model.nextStep();
@@ -192,11 +195,9 @@
         var step_count = document.getElementById("step-count");
 
         var canvas =     document.getElementById("canvasDestination");
-        var colordivs =     document.getElementById("colorDivDestination");
+        var divs =     document.getElementById("colorDivDestination");
         var run_mode;
 
-        model2d.setupRGBAColorTables();
-        model2d.setupColorDivs();
         
         var one_before_that_sample_time = new Date();
         var last_sample_time = new Date();
@@ -217,7 +218,7 @@
                   model2d.displayTemperatureCanvas(canvas, model);
                   break;
                 case 'colored-divs': 
-                  model2d.displayTemperatureColorDivs(colordivs, model); 
+                  model2d.displayTemperatureColorDivs(divs, model); 
                   break;
               }
             }
@@ -269,7 +270,7 @@
         step_count.innerHTML = 'frame: ' + model.indexOfStep;
 
         step_model_color_divs.onchange = runModelStep;
-        model2d.displayTemperatureColorDivs(colordivs, model);
+        model2d.displayTemperatureColorDivs(divs, model);
         
       });
     } else {
