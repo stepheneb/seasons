@@ -3,7 +3,7 @@
 
 var earth_circle_orbit_segments = 1024;
 
-var circle = function(scale) {
+var circlePoints = function(scale) {
     var points = [];
     var pi2 = Math.PI * 2;
     var increment = pi2 / earth_circle_orbit_segments;
@@ -20,7 +20,7 @@ var circle = function(scale) {
     return points;
 }
 
-var earth_circle_orbit_positions = circle(earth_orbital_radius_km);
+var earth_circle_orbit_positions = circlePoints(earth_orbital_radius_km);
 var earth_circle_orbit_indices = [];
 for (var i = 0; i < earth_circle_orbit_segments; i++) { earth_circle_orbit_indices.push(i) };
 
@@ -148,33 +148,83 @@ var ellipse = function(scale) {
     return points;
 }
 
-var earth_ellipse_orbit_positions = circle(earth_orbital_radius_km);
+var earth_ellipse_orbit_positions = circlePoints(earth_orbital_radius_km);
 var earth_ellipse_orbit_indices = [];
 for (var i = 0; i < earth_circle_orbit_segments; i++) { earth_ellipse_orbit_indices.push(i) };
 
+var earth_ellipse_points = function(index) {
+    earth_orbital_radius_km
+    var y = (1 / earthOrbitData.semiMajorAxis) * Math.sin(index * 2 * Math.PI);
+    var x =  earthOrbitData.semiMajorAxis * Math.cos(index * 2 * Math.PI);
+
+    x = x * earth_orbital_radius_km  + sun_focus * 2;
+    y = y * earth_orbital_radius_km;
+
+    // x = x * au2km * factor - sun_focus * 2;
+    // y = y * au2km * factor;
+
+    return [ x, 0, y ];
+}
+
 var earth_ellipse_location_by_month = function(month) {
-    var day2 = 0;
-    var loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+    var ellipse;
+    var month_rotation = 0;
     switch(month) {
         case "dec":
-        day2 = 182 * 2;
-        loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+        ellipse = earth_ellipse_points(354/365 - month_rotation);
         break;
+
         case "mar":
-        day2 = 273 * 2;
-        loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+        ellipse = earth_ellipse_points(79/365 - month_rotation);
         break;
+
         case "jun":
-        day2 = 0;
-        loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+        ellipse = earth_ellipse_points(172/365 - month_rotation);
         break;
+
         case "sep":
-        day2 = 91 * 2;
-        loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+        ellipse = earth_ellipse_points(263/365 - month_rotation);
         break;
     }
-    return loc;
+    return ellipse;
 }
+
+var earth_ellipse_distance_from_sun_by_month = function(month) {
+    var ep = earth_ellipse_location_by_month(month);
+    var distance = Math.sqrt(ep[0] * ep[0] + ep[1] * ep[1] + ep[2] * ep[2])
+    return distance;
+}
+
+var earth_ellipse_solar_constant_by_month = function(month) {
+    var ep = earth_ellipse_location_by_month(month);
+    var distance = Math.sqrt(ep[0] * ep[0] + ep[1] * ep[1] + ep[2] * ep[2])
+    return distance;
+}
+
+
+// var earth_ellipse_location_points_by_month = function(month) {
+//     var day2 = 0;
+//     var loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+//     switch(month) {
+//         case "dec":
+//         day2 = 182 * 2;
+//         loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+//         break;
+//         case "mar":
+//         day2 = 273 * 2;
+//         loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+//         break;
+//         case "jun":
+//         day2 = 0;
+//         loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+//         break;
+//         case "sep":
+//         day2 = 91 * 2;
+//         loc = [earth_circle_orbit_positions[day2], earth_circle_orbit_positions[day2 + 1]];
+//         break;
+//     }
+//     return loc;
+// }
 
 var earthEllipseOrbit = SceneJS.createNode({
     type: "library",    
@@ -182,7 +232,7 @@ var earthEllipseOrbit = SceneJS.createNode({
         {
             id: "earthEllipseOrbit",
             type: "translate",
-            x: sun_x_pos,
+            x: sun_x_pos - sun_focus * 2,
             y: 0,
             z: 0,
             nodes: [ 
@@ -224,25 +274,28 @@ var earthEllipseOrbit = SceneJS.createNode({
 
                                                 {  },
 
+                                                // Earth in Space
                                                 {
                                                                     
                                                     type: "disk", 
                                                     id: "earth-in-space-elliptical-orbital-path" ,                                         
                                                     radius: earth_orbital_radius_km,
+                                                    innerRadius : earth_orbital_radius_km - earth_orbit_line_size_med,
                                                     semiMajorAxis: earthOrbitData.semiMajorAxis,
-                                                    innerRadius : earth_orbital_radius_km - 0.4,
-                                                    height: earth_diameter_km / 50,
+                                                    height: earth_orbit_line_size_med,
                                                     rings: 360
                                                 },
                                                                             
+
+                                                // Sun-Earth Orbit
                                                 {
                                                                     
                                                     type: "disk",                                           
                                                     id: "sun-earth-elliptical-orbital-path" ,                                         
                                                     radius: earth_orbital_radius_km,
+                                                    innerRadius : earth_orbital_radius_km - earth_orbit_line_size_large,
                                                     semiMajorAxis: earthOrbitData.semiMajorAxis,
-                                                    innerRadius : earth_orbital_radius_km - (earth_diameter_km * 50),
-                                                    height: earth_diameter_km * 50,
+                                                    height: earth_orbit_line_size_large,
                                                     rings: 360
                                                 }                                        
                                             ]

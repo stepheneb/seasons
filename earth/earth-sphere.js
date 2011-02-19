@@ -1,3 +1,5 @@
+
+
 var earthSphere = SceneJS.createNode({
 
     type: "library",
@@ -31,9 +33,14 @@ var earthSphere = SceneJS.createNode({
                             id: "earthRotationalAxisQuaternion",
                             x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
 
-                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.5 } ],
+                            rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
                         
                             nodes: [
+                            
+                                {
+                                     type: "node",
+                                     id: "latitude-line-destination",
+                                },
 
                                 {
                                     type: "scale",
@@ -96,3 +103,44 @@ var earthSphere = SceneJS.createNode({
         }
     ]
 });
+
+var earth_position = SceneJS.withNode("earth-position");
+
+var get_earth_postion = function() {
+    var ep = earth_position.get();
+    return [ep.x, ep.y, ep.z];
+}
+
+var set_earth_postion = function(newpos) {
+    earth_position.set({ x: newpos[0], y: newpos[1], z: newpos[2] })
+}
+
+var get_normalized_earth_eye = function(look_at) {
+    var normalized_eye = {};
+    var eye = look_at.get("eye");
+    var ep = earth_position.get();
+    normalized_eye.x = eye.x - ep.x;
+    normalized_eye.y = eye.y - ep.y;
+    normalized_eye.z = eye.z - ep.z;
+    return normalized_eye;
+}
+
+var set_normalized_earth_eye = function(look_at, normalized_eye) {
+    var eye = {}
+    var ep = earth_position.get();
+    eye.x = normalized_eye.x + ep.x;
+    eye.y = normalized_eye.y + ep.y;
+    eye.z = normalized_eye.z + ep.z;
+    var eye = look_at.set("eye", eye);
+}
+
+var update_earth_look_at = function(look_at, normalized_eye) {
+    var eye = {};
+    var ep = earth_position.get();
+    eye.x = normalized_eye.x + ep.x;
+    eye.y = normalized_eye.y + ep.y;
+    eye.z = normalized_eye.z + ep.z;
+
+    look_at.set("look", ep );
+    look_at.set("eye",  eye );
+}

@@ -1,7 +1,50 @@
-/**
- * adapted from SceneJS Examples
- *
- */
+
+
+SceneJS.createNode({
+    id: "EarthPointerSprite",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/earth-arrow.png" } ],
+            nodes: [
+            
+                {
+                    type: "node",
+                    
+                    flags: {
+                        transparent: true
+                    },
+                    
+                    nodes: [
+                    
+                        {
+                    
+                            type: "material",
+                            specular: 0.0,
+                            emit: 10,
+                            
+                            nodes: [
+                                
+                                {
+                                    type: "translate",
+                                    y: sun_radius_km * 22,
+                                    
+                                    nodes: [
+                                        {
+                                            type: "quad",
+                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20,
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
 
 SceneJS.createNode({
     
@@ -25,6 +68,15 @@ SceneJS.createNode({
                         aspect : 1.43,
                         near : 0.10,
                         far : milky_way_apparent_radius * 10,
+                        
+                        // type   : "ortho",
+                        // left :   earth_orbital_radius_km * -1.5,
+                        // right :   earth_orbital_radius_km * 1.5,
+                        // bottom : earth_orbital_radius_km * -1.5,
+                        // top :     earth_orbital_radius_km * 1.5,
+                        // near : earth_diameter_km,
+                        // far : milky_way_apparent_radius * 20,
+                        
                     },
 
                     nodes: [
@@ -66,6 +118,12 @@ SceneJS.createNode({
                             target :"earthEllipseOrbit"
                         },
 
+                        // Integrate our JPL earth ephemerides orbit, which is defined in jpl-earth-ephemerides.js
+                        // {
+                        //     type : "instance",
+                        //     target :"earth-orbit-2010-jpl"
+                        // },
+
                         {
                             type   : "instance",
                             target : "orbit-grid"
@@ -73,28 +131,32 @@ SceneJS.createNode({
 
                         {
                             type: "light",
-                            mode:                   "dir",
+                            mode:                   "point",
+                            pos:                    { x: sun_x_pos, y: 0, z: 0 },
                             color:                  { r: 3.0, g: 3.0, b: 3.0 },
                             diffuse:                true,
                             specular:               true,
-                            dir:                    { x: 1.0, y: 0.0, z: 0.0 }
+
+                            constantAttenuation: 1.0,
+                            quadraticAttenuation: 0.0,
+                            linearAttenuation: 0.0
                         },
-                        {
-                            type: "light",
-                            mode:                   "dir",
-                            color:                  { r: 0.1, g: 0.1, b: 0.1 },
-                            diffuse:                true,
-                            specular:               true,
-                            dir:                    { x: 0.0, y: 1.0, z: -1.0 }
-                        },
-                        {
-                            type: "light",
-                            mode:                   "dir",
-                            color:                  { r: 0.1, g: 0.1, b: 0.1 },
-                            diffuse:                true,
-                            specular:               true,
-                            dir:                    { x: -1.0, y: 0.0, z: -1.0 }
-                        },
+                        // {
+                        //     type: "light",
+                        //     mode:                   "point",
+                        //     color:                  { r: 0.1, g: 0.1, b: 0.1 },
+                        //     diffuse:                true,
+                        //     specular:               true,
+                        //     dir:                    { x: 0.0, y: 1.0, z: -1.0 }
+                        // },
+                        // {
+                        //     type: "light",
+                        //     mode:                   "point",
+                        //     color:                  { r: 0.1, g: 0.1, b: 0.1 },
+                        //     diffuse:                true,
+                        //     specular:               true,
+                        //     dir:                    { x: -1.0, y: 0.0, z: -1.0 }
+                        // },
                         
                         {
                             type   : "instance",
@@ -102,9 +164,22 @@ SceneJS.createNode({
                         },
                         
                         {
+                            type: "translate",
+                            id: "earth-label",
+                            x: earth_x_pos, y: 0, z: 0,
+                            nodes: [
+                                {
+                                    type: "instance",
+                                    target: "EarthPointerSprite"
+                                }
+                            ]
+                        },
+                                                
+                        {
                             type : "instance",
                             target :"earth"
-                        }
+                        },
+                        
                     ]
                 }
             ]
@@ -139,17 +214,9 @@ var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
 
-function setAspectRatio(camera, canvas) {
+function setCamera(camera, settings) {
     var optics = SceneJS.withNode(camera).get("optics");
-    optics.aspect = canvas.clientWidth/canvas.clientHeight;
-    SceneJS.withNode(camera).set("optics", optics);
-}
-
-setAspectRatio("theCamera", canvas);
-
-function setFieldOfView(camera, fovy) {
-    var optics = SceneJS.withNode(camera).get("optics");
-    optics.fovy = fovy;
+    for(prop in settings) optics[prop] = settings[prop];
     SceneJS.withNode(camera).set("optics", optics);
 }
 
@@ -162,6 +229,8 @@ for(var i = 0; i < choose_look_at.elements.length; i++) {
 }
 var look_at = SceneJS.withNode("lookAt");
 
+var earth_label = SceneJS.withNode("earth-label");
+
 var orbital_path = document.getElementById("orbital_path");
 var earth_rotation = document.getElementById("earth_rotation");
 
@@ -173,10 +242,13 @@ var orbit_grid_selector = SceneJS.withNode("orbit-grid-selector");
 // color_map.style.display='none';
 
 var seasonal_rotations = {};
-seasonal_rotations.jun = { x :  0,  y : 0,  z : -1,  angle : 23.44 };
-seasonal_rotations.sep = { x :  1,  y : 0,  z :  0,  angle : 23.44 };
+// seasonal_rotations.dec = { x :  0,  y : 0,  z :  1,  angle : -23.44 };
+// seasonal_rotations.mar = { x :  1,  y : 0,  z :  0,  angle : 23.44 };
+seasonal_rotations.jun = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
+seasonal_rotations.sep = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
 seasonal_rotations.dec = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
-seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
+seasonal_rotations.mar = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
+// seasonal_rotations.sep = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
 
 function setTemperatureTexture(month) {
     switch (month) {
@@ -264,44 +336,43 @@ function earthSurfaceChange() {
 choose_earth_surface.onchange = earthSurfaceChange;
 choose_earth_surface.onchange();
 
-var earth_postion = SceneJS.withNode("earth-position");
 var earth_axis_position = SceneJS.withNode("earth-axis-position");
 
 var earth_scale = SceneJS.withNode("earth-scale");
 
-var earth_sun_line_rotation = SceneJS.withNode("earth-sun-line-rotation");
-var earth_sun_line_translation = SceneJS.withNode("earth-sun-line-translation");
-var earth_sun_line_selector = SceneJS.withNode("earthSunLineSelector");
-
-function earth_sun_line(month, view) {
-    var new_location = earth_circle_location_by_month(month);
-    switch(view) {
-        case "orbit":
-        switch(month) {
-            case "jun":
-            earth_sun_line_rotation.set("angle", 180);
-            earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
-            break;
-            case "sep":
-            earth_sun_line_rotation.set("angle", 90);
-            earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
-            break;
-            case "dec":
-            earth_sun_line_rotation.set("angle", 0);
-            earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
-            break;
-            case "mar":
-            earth_sun_line_rotation.set("angle", 270);
-            earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
-            break;
-        }
-        SceneJS.Message.sendMessage({ 
-          command: "update", 
-          target: "earthRotationalAxisQuaternion", 
-          set: { rotation: seasonal_rotations[month] }
-        });
-    }
-}
+// var earth_sun_line_rotation = SceneJS.withNode("earth-sun-line-rotation");
+// var earth_sun_line_translation = SceneJS.withNode("earth-sun-line-translation");
+// var earth_sun_line_selector = SceneJS.withNode("earthSunLineSelector");
+// 
+// function earth_sun_line(month, view) {
+//     var new_location = earth_ellipse_location_by_month(month);
+//     switch(view) {
+//         case "orbit":
+//         switch(month) {
+//             case "jun":
+//             earth_sun_line_rotation.set("angle", 180);
+//             earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+//             break;
+//             case "sep":
+//             earth_sun_line_rotation.set("angle", 90);
+//             earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
+//             break;
+//             case "dec":
+//             earth_sun_line_rotation.set("angle", 0);
+//             earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+//             break;
+//             case "mar":
+//             earth_sun_line_rotation.set("angle", 270);
+//             earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
+//             break;
+//         }
+//         SceneJS.Message.sendMessage({ 
+//           command: "update", 
+//           target: "earthRotationalAxisQuaternion", 
+//           set: { rotation: seasonal_rotations[month] }
+//         });
+//     }
+// }
 
 var choose_month = document.getElementById("choose-month");
 var month;
@@ -312,9 +383,25 @@ for(var i = 0; i < choose_month.elements.length; i++) {
 }
 
 function chooseMonthChange() {
-    for(var i = 0; i < this.elements.length; i++)
-        if (this.elements[i].checked) month = this.elements[i].value;
-    earth_sun_line(month, look_at_selection);
+    var current_month = month;
+    for(var i = 0; i < this.elements.length; i++) {
+        if (this.elements[i].checked) month = this.elements[i].value;        
+    }
+
+    set_earth_postion(earth_ellipse_location_by_month(month));
+    switch(look_at_selection) {
+        case "orbit":
+        break;
+
+        case 'earth':
+        update_earth_look_at(look_at, normalized_initial_earth_eye_side);
+        break;
+
+        case "surface" :
+        break;
+    }
+    
+    set_earth_sun_line(month, look_at_selection);
     setTemperatureTexture(month);
     SceneJS.Message.sendMessage({ 
       command: "update", 
@@ -327,6 +414,9 @@ function chooseMonthChange() {
         SceneJS.withNode("earthTextureSelector").set("selection", [0]);
     }
     setMilkyWayRotation(month);
+
+    var ep = get_earth_postion();
+    earth_label.set({ x: ep[0], z: ep[2] });
 }
 
 choose_month.onchange = chooseMonthChange;
@@ -338,6 +428,7 @@ function orbitalPathChange() {
          case "orbit":
           SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [2]);
           break;
+
          case 'earth':
           SceneJS.withNode("earthEllipseOrbitSelector").set("selection", [1]);
           break;
@@ -411,29 +502,20 @@ function chooseLookAt() {
     for(var i = 0; i < this.elements.length; i++) {
         if (this.elements[i].checked) look_at_selection = this.elements[i].value;
     }
-    // var new_location = earth_circle_location_by_month(month);
-    // earth_postion.set({ x: new_location[0], y: 0, z: new_location[2] });
-    // earth_axis_position.set({ x: new_location[0], y: 0, z: new_location[2] });
-
-    // reference_frame.value = look_at_selection;
     switch(look_at_selection) {
         case "orbit":
         look_at.set("eye",  initial_sun_eye );
         look_at.set("look", { x : sun_x_pos, y : 0.0, z : 0.0 } );
         orbital_path.checked = true;
-        earth_sun_line_selector.set("selection", [0]);
-        setFieldOfView("theCamera", 40.0);
-        choose_month.onchange();
+        setCamera("theCamera", initial_sun_camera);
         setMilkyWayRotation(month);
         break;
 
         case 'earth':
         earth_rotation.checked=true
-        look_at.set("eye",  initial_earth_eye );
-        look_at.set("look", { x : earth_x_pos, y : 0.0, z : 0.0 } );
+        update_earth_look_at(look_at, normalized_initial_earth_eye_side);
         orbital_path.checked = true;
-        earth_sun_line_selector.set("selection", [1]);
-        setFieldOfView("theCamera", 45.0);
+        setCamera("theCamera", initial_earth_camera);
         setMilkyWayRotation(month);
         break;
 
@@ -444,6 +526,7 @@ function chooseLookAt() {
         setMilkyWayRotation(month);
         break;
     }
+    choose_month.onchange();
     orbital_path.onchange();
     orbitalGridChange();
 }
@@ -468,6 +551,7 @@ function mouseUp() {
 
 function mouseOut() {
     dragging = false;
+    document.onselectstart = function(){ return true; }
 }
 
 /* On a mouse drag, we'll re-render the scene, passing in
@@ -476,19 +560,22 @@ function mouseOut() {
 function mouseMove(event) {
     if (dragging) {
 
-        var look, eye, eye4, eye4dup, neweye;
+        document.onselectstart = function(){ return false; }
+        canvas.style.cursor = "move";
+
+        var eye, eye4, eye4dup, neweye;
 
         var up_downQ, up_downQM, left_rightQ, left_rightQM;
 
         var f, up_down_axis, angle, new_yaw, new_pitch;
+        
+        var normalized_eye;
         
         new_yaw = (event.clientX - lastX) * -0.2;
         new_pitch = (event.clientY - lastY) * 0.2;
         
         lastX = event.clientX;
         lastY = event.clientY;
-
-        look = SceneJS.withNode("lookAt");
 
         switch(look_at_selection) {
             case "orbit":
@@ -516,7 +603,8 @@ function mouseMove(event) {
             case 'earth':
             earth_yaw   += new_yaw;
             earth_pitch += new_pitch;
-            eye4 = [normalized_initial_earth_eye.x, normalized_initial_earth_eye.y, normalized_initial_earth_eye.z, 1];
+            
+            eye4 = [normalized_initial_earth_eye_side.x, normalized_initial_earth_eye_side.y, normalized_initial_earth_eye_side.z, 1];
 
             left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : earth_yaw });
             left_rightQM = left_rightQ.getMatrix();
@@ -534,14 +622,12 @@ function mouseMove(event) {
 
             console.log("dragging: pitch: " + earth_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
 
-            neweye[0] = neweye[0] + earth_x_pos;
             break;
         }
 
+        normalized_eye =  { x: neweye[0], y: neweye[1], z: neweye[2] };
+        set_normalized_earth_eye(look_at, normalized_eye);
 
-        look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        // SceneJS.withNode("theScene").start();
-        eye = look.get("eye");
         console.log("");
 
     }
@@ -552,8 +638,27 @@ canvas.addEventListener('mousemove', mouseMove, true);
 canvas.addEventListener('mouseup', mouseUp, true);
 canvas.addEventListener('mouseout', mouseOut, true);
 
+var earth_info_label = document.getElementById("earth-info-label");
+var canvas_properties = canvas.getBoundingClientRect();
+
+
+function earthLabel() {
+    earth_info_label.style.top = canvas_properties.top + 10 + "px";
+    earth_info_label.style.left = canvas_properties.left + 10 + "px";
+    var epos = get_earth_postion();
+    var edist = earth_ellipse_distance_from_sun_by_month(month);
+    var solar_flux = earth_ephemerides_solar_constant_by_month(month);
+    labelStr = "";
+    labelStr += sprintf("Earth Distance: %6.0f km<br>", edist / factor);
+    labelStr += sprintf("Solar Radiation:  %4.1f W/m2<br>", solar_flux);
+    labelStr += "<br>";
+    labelStr += sprintf("WebGL: x: %6.0f y: %6.0f z: %6.0f", epos[0], epos[1], epos[2]);
+    earth_info_label.innerHTML = labelStr;
+}
+
 window.render = function() {
     SceneJS.withNode("theScene").start();
+    earthLabel();
     if (earth_rotation.checked) {
         var earth_angle = SceneJS.withNode("earth-rotation").get("angle");
         SceneJS.withNode("earth-rotation").set("angle", earth_angle+0.15);
@@ -580,3 +685,13 @@ SceneJS.withNode("theScene").bind("loading-status",
             SceneJS._loggingModule.info(mesg);            
         }
     });
+
+
+
+    // bottom: 900
+    // height: 730
+    // left: 55
+    // right: 1085
+    // top: 170
+    // width: 1030
+

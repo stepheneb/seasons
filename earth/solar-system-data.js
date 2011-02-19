@@ -5,8 +5,8 @@ var earth_orbital_radius_km_actual = 150000000.0;
 
 var factor = 0.001
 
-var sun_diameter_km = sun_diameter_km_actual * factor;
-var earth_diameter_km = earth_diameter_km_actual * factor;
+var sun_radius_km = sun_diameter_km_actual / 2 * factor;
+var earth_diameter_km = earth_diameter_km_actual / 2 * factor;
 var earth_orbital_radius_km = earth_orbital_radius_km_actual * factor;
 var milky_way_apparent_radius = earth_orbital_radius_km * 10;
 
@@ -24,12 +24,32 @@ var normalized_initial_earth_eye =      { x: 0, y: earth_view_small_offset, z: -
 var normalized_initial_earth_eye_side = normalized_initial_earth_eye;
 var normalized_initial_earth_eye_top =  { x: 0, y: earth_view_large_offset, z: -earth_view_small_offset };
 
+var initial_earth_camera = {
+    fovy : 40.0,
+    near : 0.10,
+    far : milky_way_apparent_radius * 10,    
+}
+
 var sun_view_small_offset = earth_orbital_radius_km * 0.3;
 var sun_view_large_offset =  earth_orbital_radius_km * 3.0;
 
 var initial_sun_eye = { x: sun_x_pos, y: sun_view_small_offset, z: -sun_view_large_offset };
 var initial_sun_eye_side = initial_sun_eye;
 var initial_sun_eye_top = { x: sun_x_pos, y: sun_view_large_offset, z: -sun_view_small_offset }
+
+var initial_sun_camera = {
+    fovy : 40.0,
+    near : sun_view_large_offset / 10,
+    far : milky_way_apparent_radius * 10,    
+}
+
+var earth_orbit_line_size_med = earth_diameter_km / 100;
+var earth_orbit_line_size_large = earth_diameter_km * 50;
+
+var sun_earth_line_size_med =   earth_diameter_km / 250;
+var sun_earth_line_size_large = earth_diameter_km * 10;
+
+monthNamesShort = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
 var deg2rad = Math.PI/180;
 var min2rad = Math.PI/(180*60);
@@ -41,6 +61,9 @@ var earthRadius = 6378.1;         // km
 var earthOrbitalPeriod = 365.256363004; // days
 var earthRotationPeriod = 0.99726968;   // days
 var t_day = 0.0001;
+var fourPI = Math.PI * 4;
+
+var solar_constant = 1367.6;
 
 var earthOrbitData = {
   aphelion: 1.01671388,
@@ -53,3 +76,6 @@ var earthOrbitData = {
   longitude : 348.73936*deg2rad,
   argument : 114.20783*deg2rad
 }
+
+
+var sun_focus = earthOrbitData.eccentricity / earthOrbitData.semiMajorAxis / 2 * au2km * factor;

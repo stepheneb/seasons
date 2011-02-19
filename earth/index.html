@@ -8,6 +8,37 @@
 
     <script type="text/javascript" src="../lib/modernizr-1.6.js"></script>
 
+    <style type="text/css">
+        .transparent-ui {
+            opacity: .6;
+        }
+
+        .container {
+            z-index: 0;
+        }
+
+        #earth-info-label {
+            position: absolute;
+            width: 240px;
+            font: 1.1em monospace;
+            clear: both;
+            padding: 8px;
+            overflow: hidden;
+            background: blue;
+            color: white;
+            z-index: 2;
+            margin: 0 auto;
+            border: 1px solid;
+            text-align: left;
+            -webkit-box-shadow: #444 5px 5px 2px;
+            border-bottom-left-radius: 5px 5px;
+            border-bottom-right-radius: 5px 5px;
+            border-top-left-radius: 5px 5px;
+            border-top-right-radius: 5px 5px;
+        }
+
+    </style>
+
 </head>
 <div id="container">
   <div id="header-inner">
@@ -122,6 +153,9 @@
     </div>    
   </div>
 </div>
+<div id="earth-info-label" class="transparent-ui">
+    Earth
+</div>
 <script type="text/javascript">
 
   function myRequire(src, callback){
@@ -164,6 +198,7 @@
     // webGLEnabled = false;
     if (webGLEnabled){
       myRequire([
+        "../lib/sprintf.js",
         "../lib/scenejs/scenejs.js",
         "solar-system-data.js",
         "sky-sphere.js",
@@ -172,8 +207,10 @@
         "sun.js",
         "earth.js",
         "earth-orbit.js",
+        "jpl-earth-ephemerides.js",
         "orbit-grid.js",
         "earth-sun-line.js",
+        "latitude-line.js",
         "solar-system.js"
       ]);
     } else {
