@@ -37,7 +37,7 @@
           <form id="show-me">
             <fieldset>
               <legend>Show me: </legend>
-              <label><input id="circle-orbital-path" type="checkbox" value="selected" /> Circular orbital path</label>
+              <label><input id="circle-orbit" type="checkbox" value="selected" /> Circular orbit</label>
               <label><input id="orbital-grid" type="checkbox"/> Orbital grid: </label>
             </fieldset>
           </form>  
@@ -73,6 +73,9 @@
       </div>    
     </div>
   </div>
+</div>
+<div id="earth-info-label" class="transparent-ui">
+    Earth
 </div>
 <script type="text/javascript">
 
@@ -116,6 +119,7 @@
     // webGLEnabled = false;
     if (webGLEnabled){
       myRequire([
+        "../lib/sprintf.js",
         "../lib/scenejs/scenejs.js",
         "solar-system-data.js",
         "sky-sphere.js",
@@ -125,7 +129,9 @@
         "earth.js",
         "earth-orbit.js",
         "earth-sun-line.js",
+        "jpl-earth-ephemerides.js",
         "orbit-grid.js",
+        "seasons.js",
         "seasons1-1.js"
       ]);
     } else {
