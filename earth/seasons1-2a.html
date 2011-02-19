@@ -3,18 +3,35 @@
 <html>
 <head>
     <title>Seasons 1.2a: Investigating Sun-Earth distance and temperature</title>
-    <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
-    <link href="../stylesheets/video-js.css" rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets/style.css"        rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets/video-js.css"     rel="stylesheet" type="text/css"/>
+		<link href="../stylesheets/flotr-style.css" rel="stylesheet" type="text/css" />
+		<link href="../stylesheets/table.css" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="../lib/modernizr-1.6.js"></script>
 
+		<script type="text/javascript" src="../lib/flotr/lib/prototype.js"></script>
+		<script type="text/javascript" src="../lib/table/fastinit.js"></script>
+		<script type="text/javascript" src="../lib/table/tablesort.js"></script>
+		
+		<!--[if IE]>
+			<script type="text/javascript" src="../lib/flotr/lib/excanvas.js"></script>
+			<script type="text/javascript" src="../lib/flotr/lib/base64.js"></script>
+		<![endif]-->
+		<script type="text/javascript" src="../lib/flotr/lib/canvas2image.js"></script>
+		<script type="text/javascript" src="../lib/flotr/lib/canvastext.js"></script>
+		<script type="text/javascript" src="../lib/flotr/flotr.debug-0.2.0-test.js"></script>
+    <script src="../lib/ace/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="../lib/ace/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../lib/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script> -->
+    
 </head>
 <div id="container">
   <div id="header-inner">
     <h1 id="title">Seasons 1.2a: Investigating Sun-Earth distance and temperature</h1>
     <div id="simulation-controls">       
       <ul class="horiz">
-        <li>
+        <!-- <li>
           <label for="earth_surface">Earth Surface:</label>
           <select id="earth_surface" name="earth_surface">
             <option value="terrain">Terrain</option>
@@ -23,7 +40,7 @@
         </li>
         <li id="temperature-color-map">
           <img src="images/color-map-minus30-to-30-400px.png" alt="color map for temperature"/>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
@@ -68,6 +85,58 @@
           </div>
         </li>
         <li>
+          
+          
+          <div class="editorQuarterFrame">
+            Select a city and date:
+            <ul class="hlist">
+              <li>
+                <form id="select-city-latitude">
+                  <!-- <label for="selected-city-latitude">City/Latitude:</label> -->
+                  <select id="selected-city-latitude" name="selected-city-latitude">
+                    <option disabled selected>city ...</option>
+                  </select>
+                </form>
+              </li>
+              <li>
+                <form id="select-city-month">
+                  <!-- <label for="selected-city-month">Month:</label> -->
+                  <select id="selected-city-month" name="selected-city-month">
+                    <option disabled selected>date ...</option>
+                    <option value="dec">Dec 21</option>
+                    <option value="mar">Mar 21</option>
+                    <option value="jun">Jun 21</option>
+                    <option value="sep">Sep 21</option>
+                  </select>
+                </form>
+              </li>
+            </ul>
+            <ul class="hlist">
+              <li>
+                <form id="city-latitude-temperature">
+                  <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
+                  <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
+                  <input type="submit" value="Run" />
+                </form>
+              </li>
+            </ul>
+            <div class="tableFrame">
+              <table id='city-data-table' class='sortable'>
+                <thead>
+                  <tr>
+                    <th class='sortfirstasc text'>City</th>
+                    <th class='text'>Month</th>
+                    <th class='number'>Temp</th>
+                    <th class='number'>Prediction</th>
+                    <th class="nosort">Season ?</th>
+                    <th class="nosort">Graph</th>
+                </thead>
+                <tbody id="city-data-table-body">
+                </tbody>
+              </table>
+            </div>
+            <!-- <div class="editorFrame" id="editor">results ...</div> -->
+          </div>
         </li>
       </ul>
       <ul class="hlist">
@@ -79,6 +148,20 @@
           </div>
         </li>
         <li>
+          <ul class="hlist">
+            <li>
+              <!-- <form id="show-graph">
+                 <fieldset>
+                   <legend>Show graph: </legend>
+                   <label><input id="solar-radiation-graph" type="checkbox"/> Solar Radiation</label>
+                   <label><input id="sun-earth-distance-graph" type="checkbox"/> Distance from Sun</label>
+                 </fieldset>
+               </form> -->
+             </li>
+          </ul>
+          <div class="quarterFrame">
+            <div class="glGraphQuarterFrame" id="theCanvas4"></div>
+          </div>
         </li>
       </ul>
     </div>
@@ -107,7 +190,21 @@
       <div id="theLoggingDiv3"></div>
       <h3>SceneJS Log 4</h3>
       <div id="theLoggingDiv4"></div>
-    </div>    
+    </div> 
+    <div id="snapshots">
+      <ul>
+        <li>
+          <ul class="hlist">
+            <li>
+              <img id="s1-small"></img>
+            </li>
+            <li>
+              <img id="s1-full"></img>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>   
   </div>
 </div>
 <script type="text/javascript">
@@ -152,6 +249,7 @@
     // webGLEnabled = false;
     if (webGLEnabled){
       myRequire([
+        "../lib/sprintf.js",
         "../lib/scenejs/scenejs.js",
         "../lib/scenejs/utils/query/scenejs-query-node-pos.js",
         "solar-system-data.js",
@@ -162,7 +260,10 @@
         "earth.js",
         "earth-orbit.js",
         "earth-sun-line.js",
+        "jpl-earth-ephemerides.js",
         "orbit-grid.js",
+        "model2d.js",
+        "cities.js",
         "seasons1-2a.js"
       ]);
     } else {

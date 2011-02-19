@@ -261,26 +261,31 @@ canvas:hover {
 
 .quarterFrame {
     width: 480px;
-    border: 1px solid lightgray;*/
 }
 
 .editorQuarterFrame {
-    width: 460px;
-    height: 460px;
+    width: 480px;
     margin-left: 5px;
     padding: 2px;
 }
 
+.tableFrame {
+    width: 476px;
+    height: 420px;
+    overflow: auto;
+    margin: 0px;
+    padding: 0px;
+}
+
 .editorFrame {
     width: 460px;
-    height: 360px;
+    height: 200px;
 }
 
 .glCanvasQuarterFrame {
     width: 480px;
     margin-left: 5px;
     padding: 2px;
-/*    border: 1px solid lightgray;*/
 }
 
 .glGraphQuarterFrame {
