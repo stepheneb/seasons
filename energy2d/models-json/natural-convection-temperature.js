@@ -1,4 +1,4 @@
-var compare_convection_conduction = {
+var natural_convection_temperature = {
   "model": {
     "solar_power_density": "2000.0",
     "viewupdate_interval": "10",
@@ -43,6 +43,7 @@ var compare_convection_conduction = {
           "density": "25.0"
         },
         {
+          "label": "%temperature",
           "specific_heat": "1000.0",
           "emissivity": "0.0",
           "draggable": "false",
@@ -51,34 +52,15 @@ var compare_convection_conduction = {
             "x": "0.0",
             "y": "6.8",
             "height": "0.2",
-            "width": "10.0"
+            "width": "4.8"
           },
+          "uid": "left_heater",
           "constant_temperature": "true",
           "transmission": "0.0",
           "absorption": "1.0",
-          "temperature": "30.0",
+          "temperature": "50.0",
           "thermal_conductivity": "1.0",
           "density": "25.0"
-        },
-        {
-          "label": "Solid",
-          "specific_heat": "1000.0",
-          "emissivity": "0.0",
-          "draggable": "false",
-          "filled": "false",
-          "reflection": "0.0",
-          "rectangle": {
-            "x": "5.0666647",
-            "y": "2.0500002",
-            "height": "4.7",
-            "width": "4.9"
-          },
-          "constant_temperature": "false",
-          "transmission": "0.0",
-          "absorption": "1.0",
-          "temperature": "0.0",
-          "thermal_conductivity": "1.0",
-          "density": "1.0"
         },
         {
           "specific_heat": "1300.0",
@@ -115,25 +97,6 @@ var compare_convection_conduction = {
           "density": "25.0"
         },
         {
-          "label": "Insulator",
-          "specific_heat": "1000.0",
-          "emissivity": "0.0",
-          "draggable": "false",
-          "reflection": "0.0",
-          "rectangle": {
-            "x": "4.666666",
-            "y": "1.9833333",
-            "height": "4.766667",
-            "width": "0.4"
-          },
-          "constant_temperature": "false",
-          "transmission": "0.0",
-          "absorption": "1.0",
-          "temperature": "0.0",
-          "thermal_conductivity": "1.0E-9",
-          "density": "25.0"
-        },
-        {
           "specific_heat": "1300.0",
           "emissivity": "0.0",
           "draggable": "false",
@@ -151,11 +114,48 @@ var compare_convection_conduction = {
           "temperature": "0.0",
           "thermal_conductivity": "1.0E-9",
           "density": "25.0"
+        },
+        {
+          "label": "%temperature",
+          "specific_heat": "1000.0",
+          "emissivity": "0.0",
+          "reflection": "0.0",
+          "rectangle": {
+            "x": "5.2",
+            "y": "6.8",
+            "height": "0.2",
+            "width": "4.8"
+          },
+          "uid": "right_heater",
+          "constant_temperature": "true",
+          "transmission": "0.0",
+          "absorption": "1.0",
+          "temperature": "25.0",
+          "thermal_conductivity": "1.0",
+          "density": "25.0"
+        },
+        {
+          "label": "Insulator",
+          "specific_heat": "1000.0",
+          "emissivity": "0.0",
+          "reflection": "0.0",
+          "rectangle": {
+            "x": "4.8",
+            "y": "1.3000001",
+            "height": "6.0",
+            "width": "0.4"
+          },
+          "constant_temperature": "false",
+          "transmission": "0.0",
+          "absorption": "1.0",
+          "temperature": "0.0",
+          "thermal_conductivity": "1.0E-9",
+          "density": "25.0"
         }
       ]
     },
     "background_density": "1.0",
-    "buoyancy_approximation": "0",
+    "buoyancy_approximation": "1",
     "background_viscosity": "2.0E-4",
     "solar_ray_speed": "0.1",
     "sun_angle": "1.5707964",
@@ -179,15 +179,6 @@ var compare_convection_conduction = {
     "rainbow_h": "0.0",
     "ruler": "true",
     "maximum_temperature": "50.0",
-    "text": {
-      "name": "Arial",
-      "size": "14",
-      "x": "2.0",
-      "y": "5.5",
-      "color": "ffffff",
-      "string": "Air",
-      "style": "0"
-    },
     "rainbow": "true",
     "minimum_temperature": "0.0",
     "rainbow_w": "0.0",
@@ -197,12 +188,12 @@ var compare_convection_conduction = {
   "sensor": {
     "thermometer": [
       {
-        "x": "2.1833334",
-        "y": "1.7666668"
+        "x": "2.5",
+        "y": "1.75"
       },
       {
-        "x": "7.75",
-        "y": "1.7833334"
+        "x": "7.5",
+        "y": "1.75"
       }
     ]
   }
