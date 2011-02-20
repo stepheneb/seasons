@@ -217,6 +217,7 @@ var scene = new seasons.Scene({
     camera:         "theCamera",
     canvas:         "theCanvas",
     look:           "lookAt",
+    earth_label:    true,
     choose_view:    "choose-view",
     choose_month:   "choose-month"
 });
