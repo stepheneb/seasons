@@ -133,7 +133,7 @@ var set_earth_sun_line = function(month, view) {
     // var distance = earth_ephemerides_datum_by_month('jun').rg * au2km * factor;
     
     switch(month) {
-        case "jun":
+        case "dec":
         earth_sun_line_rotation.set("angle", 180);
         earth_sun_line_translation.set({ x: -distance2 , y: 0.0, z: 0 });
         scale.x = distance2;
@@ -167,7 +167,7 @@ var set_earth_sun_line = function(month, view) {
         }
         break;
 
-        case "dec":
+        case "jun":
         earth_sun_line_rotation.set("angle", 0);
         earth_sun_line_translation.set({ x: distance2 , y: 0.0, z: 0 });
         scale.x = distance2;

@@ -170,20 +170,20 @@ var earth_ellipse_location_by_month = function(month) {
     var ellipse;
     var month_rotation = 0;
     switch(month) {
-        case "dec":
-        ellipse = earth_ellipse_points(354/365 - month_rotation);
-        break;
-
-        case "mar":
-        ellipse = earth_ellipse_points(79/365 - month_rotation);
-        break;
-
         case "jun":
-        ellipse = earth_ellipse_points(172/365 - month_rotation);
+        ellipse = earth_ellipse_points(0/365 - month_rotation);
         break;
 
         case "sep":
-        ellipse = earth_ellipse_points(263/365 - month_rotation);
+        ellipse = earth_ellipse_points(274/365 - month_rotation);
+        break;
+
+        case "dec":
+        ellipse = earth_ellipse_points(182/365 - month_rotation);
+        break;
+
+        case "mar":
+        ellipse = earth_ellipse_points(91/365 - month_rotation);
         break;
     }
     return ellipse;
@@ -232,7 +232,7 @@ var earthEllipseOrbit = SceneJS.createNode({
         {
             id: "earthEllipseOrbit",
             type: "translate",
-            x: sun_x_pos - sun_focus * 2,
+            x: sun_x_pos + sun_focus * 2,
             y: 0,
             z: 0,
             nodes: [ 

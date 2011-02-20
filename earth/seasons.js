@@ -174,7 +174,7 @@ seasons.Scene.prototype.mouseMove = function(event, element) {
         var f, up_down_axis, angle, new_yaw, new_pitch;
         
         new_yaw = (event.clientX - this.lastX) * -0.2;
-        new_pitch = (event.clientY - this.lastY) * 0.2;
+        new_pitch = (event.clientY - this.lastY) * -0.2;
         
         this.lastX = event.clientX;
         this.lastY = event.clientY;
