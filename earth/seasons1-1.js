@@ -159,7 +159,7 @@ SceneJS.createNode({
                         
                         {
                             type: "translate",
-                            id: "earth-label",
+                            id: "earth-pointer",
                             x: earth_x_pos, y: 0, z: 0,
                             nodes: [
                                 {
