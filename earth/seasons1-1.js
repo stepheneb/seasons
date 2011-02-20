@@ -1,4 +1,51 @@
 SceneJS.createNode({
+    id: "EarthPointerSprite",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/earth-arrow.png" } ],
+            nodes: [
+            
+                {
+                    type: "node",
+                    
+                    flags: {
+                        transparent: true
+                    },
+                    
+                    nodes: [
+                    
+                        {
+                    
+                            type: "material",
+                            specular: 0.0,
+                            emit: 10,
+                            
+                            nodes: [
+                                
+                                {
+                                    type: "translate",
+                                    y: sun_radius_km * 22,
+                                    
+                                    nodes: [
+                                        {
+                                            type: "quad",
+                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20,
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+
+SceneJS.createNode({
     
     type: "scene",
     id: "theScene",
@@ -95,15 +142,34 @@ SceneJS.createNode({
                             shine:          2.0,
                             emit:           1.0,
 
-                            nodes: [
-                            
-                                {
-                                    type   : "instance",
-                                    target : "earth-circle-orbit-sun-line"
-                                }
-                                
-                              ]
+                            // nodes: [
+                            // 
+                            //     {
+                            //         type   : "instance",
+                            //         target : "earth-circle-orbit-sun-line"
+                            //     }
+                            //     
+                            //   ]
                         },
+                        
+                        {
+                            type   : "instance",
+                            target : "earth-circle-orbit-sun-line"
+                        },
+                        
+                        {
+                            type: "translate",
+                            id: "earth-label",
+                            x: earth_x_pos, y: 0, z: 0,
+                            nodes: [
+                                {
+                                    type: "instance",
+                                    target: "EarthPointerSprite"
+                                }
+                            ]
+                        },
+                                                
+                        
 
                         {
                             type: "quaternion",

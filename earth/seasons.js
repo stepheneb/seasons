@@ -321,32 +321,40 @@ seasons.Scene.prototype.perspectiveChange = function(form_element) {
 
 
 seasons.Scene.prototype.timeOfYearChange = function(form_element) {
-  for(var i = 0; i < form_element.elements.length; i++)
-      if (form_element.elements[i].checked) this.month = form_element.elements[i].value;
-  this.earth_location = earth_circle_location_by_month(this.month);
-  this.earth_postion.set({ x: this.earth_location[0], y: 0, z: this.earth_location[2] });
-  switch(this.month) {
-      case "jun":
-      earth_sun_line_rotation.set("angle", 180);
-      earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
-      break;
-
-      case "sep":
-      earth_sun_line_rotation.set("angle", 90);
-      earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
-      break;
-
-      case "dec":
-      earth_sun_line_rotation.set("angle", 0);
-      earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
-      break;
-
-      case "mar":
-      earth_sun_line_rotation.set("angle", 270);
-      earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
-      break;
-  }
-  // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
+    for(var i = 0; i < form_element.elements.length; i++) {
+        if (form_element.elements[i].checked) this.month = form_element.elements[i].value;
+    }
+    
+    this.set_earth_postion(earth_ellipse_location_by_month(this.month));
+    
+    set_earth_sun_line(this.month, this.look_at_selection);
+    
+    this.earthLabel();
+    
+    // this.earth_location = earth_circle_location_by_month(this.month);
+    // this.earth_postion.set({ x: this.earth_location[0], y: 0, z: this.earth_location[2] });
+    // switch(this.month) {
+    //     case "jun":
+    //     earth_sun_line_rotation.set("angle", 180);
+    //     earth_sun_line_translation.set({ x: -earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+    //     break;
+    // 
+    //     case "sep":
+    //     earth_sun_line_rotation.set("angle", 90);
+    //     earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: earth_orbital_radius_km / 2 });
+    //     break;
+    // 
+    //     case "dec":
+    //     earth_sun_line_rotation.set("angle", 0);
+    //     earth_sun_line_translation.set({ x: earth_orbital_radius_km / 2 , y: 0.0, z: 0 });
+    //     break;
+    // 
+    //     case "mar":
+    //     earth_sun_line_rotation.set("angle", 270);
+    //     earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -earth_orbital_radius_km / 2 });
+    //     break;
+    // }
+    // earth_sun_line_geometry.set("positions", [new_location[0], new_location[1], 0, earth_orbital_radius_km, 0.0, 0.0]);
 }
 
 

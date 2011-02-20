@@ -33,9 +33,9 @@ var initial_earth_camera = {
 var sun_view_small_offset = earth_orbital_radius_km * 0.3;
 var sun_view_large_offset =  earth_orbital_radius_km * 3.0;
 
-var initial_sun_eye = { x: sun_x_pos, y: sun_view_small_offset, z: -sun_view_large_offset };
+var initial_sun_eye = { x: sun_x_pos, y: sun_view_small_offset, z: sun_view_large_offset };
 var initial_sun_eye_side = initial_sun_eye;
-var initial_sun_eye_top = { x: sun_x_pos, y: sun_view_large_offset, z: -sun_view_small_offset }
+var initial_sun_eye_top = { x: sun_x_pos, y: sun_view_large_offset, z: sun_view_small_offset }
 
 var initial_sun_camera = {
     fovy : 40.0,
@@ -47,7 +47,7 @@ var earth_orbit_line_size_med = earth_diameter_km / 100;
 var earth_orbit_line_size_large = earth_diameter_km * 50;
 
 var sun_earth_line_size_med =   earth_diameter_km / 250;
-var sun_earth_line_size_large = earth_diameter_km * 10;
+var sun_earth_line_size_large = earth_diameter_km * 50;
 
 monthNamesShort = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 

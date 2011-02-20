@@ -172,9 +172,8 @@ h4 {
 #header-inner input {
 }
 
-
 .transparent-ui {
-    opacity: .6;
+    opacity: .5;
 }
 
 .label-container {
@@ -183,7 +182,7 @@ h4 {
 
 #earth-info-label {
     position: absolute;
-    width: 240px;
+    width: 260px;
     font: 1.1em monospace;
     clear: both;
     padding: 8px;
