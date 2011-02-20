@@ -35,7 +35,6 @@ seasons.Scene = function(options) {
     this.scene              = SceneJS.withNode(options.theScene || "theScene");
     this.camera             = SceneJS.withNode(options.camera || "theCamera");
     this.canvas             = document.getElementById(options.canvas || "theCanvas");
-    this.canvas_properties  = this.canvas.getBoundingClientRect();
     this.optics             = this.camera.get("optics");
 
     this.setAspectRatio();
@@ -47,14 +46,19 @@ seasons.Scene = function(options) {
     
     this.look_at_selection  = (options.look_at_selection || 'orbit');
     
+    this.earth_label  = SceneJS.withNode("earth-label");
     this.earth_info_label   = document.getElementById("earth-info-label");
 
-    this.earth_postion      = SceneJS.withNode(options.earth_postion || "earth-position");
+    this.earth_position      = SceneJS.withNode(options.earth_postion || "earth-position");
     this.earth_sun_line_rotation    = SceneJS.withNode(options.earth_sun_line_rotation || "earth-sun-line-rotation");
     this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
 
     this.ellipseOrbitSelector = SceneJS.withNode(options.ellipseOrbitSelector || "earthEllipseOrbitSelector");
     this.earthTextureSelector = SceneJS.withNode(options.earthTextureSelector || "earthTextureSelector");
+
+    this.canvas_properties  = function () {
+        return this.canvas.getBoundingClientRect();
+    };
 
     this.sun_yaw =   0;
     this.sun_pitch = 0;
@@ -131,7 +135,7 @@ seasons.Scene = function(options) {
 
     this.canvas.addEventListener('mouseup', (function() {
         return function(event) {
-            self.mouseDown(event, this);
+            self.mouseUp(event, this);
         }
     })(), true);
 
@@ -149,6 +153,43 @@ seasons.Scene = function(options) {
     
 };
 
+seasons.Scene.prototype.get_earth_postion = function() {
+    var ep = this.earth_position.get();
+    return [ep.x, ep.y, ep.z];
+}
+
+seasons.Scene.prototype.set_earth_postion = function(newpos) {
+    this.earth_position.set({ x: newpos[0], y: newpos[1], z: newpos[2] })
+}
+
+seasons.Scene.prototype.get_normalized_earth_eye = function() {
+    var normalized_eye = {};
+    var eye = this.lookat.get("eye");
+    var ep = earth_position.get();
+    normalized_eye.x = eye.x - ep.x;
+    normalized_eye.y = eye.y - ep.y;
+    normalized_eye.z = eye.z - ep.z;
+    return normalized_eye;
+}
+
+seasons.Scene.prototype.set_normalized_earth_eye = function(normalized_eye) {
+    var eye = {}
+    var ep = earth_position.get();
+    eye.x = normalized_eye.x + ep.x;
+    eye.y = normalized_eye.y + ep.y;
+    eye.z = normalized_eye.z + ep.z;
+    var eye = this.look.set("eye", eye);
+}
+
+seasons.Scene.prototype.update_earth_look_at = function(normalized_eye) {
+    var eye = {};
+    var ep = earth_position.get();
+    eye.x = normalized_eye.x + ep.x;
+    eye.y = normalized_eye.y + ep.y;
+    eye.z = normalized_eye.z + ep.z;
+    this.look.set("look", ep );
+    this.look.set("eye",  eye );
+}
 
 seasons.Scene.prototype.mouseDown = function(event, element) {
     this.lastX = event.clientX;
@@ -217,17 +258,21 @@ seasons.Scene.prototype.mouseMove = function(event, element) {
 
 
 seasons.Scene.prototype.earthLabel = function() {
-    this.earth_info_label.style.top = this.canvas_properties.top + 10 + "px";
-    this.earth_info_label.style.left = this.canvas_properties.left + 0 + "px";
-    var epos = get_earth_postion();
+    this.earth_info_label.style.top = this.canvas_properties().top + window.pageYOffset + 5 + "px";
+    this.earth_info_label.style.left = this.canvas_properties().left + window.pageXOffset - 50 + "px";
     var edist = earth_ellipse_distance_from_sun_by_month(this.month);
     var solar_flux = earth_ephemerides_solar_constant_by_month(this.month);
+    var epos = this.get_earth_postion();
     var labelStr = "";
     labelStr += sprintf("Earth Distance: %6.0f km<br>", edist / factor);
     labelStr += sprintf("Solar Radiation:  %4.1f W/m2<br>", solar_flux);
     labelStr += "<br>";
-    labelStr += sprintf("WebGL: x: %6.0f y: %6.0f z: %6.0f", epos[0], epos[1], epos[2]);
+    labelStr += sprintf("WebGL: Earth x: %6.0f y: %6.0f z: %6.0f", epos[0], epos[1], epos[2]);
+    var lpos = this.earth_label.get();
+    labelStr += "<br>";
+    labelStr += sprintf("WebGL: Pointer x: %6.0f y: %6.0f z: %6.0f", lpos.x, lpos.y, lpos.z);
     this.earth_info_label.innerHTML = labelStr;
+    this.earth_label.set({ x: epos[0], z: epos[2] });
 }
 
 
