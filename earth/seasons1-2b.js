@@ -1169,11 +1169,6 @@ var scene1 = new seasons.Scene({
     debugging:           true,
 });
 
-window.render = function() {
-    SceneJS.withNode("theScene1").start();
-};
-
-
 var scene3 = new seasons.Scene({
     theScene:            "theScene3",
     camera:              "theCamera3",
@@ -1189,7 +1184,7 @@ var scene3 = new seasons.Scene({
     debugging:           true,
 });
 
-scene1.linked_scene = scene3;
+// scene1.linked_scene = scene3;
 
 window.render = function() {
     SceneJS.withNode("theScene3").render();

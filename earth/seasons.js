@@ -346,11 +346,11 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
         
         console.log("");
         this.earthLabel();
-        if (this.linked_scene && !linked) {
-            this.linked_scene.dragging = true;
-            this.linked_scene.mouseMove(event, element, new_yaw, new_pitch, true);
-            this.linked_scene.dragging = false;
-        };
+        // if (this.linked_scene && !linked) {
+        //     this.linked_scene.dragging = true;
+        //     this.linked_scene.mouseMove(event, element, new_yaw, new_pitch, true);
+        //     this.linked_scene.dragging = false;
+        // };
     };
 };
 
@@ -409,21 +409,53 @@ seasons.Scene.prototype.perspectiveChange = function(form_element) {
     this.view_selection = getRadioSelection(form_element);
     switch(this.view_selection) {
         case "top":
-        this.look.set("eye",  initial_sun_eye_top );
-        this.look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
-        this.look.set("up",   { x: 0.0, y: 1.0, z: 0.0 } );
+        switch(this.look_at_selection) {
+            case "orbit":
+                this.look.set("eye",  initial_sun_eye_top );
+                this.look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
+                this.look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
+                break;
+
+            case 'earth':
+                this.look.set("eye",  initial_earth_eye_top );
+                this.look.set("look", { x: earth_x_pos, y : 0.0, z : 0.0 } );
+                this.look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
+            
+                this.update_earth_look_at(normalized_initial_earth_eye_top);
+                break;
+
+            case "surface" :
+            break;
+        }
+        
         break;
 
         case "side":
-        this.look.set("eye",  initial_sun_eye_side );
-        this.look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
-        this.look.set("up",   { x: 0.0, y: 1.0, z: 0.0 } );
+        switch(this.look_at_selection) {
+            case "orbit":
+                this.look.set("eye",  initial_sun_eye_side );
+                this.look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
+                this.look.set("up",   { x: 0.0, y: 1.0, z: 0.0 } );
+                break;
+
+            case 'earth':
+                this.look.set("eye",  initial_earth_eye_side );
+                this.look.set("look", { x: earth_x_pos, y : 0.0, z : 0.0 } );
+                this.look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
+            
+                this.update_earth_look_at(normalized_initial_earth_eye_side);
+                break;
+
+            case "surface" :
+            break;
+        }
+        
         break;
   }
 
-  // if (this.linked_scene) {
-  //     this.perspectiveChange(form_element);
-  // };
+  if (this.linked_scene) {
+      this.linked_scene.perspectiveChange(form_element);
+  };
 }
 
 

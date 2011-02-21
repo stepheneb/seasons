@@ -16,13 +16,13 @@ var sun_x_pos = 0;
 var earth_view_small_offset = earth_diameter_km / 5;
 var earth_view_large_offset = earth_diameter_km * 3;
 
-var initial_earth_eye =      { x: earth_x_pos + earth_view_small_offset, y: earth_view_small_offset, z: -earth_view_large_offset };
+var initial_earth_eye =      { x: earth_x_pos + earth_view_small_offset, y: earth_view_small_offset, z: earth_view_large_offset };
 var initial_earth_eye_side = initial_earth_eye;
-var initial_earth_eye_top =  { x: earth_x_pos, y: earth_view_large_offset, z: -earth_view_small_offset };
+var initial_earth_eye_top =  { x: earth_x_pos, y: earth_view_large_offset, z: earth_view_small_offset };
 
-var normalized_initial_earth_eye =      { x: 0, y: earth_view_small_offset, z: -earth_view_large_offset };
+var normalized_initial_earth_eye =      { x: 0, y: earth_view_small_offset, z: earth_view_large_offset };
 var normalized_initial_earth_eye_side = normalized_initial_earth_eye;
-var normalized_initial_earth_eye_top =  { x: 0, y: earth_view_large_offset, z: -earth_view_small_offset };
+var normalized_initial_earth_eye_top =  { x: 0, y: earth_view_large_offset, z: earth_view_small_offset };
 
 var initial_earth_camera = {
     fovy : 40.0,
