@@ -1165,7 +1165,7 @@ var scene1 = new seasons.Scene({
     choose_view:    "choose-view",
     choose_month:   "choose-month",
     earth_pointer:  "earth-pointer1",
-    earth_label:         false,
+    earth_label:         true,
     debugging:           true,
 });
 
@@ -1189,6 +1189,7 @@ var scene3 = new seasons.Scene({
     debugging:           true,
 });
 
+scene1.linked_scene = scene3;
 
 window.render = function() {
     SceneJS.withNode("theScene3").render();

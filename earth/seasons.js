@@ -39,7 +39,7 @@ seasons.Scene = function(options) {
     this.canvas             = document.getElementById(options.canvas || "theCanvas");
     this.optics             = this.camera.get("optics");
 
-    this.linked_scene       = (options.linked_scene || null);
+    this.linked_scene       = (options.linked_scene || false);
 
     this.setAspectRatio();
 
@@ -149,8 +149,8 @@ seasons.Scene = function(options) {
     this.sun_lastX;
     this.sun_lastY;
 
-    this.sun_yaw            = initial_sun_eye.x;
-    this.sun_pitch          = initial_sun_eye.y;
+    this.sun_yaw            = 0;
+    this.sun_pitch          = 0;
 
 
     this.dragging           = false;
@@ -244,7 +244,7 @@ seasons.Scene.prototype.mouseOut = function(event, element) {
 }
 
 
-seasons.Scene.prototype.mouseMove = function(event, element) {
+seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch, linked) {
     if (this.dragging) {
 
         var look, eye, eye4, eye4dup, neweye;
@@ -252,15 +252,19 @@ seasons.Scene.prototype.mouseMove = function(event, element) {
         var f, up_down_axis, angle, new_yaw, new_pitch;
         
         var normalized_eye;
-        
-        look = this.look;
 
         switch(this.look_at_selection) {
             case "orbit":
-                new_yaw   = (event.clientX - this.sun_lastX) * -0.2;
-                new_pitch = (event.clientY - this.sun_lastY) * -0.2;
-                this.sun_lastX = event.clientX;
-                this.sun_lastY = event.clientY;
+                if (!new_yaw) {                                  
+                    new_yaw   = (event.clientX - this.sun_lastX) * -0.2;
+                    new_pitch = (event.clientY - this.sun_lastY) * -0.2;
+                    this.sun_lastX = event.clientX;
+                    this.sun_lastY = event.clientY;
+                };
+                
+                // test for NaN
+                if (new_yaw !== new_yaw) new_yaw = 0;
+                if (new_yaw !== new_yaw) new_pitch = 0;
 
                 this.sun_yaw   += new_yaw;
                 this.sun_pitch += new_pitch;
@@ -279,7 +283,8 @@ seasons.Scene.prototype.mouseMove = function(event, element) {
                 left_rightQM = left_rightQ.getMatrix();
 
                 neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
-                console.log("dragging: yaw: " + this.sun_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+                console.log("dragging: yaw: " + sprintf("%3.0f", this.sun_yaw) + ", eye: x: " + 
+                    sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]));
 
                 eye4 = SceneJS._math_dupMat4(neweye);
                 eye4dup = SceneJS._math_dupMat4(eye4);
@@ -289,50 +294,27 @@ seasons.Scene.prototype.mouseMove = function(event, element) {
 
                 neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
 
-                console.log("dragging: pitch: " + this.sun_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
+                console.log("dragging: pitch: " + sprintf("%3.0f", this.sun_pitch) + ", eye: x: " + 
+                    sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]) );
 
+                this.look.set("eye",  { x: neweye[0], y: neweye[1], z: neweye[2] } );
                 break;
-                
-                
-                // switch(view_selection) {
-                //     case "top":
-                //         eye4 = [initial_sun_eye_top.x, initial_sun_eye_top.y, initial_sun_eye_top.z, 1];
-                //         break;
-                //     case "side":
-                //         eye4 = [initial_sun_eye_side.x, initial_sun_eye_side.y, initial_sun_eye_side.z, 1];
-                //         break;
-                // }
-                // 
-                // left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : sun_yaw });
-                // left_rightQM = left_rightQ.getMatrix();
-                // 
-                // neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
-                // console.log("dragging: yaw: " + sun_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
-                // 
-                // eye4 = SceneJS._math_dupMat4(neweye);
-                // eye4dup = SceneJS._math_dupMat4(eye4);
-                // 
-                // up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : sun_pitch });
-                // up_downQM = up_downQ.getMatrix();
-                // 
-                // neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
-                // 
-                // console.log("dragging: pitch: " + sun_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
-                // 
-                // look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-                // // SceneJS.withNode("theScene").start();
-                
 
             case "earth":
-            
+                if (!new_yaw) {
+                    new_yaw   = (event.clientX - this.earth_lastX) * -0.2;
+                    new_pitch = (event.clientY - this.earth_lastY) * 0.2;
+
+                    this.earth_lastX = event.clientX;
+                    this.earth_lastY = event.clientY;
+                };
+                
+                // test for NaN
+                if (new_yaw !== new_yaw) new_yaw = 0;
+                if (new_yaw !== new_yaw) new_pitch = 0;
+        
                 normalized_eye = this.normalized_earth_eye;
-
-                new_yaw   = (event.clientX - this.earth_lastX) * -0.2;
-                new_pitch = (event.clientY - this.earth_lastY) * 0.2;
-
-                this.earth_lastX = event.clientX;
-                this.earth_lastY = event.clientY;
-            
+                
                 this.earth_yaw   += new_yaw;
                 this.earth_pitch += new_pitch;
             
@@ -342,7 +324,9 @@ seasons.Scene.prototype.mouseMove = function(event, element) {
                 left_rightQM = left_rightQ.getMatrix();
 
                 neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
-                console.log("dragging: yaw: " + this.earth_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+
+                console.log("dragging: yaw: " + sprintf("%3.0f", this.earth_yaw) + ", eye: x: " + 
+                    sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]));
 
                 eye4 = SceneJS._math_dupMat4(neweye);
                 eye4dup = SceneJS._math_dupMat4(eye4);
@@ -352,20 +336,21 @@ seasons.Scene.prototype.mouseMove = function(event, element) {
 
                 neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
 
-                console.log("dragging: pitch: " + this.earth_pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] );
+                console.log("dragging: pitch: " + sprintf("%3.0f", this.earth_pitch) + ", eye: x: " + 
+                    sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]));
 
                 this.normalized_earth_eye =  { x: neweye[0], y: neweye[1], z: neweye[2] };
+                this.set_normalized_earth_eye(this.normalized_earth_eye);
                 break;
         };
         
-        normalized_eye =  { x: neweye[0], y: neweye[1], z: neweye[2] };
-        this.set_normalized_earth_eye(normalized_eye);
         console.log("");
         this.earthLabel();
-        // if (this.linked_scene) {
-        //     this.linked_scene.dragging = true;
-        //     this.linked_scene.mouseMove(event, element);
-        // };
+        if (this.linked_scene && !linked) {
+            this.linked_scene.dragging = true;
+            this.linked_scene.mouseMove(event, element, new_yaw, new_pitch, true);
+            this.linked_scene.dragging = false;
+        };
     };
 };
 
@@ -422,8 +407,6 @@ seasons.Scene.prototype.setCamera = function(settings) {
 
 seasons.Scene.prototype.perspectiveChange = function(form_element) {
     this.view_selection = getRadioSelection(form_element);
-    // for(var i = 0; i < form_element.elements.length; i++)
-    //     if (form_element.elements[i].checked) this.view_selection = form_element.elements[i].value;
     switch(this.view_selection) {
         case "top":
         this.look.set("eye",  initial_sun_eye_top );
@@ -438,7 +421,6 @@ seasons.Scene.prototype.perspectiveChange = function(form_element) {
         break;
   }
 
-  // this.scene.render();
   // if (this.linked_scene) {
   //     this.perspectiveChange(form_element);
   // };
