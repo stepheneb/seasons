@@ -171,38 +171,6 @@ SceneJS.createNode({
                         },
                         
                         
-                        // {
-                        // 
-                        //     id: "sun1",
-                        //     type: "material",
-                        //     baseColor:      { r: 1.0, g: 0.95, b: 0.6 },
-                        //     specularColor:  { r: 1.0, g: 0.95, b: 0.6 },
-                        //     specular:       2.0,
-                        //     shine:          2.0,
-                        //     emit:           1.0,
-                        // 
-                        //     nodes: [
-                        // 
-                        //         {
-                        //             type: "translate",
-                        //             x: sun_x_pos,
-                        //             y: 0,
-                        //             z: 0,
-                        // 
-                        //             nodes: [
-                        //                 {
-                        //                     type: "scale",
-                        //                     x: sun_radius_km,
-                        //                     y: sun_radius_km,
-                        //                     z: sun_radius_km,
-                        // 
-                        //                     nodes: [  { type: "sphere", slices: 60, rings: 60 } ]
-                        // 
-                        //                 }
-                        //             ]
-                        //         }
-                        //     ]
-                        // },
                         // 
                         // {
                         //     type: "material",
@@ -769,26 +737,140 @@ SceneJS.createNode({
                             type: "material",
                             baseColor:      { r: 1.0, g: 0.3, b: 0.1 },
                             specularColor:  { r: 1.0, g: 0.3, b: 0.1 },
-                            specular:       1.0,
-                            shine:          2.0,
+                            specular:       5.0,
+                            shine:          5.0,
                             emit:           1.0,
-                        
+
                             nodes: [
 
                                 {
-                                    type: "geometry",
-                                    primitive: "line-loop",
+                                    type: "selector",
+                                    id: "earthSunLineSelector3",
+                                    selection: [0],
 
-                                    positions: [
-                                         sun_x_pos,     0.0,    0.0,
-                                         earth_x_pos,   0.0,    0.0
-                                    ],
+                                    nodes: [
 
-                                    indices : [ 0, 1 ]
+                                        {
 
+                                            type: "translate", // Example translation
+                                            id: "earth-sun-line-translation3",
+                                            x: 0,
+                                            y: 0.0,
+                                            z: earth_x_pos / 2,
+
+                                            nodes : [
+
+                                                {
+
+                                                    type: "rotate",
+                                                    id: "earth-sun-line-rotation3",
+                                                    angle: 270.0,
+                                                    y : 1.0,
+
+                                                    nodes: [
+
+                                                        {
+
+                                                            type: "scale",
+                                                            id: "earth-sun-line-scale3",
+                                                            x: earth_orbital_radius_km / 2,
+                                                            y: sun_earth_line_size_large,
+                                                            z: sun_earth_line_size_large,
+
+                                                            nodes: [
+
+                                                                { 
+                                                                    type: "box",
+                                                                },
+                                                            ]
+                                                        },
+                                                    ]
+                                                }
+                                            ]
+                                        },
+
+                                        // {
+                                        // 
+                                        //     type: "translate", // Example translation
+                                        //     id: "earth-sun-line-translation",
+                                        //     x: earth_x_pos / 2,
+                                        //     y: 0.0,
+                                        //     z: 0.0,
+                                        // 
+                                        //     nodes : [
+                                        // 
+                                        //         // {
+                                        //         // 
+                                        //         //     type: "rotate",
+                                        //         //     id: "earth-sun-line-rotation",
+                                        //         //     angle: 0.0,
+                                        //         //     y : 0.0,
+                                        //         // 
+                                        //         //     nodes: [
+                                        //     
+                                        //                 {
+                                        // 
+                                        //                     type: "scale",
+                                        //                     x: earth_x_pos,
+                                        //                     y: earth_diameter_km * 100,
+                                        //                     z: earth_diameter_km * 100,
+                                        // 
+                                        //                     nodes: [
+                                        // 
+                                        //                         { 
+                                        // 
+                                        //                             type: "box",
+                                        // 
+                                        //                         },
+                                        //                     ]
+                                        //                 }
+                                        //         //     ]
+                                        //         // }
+                                        //     ]
+                                        // },
+
+                                        {
+                                            type: "geometry",
+                                            primitive: "line-loop",
+
+                                            positions: [
+                                                 sun_x_pos,     0.0,    0.0,
+                                                 earth_x_pos,   0.0,    0.0
+                                            ],
+
+                                            indices : [ 0, 1 ]
+
+                                        },
+                                    ]
                                 }
                             ]
                         },
+                        
+                        // 
+                        // {
+                        //     type: "material",
+                        //     baseColor:      { r: 1.0, g: 0.3, b: 0.1 },
+                        //     specularColor:  { r: 1.0, g: 0.3, b: 0.1 },
+                        //     specular:       1.0,
+                        //     shine:          2.0,
+                        //     emit:           1.0,
+                        // 
+                        //     nodes: [
+                        // 
+                        //         {
+                        //             type: "geometry",
+                        //             primitive: "line-loop",
+                        // 
+                        //             positions: [
+                        //                  sun_x_pos,     0.0,    0.0,
+                        //                  earth_x_pos,   0.0,    0.0
+                        //             ],
+                        // 
+                        //             indices : [ 0, 1 ]
+                        // 
+                        //         }
+                        //     ]
+                        // },
  
                         {
                             type: "light",
@@ -879,7 +961,7 @@ SceneJS.createNode({
                                                 {
 
                                                     type: "selector",
-                                                    id: "earth3-orbit-grid-selector",
+                                                    id: "earth-orbit-grid-selector3",
                                                     selection: [0],
                                                     nodes: [ 
 
@@ -896,7 +978,18 @@ SceneJS.createNode({
                                                             positions: orbit_grid_earth_positions,
                                                             indices : orbit_grid_earth_indices
 
-                                                        }
+                                                        },
+
+                                                        // 2: on: orbit grid for Orbit view
+
+                                                        {
+                                                            type: "geometry",
+                                                            primitive: "lines",
+
+                                                            positions: orbit_grid_orbit_positions,
+                                                            indices : orbit_grid_orbit_indices
+
+                                                        }                    
                                                     ]
                                                 }
                                             ]
@@ -1170,18 +1263,22 @@ var scene1 = new seasons.Scene({
 });
 
 var scene3 = new seasons.Scene({
-    theScene:            "theScene3",
-    camera:              "theCamera3",
-    canvas:              "theCanvas3",
-    look:                "lookAt3",
-    earth_position:      "earth-position3",
-    look_at_selection:   "earth",
-    choose_view:         "choose-view",
-    choose_month:        "choose-month",
-    linked_scene:        scene1,
-    earth_pointer:       false,
-    earth_label:         false,
-    debugging:           true,
+    theScene:                    "theScene3",
+    camera:                      "theCamera3",
+    canvas:                      "theCanvas3",
+    look:                        "lookAt3",
+    earth_position:              "earth-position3",
+    look_at_selection:           "earth",
+    orbitGridSelector:           "earth-orbit-grid-selector3",
+    earth_sun_line_rotation:     "earth-sun-line-rotation3",
+    earth_sun_line_translation:  "earth-sun-line-translation3",
+    earth_sun_line_scale:        "earth-sun-line-scale3",
+    choose_view:                 "choose-view",
+    choose_month:                "choose-month",
+    linked_scene:                scene1,
+    earth_pointer:               false,
+    earth_label:                 false,
+    debugging:                   true,
 });
 
 // scene1.linked_scene = scene3;

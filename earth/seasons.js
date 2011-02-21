@@ -46,7 +46,8 @@ seasons.Scene = function(options) {
     this.look               = SceneJS.withNode(options.look || "lookAt");
     
     this.circleOrbit        = SceneJS.withNode("earthCircleOrbitSelector");
-    this.orbitGridSelector  = SceneJS.withNode("orbit-grid-selector");
+
+    this.orbitGridSelector  = SceneJS.withNode(options.orbitGridSelector || "orbit-grid-selector");
     
     this.look_at_selection  = (options.look_at_selection || 'orbit');
     
@@ -64,6 +65,10 @@ seasons.Scene = function(options) {
     this.earth_position      = SceneJS.withNode(options.earth_postion || "earth-position");
     this.earth_sun_line_rotation    = SceneJS.withNode(options.earth_sun_line_rotation || "earth-sun-line-rotation");
     this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
+
+    this.earth_sun_line_rotation =    SceneJS.withNode(options.earth_sun_line_rotation || "earth-sun-line-rotation");
+    this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
+    this.earth_sun_line_scale =       SceneJS.withNode(options.earth_sun_line_scale || "earth-sun-line-scale");
 
     this.ellipseOrbitSelector = SceneJS.withNode(options.ellipseOrbitSelector || "earthEllipseOrbitSelector");
     this.earthTextureSelector = SceneJS.withNode(options.earthTextureSelector || "earthTextureSelector");
@@ -406,7 +411,11 @@ seasons.Scene.prototype.setCamera = function(settings) {
 
 
 seasons.Scene.prototype.perspectiveChange = function(form_element) {
-    this.view_selection = getRadioSelection(form_element);
+    this._perspectiveChange(getRadioSelection(form_element));
+};
+
+seasons.Scene.prototype._perspectiveChange = function(view_selection) {
+    this.view_selection = view_selection;
     switch(this.view_selection) {
         case "top":
         switch(this.look_at_selection) {
@@ -454,29 +463,99 @@ seasons.Scene.prototype.perspectiveChange = function(form_element) {
   }
 
   if (this.linked_scene) {
-      this.linked_scene.perspectiveChange(form_element);
+      this.linked_scene._perspectiveChange(this.view_selection);
   };
 }
 
 
-seasons.Scene.prototype.timeOfYearChange = function(form_element) {
-    for(var i = 0; i < form_element.elements.length; i++) {
-        if (form_element.elements[i].checked) this.month = form_element.elements[i].value;
-    }
+seasons.Scene.prototype.setEarthSunLine = function() {
+    var scale = {};
+    var distance2 = earth_ellipse_distance_from_sun_by_month(this.month) / 2;
+    // var distance = earth_ephemerides_datum_by_month('jun').rg * au2km * factor;
     
+    switch(month) {
+        case "dec":
+        this.earth_sun_line_rotation.set("angle", 180);
+        this.earth_sun_line_translation.set({ x: -distance2 , y: 0.0, z: 0 });
+        scale.x = distance2;
+        switch(view) {
+            case "orbit":
+            scale.y = sun_earth_line_size_large;
+            scale.z = sun_earth_line_size_large;
+            break;
+
+            case "earth":
+            scale.y = sun_earth_line_size_med;
+            scale.z = sun_earth_line_size_med;
+            break;
+        }
+        break;
+
+        case "sep":
+        this.earth_sun_line_rotation.set("angle", 0);
+        this.earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -distance2 });
+        scale.z = distance2;
+        switch(view) {
+            case "orbit":
+            scale.x = sun_earth_line_size_large;
+            scale.y = sun_earth_line_size_large;
+            break;
+
+            case "earth":
+            scale.x = sun_earth_line_size_med;
+            scale.y = sun_earth_line_size_med;
+            break;
+        }
+        break;
+
+        case "jun":
+        this.earth_sun_line_rotation.set("angle", 0);
+        this.earth_sun_line_translation.set({ x: distance2 , y: 0.0, z: 0 });
+        scale.x = distance2;
+        switch(view) {
+            case "orbit":
+            scale.y = sun_earth_line_size_large;
+            scale.z = sun_earth_line_size_large;
+            break;
+
+            case "earth":
+            scale.y = sun_earth_line_size_med;
+            scale.z = sun_earth_line_size_med;
+            break;
+        }
+        break;
+
+        case "mar":
+        this.earth_sun_line_rotation.set("angle", 180);
+        this.earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: distance2 });
+        scale.z = distance2;
+        switch(view) {
+            case "orbit":
+            scale.x = sun_earth_line_size_large;
+            scale.y = sun_earth_line_size_large;
+            break;
+
+            case "earth":
+            scale.x = sun_earth_line_size_med;
+            scale.y = sun_earth_line_size_med;
+            break;
+        }
+        break;
+    }
+    this.earth_sun_line_scale.set(scale);
+}
+
+
+seasons.Scene.prototype.timeOfYearChange = function(form_element) {
+    this._timeOfYearChange(getRadioSelection(form_element));
+};
+
+seasons.Scene.prototype._timeOfYearChange = function(month) {
+    this.month = month;
+
     this.set_earth_postion(earth_ellipse_location_by_month(this.month));
 
-    switch(this.look_at_selection) {
-        case "orbit":
-        break;
-
-        case 'earth':
-        this.update_earth_look_at(normalized_initial_earth_eye_side);
-        break;
-
-        case "surface" :
-        break;
-    }
+    this._perspectiveChange(this.view_selection);
     
     set_earth_sun_line(this.month, this.look_at_selection);
     
@@ -484,7 +563,7 @@ seasons.Scene.prototype.timeOfYearChange = function(form_element) {
     this.earthPointer();
 
     if (this.linked_scene) {
-        this.linked_scene.timeOfYearChange(form_element);
+        this.linked_scene._timeOfYearChange(month);
     };
 }
 
@@ -510,7 +589,18 @@ seasons.Scene.prototype.circleOrbitPathChange = function(checkbox) {
 
 seasons.Scene.prototype.orbitalGridChange = function(checkbox) {
   if (checkbox.checked) {
-      this.orbitGridSelector.set("selection", [2]);
+      switch(this.look_at_selection) {
+          case "orbit":
+              this.orbitGridSelector.set("selection", [2]);
+              break;
+
+          case 'earth':
+              this.orbitGridSelector.set("selection", [1]);
+              break;
+
+          case "surface" :
+          break;
+      }
   } else {
       this.orbitGridSelector.set("selection", [0]);
   }
