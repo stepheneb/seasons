@@ -309,15 +309,7 @@ SceneJS.createNode({
                                     ]
                                 }
                             ]
-                        },
-                        // {
-                        //     type: "interpolator",
-                        //     target: "spin1",
-                        //     targetProperty: "angle",
-                        //     // over 1600 seconds rotate 360 degrees 20 times
-                        //     keys: [0.0, 1600],
-                        //     values: [0.0, 360.0*50]
-                        // }
+                        }
                     ]
                 }
             ]
@@ -875,9 +867,14 @@ canvas1.addEventListener('mouseout', mouseOut1, true);
 // canvas2.addEventListener('mouseup', mouseUp2, true);
 // canvas2.addEventListener('mouseout', mouseOut2, true);
 
+var spin1 = SceneJS.withNode("spin1");
+var spin2 = SceneJS.withNode("spin2");
+
 window.render = function() {
     SceneJS.withNode("theScene1").render();
     SceneJS.withNode("theScene2").render();
+    spin1.set("angle", spin1.get("angle") + 0.15);
+    spin2.set("angle", spin2.get("angle") + 0.15);
 };
 
 SceneJS.bind("error", function() {
