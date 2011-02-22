@@ -45,6 +45,112 @@ SceneJS.createNode({
     ]
 });
 
+
+var earthSphere3 = SceneJS.createNode({
+
+    type: "library",
+    
+    nodes: [
+
+        /* Specify the amounts of ambient, diffuse and specular
+         * lights our object reflects
+         */
+        {
+            id : "earth-sphere3",
+            type: "material",
+            baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
+            specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+            specular:       0.0,
+            shine:          2.0,
+
+            nodes: [
+            
+                {
+                    type: "translate",
+                    id: "earth-position3",
+                    x: earth_x_pos,
+                    y: 0,
+                    z: 0,
+
+                    nodes: [
+
+                        {
+                            type: "quaternion",
+                            id: "earthRotationalAxisQuaternion3",
+                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+
+                            rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
+                        
+                            nodes: [
+                            
+                                {
+                                     type: "node",
+                                     id: "latitude-line-destination3",
+                                },
+
+                                {
+                                    type: "scale",
+                                    id: "earth-scale3",
+                                    x: earth_diameter_km,
+                                    y: earth_diameter_km,
+                                    z: earth_diameter_km,
+
+                                    nodes: [
+
+                                        {
+                                            type: "rotate",
+                                            id: 'earth-rotation3',
+                                            angle: 0,
+                                            y: 1.0,
+
+                                            nodes: [ 
+
+                                                { type: "sphere", id: "esphere3" },
+
+                                            ]
+                                        }
+                                    ]
+                                },
+                            
+                                {
+                                    type: "texture",
+                                
+                                    nodes: [
+                                
+                                        {
+                                            type: "selector",
+                                            id: "earthAxisSelector3",
+                                            selection: [1],
+
+                                            nodes: [
+                                        
+                                                // 0: no axis indicator
+                                                { },
+
+                                                // 1: display axis indicator
+                                                {
+                                            
+                                                    type: "scale",
+                                                    x: earth_diameter_km * 0.02,
+                                                    y: earth_diameter_km * 1.2,
+                                                    z: earth_diameter_km * 0.02,
+
+                                                    nodes: [ { type: "sphere" } ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+
 /*----------------------------------------------------------------------
  * Canvas 1 **
  *---------------------------------------------------------------------*/
@@ -374,7 +480,7 @@ SceneJS.createNode({
                                                 { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                 { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
                                             ],
-                                            nodes: [ { type : "instance", target : "earth-sphere3"  } ]
+                                            nodes: [ { type : "instance", target : "earth-sphere1"  } ]
 
                                         },
 
@@ -386,7 +492,7 @@ SceneJS.createNode({
                                                 { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                 { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
                                             ],
-                                            nodes: [ { type : "instance", target : "earth-sphere3"  } ]
+                                            nodes: [ { type : "instance", target : "earth-sphere1"  } ]
                                 
                                         },
 
@@ -398,7 +504,7 @@ SceneJS.createNode({
                                                 { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                 { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
                                             ],
-                                            nodes: [ { type : "instance", target : "earth-sphere3"  } ]
+                                            nodes: [ { type : "instance", target : "earth-sphere1"  } ]
 
                                         },
 
@@ -789,46 +895,6 @@ SceneJS.createNode({
                                             ]
                                         },
 
-                                        // {
-                                        // 
-                                        //     type: "translate", // Example translation
-                                        //     id: "earth-sun-line-translation",
-                                        //     x: earth_x_pos / 2,
-                                        //     y: 0.0,
-                                        //     z: 0.0,
-                                        // 
-                                        //     nodes : [
-                                        // 
-                                        //         // {
-                                        //         // 
-                                        //         //     type: "rotate",
-                                        //         //     id: "earth-sun-line-rotation",
-                                        //         //     angle: 0.0,
-                                        //         //     y : 0.0,
-                                        //         // 
-                                        //         //     nodes: [
-                                        //     
-                                        //                 {
-                                        // 
-                                        //                     type: "scale",
-                                        //                     x: earth_x_pos,
-                                        //                     y: earth_diameter_km * 100,
-                                        //                     z: earth_diameter_km * 100,
-                                        // 
-                                        //                     nodes: [
-                                        // 
-                                        //                         { 
-                                        // 
-                                        //                             type: "box",
-                                        // 
-                                        //                         },
-                                        //                     ]
-                                        //                 }
-                                        //         //     ]
-                                        //         // }
-                                        //     ]
-                                        // },
-
                                         {
                                             type: "geometry",
                                             primitive: "line-loop",
@@ -845,33 +911,7 @@ SceneJS.createNode({
                                 }
                             ]
                         },
-                        
-                        // 
-                        // {
-                        //     type: "material",
-                        //     baseColor:      { r: 1.0, g: 0.3, b: 0.1 },
-                        //     specularColor:  { r: 1.0, g: 0.3, b: 0.1 },
-                        //     specular:       1.0,
-                        //     shine:          2.0,
-                        //     emit:           1.0,
-                        // 
-                        //     nodes: [
-                        // 
-                        //         {
-                        //             type: "geometry",
-                        //             primitive: "line-loop",
-                        // 
-                        //             positions: [
-                        //                  sun_x_pos,     0.0,    0.0,
-                        //                  earth_x_pos,   0.0,    0.0
-                        //             ],
-                        // 
-                        //             indices : [ 0, 1 ]
-                        // 
-                        //         }
-                        //     ]
-                        // },
- 
+
                         {
                             type: "light",
                             mode:                   "point",
@@ -1122,106 +1162,208 @@ SceneJS.createNode({
                                             type : "instance",
                                             target : "earth-sphere"
                                         }
+                                        
+                                        
+                                        /* Specify the amounts of ambient, diffuse and specular
+                                         * lights our object reflects
+                                         */
+                                        // {
+                                        //     id : "earth-sphere3",
+                                        //     type: "material",
+                                        //     baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
+                                        //     specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                        //     specular:       0.0,
+                                        //     shine:          2.0,
+                                        // 
+                                        //     nodes: [
+                                        // 
+                                        //         {
+                                        //             type: "translate",
+                                        //             id: "earth-position3",
+                                        //             x: earth_x_pos,
+                                        //             y: 0,
+                                        //             z: 0,
+                                        // 
+                                        //             nodes: [
+                                        // 
+                                        //                 {
+                                        //                     type: "quaternion",
+                                        //                     id: "earthRotationalAxisQuaternion3",
+                                        //                     x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+                                        // 
+                                        //                     rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
+                                        // 
+                                        //                     nodes: [
+                                        // 
+                                        //                         {
+                                        //                              type: "node",
+                                        //                              id: "latitude-line-destination3",
+                                        //                         },
+                                        // 
+                                        //                         {
+                                        //                             type: "scale",
+                                        //                             id: "earth-scale3",
+                                        //                             x: earth_diameter_km,
+                                        //                             y: earth_diameter_km,
+                                        //                             z: earth_diameter_km,
+                                        // 
+                                        //                             nodes: [
+                                        // 
+                                        //                                 {
+                                        //                                     type: "rotate",
+                                        //                                     id: 'earth-rotation3',
+                                        //                                     angle: 0,
+                                        //                                     y: 1.0,
+                                        // 
+                                        //                                     nodes: [ 
+                                        // 
+                                        //                                         { type: "sphere", id: "esphere3", slices: 45 },
+                                        // 
+                                        //                                     ]
+                                        //                                 }
+                                        //                             ]
+                                        //                         },
+                                        // 
+                                        //                         {
+                                        //                             type: "texture",
+                                        // 
+                                        //                             nodes: [
+                                        // 
+                                        //                                 {
+                                        //                                     type: "selector",
+                                        //                                     id: "earthAxisSelector3",
+                                        //                                     selection: [1],
+                                        // 
+                                        //                                     nodes: [
+                                        // 
+                                        //                                         // 0: no axis indicator
+                                        //                                         { },
+                                        // 
+                                        //                                         // 1: display axis indicator
+                                        //                                         {
+                                        // 
+                                        //                                             type: "scale",
+                                        //                                             x: earth_diameter_km * 0.02,
+                                        //                                             y: earth_diameter_km * 1.2,
+                                        //                                             z: earth_diameter_km * 0.02,
+                                        // 
+                                        //                                             nodes: [ { type: "sphere" } ]
+                                        //                                         }
+                                        //                                     ]
+                                        //                                 }
+                                        //                             ]
+                                        //                         }
+                                        //                     ]
+                                        //                 }
+                                        //             ]
+                                        //         }
+                                        //     ]
+                                        // }
 
                                     ]
                                 },
-                                    
-                                /* Specify the amounts of ambient, diffuse and specular
-                                 * lights our object reflects
-                                 */
-
-                                {
-                                    id : "earth-sphere3",
-                                    type: "material",
-                                    baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
-                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
-                                    specular:       0.0,
-                                    shine:          2.0,
-
-                                    nodes: [
-
-                                        {
-                                            type: "translate",
-                                            id: "earth-position3",
-                                            x: earth_x_pos,
-                                            y: 0,
-                                            z: 0,
-
-                                            nodes: [
-
-                                                {
-                                                    type: "quaternion",
-                                                    id: "earthRotationalAxisQuaternion3",
-                                                    x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-
-                                                    rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
-
-                                                    nodes: [
-
-                                                        {
-                                                             type: "node",
-                                                             id: "latitude-line-destination",
-                                                        },
-
-                                                        {
-                                                            type: "scale",
-                                                            id: "earth-scale3",
-                                                            x: earth_diameter_km,
-                                                            y: earth_diameter_km,
-                                                            z: earth_diameter_km,
-
-                                                            nodes: [
-
-                                                                {
-                                                                    type: "rotate",
-                                                                    id: 'earth-rotation3',
-                                                                    angle: 0,
-                                                                    y: 1.0,
-
-                                                                    nodes: [ 
-
-                                                                        { type: "sphere", id: "esphere3" },
-
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        },
-
-                                                        {
-                                                            type: "texture",
-
-                                                            nodes: [
-
-                                                                {
-                                                                    type: "selector",
-                                                                    id: "earthAxisSelector3",
-                                                                    selection: [1],
-
-                                                                    nodes: [
-
-                                                                        // 0: no axis indicator
-                                                                        { },
-
-                                                                        // 1: display axis indicator
-                                                                        {
-
-                                                                            type: "scale",
-                                                                            x: earth_diameter_km * 0.02,
-                                                                            y: earth_diameter_km * 1.2,
-                                                                            z: earth_diameter_km * 0.02,
-
-                                                                            nodes: [ { type: "sphere" } ]
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
+                                
+                                
+                                
+                                
+                                
+                                
+                                // /* Specify the amounts of ambient, diffuse and specular
+                                //  * lights our object reflects
+                                //  */
+                                // 
+                                // {
+                                //     id : "earth-sphere3",
+                                //     type: "material",
+                                //     baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
+                                //     specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                //     specular:       0.0,
+                                //     shine:          2.0,
+                                // 
+                                //     nodes: [
+                                // 
+                                //         {
+                                //             type: "translate",
+                                //             id: "earth-position3",
+                                //             x: earth_x_pos,
+                                //             y: 0,
+                                //             z: 0,
+                                // 
+                                //             nodes: [
+                                // 
+                                //                 {
+                                //                     type: "quaternion",
+                                //                     id: "earthRotationalAxisQuaternion3",
+                                //                     x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+                                // 
+                                //                     rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
+                                // 
+                                //                     nodes: [
+                                // 
+                                //                         {
+                                //                              type: "node",
+                                //                              id: "latitude-line-destination3",
+                                //                         },
+                                // 
+                                //                         {
+                                //                             type: "scale",
+                                //                             id: "earth-scale3",
+                                //                             x: earth_diameter_km,
+                                //                             y: earth_diameter_km,
+                                //                             z: earth_diameter_km,
+                                // 
+                                //                             nodes: [
+                                // 
+                                //                                 {
+                                //                                     type: "rotate",
+                                //                                     id: 'earth-rotation3',
+                                //                                     angle: 0,
+                                //                                     y: 1.0,
+                                // 
+                                //                                     nodes: [ 
+                                // 
+                                //                                         { type: "sphere", id: "esphere3" },
+                                // 
+                                //                                     ]
+                                //                                 }
+                                //                             ]
+                                //                         },
+                                // 
+                                //                         {
+                                //                             type: "texture",
+                                // 
+                                //                             nodes: [
+                                // 
+                                //                                 {
+                                //                                     type: "selector",
+                                //                                     id: "earthAxisSelector3",
+                                //                                     selection: [1],
+                                // 
+                                //                                     nodes: [
+                                // 
+                                //                                         // 0: no axis indicator
+                                //                                         { },
+                                // 
+                                //                                         // 1: display axis indicator
+                                //                                         {
+                                // 
+                                //                                             type: "scale",
+                                //                                             x: earth_diameter_km * 0.02,
+                                //                                             y: earth_diameter_km * 1.2,
+                                //                                             z: earth_diameter_km * 0.02,
+                                // 
+                                //                                             nodes: [ { type: "sphere" } ]
+                                //                                         }
+                                //                                     ]
+                                //                                 }
+                                //                             ]
+                                //                         }
+                                //                     ]
+                                //                 }
+                                //             ]
+                                //         }
+                                //     ]
+                                // }
                             ]
                         }
                     ]
@@ -1251,15 +1393,16 @@ SceneJS.createNode({
  *---------------------------------------------------------------------*/
 
 var scene1 = new seasons.Scene({
-    theScene:       "theScene1",
-    camera:         "theCamera1",
-    canvas:         "theCanvas1",
-    look:           "lookAt1",
-    choose_view:    "choose-view",
-    choose_month:   "choose-month",
-    earth_pointer:  "earth-pointer1",
-    earth_label:         true,
-    debugging:           false,
+    theScene:                    "theScene1",
+    camera:                      "theCamera1",
+    canvas:                      "theCanvas1",
+    look:                        "lookAt1",
+    choose_view:                 "choose-view",
+    choose_month:                "choose-month",
+    earth_pointer:               "earth-pointer1",
+    earth_label:                 true,
+    earth_info_label:            "earth-info-label1",
+    debugging:                   false,
 });
 
 var scene3 = new seasons.Scene({
@@ -1268,6 +1411,7 @@ var scene3 = new seasons.Scene({
     canvas:                      "theCanvas3",
     look:                        "lookAt3",
     earth_position:              "earth-position3",
+    earth_rotation:              "earth-rotation",
     look_at_selection:           "earth",
     orbitGridSelector:           "earth-orbit-grid-selector3",
     earth_sun_line_rotation:     "earth-sun-line-rotation3",
@@ -1276,8 +1420,10 @@ var scene3 = new seasons.Scene({
     choose_view:                 "choose-view",
     choose_month:                "choose-month",
     linked_scene:                scene1,
+    latitude_line:               true,
     earth_pointer:               false,
     earth_label:                 false,
+    earth_info_label:            "earth-info-label3",
     debugging:                   true,
 });
 
@@ -1286,6 +1432,9 @@ var scene3 = new seasons.Scene({
 window.render = function() {
     SceneJS.withNode("theScene3").render();
     SceneJS.withNode("theScene1").render();
+    if (earth_rotation.checked) {
+        scene3.earth_rotation.set("angle", scene3.earth_rotation.get("angle") + 0.15);
+    }
 };
 
 SceneJS.bind("error", function() {
@@ -1296,7 +1445,7 @@ SceneJS.bind("reset", function() {
     window.clearInterval(pInterval);
 });
 
-var pInterval = setInterval("window.render()", 30);
+var pInterval = setInterval("window.render()", 60);
 
 var zBufferDepth = 0;
 
@@ -1321,10 +1470,36 @@ for (var i = 0; i < active_cities.length; i++) {
 
 var select_city_month = document.getElementById("select-city-month");
 var selected_city_month = document.getElementById("selected-city-month");
+var choose_month = document.getElementById("choose-month");
+
+function updateMonth() {
+    var month = selected_city_month.value;
+    for(var i = 0; i < choose_month.elements.length; i++) {
+        if (choose_month.elements[i].value === month) {
+            choose_month.elements[i].checked = true;
+        } else {
+            choose_month.elements[i].checked = false;
+        }
+    }
+    scene3._timeOfYearChange(month);
+};
+
+selected_city_month.onchange = updateMonth;
 
 var city_latitude_temperature = document.getElementById("city-latitude-temperature");
 var city_latitude_temperature_label = document.getElementById("city-latitude-temperature-label");
 var city_latitude_temperature_prediction = document.getElementById("city-latitude-temperature-prediction");
+
+var selected_city_latitude = document.getElementById("selected-city-latitude");
+
+function updateLatitudeLine() {
+    var city_index = Number(selected_city_latitude.value);
+    var city = active_cities[city_index];
+    var city_location = city.location;
+    scene3.latitude_line.setLatitude(city_location.signed_latitude);
+};
+
+selected_city_latitude.onchange = updateLatitudeLine;
 
 var city_data_table = document.getElementById("city-data-table");
 var city_data_table_body = document.getElementById("city-data-table-body");
@@ -1465,6 +1640,10 @@ function addExperimentData() {
 }
 
 city_latitude_temperature.onsubmit = addExperimentData;
+
+//
+// Graphs ...
+//
 
 var use_fahrenheit = true;
 

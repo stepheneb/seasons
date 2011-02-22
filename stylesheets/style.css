@@ -180,7 +180,7 @@ h4 {
     z-index: 0;
 }
 
-#earth-info-label {
+.earth-info-label {
     position: absolute;
     width: 260px;
     font: 1.1em monospace;
@@ -445,7 +445,7 @@ canvas:hover {
 #content ul.hlist li  {
     line-height: 1.4em;
     color: #444444 !important;
-    margin-left: 10px;
+    margin-left: 5px;
     margin-bottom: 5px;
     display: inline-table;
     list-style-type: none;

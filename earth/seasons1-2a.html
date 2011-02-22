@@ -66,7 +66,8 @@
                 <form id="show-me">
                   <fieldset>
                     <legend>Show me: </legend>
-                    <label><input id="orbital-grid" type="checkbox"/> Orbital grid: </label>
+                    <label><input id="orbital-grid" type="checkbox"/> Grid: </label>
+                    <label><input id="earth_rotation" type="checkbox" checked/> Rotation</label>
                   </fieldset>
                 </form>  
               </li>
@@ -207,9 +208,8 @@
     </div>   
   </div>
 </div>
-<div id="earth-info-label" class="transparent-ui">
-    Earth
-</div>
+<div id="earth-info-label1" class="earth-info-label transparent-ui"></div>
+<div id="earth-info-label3" class="earth-info-label transparent-ui"></div>
 <script type="text/javascript">
 
   function myRequire(src, callback){
@@ -267,6 +267,7 @@
         "orbit-grid.js",
         "seasons.js",
         "cities.js",
+        "latitude-line.js",
         "seasons1-2b.js"
       ]);
     } else {

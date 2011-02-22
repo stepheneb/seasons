@@ -36,10 +36,16 @@ var earthSphere = SceneJS.createNode({
                             rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
                         
                             nodes: [
-                            
+                                
                                 {
                                      type: "node",
-                                     id: "latitude-line-destination",
+                                     
+                                     nodes: [
+                                        {
+                                            type: "node",
+                                            id: "latitude-line-destination"
+                                        }
+                                    ]
                                 },
 
                                 {

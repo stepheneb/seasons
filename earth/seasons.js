@@ -24,6 +24,17 @@ function getRadioSelection (form_element) {
     return false;
 }
 
+function setRadioSelection (form_element, value) {
+    for(var i = 0; i < form_element.elements.length; i++) {
+        if (form_element.elements[i].value = value) {
+            form_element.elements[i].checked = true;
+        } else {
+            form_element.elements[i].checked = false;
+        }
+    }
+    return false;
+}
+
 //
 // The Main Object: seasons.Scene
 
@@ -51,6 +62,10 @@ seasons.Scene = function(options) {
     
     this.look_at_selection  = (options.look_at_selection || 'orbit');
     
+    if (options.latitude_line) {
+        this.latitude_line = new LatitudeLine("latitude-line-destination")
+    };
+    
     this.earth_pointer;
     
     if (options.earth_pointer === false) {
@@ -60,9 +75,13 @@ seasons.Scene = function(options) {
     };
 
     this.earth_label        = (options.earth_label || false);
-    this.earth_info_label   = document.getElementById("earth-info-label");
+    if (this.earth_label) {
+        this.earth_info_label   = document.getElementById(options.earth_info_label || "earth-info-label");
+    };
 
     this.earth_position      = SceneJS.withNode(options.earth_postion || "earth-position");
+    this.earth_rotation      = SceneJS.withNode(options.earth_rotation || "earth-rotation");
+    
     this.earth_sun_line_rotation    = SceneJS.withNode(options.earth_sun_line_rotation || "earth-sun-line-rotation");
     this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
 
@@ -308,7 +327,7 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
             case "earth":
                 if (!new_yaw) {
                     new_yaw   = (event.clientX - this.earth_lastX) * -0.2;
-                    new_pitch = (event.clientY - this.earth_lastY) * 0.2;
+                    new_pitch = (event.clientY - this.earth_lastY) * -0.2;
 
                     this.earth_lastX = event.clientX;
                     this.earth_lastY = event.clientY;
@@ -389,8 +408,9 @@ seasons.Scene.prototype.earthLabel = function() {
         this.earth_info_label.style.top = this.canvas_properties().top + window.pageYOffset + 5 + "px";
         // this.earth_info_label.style.left = this.canvas_properties().left + getX(this.canvas) + window.pageXOffset + 5 + "px";
         // this.earth_info_label.style.left = getX(this.canvas) + 5 + "px";
-        this.earth_info_label.style.left = getX(this.canvas) - getX(document.getElementById("content")) + 15 + "px";
         // this.earth_info_label.style.left = "5px";
+        // this.earth_info_label.style.top = getY(this.canvas) + 5 + "px";
+        this.earth_info_label.style.left = getX(this.canvas) - getX(document.getElementById("content")) + 15 + "px";
         var edist = earth_ellipse_distance_from_sun_by_month(this.month);
         var solar_flux = earth_ephemerides_solar_constant_by_month(this.month);
         var labelStr = "";

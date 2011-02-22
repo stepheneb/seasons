@@ -4,6 +4,7 @@ var cities = [
         country: "Canada",
         active: false,
         location: {
+            signed_latitude: 49.25,
             latitude: 49.25,
             lat_dir: "N",
             longitude: 123.1,
@@ -19,6 +20,7 @@ var cities = [
         country: "United States",
         active: true,
         location: {
+            signed_latitude: 61.21,
             latitude: 61.21,
             lat_dir: "N",
             longitude: 149.9,
@@ -34,6 +36,7 @@ var cities = [
         country: "United States",
         active: true,
         location: {
+            signed_latitude: 37.77,
             latitude: 37.77,
             lat_dir: "N",
             longitude: 122.42,
@@ -49,6 +52,7 @@ var cities = [
         country: "United States",
         active: false,
         location: {
+            signed_latitude: 25.75,
             latitude: 25.75,
             lat_dir: "N",
             longitude: 80.25,
@@ -64,6 +68,7 @@ var cities = [
         country: "Chile",
         active: true,
         location: {
+            signed_latitude: -0.75,
             latitude: 0.75,
             lat_dir: "S",
             longitude: 91.1,
@@ -79,6 +84,7 @@ var cities = [
         country: "Brazil",
         active: false,
         location: {
+            signed_latitude: -27.75,
             latitude: 27.75,
             lat_dir: "S",
             longitude: 43.25,
@@ -94,6 +100,7 @@ var cities = [
         country: "Argentina",
         active: false,
         location: {
+            signed_latitude: -51.65,
             latitude: 51.65,
             lat_dir: "S",
             longitude: 69.25,
@@ -109,6 +116,7 @@ var cities = [
         country: "Australia",
         active: true,
         location: {
+            signed_latitude: -37.8,
             latitude: 37.8,
             lat_dir: "S",
             longitude: 144.95,
@@ -124,6 +132,7 @@ var cities = [
         country: "Antarctica",
         active: true,
         location: {
+            signed_latitude: -77.88,
             latitude: 77.88,
             lat_dir: "S",
             longitude: 166.73,
