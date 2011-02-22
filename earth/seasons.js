@@ -368,9 +368,29 @@ seasons.Scene.prototype.earthPointer = function() {
 };
 
 seasons.Scene.prototype.earthLabel = function() {
+    var getY = function getY(el) {
+        var ypos = 0;
+        while( el != null ) {
+            ypos += el.offsetTop;
+            el = el.offsetParent;
+        }
+        return ypos;
+    };
+    var getX = function getX(el) {
+        var xpos = 0;
+        while( el != null ) {
+            xpos += el.offsetLeft;
+            el = el.offsetParent;
+        }
+        return xpos;
+    };
+
     if (this.earth_label) {
         this.earth_info_label.style.top = this.canvas_properties().top + window.pageYOffset + 5 + "px";
-        this.earth_info_label.style.left = this.canvas_properties().left + window.pageXOffset - 50 + "px";
+        // this.earth_info_label.style.left = this.canvas_properties().left + getX(this.canvas) + window.pageXOffset + 5 + "px";
+        // this.earth_info_label.style.left = getX(this.canvas) + 5 + "px";
+        this.earth_info_label.style.left = getX(this.canvas) - getX(document.getElementById("content")) + 15 + "px";
+        // this.earth_info_label.style.left = "5px";
         var edist = earth_ellipse_distance_from_sun_by_month(this.month);
         var solar_flux = earth_ephemerides_solar_constant_by_month(this.month);
         var labelStr = "";
