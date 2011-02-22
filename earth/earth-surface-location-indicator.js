@@ -70,7 +70,7 @@ var EarthSurfaceLocationIndicator = function(parentNodeId) {
 
                                 type: "quaternion",
                                 id: EARTH_SURFACE_LOCATION_INDICATOR_NODE_ID + "_longitude",
-                                x: -1.0, y: 0.0, z: 0.0, angle: 72.0,
+                                x: -1.0, y: 0.0, z: 0.0, angle: 0.0,
 
                                 nodes: [
 
@@ -78,7 +78,7 @@ var EarthSurfaceLocationIndicator = function(parentNodeId) {
 
                                         type: "quaternion",
                                         id: EARTH_SURFACE_LOCATION_INDICATOR_NODE_ID + "_latitude",
-                                        x: 0.0, y: 0.0, z: -1.0, angle: 42.0,
+                                        x: 0.0, y: 0.0, z: -1.0, angle: 0.0,
 
                                         nodes: [
                                             {
