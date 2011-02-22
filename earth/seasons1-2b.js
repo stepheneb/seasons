@@ -1259,7 +1259,7 @@ var scene1 = new seasons.Scene({
     choose_month:   "choose-month",
     earth_pointer:  "earth-pointer1",
     earth_label:         true,
-    debugging:           true,
+    debugging:           false,
 });
 
 var scene3 = new seasons.Scene({
