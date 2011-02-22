@@ -65,7 +65,7 @@ SceneJS.createNode({
                         type: "perspective",
                         fovy : 45.0,
                         aspect : 1.365,
-                        near : earth_diameter_km,
+                        near : earth_radius_km,
                         far : milky_way_apparent_radius * 10,
                     },
 

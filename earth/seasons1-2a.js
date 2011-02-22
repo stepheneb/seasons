@@ -636,9 +636,9 @@ SceneJS.createNode({
                                                                 {
 
                                                                     type: "scale",
-                                                                    x: earth_diameter_km,
-                                                                    y: earth_diameter_km,
-                                                                    z: earth_diameter_km,
+                                                                    x: earth_radius_km,
+                                                                    y: earth_radius_km,
+                                                                    z: earth_radius_km,
 
                                                                     nodes: [
 

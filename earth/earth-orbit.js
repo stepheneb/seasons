@@ -101,7 +101,7 @@ var earthCircleOrbit = SceneJS.createNode({
                                                     id: "earth-in-space-circular-orbital-path" ,                                         
                                                     radius: earth_orbital_radius_km,
                                                     innerRadius : earth_orbital_radius_km - 0.2,
-                                                    height: earth_diameter_km / 49,
+                                                    height: earth_radius_km / 49,
                                                     rings: 360
                                                 },
                                     
@@ -110,8 +110,8 @@ var earthCircleOrbit = SceneJS.createNode({
                                                     type: "disk",                                           
                                                     id: "sun-earth-circular-orbital-path" ,                                         
                                                     radius: earth_orbital_radius_km,
-                                                    innerRadius : earth_orbital_radius_km - (earth_diameter_km * 50),
-                                                    height: earth_diameter_km * 99,
+                                                    innerRadius : earth_orbital_radius_km - (earth_radius_km * 50),
+                                                    height: earth_radius_km * 99,
                                                     rings: 360
                                                 }
                                             ]

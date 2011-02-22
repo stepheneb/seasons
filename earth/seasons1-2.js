@@ -450,9 +450,9 @@ SceneJS.createNode({
                                                                 {
 
                                                                     type: "scale",
-                                                                    x: earth_diameter_km,
-                                                                    y: earth_diameter_km,
-                                                                    z: earth_diameter_km,
+                                                                    x: earth_radius_km,
+                                                                    y: earth_radius_km,
+                                                                    z: earth_radius_km,
 
                                                                     nodes: [
 
@@ -714,7 +714,7 @@ SceneJS.createNode({
                         //                             type: "disk", 
                         //                             radius: earth_orbital_radius_km,
                         //                             innerRadius : earth_orbital_radius_km - 0.2,
-                        //                             height: earth_diameter_km / 50,
+                        //                             height: earth_radius_km / 50,
                         //                             rings: 360
                         //                         }
                         //                     ]
@@ -875,9 +875,9 @@ SceneJS.createNode({
                                                                {
 
                                                                     type: "scale",
-                                                                    x: earth_diameter_km,
-                                                                    y: earth_diameter_km,
-                                                                    z: earth_diameter_km,
+                                                                    x: earth_radius_km,
+                                                                    y: earth_radius_km,
+                                                                    z: earth_radius_km,
 
                                                                     nodes: [
 
@@ -917,7 +917,7 @@ SceneJS.createNode({
         {
             type: "lookAt", 
             id: "lookAt4",
-            eye : { x: earth_x_pos, y: earth_diameter_km * 3, z: 0 },
+            eye : { x: earth_x_pos, y: earth_radius_km * 3, z: 0 },
             look : { x : earth_x_pos, y : 0.0, z : 0.0 },
             up : { x: 0.0, y: 0.0, z: 1.0 },
 

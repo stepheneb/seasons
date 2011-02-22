@@ -6,15 +6,15 @@ var earth_orbital_radius_km_actual = 150000000.0;
 var factor = 0.001
 
 var sun_radius_km = sun_diameter_km_actual / 2 * factor;
-var earth_diameter_km = earth_diameter_km_actual / 2 * factor;
+var earth_radius_km = earth_diameter_km_actual / 2 * factor;
 var earth_orbital_radius_km = earth_orbital_radius_km_actual * factor;
 var milky_way_apparent_radius = earth_orbital_radius_km * 10;
 
 var earth_x_pos = -earth_orbital_radius_km;
 var sun_x_pos = 0;
 
-var earth_view_small_offset = earth_diameter_km / 5;
-var earth_view_large_offset = earth_diameter_km * 3;
+var earth_view_small_offset = earth_radius_km / 5;
+var earth_view_large_offset = earth_radius_km * 3;
 
 var initial_earth_eye =      { x: earth_x_pos + earth_view_small_offset, y: earth_view_small_offset, z: earth_view_large_offset };
 var initial_earth_eye_side = initial_earth_eye;
@@ -43,11 +43,11 @@ var initial_sun_camera = {
     far : milky_way_apparent_radius * 10,    
 }
 
-var earth_orbit_line_size_med = earth_diameter_km / 100;
-var earth_orbit_line_size_large = earth_diameter_km * 50;
+var earth_orbit_line_size_med = earth_radius_km / 100;
+var earth_orbit_line_size_large = earth_radius_km * 50;
 
-var sun_earth_line_size_med =   earth_diameter_km / 250;
-var sun_earth_line_size_large = earth_diameter_km * 50;
+var sun_earth_line_size_med =   earth_radius_km / 250;
+var sun_earth_line_size_large = earth_radius_km * 50;
 
 monthNamesShort = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 

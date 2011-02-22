@@ -51,9 +51,9 @@ var earthSphere = SceneJS.createNode({
                                 {
                                     type: "scale",
                                     id: "earth-scale",
-                                    x: earth_diameter_km,
-                                    y: earth_diameter_km,
-                                    z: earth_diameter_km,
+                                    x: earth_radius_km,
+                                    y: earth_radius_km,
+                                    z: earth_radius_km,
 
                                     nodes: [
 
@@ -67,6 +67,10 @@ var earthSphere = SceneJS.createNode({
 
                                                 { type: "sphere", id: "esphere" },
 
+                                                {
+                                                    type: "node",
+                                                    id: "earth-surface-location-destination"
+                                                }
                                             ]
                                         }
                                     ]
@@ -91,9 +95,9 @@ var earthSphere = SceneJS.createNode({
                                                 {
                                             
                                                     type: "scale",
-                                                    x: earth_diameter_km * 0.02,
-                                                    y: earth_diameter_km * 1.2,
-                                                    z: earth_diameter_km * 0.02,
+                                                    x: earth_radius_km * 0.02,
+                                                    y: earth_radius_km * 1.2,
+                                                    z: earth_radius_km * 0.02,
 
                                                     nodes: [ { type: "sphere" } ]
                                                 }

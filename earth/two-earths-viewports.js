@@ -8,7 +8,7 @@ var earth_orbital_radius_km_actual = 150000000.0;
 
 var factor = 0.001
 
-var earth_diameter_km = earth_diameter_km_actual * factor;
+var earth_radius_km = earth_diameter_km_actual * factor;
 var earth_orbital_radius_km = earth_orbital_radius_km_actual * factor;
 var milky_way_apparent_radius = earth_orbital_radius_km * 10;
 
@@ -277,9 +277,9 @@ SceneJS.createNode({
                                                                 {
 
                                                                     type: "scale",
-                                                                    x: earth_diameter_km,
-                                                                    y: earth_diameter_km,
-                                                                    z: earth_diameter_km,
+                                                                    x: earth_radius_km,
+                                                                    y: earth_radius_km,
+                                                                    z: earth_radius_km,
 
                                                                     nodes: [
 
@@ -442,7 +442,7 @@ SceneJS.createNode({
 
                     type: "lookAt", 
                     id: "firstLookAt",
-                    eye : { x: earth_x_pos, y: 0, z: earth_diameter_km * -3 },
+                    eye : { x: earth_x_pos, y: 0, z: earth_radius_km * -3 },
                     look : { x : earth_x_pos, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
 
@@ -582,7 +582,7 @@ SceneJS.createNode({
 
                     type: "lookAt", 
                     id: "secondLookAt",
-                    eye : { x: earth_x_pos, y: 0, z: earth_diameter_km * -3 },
+                    eye : { x: earth_x_pos, y: 0, z: earth_radius_km * -3 },
                     look : { x : earth_x_pos, y : 0.0, z : 0.0 },
                     up : { x: 0.0, y: 1.0, z: 0.0 },
 

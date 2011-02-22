@@ -9,12 +9,12 @@ var earth = SceneJS.createNode({
             id: "earth",
             type: "boundingBox",
 
-            xmin: -earth_diameter_km,
-            ymin: -earth_diameter_km,
-            zmin: -earth_diameter_km,
-            xmax:  earth_diameter_km,
-            ymax:  earth_diameter_km,
-            zmax:  earth_diameter_km,
+            xmin: -earth_radius_km,
+            ymin: -earth_radius_km,
+            zmin: -earth_radius_km,
+            xmax:  earth_radius_km,
+            ymax:  earth_radius_km,
+            zmax:  earth_radius_km,
 
             /* We'll do level-of-detail selection with this
              * boundingBox - two representations at

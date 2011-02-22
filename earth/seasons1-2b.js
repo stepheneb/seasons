@@ -91,9 +91,9 @@ var earthSphere3 = SceneJS.createNode({
                                 {
                                     type: "scale",
                                     id: "earth-scale3",
-                                    x: earth_diameter_km,
-                                    y: earth_diameter_km,
-                                    z: earth_diameter_km,
+                                    x: earth_radius_km,
+                                    y: earth_radius_km,
+                                    z: earth_radius_km,
 
                                     nodes: [
 
@@ -131,9 +131,9 @@ var earthSphere3 = SceneJS.createNode({
                                                 {
                                             
                                                     type: "scale",
-                                                    x: earth_diameter_km * 0.02,
-                                                    y: earth_diameter_km * 1.2,
-                                                    z: earth_diameter_km * 0.02,
+                                                    x: earth_radius_km * 0.02,
+                                                    y: earth_radius_km * 1.2,
+                                                    z: earth_radius_km * 0.02,
 
                                                     nodes: [ { type: "sphere" } ]
                                                 }
@@ -624,9 +624,9 @@ SceneJS.createNode({
                                                         {
                                                             type: "scale",
                                                             id: "earth-scale1",
-                                                            x: earth_diameter_km,
-                                                            y: earth_diameter_km,
-                                                            z: earth_diameter_km,
+                                                            x: earth_radius_km,
+                                                            y: earth_radius_km,
+                                                            z: earth_radius_km,
 
                                                             nodes: [
 
@@ -664,9 +664,9 @@ SceneJS.createNode({
                                                                         {
 
                                                                             type: "scale",
-                                                                            x: earth_diameter_km * 0.02,
-                                                                            y: earth_diameter_km * 1.2,
-                                                                            z: earth_diameter_km * 0.02,
+                                                                            x: earth_radius_km * 0.02,
+                                                                            y: earth_radius_km * 1.2,
+                                                                            z: earth_radius_km * 0.02,
 
                                                                             nodes: [ { type: "sphere" } ]
                                                                         }
@@ -1203,9 +1203,9 @@ SceneJS.createNode({
                                         //                         {
                                         //                             type: "scale",
                                         //                             id: "earth-scale3",
-                                        //                             x: earth_diameter_km,
-                                        //                             y: earth_diameter_km,
-                                        //                             z: earth_diameter_km,
+                                        //                             x: earth_radius_km,
+                                        //                             y: earth_radius_km,
+                                        //                             z: earth_radius_km,
                                         // 
                                         //                             nodes: [
                                         // 
@@ -1243,9 +1243,9 @@ SceneJS.createNode({
                                         //                                         {
                                         // 
                                         //                                             type: "scale",
-                                        //                                             x: earth_diameter_km * 0.02,
-                                        //                                             y: earth_diameter_km * 1.2,
-                                        //                                             z: earth_diameter_km * 0.02,
+                                        //                                             x: earth_radius_km * 0.02,
+                                        //                                             y: earth_radius_km * 1.2,
+                                        //                                             z: earth_radius_km * 0.02,
                                         // 
                                         //                                             nodes: [ { type: "sphere" } ]
                                         //                                         }
@@ -1308,9 +1308,9 @@ SceneJS.createNode({
                                 //                         {
                                 //                             type: "scale",
                                 //                             id: "earth-scale3",
-                                //                             x: earth_diameter_km,
-                                //                             y: earth_diameter_km,
-                                //                             z: earth_diameter_km,
+                                //                             x: earth_radius_km,
+                                //                             y: earth_radius_km,
+                                //                             z: earth_radius_km,
                                 // 
                                 //                             nodes: [
                                 // 
@@ -1348,9 +1348,9 @@ SceneJS.createNode({
                                 //                                         {
                                 // 
                                 //                                             type: "scale",
-                                //                                             x: earth_diameter_km * 0.02,
-                                //                                             y: earth_diameter_km * 1.2,
-                                //                                             z: earth_diameter_km * 0.02,
+                                //                                             x: earth_radius_km * 0.02,
+                                //                                             y: earth_radius_km * 1.2,
+                                //                                             z: earth_radius_km * 0.02,
                                 // 
                                 //                                             nodes: [ { type: "sphere" } ]
                                 //                                         }

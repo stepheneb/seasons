@@ -74,7 +74,7 @@ SceneJS.createNode({
                         // right :   earth_orbital_radius_km * 1.5,
                         // bottom : earth_orbital_radius_km * -1.5,
                         // top :     earth_orbital_radius_km * 1.5,
-                        // near : earth_diameter_km,
+                        // near : earth_radius_km,
                         // far : milky_way_apparent_radius * 20,
                         
                     },
@@ -521,7 +521,7 @@ function chooseLookAt() {
 
         case "surface":
         earth_rotation.checked=false
-        look_at.set("eye", { x : earth_diameter_km, y : 0.0, z : 0.0 } );
+        look_at.set("eye", { x : earth_radius_km, y : 0.0, z : 0.0 } );
         look_at.set("look", { x : earth_orbital_radius_km, y : 0.0, z : 0.0 } );
         setMilkyWayRotation(month);
         break;
