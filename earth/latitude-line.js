@@ -62,7 +62,7 @@ var LatitudeLine = function(parentNodeId) {
                         type: "translate",
                         id: LATITUDE_LINE_NODE_ID + "_translate",
                         x: 0,
-                        y: earth_diameter_km * Math.sin(this._latitude * deg2rad),
+                        y: earth_radius_km * Math.sin(this._latitude * deg2rad),
                         z: 0,
                         
                         nodes: [
@@ -77,9 +77,9 @@ var LatitudeLine = function(parentNodeId) {
 
                                     {
                                         type: "disk",
-                                        radius: earth_diameter_km * 1.02,
-                                        // radius: earth_diameter_km / 2 + earth_orbit_line_size_med,
-                                        innerRadius: earth_diameter_km * 1.01,
+                                        radius: earth_radius_km * 1.02,
+                                        // radius: earth_radius_km / 2 + earth_orbit_line_size_med,
+                                        innerRadius: earth_radius_km * 1.01,
                                         height: earth_orbit_line_size_med * 1,
                                         rings: 360
                                     }
@@ -101,7 +101,7 @@ var LatitudeLine = function(parentNodeId) {
 
 LatitudeLine.prototype.setLatitude = function(latitude) {
     this._latitude = latitude;
-    this._translateNode.set({ y: earth_diameter_km * Math.sin(this._latitude * deg2rad) });
+    this._translateNode.set({ y: earth_radius_km * Math.sin(this._latitude * deg2rad) });
     this._scaleNode.set({ x: Math.cos(this._latitude * deg2rad) });
     this._scaleNode.set({ z: Math.cos(this._latitude * deg2rad) });
 };

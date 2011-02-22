@@ -4,6 +4,7 @@ var cities = [
         country: "Canada",
         active: false,
         location: {
+            signed_longitude: 123.1,
             signed_latitude: 49.25,
             latitude: 49.25,
             lat_dir: "N",
@@ -20,6 +21,7 @@ var cities = [
         country: "United States",
         active: true,
         location: {
+            signed_longitude: 149.9,
             signed_latitude: 61.21,
             latitude: 61.21,
             lat_dir: "N",
@@ -36,6 +38,7 @@ var cities = [
         country: "United States",
         active: true,
         location: {
+            signed_longitude: 122.42,
             signed_latitude: 37.77,
             latitude: 37.77,
             lat_dir: "N",
@@ -52,6 +55,7 @@ var cities = [
         country: "United States",
         active: false,
         location: {
+            signed_longitude: 80.25,
             signed_latitude: 25.75,
             latitude: 25.75,
             lat_dir: "N",
@@ -68,6 +72,7 @@ var cities = [
         country: "Chile",
         active: true,
         location: {
+            signed_longitude: 91.1,
             signed_latitude: -0.75,
             latitude: 0.75,
             lat_dir: "S",
@@ -84,6 +89,7 @@ var cities = [
         country: "Brazil",
         active: false,
         location: {
+            signed_longitude: 43.25,
             signed_latitude: -27.75,
             latitude: 27.75,
             lat_dir: "S",
@@ -100,6 +106,7 @@ var cities = [
         country: "Argentina",
         active: false,
         location: {
+            signed_longitude: 69.25,
             signed_latitude: -51.65,
             latitude: 51.65,
             lat_dir: "S",
@@ -116,6 +123,7 @@ var cities = [
         country: "Australia",
         active: true,
         location: {
+            signed_longitude: -144.95,
             signed_latitude: -37.8,
             latitude: 37.8,
             lat_dir: "S",
@@ -132,6 +140,7 @@ var cities = [
         country: "Antarctica",
         active: true,
         location: {
+            signed_longitude: -166.73,
             signed_latitude: -77.88,
             latitude: 77.88,
             lat_dir: "S",

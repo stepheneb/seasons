@@ -65,7 +65,11 @@ seasons.Scene = function(options) {
     if (options.latitude_line) {
         this.latitude_line = new LatitudeLine("latitude-line-destination")
     };
-    
+
+    if (options.earth_surface_location) {
+        this.earth_surface_location = new EarthSurfaceLocationIndicator("earth-surface-location-destination")
+    };
+
     this.earth_pointer;
     
     if (options.earth_pointer === false) {

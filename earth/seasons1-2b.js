@@ -1421,6 +1421,7 @@ var scene3 = new seasons.Scene({
     choose_month:                "choose-month",
     linked_scene:                scene1,
     latitude_line:               true,
+    earth_surface_location:      true,
     earth_pointer:               false,
     earth_label:                 false,
     earth_info_label:            "earth-info-label3",
@@ -1433,7 +1434,7 @@ window.render = function() {
     SceneJS.withNode("theScene3").render();
     SceneJS.withNode("theScene1").render();
     if (earth_rotation.checked) {
-        scene3.earth_rotation.set("angle", scene3.earth_rotation.get("angle") + 0.15);
+        scene3.earth_rotation.set("angle", scene3.earth_rotation.get("angle") + 0.5);
     }
 };
 
@@ -1492,14 +1493,15 @@ var city_latitude_temperature_prediction = document.getElementById("city-latitud
 
 var selected_city_latitude = document.getElementById("selected-city-latitude");
 
-function updateLatitudeLine() {
+function updateLatitudeLineAndCity() {
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
     var city_location = city.location;
     scene3.latitude_line.setLatitude(city_location.signed_latitude);
+    scene3.earth_surface_location.setLocation(city_location.signed_latitude, city_location.signed_longitude)
 };
 
-selected_city_latitude.onchange = updateLatitudeLine;
+selected_city_latitude.onchange = updateLatitudeLineAndCity;
 
 var city_data_table = document.getElementById("city-data-table");
 var city_data_table_body = document.getElementById("city-data-table-body");
