@@ -213,13 +213,14 @@ SceneJS.createNode({
 
 
 var scene = new seasons.Scene({
-    theScene:       "theScene",
-    camera:         "theCamera",
-    canvas:         "theCanvas",
-    look:           "lookAt",
-    earth_label:    true,
-    choose_view:    "choose-view",
-    choose_month:   "choose-month"
+    theScene:                    "theScene",
+    camera:                      "theCamera",
+    canvas:                      "theCanvas",
+    look:                        "lookAt",
+    earth_label:                 true,
+    earth_info_label:            "earth-info-label",
+    choose_view:                 "choose-view",
+    choose_month:                "choose-month"
 });
 
 window.render = function() {
