@@ -120,10 +120,6 @@ var EarthSurfaceLocationIndicator = function(parentNodeId) {
 EarthSurfaceLocationIndicator.prototype.setLocation = function(latitude, longitude) {
     this._latitude = latitude;
     this._longitude = longitude;
-    // var l1 = this._longitudeNode.get("rotation");
-    // var l2 = this._latitudeNode.get("rotation");
     this._latitudeNode.set("rotation", { x: 0.0, y: 0.0, z: -1.0, angle: latitude });
     this._longitudeNode.set("rotation", { x: -1.0, y: 0.0, z: 0.0, angle: longitude });
-    // this._latitudeNode.set("angle", latitude);
-    // this._longitudeNode.set("angle", longitude);
 };

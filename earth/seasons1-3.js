@@ -1657,15 +1657,6 @@ function addExperimentData() {
     table_data.appendChild(select);
     table_row.appendChild(table_data);
 
-    
-    // <select id="selected-city-month" name="selected-city-month">
-    //   <option disabled selected>date ...</option>
-    //   <option value="dec">Dec 21</option>
-    //   <option value="mar">Mar 21</option>
-    //   <option value="jun">Jun 21</option>
-    //   <option value="sep">Sep 21</option>
-    // </select>
-
     table_data = document.createElement('td');
     var graph_checkbox = document.createElement('input');
     graph_checkbox.id = city_element_id;    
