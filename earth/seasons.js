@@ -83,6 +83,12 @@ seasons.Scene = function(options) {
         this.earth_info_label   = document.getElementById(options.earth_info_label || "earth-info-label");
     };
 
+    this.choose_tilt        = options.choose_tilt || false;
+    this.tilt;
+    if (this.choose_tilt) {
+        this.choose_tilt   = document.getElementById(this.choose_tilt);
+    };
+
     this.earth_position      = SceneJS.withNode(options.earth_postion || "earth-position");
     this.earth_rotation      = SceneJS.withNode(options.earth_rotation || "earth-rotation");
     
@@ -154,6 +160,16 @@ seasons.Scene = function(options) {
     })();
     this.orbital_grid.onchange();
 
+    // Selecting an Earth Tilt: yes, no 
+    if (this.choose_tilt) {
+        this.choose_tilt.onchange = (function() {
+            return function() {
+                self.updateTilt(this);
+            }
+        })();
+        this.choose_tilt.onchange();
+    };
+
     //
     // Rendering bits ...
     //
@@ -207,6 +223,25 @@ seasons.Scene = function(options) {
         }
     })(), true);
     
+};
+
+
+seasons.Scene.prototype.updateTilt = function(form_element) {
+    this._updateTilt(getRadioSelection(form_element));
+};
+
+seasons.Scene.prototype._updateTilt = function(tilt) {
+    this.tilt = tilt;
+    var earth_tilt = SceneJS.withNode("earthRotationalAxisQuaternion");
+    switch (tilt) {
+        case "yes":
+            earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 23.5 });
+            break;
+
+        case "no":
+            earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 0 });
+            break;
+    }
 };
 
 seasons.Scene.prototype.get_earth_postion = function() {
