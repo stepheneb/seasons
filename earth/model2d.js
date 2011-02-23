@@ -35,11 +35,13 @@ model2d.NX = 100;
 model2d.NY = 100;
 model2d.ARRAY_SIZE = model2d.NX * model2d.NY;
 
+model2d.array_type = "regular";
+
 function createArray(size, fill) {
     size = size || model2d.ARRAY_SIZE;
     fill = fill || 0;
     var a;
-    if (!!window.WebGLRenderingContext) {
+    if (model2d.array_type === "typed") {
         a = new Float32Array(size);
     } else {
         a = new Array(size);
@@ -249,9 +251,9 @@ model2d.config = {
 
 
 
-model2d.Model2D = function(options) {
+model2d.Model2D = function(options, array_type) {
 
-    if (!options) {
+    if (!options || options === {}) {
         options = model2d.config;
     };
 
@@ -259,6 +261,11 @@ model2d.Model2D = function(options) {
         options.model = {};
     };
 
+    if (!array_type) {
+        array_type = "regular";
+    };
+    model2d.array_type = array_type;
+    
     this.measurementInterval = options.model.measurement_interval || 100;
     this.viewUpdateInterval = options.model.view_update_interval || 20;
     this.sunny = options.model.sunny || true;

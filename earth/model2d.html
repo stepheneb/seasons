@@ -108,6 +108,15 @@
       </ul>
       <ul class="hlist">
         <li>
+          <form id="choose-array-type">
+            <fieldset>
+              <legend>Type of Arrays: </legend>
+              <label><input type="radio" name="array" value="regular" checked> Regular</input></label>
+              <label><input type="radio" name="array" value="typed" disabled> Typed</input></label>
+            </fieldset>
+          </form>
+        </li>
+        <li>
           <form id="show-me">
             <fieldset>
               <legend>Render</legend>
@@ -176,12 +185,35 @@
       myRequire([ "model2d.js" ],
       function() {
 
+        var webgl = !!window.WebGLRenderingContext;
+        var choose_array_type = document.getElementById("choose-array-type");
+
+        if (webgl) {
+          choose_array_type.elements[2].disabled = false;
+        }
+
         model2d.setupColorDivs();
         model2d.setupRGBAColorTables();
+        
+        var model, array_selection;
+        
+        function arrayTypeChange() {
+          if (choose_array_type.elements[1].checked) {
+            array_selection = "regular";
+          } else {
+            array_selection = "typed";
+          }
+          model = new model2d.Model2D({}, array_selection);
+          model2d.addHotSpot(model, 50.0);
+          model.nextStep();
+        };
+        
+        choose_array_type.onchange = arrayTypeChange;
+        choose_array_type.onchange();
 
-        var model = new model2d.Model2D();
-        model2d.addHotSpot(model, 50.0);
-        model.nextStep();
+        // var model = new model2d.Model2D({}, array_selection);
+        // model2d.addHotSpot(model, 50.0);
+        // model.nextStep();
 
         var tdata =      document.getElementById("tdata");
         model2d.displayTemperatureTable(tdata, model);
@@ -257,9 +289,9 @@
               if (window.paintInterval) {
                 window.clearInterval(paintInterval);
               }
-              var model = new model2d.Model2D();
-              model.reset;
-              // model = new model2d.Model2D();
+              model = new model2d.Model2D({}, array_selection);
+              model2d.addHotSpot(model, 50.0);
+              model.nextStep();
               renderModelStep;
               break;
           }
