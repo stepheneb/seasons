@@ -58,8 +58,10 @@ seasons.Scene = function(options) {
     
     this.circleOrbit        = SceneJS.withNode("earthCircleOrbitSelector");
 
-    this.orbitGridSelector  = SceneJS.withNode(options.orbitGridSelector || "orbit-grid-selector");
-    
+    if (options.orbitGridSelector !== false) {
+        this.orbitGridSelector  = SceneJS.withNode(options.orbitGridSelector || "orbit-grid-selector");
+    };
+        
     this.look_at_selection  = (options.look_at_selection || 'orbit');
     
     if (options.latitude_line) {
@@ -70,12 +72,29 @@ seasons.Scene = function(options) {
         this.earth_surface_location = new EarthSurfaceLocationIndicator("earth-surface-location-destination")
     };
 
-    this.earth_pointer;
-    
+    if (options.choose_view === false) {
+        this.choose_view = false;
+    } else {
+        this.choose_view = document.getElementById(options.choose_view || "choose-view");
+        this.view_selection = getRadioSelection(this.choose_view);
+    };
+
+    if (options.orbital_grid === false) {
+        this.orbital_grid = false;
+    } else {
+        this.orbital_grid = document.getElementById(options.orbital_grid || "orbital-grid");
+    };
+
     if (options.earth_pointer === false) {
         this.earth_pointer = false;
     } else {
         this.earth_pointer      = SceneJS.withNode(options.earth_pointer || "earth-pointer");
+    };
+
+    if (options.circle_orbit === false) {
+        this.circle_orbit = false;
+    } else {
+        this.circle_orbit = document.getElementById(options.circle_orbit || "circle-orbit");
     };
 
     this.earth_label        = (options.earth_label || false);
@@ -92,12 +111,18 @@ seasons.Scene = function(options) {
     this.earth_position      = SceneJS.withNode(options.earth_postion || "earth-position");
     this.earth_rotation      = SceneJS.withNode(options.earth_rotation || "earth-rotation");
     
-    this.earth_sun_line_rotation    = SceneJS.withNode(options.earth_sun_line_rotation || "earth-sun-line-rotation");
-    this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
+    if (options.earth_sun_line === false) {
+        this.earth_sun_line = false;
+    } else {
+        this.earth_sun_line = true;
+        this.earth_sun_line_rotation    = SceneJS.withNode(options.earth_sun_line_rotation || "earth-sun-line-rotation");
+        this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
 
-    this.earth_sun_line_rotation =    SceneJS.withNode(options.earth_sun_line_rotation || "earth-sun-line-rotation");
-    this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
-    this.earth_sun_line_scale =       SceneJS.withNode(options.earth_sun_line_scale || "earth-sun-line-scale");
+        this.earth_sun_line_rotation =    SceneJS.withNode(options.earth_sun_line_rotation || "earth-sun-line-rotation");
+        this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
+        this.earth_sun_line_scale =       SceneJS.withNode(options.earth_sun_line_scale || "earth-sun-line-scale");
+    };
+    
 
     this.ellipseOrbitSelector = SceneJS.withNode(options.ellipseOrbitSelector || "earthEllipseOrbitSelector");
     this.earthTextureSelector = SceneJS.withNode(options.earthTextureSelector || "earthTextureSelector");
@@ -122,13 +147,15 @@ seasons.Scene = function(options) {
     
     // Selecting a Perspective: top, side 
     this.choose_view = document.getElementById(options.choose_view || "choose-view");
-    this.view_selection = getRadioSelection(this.choose_view);
-    this.choose_view.onchange = (function() {
-        return function() {
-            self.perspectiveChange(this);
-        }
-    })();
-    this.choose_view.onchange();
+    
+    if (this.choose_view) {
+        this.choose_view.onchange = (function() {
+            return function() {
+                self.perspectiveChange(this);
+            }
+        })();
+        this.choose_view.onchange();
+    }
     
     // Selecting the time of year: jun, sep, dec, mar
     this.choose_month = document.getElementById(options.choose_month || "choose-month");
@@ -141,7 +168,6 @@ seasons.Scene = function(options) {
     this.choose_month.onchange();
 
     // Circular Orbital Path selector ...
-    this.circle_orbit = document.getElementById(options.circle_orbit || "circle-orbit");
     if (this.circle_orbit) {
         this.circle_orbit.onchange = (function() {
             return function() {
@@ -152,13 +178,14 @@ seasons.Scene = function(options) {
     };
     
     // Orbital Grid selector ...
-    this.orbital_grid = document.getElementById(options.orbital_grid || "orbital-grid");
-    this.orbital_grid.onchange = (function() {
-        return function() {
-            self.orbitalGridChange(this);
-        }
-    })();
-    this.orbital_grid.onchange();
+    if (this.orbital_grid) {
+        this.orbital_grid.onchange = (function() {
+            return function() {
+                self.orbitalGridChange(this);
+            }
+        })();
+        this.orbital_grid.onchange();
+    }
 
     // Selecting an Earth Tilt: yes, no 
     if (this.choose_tilt) {
