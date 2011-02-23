@@ -1423,7 +1423,7 @@ var scene3 = new seasons.Scene({
     latitude_line:               true,
     earth_surface_location:      true,
     earth_pointer:               false,
-    earth_label:                 true,
+    earth_label:                 false,
     earth_info_label:            "earth-info-label3",
     debugging:                   true,
 });
