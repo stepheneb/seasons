@@ -1551,7 +1551,7 @@ var graph_checkbox_callbacks = {};
 var city_data_to_plot = [];
 for (var i = 0; i < active_cities.length; i++) {
     city_data_to_plot.push({});
-    var city_data = city_data_to_plot[i];
+    var city_data = city_data_to_plot[i * 2];
     var city = active_cities[i];
     city_data.label = city.name;
     city_data.lines = { show: true };
@@ -1560,12 +1560,38 @@ for (var i = 0; i < active_cities.length; i++) {
     for (var m = 0; m < 12; m++) {
         city_data.data.push([m, null]);
     };
+
+    city_data_to_plot.push({});
+    city_data = city_data_to_plot[i * 2 + 1];
+    city_data.label = city.name + ' no tilt';
+    city_data.lines = { show: true };
+    city_data.points = { show: true };
+    city_data.data = [];
+    for (var m = 0; m < 12; m++) {
+        city_data.data.push([m, null]);
+    };
+
 };
 
 var city_x_axis_tics = [];
 for (var i = 0; i < 12; i++) {
     city_x_axis_tics.push([i, month_data[month_names[i]].long_name]);
 };
+
+function calc_ave_temp(average_temperatures, month_index, tilt_value) {
+    var ave_temp;
+    if (tilt_value === "yes") {
+        ave_temp = average_temperatures[month_index];
+    } else {
+        var i;
+        ave_temp = average_temperatures[0]
+        for (i = 1; i < average_temperatures.length; i++) {
+            ave_temp += average_temperatures[i];
+        };
+        ave_temp = ave_temp / average_temperatures.length;
+    }
+    return ave_temp;
+}
 
 function addExperimentData() {
     if (selected_city_latitude.value == 'city ...' || 
@@ -1578,7 +1604,7 @@ function addExperimentData() {
     var city = active_cities[city_index];
     var city_location = city.location;
     var month = month_data[selected_city_month.value];
-    var city_element_id = 'city_' + city_index + '_' + selected_city_month.value + '_tilt_' + selected_tilt.value;
+    var city_element_id = 'city_' + city_index + '_' + selected_city_month.value + '_' + selected_tilt.value;
     var ave_temp;
     
     // if the City/Month row already exists in the 
@@ -1587,7 +1613,11 @@ function addExperimentData() {
     
     table_row = document.createElement('tr');
     table_data = document.createElement('td');
-    table_data.innerText = city.name;
+    if (selected_tilt.value == "yes") {
+        table_data.innerText = city.name;
+    } else {
+        table_data.innerText = city.name + ' no tilt';
+    }
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
@@ -1599,16 +1629,8 @@ function addExperimentData() {
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
-    if (selected_tilt.value === "yes") {
-        ave_temp = city.average_temperatures[month.index];
-    } else {
-        var i;
-        ave_temp = city.average_temperatures[0]
-        for (i = 1; i < city.average_temperatures.length; i++) {
-            ave_temp += city.average_temperatures[i];
-        };
-        ave_temp = ave_temp / city.average_temperatures.length;
-    }
+    
+    ave_temp = calc_ave_temp(city.average_temperatures, month.index, selected_tilt.value);
     if (use_fahrenheit) ave_temp = ave_temp * 9 / 5 + 32;
     table_data.innerText = sprintf("%3.1f", ave_temp);
     table_row.appendChild(table_data);
@@ -1654,11 +1676,19 @@ function addExperimentData() {
     var graph_checkbox_callback = function(event) {
         var id_parts = this.id.split(/_/)
         var city_index = id_parts[1];
-        var city_data = city_data_to_plot[city_index];
+
+        var tilt = id_parts[3];
+        var city_data;
+        if (tilt === "yes") {
+             city_data = city_data_to_plot[city_index * 2];
+        } else {
+            city_data = city_data_to_plot[city_index * 2 + 1];
+        };
+        
         var city = active_cities[city_index];
         var city_location = city.location;
         var month = month_data[id_parts[2]];
-        var temperature = city.average_temperatures[month.index];
+        var temperature = calc_ave_temp(city.average_temperatures, month.index, tilt);
         if (use_fahrenheit) temperature = temperature * 9 / 5 + 32;
         if (this.checked) {
             city_data.data[month.index] = [month.index, temperature]
