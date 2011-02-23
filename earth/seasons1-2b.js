@@ -46,110 +46,110 @@ SceneJS.createNode({
 });
 
 
-var earthSphere3 = SceneJS.createNode({
-
-    type: "library",
-    
-    nodes: [
-
-        /* Specify the amounts of ambient, diffuse and specular
-         * lights our object reflects
-         */
-        {
-            id : "earth-sphere3",
-            type: "material",
-            baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
-            specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
-            specular:       0.0,
-            shine:          2.0,
-
-            nodes: [
-            
-                {
-                    type: "translate",
-                    id: "earth-position3",
-                    x: earth_x_pos,
-                    y: 0,
-                    z: 0,
-
-                    nodes: [
-
-                        {
-                            type: "quaternion",
-                            id: "earthRotationalAxisQuaternion3",
-                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-
-                            rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
-                        
-                            nodes: [
-                            
-                                {
-                                     type: "node",
-                                     id: "latitude-line-destination3",
-                                },
-
-                                {
-                                    type: "scale",
-                                    id: "earth-scale3",
-                                    x: earth_radius_km,
-                                    y: earth_radius_km,
-                                    z: earth_radius_km,
-
-                                    nodes: [
-
-                                        {
-                                            type: "rotate",
-                                            id: 'earth-rotation3',
-                                            angle: 0,
-                                            y: 1.0,
-
-                                            nodes: [ 
-
-                                                { type: "sphere", id: "esphere3" },
-
-                                            ]
-                                        }
-                                    ]
-                                },
-                            
-                                {
-                                    type: "texture",
-                                
-                                    nodes: [
-                                
-                                        {
-                                            type: "selector",
-                                            id: "earthAxisSelector3",
-                                            selection: [1],
-
-                                            nodes: [
-                                        
-                                                // 0: no axis indicator
-                                                { },
-
-                                                // 1: display axis indicator
-                                                {
-                                            
-                                                    type: "scale",
-                                                    x: earth_radius_km * 0.02,
-                                                    y: earth_radius_km * 1.2,
-                                                    z: earth_radius_km * 0.02,
-
-                                                    nodes: [ { type: "sphere" } ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-});
-
+// var earthSphere3 = SceneJS.createNode({
+// 
+//     type: "library",
+//     
+//     nodes: [
+// 
+//         /* Specify the amounts of ambient, diffuse and specular
+//          * lights our object reflects
+//          */
+//         {
+//             id : "earth-sphere3",
+//             type: "material",
+//             baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
+//             specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+//             specular:       0.0,
+//             shine:          2.0,
+// 
+//             nodes: [
+//             
+//                 {
+//                     type: "translate",
+//                     id: "earth-position3",
+//                     x: earth_x_pos,
+//                     y: 0,
+//                     z: 0,
+// 
+//                     nodes: [
+// 
+//                         {
+//                             type: "quaternion",
+//                             id: "earthRotationalAxisQuaternion3",
+//                             x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+// 
+//                             rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
+//                         
+//                             nodes: [
+//                             
+//                                 {
+//                                      type: "node",
+//                                      id: "latitude-line-destination3",
+//                                 },
+// 
+//                                 {
+//                                     type: "scale",
+//                                     id: "earth-scale3",
+//                                     x: earth_radius_km,
+//                                     y: earth_radius_km,
+//                                     z: earth_radius_km,
+// 
+//                                     nodes: [
+// 
+//                                         {
+//                                             type: "rotate",
+//                                             id: 'earth-rotation3',
+//                                             angle: 0,
+//                                             y: 1.0,
+// 
+//                                             nodes: [ 
+// 
+//                                                 { type: "sphere", id: "esphere3" },
+// 
+//                                             ]
+//                                         }
+//                                     ]
+//                                 },
+//                             
+//                                 {
+//                                     type: "texture",
+//                                 
+//                                     nodes: [
+//                                 
+//                                         {
+//                                             type: "selector",
+//                                             id: "earthAxisSelector3",
+//                                             selection: [1],
+// 
+//                                             nodes: [
+//                                         
+//                                                 // 0: no axis indicator
+//                                                 { },
+// 
+//                                                 // 1: display axis indicator
+//                                                 {
+//                                             
+//                                                     type: "scale",
+//                                                     x: earth_radius_km * 0.02,
+//                                                     y: earth_radius_km * 1.2,
+//                                                     z: earth_radius_km * 0.02,
+// 
+//                                                     nodes: [ { type: "sphere" } ]
+//                                                 }
+//                                             ]
+//                                         }
+//                                     ]
+//                                 }
+//                             ]
+//                         }
+//                     ]
+//                 }
+//             ]
+//         }
+//     ]
+// });
+// 
 
 /*----------------------------------------------------------------------
  * Canvas 1 **
@@ -458,230 +458,230 @@ SceneJS.createNode({
                         },
 
 
-                        {
-
-                            type: "selector",
-                            id: "earthTextureSelector1",
-                            selection: [1],
-                            nodes: [
-
-                                {
-                                    id: "earthTemperatureTextureSelector1",
-                                    type: "selector",
-                                    selection: [0],
-                                    nodes: [
-
-
-                                        // selection [0], March
-                                        {
-                                            type: "texture",
-                                            layers: [
-                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
-                                            ],
-                                            nodes: [ { type : "instance", target : "earth-sphere1"  } ]
-
-                                        },
-
-                                        // selection [1], June
-                                        {
-                                            type: "texture",
-                                            layers: [
-                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
-                                            ],
-                                            nodes: [ { type : "instance", target : "earth-sphere1"  } ]
-                                
-                                        },
-
-                                        // selection [2], September
-                                        {
-                                            type: "texture",
-                                            layers: [
-                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
-                                            ],
-                                            nodes: [ { type : "instance", target : "earth-sphere1"  } ]
-
-                                        },
-
-
-                                        // selection [3], December
-                                        {
-                                            type: "texture",
-                                            layers: [
-                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
-                                            ],
-                                            nodes: [ { type : "instance", target : "earth-sphere1"  } ]
-
-                                        }                                
-                                    ]
-                                },
-
-                                {
-
-                                    id: "earth-terrain-texture1",
-                                    type: "texture",
-                                    layers: [
-
-                                        { 
-                                           uri:"images/lat-long-grid-invert-units-1440x720-15.png",
-                                           blendMode: "add",
-
-                                        },
-                                        { 
-                                            uri:"images/earth3.jpg",
-
-                                            minFilter: "linear",
-                                            magFilter: "linear",
-                                            wrapS: "repeat",
-                                            wrapT: "repeat",
-                                            isDepth: false,
-                                            depthMode:"luminance",
-                                            depthCompareMode: "compareRToTexture",
-                                            depthCompareFunc: "lequal",
-                                            flipY: false,
-                                            width: 1,
-                                            height: 1,
-                                            internalFormat:"lequal",
-                                            sourceFormat:"alpha",
-                                            sourceType: "unsignedByte",
-                                            applyTo:"baseColor",
-                                            blendMode: "multiply",
-
-                                            /* Texture rotation angle in degrees
-                                             */
-                                            rotate: 180.0,
-
-                                            /* Texture translation offset
-                                             */
-                                            translate : {
-                                                x: 0,
-                                                y: 0
-                                            },
-
-                                            /* Texture scale factors
-                                             */
-                                            scale : {
-                                                x: -1.0,
-                                                y: 1.0
-                                            }
-                                        }
-                                    ],
-                                    
-                                    nodes: [
-
-                                        {
-                                            type : "instance",
-                                            target : "earth-sphere1"
-                                        }
-
-                                    ]
-                                },
-                                    
-                                /* Specify the amounts of ambient, diffuse and specular
-                                 * lights our object reflects
-                                 */
-
-                                {
-                                    id : "earth-sphere1",
-                                    type: "material",
-                                    baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
-                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
-                                    specular:       0.0,
-                                    shine:          2.0,
-
-                                    nodes: [
-
-                                        {
-                                            type: "translate",
-                                            id: "earth-position1",
-                                            x: earth_x_pos,
-                                            y: 0,
-                                            z: 0,
-
-                                            nodes: [
-
-                                                {
-                                                    type: "quaternion",
-                                                    id: "earthRotationalAxisQuaternion1",
-                                                    x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-
-                                                    rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
-
-                                                    nodes: [
-
-                                                        // {
-                                                        //      type: "node",
-                                                        //      id: "latitude-line-destination",
-                                                        // },
-
-                                                        {
-                                                            type: "scale",
-                                                            id: "earth-scale1",
-                                                            x: earth_radius_km,
-                                                            y: earth_radius_km,
-                                                            z: earth_radius_km,
-
-                                                            nodes: [
-
-                                                                {
-                                                                    type: "rotate",
-                                                                    id: 'earth-rotation2',
-                                                                    angle: 0,
-                                                                    y: 1.0,
-
-                                                                    nodes: [ 
-
-                                                                        { type: "sphere", id: "esphere1" },
-
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        },
-
-                                                        {
-                                                            type: "texture",
-
-                                                            nodes: [
-
-                                                                {
-                                                                    type: "selector",
-                                                                    id: "earthAxisSelector1",
-                                                                    selection: [1],
-
-                                                                    nodes: [
-
-                                                                        // 0: no axis indicator
-                                                                        { },
-
-                                                                        // 1: display axis indicator
-                                                                        {
-
-                                                                            type: "scale",
-                                                                            x: earth_radius_km * 0.02,
-                                                                            y: earth_radius_km * 1.2,
-                                                                            z: earth_radius_km * 0.02,
-
-                                                                            nodes: [ { type: "sphere" } ]
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                        // {
+                        // 
+                        //     type: "selector",
+                        //     id: "earthTextureSelector1",
+                        //     selection: [1],
+                        //     nodes: [
+                        // 
+                        //         {
+                        //             id: "earthTemperatureTextureSelector1",
+                        //             type: "selector",
+                        //             selection: [0],
+                        //             nodes: [
+                        // 
+                        // 
+                        //                 // selection [0], March
+                        //                 {
+                        //                     type: "texture",
+                        //                     layers: [
+                        //                         { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                        //                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                        //                         { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
+                        //                     ],
+                        //                     nodes: [ { type : "instance", target : "earth-sphere1"  } ]
+                        // 
+                        //                 },
+                        // 
+                        //                 // selection [1], June
+                        //                 {
+                        //                     type: "texture",
+                        //                     layers: [
+                        //                         { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                        //                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                        //                         { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
+                        //                     ],
+                        //                     nodes: [ { type : "instance", target : "earth-sphere1"  } ]
+                        //         
+                        //                 },
+                        // 
+                        //                 // selection [2], September
+                        //                 {
+                        //                     type: "texture",
+                        //                     layers: [
+                        //                         { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                        //                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                        //                         { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
+                        //                     ],
+                        //                     nodes: [ { type : "instance", target : "earth-sphere1"  } ]
+                        // 
+                        //                 },
+                        // 
+                        // 
+                        //                 // selection [3], December
+                        //                 {
+                        //                     type: "texture",
+                        //                     layers: [
+                        //                         { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                        //                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                        //                         { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
+                        //                     ],
+                        //                     nodes: [ { type : "instance", target : "earth-sphere1"  } ]
+                        // 
+                        //                 }                                
+                        //             ]
+                        //         },
+                        // 
+                        //         {
+                        // 
+                        //             id: "earth-terrain-texture1",
+                        //             type: "texture",
+                        //             layers: [
+                        // 
+                        //                 { 
+                        //                    uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+                        //                    blendMode: "add",
+                        // 
+                        //                 },
+                        //                 { 
+                        //                     uri:"images/earth3.jpg",
+                        // 
+                        //                     minFilter: "linear",
+                        //                     magFilter: "linear",
+                        //                     wrapS: "repeat",
+                        //                     wrapT: "repeat",
+                        //                     isDepth: false,
+                        //                     depthMode:"luminance",
+                        //                     depthCompareMode: "compareRToTexture",
+                        //                     depthCompareFunc: "lequal",
+                        //                     flipY: false,
+                        //                     width: 1,
+                        //                     height: 1,
+                        //                     internalFormat:"lequal",
+                        //                     sourceFormat:"alpha",
+                        //                     sourceType: "unsignedByte",
+                        //                     applyTo:"baseColor",
+                        //                     blendMode: "multiply",
+                        // 
+                        //                     /* Texture rotation angle in degrees
+                        //                      */
+                        //                     rotate: 180.0,
+                        // 
+                        //                     /* Texture translation offset
+                        //                      */
+                        //                     translate : {
+                        //                         x: 0,
+                        //                         y: 0
+                        //                     },
+                        // 
+                        //                     /* Texture scale factors
+                        //                      */
+                        //                     scale : {
+                        //                         x: -1.0,
+                        //                         y: 1.0
+                        //                     }
+                        //                 }
+                        //             ],
+                        //             
+                        //             nodes: [
+                        // 
+                        //                 {
+                        //                     type : "instance",
+                        //                     target : "earth-sphere1"
+                        //                 }
+                        // 
+                        //             ]
+                        //         },
+                        //             
+                        //         /* Specify the amounts of ambient, diffuse and specular
+                        //          * lights our object reflects
+                        //          */
+                        // 
+                        //         {
+                        //             id : "earth-sphere1",
+                        //             type: "material",
+                        //             baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
+                        //             specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                        //             specular:       0.0,
+                        //             shine:          2.0,
+                        // 
+                        //             nodes: [
+                        // 
+                        //                 {
+                        //                     type: "translate",
+                        //                     id: "earth-position1",
+                        //                     x: earth_x_pos,
+                        //                     y: 0,
+                        //                     z: 0,
+                        // 
+                        //                     nodes: [
+                        // 
+                        //                         {
+                        //                             type: "quaternion",
+                        //                             id: "earthRotationalAxisQuaternion1",
+                        //                             x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+                        // 
+                        //                             rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
+                        // 
+                        //                             nodes: [
+                        // 
+                        //                                 // {
+                        //                                 //      type: "node",
+                        //                                 //      id: "latitude-line-destination",
+                        //                                 // },
+                        // 
+                        //                                 {
+                        //                                     type: "scale",
+                        //                                     id: "earth-scale1",
+                        //                                     x: earth_radius_km,
+                        //                                     y: earth_radius_km,
+                        //                                     z: earth_radius_km,
+                        // 
+                        //                                     nodes: [
+                        // 
+                        //                                         {
+                        //                                             type: "rotate",
+                        //                                             id: 'earth-rotation2',
+                        //                                             angle: 0,
+                        //                                             y: 1.0,
+                        // 
+                        //                                             nodes: [ 
+                        // 
+                        //                                                 { type: "sphere", id: "esphere1" },
+                        // 
+                        //                                             ]
+                        //                                         }
+                        //                                     ]
+                        //                                 },
+                        // 
+                        //                                 {
+                        //                                     type: "texture",
+                        // 
+                        //                                     nodes: [
+                        // 
+                        //                                         {
+                        //                                             type: "selector",
+                        //                                             id: "earthAxisSelector1",
+                        //                                             selection: [1],
+                        // 
+                        //                                             nodes: [
+                        // 
+                        //                                                 // 0: no axis indicator
+                        //                                                 { },
+                        // 
+                        //                                                 // 1: display axis indicator
+                        //                                                 {
+                        // 
+                        //                                                     type: "scale",
+                        //                                                     x: earth_radius_km * 0.02,
+                        //                                                     y: earth_radius_km * 1.2,
+                        //                                                     z: earth_radius_km * 0.02,
+                        // 
+                        //                                                     nodes: [ { type: "sphere" } ]
+                        //                                                 }
+                        //                                             ]
+                        //                                         }
+                        //                                     ]
+                        //                                 }
+                        //                             ]
+                        //                         }
+                        //                     ]
+                        //                 }
+                        //             ]
+                        //         }
+                        //     ]
+                        // }
                     ]
                 }
             ]
