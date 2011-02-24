@@ -108,7 +108,7 @@ seasons.Scene = function(options) {
         this.choose_tilt   = document.getElementById(this.choose_tilt);
     };
 
-    this.earth_position      = SceneJS.withNode(options.earth_postion || "earth-position");
+    this.earth_position      = SceneJS.withNode(options.earth_position || "earth-position");
     this.earth_rotation      = SceneJS.withNode(options.earth_rotation || "earth-rotation");
     
     if (options.earth_sun_line === false) {
@@ -271,19 +271,19 @@ seasons.Scene.prototype._updateTilt = function(tilt) {
     }
 };
 
-seasons.Scene.prototype.get_earth_postion = function() {
+seasons.Scene.prototype.get_earth_position = function() {
     var ep = this.earth_position.get();
     return [ep.x, ep.y, ep.z];
 }
 
-seasons.Scene.prototype.set_earth_postion = function(newpos) {
+seasons.Scene.prototype.set_earth_position = function(newpos) {
     this.earth_position.set({ x: newpos[0], y: newpos[1], z: newpos[2] })
 }
 
 seasons.Scene.prototype.get_normalized_earth_eye = function() {
     var normalized_eye = {};
     var eye = this.lookat.get("eye");
-    var ep = earth_position.get();
+    var ep = this.earth_position.get();
     normalized_eye.x = eye.x - ep.x;
     normalized_eye.y = eye.y - ep.y;
     normalized_eye.z = eye.z - ep.z;
@@ -292,7 +292,7 @@ seasons.Scene.prototype.get_normalized_earth_eye = function() {
 
 seasons.Scene.prototype.set_normalized_earth_eye = function(normalized_eye) {
     var eye = {}
-    var ep = earth_position.get();
+    var ep = this.earth_position.get();
     eye.x = normalized_eye.x + ep.x;
     eye.y = normalized_eye.y + ep.y;
     eye.z = normalized_eye.z + ep.z;
@@ -301,7 +301,7 @@ seasons.Scene.prototype.set_normalized_earth_eye = function(normalized_eye) {
 
 seasons.Scene.prototype.update_earth_look_at = function(normalized_eye) {
     var eye = {};
-    var ep = earth_position.get();
+    var ep = this.earth_position.get();
     eye.x = normalized_eye.x + ep.x;
     eye.y = normalized_eye.y + ep.y;
     eye.z = normalized_eye.z + ep.z;
@@ -446,7 +446,7 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
 
 seasons.Scene.prototype.earthPointer = function() {
     if (this.earth_pointer) {
-        var earth_pos = this.get_earth_postion();
+        var earth_pos = this.get_earth_position();
         this.earth_pointer.set({ x: earth_pos[0], y: earth_pos[1], z: earth_pos[2] });
 
     }
@@ -483,7 +483,7 @@ seasons.Scene.prototype.earthLabel = function() {
         labelStr += sprintf("Earth Distance: %6.0f km<br>", edist / factor);
         labelStr += sprintf("Solar Radiation:  %4.1f W/m2<br>", solar_flux);
         if (this.debugging) {
-            var earth_pos = this.get_earth_postion();
+            var earth_pos = this.get_earth_position();
             var eye_pos = this.look.get("eye");
             var look_pos = this.look.get("look");
 
