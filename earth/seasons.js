@@ -62,10 +62,14 @@ seasons.Scene = function(options) {
         this.orbitGridSelector  = SceneJS.withNode(options.orbitGridSelector || "orbit-grid-selector");
     };
         
+    if (options.earth_tilt !== false) {
+        this.earth_tilt  = SceneJS.withNode(options.earth_tilt || "earthRotationalAxisQuaternion");
+    };
+
     this.look_at_selection  = (options.look_at_selection || 'orbit');
     
     if (options.latitude_line) {
-        this.latitude_line = new LatitudeLine("latitude-line-destination")
+        this.latitude_line = new LatitudeLine(options.latitude_line)
     };
 
     if (options.earth_surface_location) {
@@ -141,6 +145,29 @@ seasons.Scene = function(options) {
 
     this.normalized_earth_eye_side =   normalized_initial_earth_eye_side;
     this.normalized_earth_eye_top  =   normalized_initial_earth_eye_side;
+
+    // Some useful variables
+    
+    this.month_data = {
+        "jan": { index:  0, num:   1, short_name: 'Jan', long_name: 'January' },
+        "feb": { index:  1, num:   2, short_name: 'Feb', long_name: 'February' },
+        "mar": { index:  2, num:   3, short_name: 'Mar', long_name: 'March' },
+        "apr": { index:  3, num:   4, short_name: 'Apr', long_name: 'April' },
+        "may": { index:  4, num:   5, short_name: 'May', long_name: 'May' },
+        "jun": { index:  5, num:   6, short_name: 'Jun', long_name: 'June' },
+        "jul": { index:  6, num:   7, short_name: 'Jul', long_name: 'July' },
+        "aug": { index:  7, num:   8, short_name: 'Aug', long_name: 'August' },
+        "sep": { index:  8, num:   9, short_name: 'Sep', long_name: 'September' },
+        "oct": { index:  9, num:  10, short_name: 'Oct', long_name: 'October' },
+        "nov": { index: 10, num:  11, short_name: 'Nov', long_name: 'Novemeber' },
+        "dec": { index: 11, num:  12, short_name: 'Dec', long_name: 'December' }
+    };
+
+    this.month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+
+    this.seasons = ["Fall", "Winter", "Spring", "Summer"];
+    
+
 
     // Setting up callbacks for ...
     var self = this;
@@ -259,14 +286,13 @@ seasons.Scene.prototype.updateTilt = function(form_element) {
 
 seasons.Scene.prototype._updateTilt = function(tilt) {
     this.tilt = tilt;
-    var earth_tilt = SceneJS.withNode("earthRotationalAxisQuaternion");
     switch (tilt) {
         case "yes":
-            earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 23.5 });
+            this.earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 23.5 });
             break;
 
         case "no":
-            earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 0 });
+            this.earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 0 });
             break;
     }
 };
@@ -579,12 +605,12 @@ seasons.Scene.prototype.setEarthSunLine = function() {
     var distance2 = earth_ellipse_distance_from_sun_by_month(this.month) / 2;
     // var distance = earth_ephemerides_datum_by_month('jun').rg * au2km * factor;
     
-    switch(month) {
+    switch(this.month) {
         case "dec":
-        this.earth_sun_line_rotation.set("angle", 180);
+        this.earth_sun_line_rotation.set("angle", 1.0030);
         this.earth_sun_line_translation.set({ x: -distance2 , y: 0.0, z: 0 });
         scale.x = distance2;
-        switch(view) {
+        switch(this.look_at_selection) {
             case "orbit":
             scale.y = sun_earth_line_size_large;
             scale.z = sun_earth_line_size_large;
@@ -598,16 +624,18 @@ seasons.Scene.prototype.setEarthSunLine = function() {
         break;
 
         case "sep":
-        this.earth_sun_line_rotation.set("angle", 0);
+        this.earth_sun_line_rotation.set("angle", -2.4025);
         this.earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -distance2 });
-        scale.z = distance2;
-        switch(view) {
+        scale.z = distance2 * 1.1;
+        switch(this.look_at_selection) {
             case "orbit":
             scale.x = sun_earth_line_size_large;
             scale.y = sun_earth_line_size_large;
             break;
 
             case "earth":
+            // scale.x = sun_earth_line_size_large / 400;
+            // scale.y = sun_earth_line_size_large / 400;
             scale.x = sun_earth_line_size_med;
             scale.y = sun_earth_line_size_med;
             break;
@@ -618,7 +646,7 @@ seasons.Scene.prototype.setEarthSunLine = function() {
         this.earth_sun_line_rotation.set("angle", 0);
         this.earth_sun_line_translation.set({ x: distance2 , y: 0.0, z: 0 });
         scale.x = distance2;
-        switch(view) {
+        switch(this.look_at_selection) {
             case "orbit":
             scale.y = sun_earth_line_size_large;
             scale.z = sun_earth_line_size_large;
@@ -632,10 +660,10 @@ seasons.Scene.prototype.setEarthSunLine = function() {
         break;
 
         case "mar":
-        this.earth_sun_line_rotation.set("angle", 180);
+        this.earth_sun_line_rotation.set("angle", 182.4025);
         this.earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: distance2 });
-        scale.z = distance2;
-        switch(view) {
+        scale.z = distance2 * 1.0004;
+        switch(this.look_at_selection) {
             case "orbit":
             scale.x = sun_earth_line_size_large;
             scale.y = sun_earth_line_size_large;
@@ -649,6 +677,9 @@ seasons.Scene.prototype.setEarthSunLine = function() {
         break;
     }
     this.earth_sun_line_scale.set(scale);
+    if (this.linked_scene) {
+        this.linked_scene.setEarthSunLine();
+    };
 }
 
 
@@ -657,14 +688,17 @@ seasons.Scene.prototype.timeOfYearChange = function(form_element) {
 };
 
 seasons.Scene.prototype._timeOfYearChange = function(month) {
+    var mi_1 = this.month_data[this.month].index;
     this.month = month;
+    var mi_2 = this.month_data[month].index;
+    if (mi_2 < mi_1) mi_2 = mi_2 + 12;
+    var rotation_increment = (mi_2 - mi_1) * 30;
 
-    this.set_earth_postion(earth_ellipse_location_by_month(this.month));
+    this.set_earth_position(earth_ellipse_location_by_month(this.month));
 
     this._perspectiveChange(this.view_selection);
-    
-    set_earth_sun_line(this.month, this.look_at_selection);
-    
+    this.earth_rotation.set("angle", this.earth_rotation.get("angle") + rotation_increment);
+    this.setEarthSunLine();
     this.earthLabel();
     this.earthPointer();
 
