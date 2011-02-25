@@ -22,23 +22,23 @@ var LatitudeLine = function(parentNodeId) {
         nodes: [
 
 
-            {
-                type: "light",
-                mode:                 "dir",
-                color:                  {r: 0.1, g: 0.1, b: 0.1},
-                diffuse:                true,
-                specular:               true,
-                dir:                    { x: -1.0, y: -1.0, z: -1.0 }
-            },
-            
-            {
-                type: "light",
-                mode:                 "dir",
-                color:                  {r: 0.1, g: 0.1, b: 0.1},
-                diffuse:                true,
-                specular:               true,
-                dir:                    { x: 1.0, y: 1.0, z: 1.0 }
-            },
+            // {
+            //     type: "light",
+            //     mode:                 "dir",
+            //     color:                  {r: 0.1, g: 0.1, b: 0.1},
+            //     diffuse:                true,
+            //     specular:               true,
+            //     dir:                    { x: -1.0, y: -1.0, z: -1.0 }
+            // },
+            // 
+            // {
+            //     type: "light",
+            //     mode:                 "dir",
+            //     color:                  {r: 0.1, g: 0.1, b: 0.1},
+            //     diffuse:                true,
+            //     specular:               true,
+            //     dir:                    { x: 1.0, y: 1.0, z: 1.0 }
+            // },
             
             {
                 type: "light",
