@@ -989,6 +989,7 @@ var scene3 = new seasons.Scene({
     choose_month:                "choose-month",
     choose_tilt:                 "choose-tilt",
     linked_scene:                scene1,
+    earth_surface_location:      true,
     earth_pointer:               false,
     earth_label:                 false,
     earth_info_label:            "earth-info-label3",
@@ -1082,8 +1083,12 @@ function updateLatitudeLineAndCity() {
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
     var city_location = city.location;
-    scene3.latitude_line.setLatitude(city_location.signed_latitude);
-    scene3.earth_surface_location.setLocation(city_location.signed_latitude, city_location.signed_longitude)
+    if (scene3.latitude_line) {
+        scene3.latitude_line.setLatitude(city_location.signed_latitude);
+    };
+    if (scene3.earth_surface_location) {
+        scene3.earth_surface_location.setLocation(city_location.signed_latitude, city_location.signed_longitude)
+    };
 };
 
 selected_city_latitude.onchange = updateLatitudeLineAndCity;
