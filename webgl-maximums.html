@@ -1,0 +1,81 @@
+
+<html>
+
+<head>
+<title>WebGL Maximums</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<script type="text/javascript">
+
+  // MAX_COMBINED_TEXTURE_IMAGE_UNITS  long
+  // MAX_CUBE_MAP_TEXTURE_SIZE long
+  // MAX_FRAGMENT_UNIFORM_VECTORS  long
+  // MAX_RENDERBUFFER_SIZE long
+  // MAX_TEXTURE_IMAGE_UNITS long
+  // MAX_TEXTURE_SIZE  long
+  // MAX_VARYING_VECTORS long
+  // MAX_VERTEX_ATTRIBS  long
+  // MAX_VERTEX_TEXTURE_IMAGE_UNITS  long
+  // MAX_VERTEX_UNIFORM_VECTORS  long
+  // MAX_VIEWPORT_DIMS Int32Array (with 2 elements)
+
+  var webgl_limits = [
+    ["MAX_COMBINED_TEXTURE_IMAGE_UNITS", ""],
+    ["MAX_CUBE_MAP_TEXTURE_SIZE",        ""],
+    ["MAX_FRAGMENT_UNIFORM_VECTORS",     ""],
+    ["MAX_RENDERBUFFER_SIZE",            ""],
+    ["MAX_TEXTURE_IMAGE_UNITS",          ""],
+    ["MAX_TEXTURE_SIZE",                 ""],
+    ["MAX_VARYING_VECTORS",              ""],
+    ["MAX_VERTEX_ATTRIBS",               ""],
+    ["MAX_VERTEX_TEXTURE_IMAGE_UNITS",   ""],
+    ["MAX_VERTEX_UNIFORM_VECTORS",       ""],
+    ["MAX_VIEWPORT_DIMS",                ""]
+  ];
+  
+  
+  var gl;
+  function initGL(canvas) {
+    try {
+      gl = canvas.getContext("experimental-webgl");
+      gl.viewportWidth = canvas.width;
+      gl.viewportHeight = canvas.height;
+    } catch(e) {
+    }
+    if (!gl) {
+      alert("Could not initialise WebGL, sorry :-(");
+    }
+  }
+
+  function getWebGLMaximums() {
+    var i, j, limit, value, results, item;
+    results = document.getElementById("results");
+    for (i = 0; i < webgl_limits.length; i++) {
+      limit = webgl_limits[i];
+      value = gl.getParameter(gl[limit[0]]);
+      if (value instanceof Int32Array) {
+        limit[1] = value[0] + ', ' + value[1];
+      } else {
+        limit[1] = value;
+      }
+      item = document.createElement("li");
+      item.innerHTML = limit[0] + ': ' + limit[1];
+      results.appendChild(item);
+    }
+  };
+  
+  function webGLStart() {
+    var canvas = document.getElementById("canvas");
+    initGL(canvas);
+    getWebGLMaximums();
+  }
+
+</script>
+
+<body onload="webGLStart();">
+  <ul id="results">
+  </ul>
+  <canvas id="canvas" style="border: none;" width="100" height="100"></canvas>
+</body>
+
+</html>
