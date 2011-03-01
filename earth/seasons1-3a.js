@@ -1002,25 +1002,53 @@ var scene3 = new seasons.Scene({
 
 // scene1.linked_scene = scene3;
 
-window.render = function() {
-    SceneJS.withNode("theScene3").render();
-    SceneJS.withNode("theScene1").render();
-    if (earth_rotation.checked) {
-        scene3.earth_rotation.set("angle", scene3.earth_rotation.get("angle") + 0.5);
+function seasonsRender() {
+    scene1.render();
+    scene3.render();
+};
+
+function seasonsAnimate(t) {
+    sampleTime = new Date().getTime();
+    if (keepAnimating) requestAnimFrame(seasonsAnimate);
+    if (sampleTime > nextAnimationTime) {
+        nextAnimationTime = nextAnimationTime + updateInterval;
+        if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
+        if (earth_rotation.checked) {
+            scene3.earth_rotation.set("angle", scene3.earth_rotation.get("angle") + 0.25);
+        }
+        seasonsRender();
     }
 };
 
 SceneJS.bind("error", function() {
-    window.clearInterval(pInterval);
+    keepAnimating = false;
 });
 
 SceneJS.bind("reset", function() {
-    window.clearInterval(pInterval);
+    keepAnimating = false;
 });
 
-var pInterval = setInterval("window.render()", 60);
+window.requestAnimFrame = (function() {
+  return window.requestAnimationFrame ||
+         window.webkitRequestAnimationFrame ||
+         window.mozRequestAnimationFrame ||
+         window.oRequestAnimationFrame ||
+         window.msRequestAnimationFrame ||
+         function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+           window.setTimeout(callback, 1000/60);
+         };
+})();
 
-var zBufferDepth = 0;
+var updateRate = 30;
+var updateInterval = 1000/updateRate;
+var nextAnimationTime = new Date().getTime(); + updateInterval;
+var keepAnimating = true;
+
+requestAnimFrame(seasonsAnimate);
+
+//
+// city data experiment table and graph
+//
 
 var selected_city_latitude = document.getElementById("selected-city-latitude");
 var city_option;
