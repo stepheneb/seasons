@@ -366,7 +366,7 @@ seasons.Scene.prototype.mouseOut = function(event, element) {
 seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch, linked) {
     if (this.dragging) {
 
-        var look, eye, eye4, eye4dup, neweye;
+        var look, eye, eye4, neweye;
         var up_downQ, up_downQM, left_rightQ, left_rightQM;
         var f, up_down_axis, angle, new_yaw, new_pitch;
         
@@ -406,7 +406,6 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
                     sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]));
 
                 eye4 = SceneJS._math_dupMat4(neweye);
-                eye4dup = SceneJS._math_dupMat4(eye4);
 
                 up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : this.sun_pitch });
                 up_downQM = up_downQ.getMatrix();
@@ -448,7 +447,6 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
                     sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]));
 
                 eye4 = SceneJS._math_dupMat4(neweye);
-                eye4dup = SceneJS._math_dupMat4(eye4);
 
                 up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : this.earth_pitch });
                 up_downQM = up_downQ.getMatrix();

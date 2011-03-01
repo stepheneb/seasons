@@ -563,7 +563,7 @@ function mouseMove(event) {
         document.onselectstart = function(){ return false; }
         canvas.style.cursor = "move";
 
-        var eye, eye4, eye4dup, neweye;
+        var eye, eye4, neweye;
 
         var up_downQ, up_downQM, left_rightQ, left_rightQM;
 
@@ -590,7 +590,6 @@ function mouseMove(event) {
             console.log("dragging: yaw: " + sun_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
 
             eye4 = SceneJS._math_dupMat4(neweye);
-            eye4dup = SceneJS._math_dupMat4(eye4);
 
             up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : sun_pitch });
             up_downQM = up_downQ.getMatrix();
@@ -613,7 +612,6 @@ function mouseMove(event) {
             console.log("dragging: yaw: " + earth_yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
 
             eye4 = SceneJS._math_dupMat4(neweye);
-            eye4dup = SceneJS._math_dupMat4(eye4);
 
             up_downQ = new SceneJS.Quaternion({ x : left_rightQM[0], y : 0, z : left_rightQM[2], angle : earth_pitch });
             up_downQM = up_downQ.getMatrix();
