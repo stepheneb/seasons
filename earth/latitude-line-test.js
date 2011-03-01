@@ -1,7 +1,7 @@
 var deg2rad = Math.PI/180;
 
-var radius = 5;
-var dark_side = 0.2;
+var radius = 6;
+var dark_side = 0.3;
 var latitude = 42;
 
 var initial_eye = { x: 0, y: 2, z: 15 };
@@ -212,7 +212,7 @@ SceneJS.createNode({
 
 SceneJS.setDebugConfigs({
     compilation : {
-        enabled : true
+        enabled : false
     }
 });
 
@@ -235,6 +235,9 @@ function sampleAnimate(t) {
         nextAnimationTime = nextAnimationTime + updateInterval;
         if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
         angle.set("angle", angle.get("angle") + 0.25);
+        // yaw = yaw + 0.25;
+        // var neweye = newEye2(yaw);
+        // look_at.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
         sampleRender();
     }
 };
@@ -303,10 +306,34 @@ function newEye2(yaw) {
     return neweye;
 };
 
+function newEye3(yaw, pitch) {
+    var eye4 = [initial_eye.x, initial_eye.y, initial_eye.z, 1];
+    var left_rightQ =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
+    var left_rightQM = SceneJS._math_newMat4FromQuaternion(left_rightQ);
+    var neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
+
+    var up_downQ =  SceneJS._math_angleAxisQuaternion(left_rightQM[0], 0, left_rightQM[2], pitch);
+    var up_downQM = SceneJS._math_newMat4FromQuaternion(up_downQ);
+    neweye = SceneJS._math_mulMat4v4(up_downQM, neweye);
+    return neweye;
+};
+
 function setLatitude(latitude) {
     latitude_translate.set({ x: 0, y: radius * Math.sin(latitude * deg2rad), z: 0 });
     var scale = Math.cos(latitude * deg2rad);
     latitude_scale.set({ x: scale, y: 1.0, z: scale });
+};
+
+function incrementLatitude() {
+    latitude += 1;
+    if (latitude > 90) latitude = 90;
+    setLatitude(latitude);
+};
+
+function decrementLatitude() {
+    latitude -= 1;
+    if (latitude < -90) latitude = -90;
+    setLatitude(latitude);
 };
 
 function mouseMove(event) {
@@ -316,21 +343,42 @@ function mouseMove(event) {
         pitch += (event.clientY - lastY) * -0.2;
         lastX = event.clientX;
         lastY = event.clientY;
-        
-        var neweye = newEye2(yaw);
+
+        // var neweye = newEye2(yaw);
+        var neweye = newEye3(yaw, pitch);
 
         look_at.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
         
-        setLatitude(((pitch + 90) % 180) - 90);
+        // setLatitude(((pitch + 90) % 180) - 90);
         
         // console.log("dragging: yaw: " + sprintf("%3.0f", yaw) + ", eye: x: " + 
         //     sprintf("%3.1f", neweye[0]) + " y: " + sprintf("%3.1f", neweye[1]) + " z: " + sprintf("%3.1f", neweye[2]));
         // console.log("");
 
-        requestAnimFrame(sampleAnimate);
+        if (!keepAnimating) requestAnimFrame(sampleAnimate);
     }
 }
 
 canvas.addEventListener('mousedown', mouseDown, true);
 canvas.addEventListener('mousemove', mouseMove, true);
 canvas.addEventListener('mouseup', mouseUp, true);
+
+function handleArrowKeys(evt) { 
+    evt = (evt) ? evt : ((window.event) ? event : null); 
+    if (evt) {
+        switch (evt.keyCode) {
+            case 37: break;
+            case 38: 
+                incrementLatitude(); 
+                evt.preventDefault();
+                break;
+            case 39: break;
+            case 40: 
+                decrementLatitude();
+                evt.preventDefault();
+                break;
+        };
+    };
+};
+
+document.onkeydown = handleArrowKeys;
