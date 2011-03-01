@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Latitude Line Test (scenejs 0.7.9)</title>
+    <link href="../stylesheets/style.css"        rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../lib/scenejs-0.7.9/scenejs.js"></script>
+    <script type="text/javascript" src="../lib/glmatrix.js"></script>
+    <script type="text/javascript" src="../lib/sprintf.js"></script>
+</head>
+<div id="container">
+  <div id="header-inner">
+    <h1 id="title">Latitude Line Test (scenejs 0.7.9)</h1>
+    <p>
+      In this UI experiment the Earth is stationary, tilted and illuminated as if it was June 21. 
+      Your location is what changes when either arrow-keys or dragging is used.
+    </p>
+    <p>
+      Either drag or use the arrows keys to change the location you are viewing the Earth from.
+      Use the command or control keys along with the up or down arrows to move closer or further away from the Earth
+    </p>
+    <p>
+      Use shift and up or down arrow to adjust the latitude line.
+    </p>
+  </div>
+  <div id="content">
+    <div id="webglCanvasContainer">
+      <canvas id="theCanvas" height="700px", width="1000px"></canvas>
+    </div>
+    <div id="info">
+    <div id="log">
+      <h3>SceneJS Log 1</h3>
+      <div id="theLoggingDiv1"></div>
+    </div> 
+  </div>
+</div>
+<script type="text/javascript" src="latitude-line-test.js"></script>
+</body>
+</html>
