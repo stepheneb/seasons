@@ -279,6 +279,9 @@ seasons.Scene = function(options) {
     
 };
 
+seasons.Scene.prototype.render = function() {
+    this.scene.render();
+};
 
 seasons.Scene.prototype.updateTilt = function(form_element) {
     this._updateTilt(getRadioSelection(form_element));
