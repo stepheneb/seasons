@@ -3,8 +3,22 @@ var deg2rad = Math.PI/180;
 var radius = 6;
 var dark_side = 0.3;
 var latitude = 42;
+var distance = 15;
 
-var initial_eye = { x: 0, y: 2, z: 15 };
+
+var initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, -10);
+var initial_eye_mat4 = SceneJS._math_newMat4FromQuaternion(initial_eye_quat);
+var initial_eye_vec4 = SceneJS._math_mulMat4v4(initial_eye_mat4, [0, 0, distance, 1]);
+var initial_eye =      { x: initial_eye_vec4[0], y: initial_eye_vec4[1], z: initial_eye_vec4[2] };
+
+function update_initial_eye(d) {
+    if (d < (radius + 2)) d = radius + 1;
+    distance = d;
+    initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, -10);
+    initial_eye_mat4 = SceneJS._math_newMat4FromQuaternion(initial_eye_quat);
+    initial_eye_vec4 = SceneJS._math_mulMat4v4(initial_eye_mat4, [0, 0, distance, 1]);
+    initial_eye =      { x: initial_eye_vec4[0], y: initial_eye_vec4[1], z: initial_eye_vec4[2] };
+}
 
 SceneJS.createNode({
     type: "scene",
@@ -307,18 +321,19 @@ function newEye2(yaw) {
 };
 
 function newEye3(yaw, pitch) {
-    var eye4 = [initial_eye.x, initial_eye.y, initial_eye.z, 1];
-    var left_rightQ =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
-    var left_rightQM = SceneJS._math_newMat4FromQuaternion(left_rightQ);
-    var neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
-
+    var new_eye_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
+    var new_eye_mat4 = SceneJS._math_newMat4FromQuaternion(new_eye_quat);
+    var neweye = SceneJS._math_mulMat4v4(new_eye_mat4, initial_eye_vec4);
     if (pitch > 80)  pitch =  80;
     if (pitch < -80) pitch = -80;
-    
-    var up_downQ =  SceneJS._math_angleAxisQuaternion(left_rightQM[0], 0, left_rightQM[2], pitch);
-    var up_downQM = SceneJS._math_newMat4FromQuaternion(up_downQ);
-    neweye = SceneJS._math_mulMat4v4(up_downQM, neweye);
+    var up_down_quat =  SceneJS._math_angleAxisQuaternion(new_eye_mat4[0], 0, new_eye_mat4[2], pitch);
+    var up_down_mat4 = SceneJS._math_newMat4FromQuaternion(up_down_quat);
+    neweye = SceneJS._math_mulMat4v4(up_down_mat4, neweye);
     return neweye;
+};
+
+function update_look_at(neweye) {
+    look_at.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
 };
 
 function setLatitude(latitude) {
@@ -347,12 +362,8 @@ function mouseMove(event) {
         lastX = event.clientX;
         lastY = event.clientY;
 
-        // var neweye = newEye2(yaw);
         var neweye = newEye3(yaw, pitch);
-
-        look_at.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        
-        // setLatitude(((pitch + 90) % 180) - 90);
+        update_look_at(neweye);
         
         // console.log("dragging: yaw: " + sprintf("%3.0f", yaw) + ", eye: x: " + 
         //     sprintf("%3.1f", neweye[0]) + " y: " + sprintf("%3.1f", neweye[1]) + " z: " + sprintf("%3.1f", neweye[2]));
@@ -370,15 +381,54 @@ function handleArrowKeys(evt) {
     evt = (evt) ? evt : ((window.event) ? event : null); 
     if (evt) {
         switch (evt.keyCode) {
-            case 37: break;
-            case 38: 
-                incrementLatitude(); 
-                evt.preventDefault();
+            case 37:                                    // left arrow
+                if (evt.metaKey || evt.ctrlKey) {
+                    // evt.preventDefault();
+                } else {
+                    yaw -= 2; 
+                    update_look_at(newEye3(yaw, pitch));
+                    evt.preventDefault();
+                }
                 break;
-            case 39: break;
-            case 40: 
-                decrementLatitude();
-                evt.preventDefault();
+
+            case 38:                                    // up arrow
+                if (evt.metaKey || evt.ctrlKey) {
+                    update_initial_eye(distance - 1);
+                    update_look_at(newEye3(yaw, pitch));
+                    evt.preventDefault();
+                } else if (evt.shiftKey) {
+                    incrementLatitude(); 
+                    evt.preventDefault();
+                } else {
+                    pitch -= 1; 
+                    update_look_at(newEye3(yaw, pitch));
+                    evt.preventDefault();
+                }
+                break;
+
+            case 39:                                    // right arrow
+                if (evt.metaKey || evt.ctrlKey) {
+                    // evt.preventDefault();
+                 } else {
+                     yaw += 2; 
+                     update_look_at(newEye3(yaw, pitch));
+                     evt.preventDefault();
+                 }
+                 break;
+
+            case 40:                                    // down arrow
+                if (evt.metaKey || evt.ctrlKey) {
+                    update_initial_eye(distance + 1);
+                    update_look_at(newEye3(yaw, pitch));
+                    evt.preventDefault();
+                } else if (evt.shiftKey) {
+                    decrementLatitude(); 
+                    evt.preventDefault();
+                } else {
+                    pitch += 1; 
+                    update_look_at(newEye3(yaw, pitch));
+                    evt.preventDefault();
+                }
                 break;
         };
     };
