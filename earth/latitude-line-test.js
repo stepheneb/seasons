@@ -312,6 +312,9 @@ function newEye3(yaw, pitch) {
     var left_rightQM = SceneJS._math_newMat4FromQuaternion(left_rightQ);
     var neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
 
+    if (pitch > 80)  pitch =  80;
+    if (pitch < -80) pitch = -80;
+    
     var up_downQ =  SceneJS._math_angleAxisQuaternion(left_rightQM[0], 0, left_rightQM[2], pitch);
     var up_downQM = SceneJS._math_newMat4FromQuaternion(up_downQ);
     neweye = SceneJS._math_mulMat4v4(up_downQM, neweye);
