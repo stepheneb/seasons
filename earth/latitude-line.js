@@ -40,21 +40,22 @@ var LatitudeLine = function(parentNodeId) {
             //     dir:                    { x: 1.0, y: 1.0, z: 1.0 }
             // },
             
-            {
-                type: "light",
-                mode:                 "dir",
-                color:                  {r: 1.0, g: 1.0, b: 1.0},
-                diffuse:                true,
-                specular:               true,
-                dir:                    { x: -1.0, y: 0.0, z: -1.0 }
-            },
+            // {
+            //     type: "light",
+            //     mode:                 "dir",
+            //     color:                  {r: 1.0, g: 1.0, b: 1.0},
+            //     diffuse:                true,
+            //     specular:               true,
+            //     dir:                    { x: -1.0, y: 0.0, z: -1.0 }
+            // },
 
             { 
                 type: "material",
                 baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
                 specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
-                specular:       10,
-                shine:          0.1,
+                specular:       1.0,
+                shine:          1.0,
+                emit: 10.0,
 
                 nodes: [
                     
