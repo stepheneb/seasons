@@ -365,24 +365,7 @@ function mouseUp() {
     dragging = false;
 }
 
-function newEye(yaw) {
-    var left_right_quat = quat4.create([0, 1, 0, (yaw % 360) * deg2rad]);
-    quat4.normalize(left_right_quat);
-    var left_right_mat4 = quat4.toMat4(left_right_quat);
-    var new_eye = [0, 0, 0];
-    mat4.multiplyVec3(left_right_mat4, initial_eye_vec3, new_eye);
-    return new_eye
-};
-
-function newEye2(yaw) {
-    var eye4 = [initial_eye.x, initial_eye.y, initial_eye.z, 1];
-    var left_rightQ =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
-    var left_rightQM = SceneJS._math_newMat4FromQuaternion(left_rightQ);
-    var neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
-    return neweye;
-};
-
-function newEye3(yaw, pitch) {
+function newEye(yaw, pitch) {
     var new_eye_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
     var new_eye_mat4 = SceneJS._math_newMat4FromQuaternion(new_eye_quat);
     var neweye = SceneJS._math_mulMat4v4(new_eye_mat4, initial_eye_vec4);
@@ -424,7 +407,7 @@ function mouseMove(event) {
         lastX = event.clientX;
         lastY = event.clientY;
 
-        var neweye = newEye3(yaw, pitch);
+        var neweye = newEye(yaw, pitch);
         update_look_at(neweye);
         
         // console.log("dragging: yaw: " + sprintf("%3.0f", yaw) + ", eye: x: " + 
@@ -448,7 +431,7 @@ function handleArrowKeys(evt) {
                     // evt.preventDefault();
                 } else {
                     yaw -= 2; 
-                    update_look_at(newEye3(yaw, pitch));
+                    update_look_at(newEye(yaw, pitch));
                     evt.preventDefault();
                 }
                 break;
@@ -463,7 +446,7 @@ function handleArrowKeys(evt) {
                     evt.preventDefault();
                 } else {
                     pitch -= 1; 
-                    update_look_at(newEye3(yaw, pitch));
+                    update_look_at(newEye(yaw, pitch));
                     evt.preventDefault();
                 }
                 break;
@@ -473,7 +456,7 @@ function handleArrowKeys(evt) {
                     // evt.preventDefault();
                  } else {
                      yaw += 2; 
-                     update_look_at(newEye3(yaw, pitch));
+                     update_look_at(newEye(yaw, pitch));
                      evt.preventDefault();
                  }
                  break;
@@ -488,7 +471,7 @@ function handleArrowKeys(evt) {
                     evt.preventDefault();
                 } else {
                     pitch += 1; 
-                    update_look_at(newEye3(yaw, pitch));
+                    update_look_at(newEye(yaw, pitch));
                     evt.preventDefault();
                 }
                 break;

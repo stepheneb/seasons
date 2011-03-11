@@ -909,6 +909,8 @@ function seasonsRender() {
     scene3.render();
 };
 
+var earth_rotation = document.getElementById("earth-rotation");
+
 function seasonsAnimate(t) {
     sampleTime = new Date().getTime();
     if (keepAnimating) requestAnimFrame(seasonsAnimate);
