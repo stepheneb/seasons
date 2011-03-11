@@ -1292,6 +1292,7 @@ function addExperimentData() {
     graph_checkbox.onchange = graph_checkbox_callback;
 
     city_data_table_body.appendChild(table_row);
+    SortableTable.load();
     return false;
 }
 
