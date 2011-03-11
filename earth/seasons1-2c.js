@@ -898,7 +898,6 @@ var scene3 = new seasons.Scene({
 // scene1.linked_scene = scene3;
 
 SceneJS.setDebugConfigs({
- 
     compilation : {
         enabled : false
     }
