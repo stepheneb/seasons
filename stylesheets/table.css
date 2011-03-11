@@ -31,11 +31,10 @@ thead, tfoot {
 }
 
 tr.rowodd {
-
 }
 
 tr {
-    height:; 1em;
+    height: 1em;
 }
 
 tr.roweven {
