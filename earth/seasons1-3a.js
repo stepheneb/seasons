@@ -1213,29 +1213,29 @@ function addExperimentData() {
     table_row = document.createElement('tr');
     table_data = document.createElement('td');
     if (selected_tilt.value == "yes") {
-        table_data.innerText = city.name;
+        table_data.textContent = city.name;
     } else {
-        table_data.innerText = city.name + ' no tilt';
+        table_data.textContent = city.name + ' no tilt';
     }
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
-    table_data.innerText = month.short_name;
+    table_data.textContent = month.short_name;
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
-    table_data.innerText = selected_tilt.value;
+    table_data.textContent = selected_tilt.value;
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
     
     ave_temp = calc_ave_temp(city.average_temperatures, month.index, selected_tilt.value);
-    if (use_fahrenheit) ave_temp = ave_temp * 9 / 5 + 32;
-    table_data.innerText = sprintf("%3.1f", ave_temp);
+    if (use_fahrenheit) ave_temp = Math.round(ave_temp * 9 / 5 + 32);
+    table_data.textContent = sprintf("%3.1f", ave_temp);
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
-    table_data.innerText = city_latitude_temperature_prediction.value;
+    table_data.textContent = city_latitude_temperature_prediction.value;
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
@@ -1246,12 +1246,12 @@ function addExperimentData() {
     for (i = 0; i < seasons.length; i++) {
         option = document.createElement('option');
         option.value = seasons[i];
-        option.innerText = seasons[i];
+        option.textContent = seasons[i];
         select.appendChild(option);
     };
     option = document.createElement('option');
     option.value = "I'm not sure";
-    option.innerText = "I'm not sure";
+    option.textContent = "I'm not sure";
     select.appendChild(option);
     table_data.appendChild(select);
     table_row.appendChild(table_data);
@@ -1304,11 +1304,11 @@ city_latitude_temperature.onsubmit = addExperimentData;
 var use_fahrenheit = true;
 
 if (use_fahrenheit) {
-    city_latitude_temperature_label.innerText = 
-    city_latitude_temperature_label.innerText.replace(/(C|F)$/, 'F')
+    city_latitude_temperature_label.textContent = 
+    city_latitude_temperature_label.textContent.replace(/(C|F)$/, 'F')
 } else {
-    city_latitude_temperature_label.innerText = 
-    city_latitude_temperature_label.innerText.replace(/(C|F)$/, 'C')    
+    city_latitude_temperature_label.textContent = 
+    city_latitude_temperature_label.textContent.replace(/(C|F)$/, 'C')    
 }
 
 var y_axis = { title: 'Temperature deg C', min: -30, max: 60 };

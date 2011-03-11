@@ -1069,21 +1069,21 @@ function addExperimentData() {
     
     table_row = document.createElement('tr');
     table_data = document.createElement('td');
-    table_data.innerText = city.name;
+    table_data.textContent = city.name;
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
-    table_data.innerText = month.short_name;
+    table_data.textContent = month.short_name;
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
     var ave_temp = city.average_temperatures[month.index];
     if (use_fahrenheit) ave_temp = ave_temp * 9 / 5 + 32;
-    table_data.innerText = sprintf("%3.1f", ave_temp);
+    table_data.textContent = sprintf("%3.1f", ave_temp);
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
-    table_data.innerText = city_latitude_temperature_prediction.value;
+    table_data.textContent = city_latitude_temperature_prediction.value;
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
@@ -1094,12 +1094,12 @@ function addExperimentData() {
     for (i = 0; i < seasons.length; i++) {
         option = document.createElement('option');
         option.value = seasons[i];
-        option.innerText = seasons[i];
+        option.textContent = seasons[i];
         select.appendChild(option);
     };
     option = document.createElement('option');
     option.value = "I'm not sure";
-    option.innerText = "I'm not sure";
+    option.textContent = "I'm not sure";
     select.appendChild(option);
     table_data.appendChild(select);
     table_row.appendChild(table_data);
@@ -1153,11 +1153,11 @@ city_latitude_temperature.onsubmit = addExperimentData;
 var use_fahrenheit = true;
 
 if (use_fahrenheit) {
-    city_latitude_temperature_label.innerText = 
-    city_latitude_temperature_label.innerText.replace(/(C|F)$/, 'F')
+    city_latitude_temperature_label.textContent = 
+    city_latitude_temperature_label.textContent.replace(/(C|F)$/, 'F')
 } else {
-    city_latitude_temperature_label.innerText = 
-    city_latitude_temperature_label.innerText.replace(/(C|F)$/, 'C')    
+    city_latitude_temperature_label.textContent = 
+    city_latitude_temperature_label.textContent.replace(/(C|F)$/, 'C')    
 }
 
 var y_axis = { title: 'Temperature deg C', min: -30, max: 60 };
