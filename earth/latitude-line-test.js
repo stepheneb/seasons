@@ -5,9 +5,9 @@ var dark_side = 0.3;
 var latitude = 42;
 var distance = 15;
 
-var milky_way_apparent_radius = 100;
+var milky_way_apparent_radius = 1000;
 
-var initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, -10);
+var initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, 0);
 var initial_eye_mat4 = SceneJS._math_newMat4FromQuaternion(initial_eye_quat);
 var initial_eye_vec4 = SceneJS._math_mulMat4v4(initial_eye_mat4, [0, 0, distance, 1]);
 var initial_eye =      { x: initial_eye_vec4[0], y: initial_eye_vec4[1], z: initial_eye_vec4[2] };
@@ -15,7 +15,7 @@ var initial_eye =      { x: initial_eye_vec4[0], y: initial_eye_vec4[1], z: init
 function update_initial_eye(d) {
     if (d < (radius + 2)) d = radius + 1;
     distance = d;
-    initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, -10);
+    initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, 0);
     initial_eye_mat4 = SceneJS._math_newMat4FromQuaternion(initial_eye_quat);
     initial_eye_vec4 = SceneJS._math_mulMat4v4(initial_eye_mat4, [0, 0, distance, 1]);
     initial_eye =      { x: initial_eye_vec4[0], y: initial_eye_vec4[1], z: initial_eye_vec4[2] };
@@ -40,6 +40,7 @@ SceneJS.createNode({
 
                 {
                     type: "camera",
+                    id: "camera",
                     optics: {
                         type: "perspective",
                         fovy: 50.0,
@@ -345,15 +346,19 @@ requestAnimFrame(sampleAnimate);
 
 var yaw = 0;
 var pitch = 0;
+var rotation = 0;
+
 var lastX;
 var lastY;
 var dragging = false;
 
 var look_at = SceneJS.withNode("lookAt");
+var camera = SceneJS.withNode("camera");
+
 var latitude_translate = SceneJS.withNode("latitude-translate");
 var latitude_scale     = SceneJS.withNode("latitude-scale");
 
-var canvas = document.getElementById("theCanvas");
+var the_canvas = document.getElementById("theCanvas");
 
 function mouseDown(event) {
     lastX = event.clientX;
@@ -365,21 +370,55 @@ function mouseUp() {
     dragging = false;
 }
 
-function newEye(yaw, pitch) {
-    var new_eye_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
-    var new_eye_mat4 = SceneJS._math_newMat4FromQuaternion(new_eye_quat);
-    var neweye = SceneJS._math_mulMat4v4(new_eye_mat4, initial_eye_vec4);
+// function newEye(yaw, pitch) {
+//     var new_eye_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
+//     var new_eye_mat4 = SceneJS._math_newMat4FromQuaternion(new_eye_quat);
+//     var neweye = SceneJS._math_mulMat4v4(new_eye_mat4, initial_eye_vec4);
+//     if (pitch > 80)  pitch =  80;
+//     if (pitch < -80) pitch = -80;
+//     var up_down_quat =  SceneJS._math_angleAxisQuaternion(new_eye_mat4[0], 0, new_eye_mat4[2], pitch);
+//     var up_down_mat4 = SceneJS._math_newMat4FromQuaternion(up_down_quat);
+//     neweye = SceneJS._math_mulMat4v4(up_down_mat4, neweye);
+//     return neweye;
+// };
+
+
+// function newEye(yaw, pitch) {
+//     var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
+//     var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
+//     if (pitch > 80)  pitch =  80;
+//     if (pitch < -80) pitch = -80;
+//     var pitch_quat =  SceneJS._math_angleAxisQuaternion(yaw_mat4[0], 0, yaw_mat4[2], pitch);
+//     var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
+//     var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
+//     var neweye = SceneJS._math_mulMat4v4(result_mat4, initial_eye_vec4);
+//     return neweye;
+// };
+// 
+
+function updateLookAt() {
+    var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
+    var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
     if (pitch > 80)  pitch =  80;
     if (pitch < -80) pitch = -80;
-    var up_down_quat =  SceneJS._math_angleAxisQuaternion(new_eye_mat4[0], 0, new_eye_mat4[2], pitch);
-    var up_down_mat4 = SceneJS._math_newMat4FromQuaternion(up_down_quat);
-    neweye = SceneJS._math_mulMat4v4(up_down_mat4, neweye);
-    return neweye;
+    var pitch_quat =  SceneJS._math_angleAxisQuaternion(yaw_mat4[0], 0, yaw_mat4[2], pitch);
+    var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
+    var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
+    var neweye = SceneJS._math_mulMat4v4(result_mat4, initial_eye_vec4);
+    look_at.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
+    var rot_quat = SceneJS._math_angleAxisQuaternion(0, 1, 0, rotation); 
+    var rot_mat4 = SceneJS._math_newMat4FromQuaternion(rot_quat);
+    var new_look = SceneJS._math_mulMat4v4(rot_mat4, neweye);
+    new_look[0] = neweye[0] - new_look[0];
+    new_look[1] = neweye[1] - new_look[1];
+    new_look[2] = neweye[2] - new_look[2];
+    look_at.set("look", { x: new_look[0], y: new_look[1], z: new_look[2] });
+    infoLabel();
 };
 
-function update_look_at(neweye) {
-    look_at.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-};
+// function update_look_at(neweye) {
+//     look_at.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
+// };
 
 function setLatitude(latitude) {
     latitude_translate.set({ x: 0, y: radius * Math.sin(latitude * deg2rad), z: 0 });
@@ -407,46 +446,47 @@ function mouseMove(event) {
         lastX = event.clientX;
         lastY = event.clientY;
 
-        var neweye = newEye(yaw, pitch);
-        update_look_at(neweye);
-        
-        // console.log("dragging: yaw: " + sprintf("%3.0f", yaw) + ", eye: x: " + 
-        //     sprintf("%3.1f", neweye[0]) + " y: " + sprintf("%3.1f", neweye[1]) + " z: " + sprintf("%3.1f", neweye[2]));
-        // console.log("");
+        updateLookAt();
 
         if (!keepAnimating) requestAnimFrame(sampleAnimate);
     }
 }
 
-canvas.addEventListener('mousedown', mouseDown, true);
-canvas.addEventListener('mousemove', mouseMove, true);
-canvas.addEventListener('mouseup', mouseUp, true);
+the_canvas.addEventListener('mousedown', mouseDown, true);
+the_canvas.addEventListener('mousemove', mouseMove, true);
+the_canvas.addEventListener('mouseup', mouseUp, true);
 
-function handleArrowKeys(evt) { 
+function handleArrowKeys(evt) {
+    var distanceIncrementFactor = 40;
     evt = (evt) ? evt : ((window.event) ? event : null); 
     if (evt) {
         switch (evt.keyCode) {
             case 37:                                    // left arrow
                 if (evt.metaKey || evt.ctrlKey) {
                     // evt.preventDefault();
+                } else if (evt.shiftKey) {
+                    rotation += 2; 
+                    updateLookAt();
+                    evt.preventDefault();
                 } else {
                     yaw -= 2; 
-                    update_look_at(newEye(yaw, pitch));
+                    updateLookAt();
                     evt.preventDefault();
                 }
                 break;
 
             case 38:                                    // up arrow
                 if (evt.metaKey || evt.ctrlKey) {
-                    update_initial_eye(distance - 1);
-                    update_look_at(newEye3(yaw, pitch));
+                    var increment = distance / distanceIncrementFactor;
+                    update_initial_eye(distance - increment);
+                    updateLookAt();
                     evt.preventDefault();
-                } else if (evt.shiftKey) {
+                } else if (evt.altKey) {
                     incrementLatitude(); 
                     evt.preventDefault();
                 } else {
                     pitch -= 1; 
-                    update_look_at(newEye(yaw, pitch));
+                    updateLookAt();
                     evt.preventDefault();
                 }
                 break;
@@ -454,24 +494,29 @@ function handleArrowKeys(evt) {
             case 39:                                    // right arrow
                 if (evt.metaKey || evt.ctrlKey) {
                     // evt.preventDefault();
-                 } else {
-                     yaw += 2; 
-                     update_look_at(newEye(yaw, pitch));
-                     evt.preventDefault();
-                 }
-                 break;
+                } else if (evt.shiftKey) {
+                    rotation -= 2; 
+                    updateLookAt();
+                    evt.preventDefault();
+                } else {
+                    yaw += 2; 
+                    updateLookAt();
+                    evt.preventDefault();
+                }
+                break;
 
             case 40:                                    // down arrow
                 if (evt.metaKey || evt.ctrlKey) {
-                    update_initial_eye(distance + 1);
-                    update_look_at(newEye3(yaw, pitch));
+                    var increment = distance / distanceIncrementFactor;
+                    update_initial_eye(distance + increment);
+                    updateLookAt();
                     evt.preventDefault();
-                } else if (evt.shiftKey) {
+                } else if (evt.altKey) {
                     decrementLatitude(); 
                     evt.preventDefault();
                 } else {
                     pitch += 1; 
-                    update_look_at(newEye(yaw, pitch));
+                    updateLookAt();
                     evt.preventDefault();
                 }
                 break;
@@ -480,3 +525,53 @@ function handleArrowKeys(evt) {
 };
 
 document.onkeydown = handleArrowKeys;
+
+//
+// InfoLabel
+//
+
+var info_label = document.getElementById("info-label");
+var container = document.getElementById("container");
+
+function infoLabel() {
+    var getY = function getY(el) {
+        var ypos = 0;
+        while( el != null ) {
+            ypos += el.offsetTop;
+            el = el.offsetParent;
+        }
+        return ypos;
+    };
+    var getX = function getX(el) {
+        var xpos = 0;
+        while( el != null ) {
+            xpos += el.offsetLeft;
+            el = el.offsetParent;
+        }
+        return xpos;
+    };
+
+    if (info_label) {
+        var canvas_properties = the_canvas.getBoundingClientRect();
+        var container_properties = container.getBoundingClientRect();
+        info_label.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
+        info_label.style.left = canvas_properties.left + getX(the_canvas) + window.pageXOffset + 5 + "px";
+        // info_label.style.left = getX(this.canvas) + 5 + "px";
+        // info_label.style.left = "5px";
+        // info_label.style.top = getY(this.canvas) + 5 + "px";
+        info_label.style.left = getX(the_canvas) - getX(document.getElementById("content")) + 15 + "px";
+        var labelStr = "";
+        labelStr += sprintf("Pitch: %4.1f<br>", pitch);
+        labelStr += sprintf("Yaw:  %4.1f<br>", yaw);
+        labelStr += sprintf("Rot:  %4.1f<br>", rotation);
+        var eye = look_at.get("eye");
+        labelStr += sprintf("Eye:  x: %4.1f y: %4.1f z: %4.1f<br>", eye.x, eye.y, eye.z);
+        var look = look_at.get("look");
+        labelStr += sprintf("Look:  x: %4.1f y: %4.1f z: %4.1f<br>", look.x, look.y, look.z);
+        var up = look_at.get("up");
+        labelStr += sprintf("Up  x: %4.1f y: %4.1f z: %4.1f<br>", up.x, up.y, up.z);
+        info_label.innerHTML = labelStr;
+    };
+};
+
+infoLabel();
