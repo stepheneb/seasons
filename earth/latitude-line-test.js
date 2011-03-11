@@ -462,8 +462,10 @@ function handleArrowKeys(evt) {
     if (evt) {
         switch (evt.keyCode) {
             case 37:                                    // left arrow
-                if (evt.metaKey || evt.ctrlKey) {
+                if (evt.ctrlKey) {
                     // evt.preventDefault();
+                } else if (evt.metaKey || evt.altKey) {
+                    evt.preventDefault();
                 } else if (evt.shiftKey) {
                     rotation += 2; 
                     updateLookAt();
@@ -476,13 +478,15 @@ function handleArrowKeys(evt) {
                 break;
 
             case 38:                                    // up arrow
-                if (evt.metaKey || evt.ctrlKey) {
+                if (evt.ctrlKey) {
                     var increment = distance / distanceIncrementFactor;
                     update_initial_eye(distance - increment);
                     updateLookAt();
                     evt.preventDefault();
-                } else if (evt.altKey) {
+                } else if (evt.metaKey || evt.altKey) {
                     incrementLatitude(); 
+                    evt.preventDefault();
+                } else if (evt.shiftKey) {
                     evt.preventDefault();
                 } else {
                     pitch -= 1; 
@@ -492,8 +496,10 @@ function handleArrowKeys(evt) {
                 break;
 
             case 39:                                    // right arrow
-                if (evt.metaKey || evt.ctrlKey) {
+                if (evt.ctrlKey) {
                     // evt.preventDefault();
+                } else if (evt.metaKey || evt.altKey) {
+                    evt.preventDefault();
                 } else if (evt.shiftKey) {
                     rotation -= 2; 
                     updateLookAt();
@@ -506,13 +512,15 @@ function handleArrowKeys(evt) {
                 break;
 
             case 40:                                    // down arrow
-                if (evt.metaKey || evt.ctrlKey) {
+                if (evt.ctrlKey) {
                     var increment = distance / distanceIncrementFactor;
                     update_initial_eye(distance + increment);
                     updateLookAt();
                     evt.preventDefault();
-                } else if (evt.altKey) {
+                } else if (evt.metaKey || evt.altKey) {
                     decrementLatitude(); 
+                    evt.preventDefault();
+                } else if (evt.shiftKey) {
                     evt.preventDefault();
                 } else {
                     pitch += 1; 
