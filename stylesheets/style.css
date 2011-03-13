@@ -173,16 +173,19 @@ h4 {
 }
 
 .transparent-ui {
-    opacity: .5;
+    opacity: 0.3;
+}
+
+.transparent-ui:hover {
+    opacity: 0.6;
 }
 
 .label-container {
     z-index: 0;
 }
 
-.earth-info-label {
+.webgl-canvas-label {
     position: absolute;
-    width: 260px;
     font: 1.1em monospace;
     clear: both;
     padding: 8px;
@@ -199,6 +202,11 @@ h4 {
     border-top-left-radius: 5px 5px;
     border-top-right-radius: 5px 5px;
 }
+
+.webgl-canvas-label fieldset  {
+    color: white;
+}
+
 .checkbox, .radio {
   width: 19px;
   height: 25px;
@@ -229,14 +237,6 @@ canvas:hover {
     background: #ffffff;
     padding: 10px 15px 10px 15px;
     height: 3000px;
-}
-
-
-#content fieldset {
-    overflow: auto;
-    text-align: left;
-    margin: 0 auto;
-    padding: 10px 15px 10px 15px;
 }
 
 .glCanvasFullFrame {
@@ -338,9 +338,16 @@ canvas:hover {
     list-style-type: none;
 }
 
-#content fieldset  {
+/*fieldset {
+    overflow: auto;
+    text-align: left;
+    margin: 0 auto;
+    padding: 10px 15px 10px 15px;
+}
+*/
+
+fieldset  {
     line-height: 1.2em;
-    color: #444444 !important;
     margin-top: 5px;
     padding: 1.0em 0.5em 1.0em 0.5em;
     font-size: 90%;
@@ -348,22 +355,23 @@ canvas:hover {
     list-style-type: none;
 }
 
-#content .glCanvasQuarterFrame fieldset  {
+.glCanvasQuarterFrame fieldset  {
     font-size: 80%;
+    color: #444444 !important;
 }
 
-#content fieldset img {
+fieldset img {
     vertical-align: text-top;
     margin: 0px;
     padding: 0px;
 }
 
 
-#content fieldset label  {
+fieldset label  {
     margin: 2px 4px 2px 4px;
 }
 
-#content .glCanvasQuarterFrame fieldset label  {
+.glCanvasQuarterFrame fieldset label  {
     margin: 2px 2px 2px 2px;
 }
 

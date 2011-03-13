@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Latitude Line Test</title>
+    <title>Latitude/Longitude Line Test</title>
     <link href="../stylesheets/style.css"        rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="../lib/scenejs-0.8.0/scenejs.js"></script>
     <script type="text/javascript" src="../lib/glmatrix.js"></script>
@@ -10,30 +10,58 @@
 </head>
 <div id="container">
   <div id="header-inner">
-    <h1 id="title">Latitude Line Test</h1>
+    <h1 id="title">Latitude/Longitude Line Test</h1>
     <p>
-      In this UI experiment the Earth is stationary, tilted and illuminated as if it was June 21. 
+      In this UI experiment the Earth is stationary in it's orbit, and is tilted and illuminated as if the date is June 21.<br />
       Your location is what changes when either arrow-keys or dragging is used.
     </p>
     <p>
       Either <b>drag</b> with the mouse or use the <b>arrow</b> keys to change the location you are viewing the Earth from.<br />
       Use the <b>control</b> key along with the <b>up or down arrow</b> keys to move closer or further away from the Earth.<br />
       Use the <b>shift</b> key along with the <b>left or right arrow</b> keys to change the direction you are facing.<br />
-      Use the <b>alt or command</b> key along with the <b>up or down arrows</b> to adjust the latitude line.
+      Use the <b>alt or option</b> key along with the <b>arrows</b> keys to adjust the latitude or longitude lines.
     </p>
   </div>
   <div id="content">
     <div id="webglCanvasContainer">
       <canvas id="theCanvas" height="700px", width="1000px"></canvas>
+      <div id="info-label" class="webgl-canvas-label transparent-ui">
+        Show: <input id="info-view" type="checkbox"/>
+        <div id="info-content"></div>
+      </div>
+      <div id="controls-label" class="webgl-canvas-label transparent-ui" style="text-align:right">
+        <form id="show-me">
+          <fieldset>
+            <legend>Controls</legend>
+            <label>Rotation <input id="earth-rotation" type="checkbox"/></label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Grids</legend>
+            <label>Square <input id="earth-grid" type="checkbox"/></label><br />
+            <label>Rose <input id="earth-rose-grid" type="checkbox"/></label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Sun Rays</legend>
+            <label>Earth <input id="sun-earth-line" type="checkbox" checked/></label><br />
+            <label>Surface <input id="sun-surface-line" type="checkbox"/></label><br />
+            <label>Rays <input id="sun-rays" type="checkbox" /></label><br />
+          </fieldset>
+        </form>
+      </div>
+      <div id="debug-label" class="webgl-canvas-label transparent-ui">
+        Show debug output: <input id="debug-view" type="checkbox"/>
+        <div id="debug-content"></div>
+      </div>
     </div>
     <div id="info">
     <div id="log">
-      <h3>SceneJS Log 1</h3>
-      <div id="theLoggingDiv1"></div>
+      <h3>SceneJS Log</h3>
+      <div id="theLoggingDiv"></div>
     </div> 
   </div>
 </div>
-<div id="info-label" class="earth-info-label transparent-ui"></div>
 <script type="text/javascript" src="latitude-line-test.js"></script>
 </body>
 </html>
