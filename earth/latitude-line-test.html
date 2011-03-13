@@ -26,31 +26,38 @@
     <div id="webglCanvasContainer">
       <canvas id="theCanvas" height="700px", width="1000px"></canvas>
       <div id="info-label" class="webgl-canvas-label transparent-ui">
-        Show: <input id="info-view" type="checkbox"/>
-        <div id="info-content"></div>
+        Show: <input id="info-view" type="checkbox" checked/><div id="info-content"></div>
       </div>
-      <div id="controls-label" class="webgl-canvas-label transparent-ui" style="text-align:right">
+      <div id="controls-label" class="webgl-canvas-label transparent-ui">
         <form id="show-me">
           <fieldset>
             <legend>Controls</legend>
-            <label>Rotation <input id="earth-rotation" type="checkbox"/></label><br />
+            <label><input id="earth-rotation" type="checkbox"/> Rotation</label><br />
+            <label><input id="back-light" type="checkbox"/> Back Lighting</label><br />
           </fieldset>
           <br />
           <fieldset>
             <legend>Grids</legend>
-            <label>Square <input id="earth-grid" type="checkbox"/></label><br />
-            <label>Rose <input id="earth-rose-grid" type="checkbox"/></label><br />
+            <label><input id="earth-grid" type="checkbox"/> Square</label><br />
+            <label><input id="earth-rose-grid" type="checkbox"/> Rose</label><br />
           </fieldset>
           <br />
           <fieldset>
-            <legend>Sun Rays</legend>
-            <label>Earth <input id="sun-earth-line" type="checkbox" checked/></label><br />
-            <label>Surface <input id="sun-surface-line" type="checkbox"/></label><br />
-            <label>Rays <input id="sun-rays" type="checkbox" /></label><br />
+            <legend>Sun</legend>
+            <label><input id="sun-earth-line" type="checkbox"/> Center Ray</label><br />
+            <label><input id="sun-surface-line" type="checkbox"/> Point Ray</label><br />
+            <label><input id="sun-rays" type="checkbox"/> Many Rays</label><br />
+            <label><input id="sun-rise-set" type="checkbox" checked/> Rise/Set</label><br />
+            <label><input id="sun-noon-midnight" type="checkbox" checked/> Noon/Midnight</label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Latitude</legend>
+            <label><input id="lat-hour-markers" type="checkbox"/> Hour Markers</label><br />
           </fieldset>
         </form>
       </div>
-      <div id="debug-label" class="webgl-canvas-label transparent-ui">
+      <div id="debug-label" class="webgl-canvas-label transparent-ui" style="font-size:90%">
         Show debug output: <input id="debug-view" type="checkbox"/>
         <div id="debug-content"></div>
       </div>

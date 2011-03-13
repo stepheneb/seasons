@@ -8,7 +8,6 @@ var earth_orbital_radius = 150000000.0 / scale_factor;
 
 var milky_way_apparent_radius = earth_orbital_radius * 10;
 
-
 var sun = {
     pos: { x: 0, y: 0, z: 0 },
     radius: sun_diameter / 2
@@ -21,14 +20,17 @@ var earth = {
 };
 
 var dark_side_light = 0.25;
+var max_pitch = 85;
 
 var distance = earth.radius * 3;
+
+var surface_line_width = earth.radius / 200;
 
 var latitude  = 52;
 var longitude = 0;
 
-var yaw      = -20;
-var pitch    = -10;
+var yaw      = -60;
+var pitch    = -15;
 var rotation = 0;
 
 //
@@ -83,7 +85,7 @@ for (var i = 1; i < earth_rose_grid_points; i += 2) {
 };
 
 
-var latitude_rose_scale = earth.radius * 1.5;
+var latitude_rose_scale = earth.radius * 1.25;
 var latitude_rose_grid_positions = rose_grid(latitude_rose_scale, 24);
 var latitude_rose_grid_indices = [];
 var latitude_rose_grid_points = latitude_rose_grid_positions.length / 3;
@@ -98,19 +100,21 @@ for (var i = 1; i < latitude_rose_grid_points; i += 2) {
 var sun_rays = function() {
     var points = [];
     var x, y, z, rangle;
-    var density = 12;
+    var density = 36;
     var angle_distance = Math.PI * earth.radius / density;
     var angle_increment;
+    var angle = 0;
     points.push(sun.pos.x, sun.pos.y, sun.pos.z);
     for (var radius = earth.radius; radius > 0; radius -= angle_distance) {
-        angle_increment = 360 / (Math.PI * radius) / angle_distance
-        for (var angle = 0; angle <= 180; angle += angle_increment) {
-            rangle = angle * deg2rad;
+        angle_increment = 360 / ((Math.PI * radius) / angle_distance);
+        for (var a = angle; a <= 180; a += angle_increment) {
+            rangle = a * deg2rad;
             y = Math.sin(rangle) * radius;
             z = Math.cos(rangle) * radius;
             points.push(earth.pos.x,  y,  z);
             points.push(earth.pos.x, -y, -z);
         }
+        angle = a % 180;
     }
     return points;
 }
@@ -255,6 +259,7 @@ SceneJS.createNode({
 
                         {
                             type: "light",
+                            id:   "back-light1",
                             mode:                   "dir",
                             color:                  { r: dark_side_light, g: dark_side_light, b: dark_side_light },
                             diffuse:                true,
@@ -264,6 +269,7 @@ SceneJS.createNode({
         
                         {
                             type: "light",
+                            id:   "back-light2",
                             mode:                   "dir",
                             color:                  { r: dark_side_light, g: dark_side_light, b: dark_side_light },
                             diffuse:                true,
@@ -330,22 +336,47 @@ SceneJS.createNode({
                                 },
                                 
                                 // Sun Rays
+                                
                                 {
-                                    type: "selector",
-                                    id: "sun-rays-selector",
-                                    selection: [0],
-                                    nodes: [ 
+                                    type: "node",
 
-                                        // 0: off
-                                        {  },
+                                    flags: {
+                                        transparent: true
+                                    },
 
-                                        // 1: on
-                                        {
-                                            type: "geometry",
-                                            primitive: "lines",
+                                    nodes: [
+                                        { 
 
-                                            positions: sun_ray_positions,
-                                            indices :  sun_ray_indices
+                                            type: "material",
+                                            baseColor:      { r: 1.0, g: 0.95, b: 0.8 },
+                                            specularColor:  { r: 1.0, g: 0.95, b: 0.8 },
+                                            specular:       2.0,
+                                            shine:          2.0,
+                                            emit:           1.0,
+                                            alpha:          0.6,
+
+                                            nodes: [
+                                
+                                                {
+                                                    type: "selector",
+                                                    id: "sun-rays-selector",
+                                                    selection: [0],
+                                                    nodes: [ 
+
+                                                        // 0: off
+                                                        {  },
+
+                                                        // 1: on
+                                                        {
+                                                            type: "geometry",
+                                                            primitive: "lines",
+
+                                                            positions: sun_ray_positions,
+                                                            indices :  sun_ray_indices
+                                                        }
+                                                    ]
+                                                }
+                                            ]
                                         }
                                     ]
                                 },
@@ -361,6 +392,7 @@ SceneJS.createNode({
                                         {  },
 
                                         // 1: on
+                                        
                                         {
                                             type: "geometry",
                                             primitive: "lines",
@@ -419,7 +451,7 @@ SceneJS.createNode({
 
                                                         {  },
 
-                                                        // 1: on: quare grid for Earth view
+                                                        // 1: on: square grid for Earth view
 
                                                         {
                                                             nodes: [
@@ -435,9 +467,9 @@ SceneJS.createNode({
                                                                 // Latitude-like line in the ecliptic plane
                                                                 {
                                                                     type: "disk",
-                                                                    radius: earth.radius * 1.002,
-                                                                    innerRadius: earth.radius * 1.001,
-                                                                    height: earth.radius / 300,
+                                                                    radius: earth.radius + surface_line_width,
+                                                                    innerRadius: earth.radius,
+                                                                    height: surface_line_width,
                                                                     rings: 128
                                                                 }
                                                             ]
@@ -495,9 +527,9 @@ SceneJS.createNode({
                                                                 // Latitude-like line in the ecliptic plane
                                                                 {
                                                                     type: "disk",
-                                                                    radius: earth.radius * 1.002,
-                                                                    innerRadius: earth.radius * 1.001,
-                                                                    height: earth.radius / 300,
+                                                                    radius: earth.radius + surface_line_width,
+                                                                    innerRadius: earth.radius,
+                                                                    height: surface_line_width,
                                                                     rings: 128
                                                                 },
 
@@ -505,7 +537,7 @@ SceneJS.createNode({
                                                                     type: "disk",
                                                                     radius: earth_rose_scale,
                                                                     innerRadius: earth_rose_scale - 0.001,
-                                                                    height: earth.radius / 300,
+                                                                    height: surface_line_width,
                                                                     rings: 128
                                                                 }
                                                             ]
@@ -517,6 +549,133 @@ SceneJS.createNode({
                                     ]
                                 },
                                 
+                                // Longitude-like circle-line in the noon-midnight plane
+                                {
+                                    type: "node",
+
+                                    flags: {
+                                        transparent: true
+                                    },
+
+                                    nodes: [
+                                    
+                                        // Longitude-like circle-line in the noon-midnight plane
+                                        { 
+                                            type: "material",
+                                            baseColor:      { r: 0.6, g: 0.5, b: 0.02 },
+                                            specularColor:  { r: 0.6, g: 0.5, b: 0.02 },
+                                            specular:       1.0,
+                                            shine:          1.0,
+                                            emit:           0.5,
+                                            alpha:          0.6,
+
+                                            nodes: [
+                                    
+                                                {
+                                                    type: "selector",
+                                                    id: "sun-noon-midnight-selector",
+                                                    selection: [0],
+                                                    nodes: [ 
+
+                                                        // 0: off
+
+                                                        {  },
+
+                                                        // 1: on: sun noon-midnight indicator
+
+                                                        {
+                                                            type: "rotate", 
+                                                            x: 0.0,
+                                                            z: 0.0,
+                                                            y: 1.0,
+                                                            angle: 0,
+
+                                                            nodes: [
+
+                                                                {
+                                                                    type: "rotate", 
+                                                                    x: 1.0,
+                                                                    z: 0.0,
+                                                                    y: 0.0,
+                                                                    angle: 90,
+
+                                                                    nodes: [
+
+                                                                        {
+                                                                            type: "disk",
+                                                                            radius: earth.radius + surface_line_width * 2,
+                                                                            innerRadius: earth.radius + surface_line_width,
+                                                                            height: surface_line_width,
+                                                                            rings: 128
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+
+                                        // Longitude-like circle-line in the dawn-dusk plane
+                                        { 
+                                            type: "material",
+                                            baseColor:      { r: 0.6, g: 0.02, b: 0.5 },
+                                            specularColor:  { r: 0.6, g: 0.02, b: 0.5 },
+                                            specular:       1.0,
+                                            shine:          1.0,
+                                            emit:           0.5,
+                                            alpha:          0.3,
+
+                                            nodes: [
+                                    
+                                                {
+                                                    type: "selector",
+                                                    id: "sun-rise-set-selector",
+                                                    selection: [0],
+                                                    nodes: [ 
+
+                                                        // 0: off
+
+                                                        {  },
+
+                                                        // 1: on: sun rise/set indicator
+
+                                                        {
+                                                            type: "rotate", 
+                                                            x: 0.0,
+                                                            z: 0.0,
+                                                            y: 1.0,
+                                                            angle: 90,
+
+                                                            nodes: [
+
+                                                                {
+                                                                    type: "rotate", 
+                                                                    x: 1.0,
+                                                                    z: 0.0,
+                                                                    y: 0.0,
+                                                                    angle: 90,
+
+                                                                    nodes: [
+
+                                                                        {
+                                                                            type: "disk",
+                                                                            radius: earth.radius + surface_line_width * 2,
+                                                                            innerRadius: earth.radius + surface_line_width,
+                                                                            height: surface_line_width,
+                                                                            rings: 128
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
 
                                 // Everything under this node will be tilted 23.5 degrees
                                 {
@@ -554,24 +713,36 @@ SceneJS.createNode({
                                                             y: 1.0,
 
                                                             nodes: [
-                                                            
-                                                                
 
                                                                 {
                                                                     type: "disk",
-                                                                    radius: earth.radius * 1.002,
-                                                                    innerRadius: earth.radius * 1.002,
-                                                                    height: earth.radius / 200,
+                                                                    radius: earth.radius + surface_line_width,
+                                                                    innerRadius: earth.radius,
+                                                                    height: surface_line_width,
                                                                     rings: 128
                                                                 },
                                                                 
                                                                 {
-                                                                     type: "geometry",
-                                                                     primitive: "lines",
+                                                                    type: "selector",
+                                                                    id: "lat-hour-markers-selector",
+                                                                    selection: [0],
+                                                                    nodes: [ 
 
-                                                                     positions: latitude_rose_grid_positions,
-                                                                     indices : latitude_rose_grid_indices
-                                                                 }
+                                                                        // 0: off
+
+                                                                        {  },
+
+                                                                        // 1: on: sun rlatitude hour markers
+
+                                                                        {
+                                                                             type: "geometry",
+                                                                             primitive: "lines",
+
+                                                                             positions: latitude_rose_grid_positions,
+                                                                             indices : latitude_rose_grid_indices
+                                                                        }
+                                                                    ]
+                                                                }
                                                             ]
                                                         }
                                                     ]
@@ -617,9 +788,9 @@ SceneJS.createNode({
 
                                                                         {
                                                                             type: "disk",
-                                                                            radius: earth.radius * 1.005,
-                                                                            innerRadius: earth.radius * 1.004,
-                                                                            height: earth.radius / 200,
+                                                                            radius: earth.radius + surface_line_width,
+                                                                            innerRadius: earth.radius,
+                                                                            height: surface_line_width,
                                                                             rings: 128,
                                                                             sweep: 0.5,
                                                                         }
@@ -738,6 +909,28 @@ var keepAnimating = true;
 var earth_rotation = document.getElementById("earth-rotation");
 
 //
+// Back Lighting Handler
+//
+var back_light = document.getElementById("back-light");
+var back_light1 =  SceneJS.withNode("back-light1");
+var back_light2 =  SceneJS.withNode("back-light2");
+
+function backLightHandler() {
+    var colors;
+    if (back_light.checked) {
+        colors = { r: 2.0, g: 2.0, b: 2.0 };
+    } else {
+        colors = { r: dark_side_light, g: dark_side_light, b: dark_side_light };
+    };
+    back_light1.set("color", colors);
+    back_light2.set("color", colors);
+};
+
+back_light.onchange = backLightHandler;
+backLightHandler();
+
+
+//
 // Earth Square Grid Handler
 //
 var earth_grid = document.getElementById("earth-grid");
@@ -806,6 +999,57 @@ sun_surface_line.onchange = sunSurfaceLineHandler;
 sunSurfaceLineHandler();
 
 //
+// Sun rise/set surface indicator Handler
+//
+var sun_rise_set = document.getElementById("sun-rise-set");
+var sun_rise_set_selector =  SceneJS.withNode("sun-rise-set-selector");
+
+function sunRiseSetHandler() {
+    if (sun_rise_set.checked) {
+        sun_rise_set_selector.set("selection", [1]);
+    } else {
+        sun_rise_set_selector.set("selection", [0]);
+    };
+};
+
+sun_rise_set.onchange = sunRiseSetHandler;
+sunRiseSetHandler();
+
+//
+// Sun noon/midnight surface indicator Handler
+//
+var sun_noon_midnight = document.getElementById("sun-noon-midnight");
+var sun_noon_midnight_selector =  SceneJS.withNode("sun-noon-midnight-selector");
+
+function sunNoonMidnightHandler() {
+    if (sun_noon_midnight.checked) {
+        sun_noon_midnight_selector.set("selection", [1]);
+    } else {
+        sun_noon_midnight_selector.set("selection", [0]);
+    };
+};
+
+sun_noon_midnight.onchange = sunNoonMidnightHandler;
+sunNoonMidnightHandler();
+
+//
+// Latitude hour markers Handler
+//
+var lat_hour_markers = document.getElementById("lat-hour-markers");
+var lat_hour_markers_selector =  SceneJS.withNode("lat-hour-markers-selector");
+
+function latHourMarkersHandler() {
+    if (lat_hour_markers.checked) {
+        lat_hour_markers_selector.set("selection", [1]);
+    } else {
+        lat_hour_markers_selector.set("selection", [0]);
+    };
+};
+
+lat_hour_markers.onchange = latHourMarkersHandler;
+latHourMarkersHandler();
+
+//
 // Sun Rays Line Handler
 //
 var sun_rays = document.getElementById("sun-rays");
@@ -836,6 +1080,8 @@ function sampleAnimate(t) {
             angle.set("angle", angle.get("angle") + 0.25);
         }
         sampleRender();
+        if (debug_view.checked) debugLabel();
+        infoLabel();
     }
 };
 
@@ -904,8 +1150,8 @@ function mouseUp() {
 function updateLookAt() {
     var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
     var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
-    if (pitch > 80)  pitch =  80;
-    if (pitch < -80) pitch = -80;
+    if (pitch > max_pitch)  pitch =  max_pitch;
+    if (pitch < -max_pitch) pitch = -max_pitch;
     var pitch_quat =  SceneJS._math_angleAxisQuaternion(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
     var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
     var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
@@ -1121,7 +1367,7 @@ function debugLabel() {
         var up = look_at.get("up");
         labelStr += sprintf("Up  x: %4.1f y: %4.1f z: %4.1f<br>", up.x, up.y, up.z);
 
-        labelStr += sprintf("Radius: %4.1f<br>", earth.radius);
+        labelStr += sprintf("Angle: %4.1f, Radius: %4.1f<br>", angle.get().angle, earth.radius);
         
         debug_content.innerHTML = labelStr;
 
@@ -1153,12 +1399,13 @@ function infoLabel() {
         };
 
         var labelStr = "";
-        labelStr += sprintf("Latitude: %4.1f, Longitude:  %4.1f<br>", latitude, longitude);
+        labelStr += sprintf("Latitude: %4.1f, Longitude:  %4.1f", latitude, longitude);
+        labelStr += sprintf(" Time: %4.1f", ((angle.get().angle % 360 * 2 / 30) + 12) % 24);
         info_content.innerHTML = labelStr;
 
         var canvas_properties = the_canvas.getBoundingClientRect();
         var container_properties = container.getBoundingClientRect();
-        info_label.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
+        info_label.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - info_label.offsetHeight - 24 + "px"
         info_label.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
     };
 };
@@ -1176,7 +1423,9 @@ function controlsLabel() {
         var canvas_properties = the_canvas.getBoundingClientRect();
         var container_properties = container.getBoundingClientRect();
         controls_label.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
-        controls_label.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - controls_label.offsetWidth + "px";
+        
+        controls_label.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
+        // controls_label.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - controls_label.offsetWidth + "px";
         // var labelStr = "controls";
         // controls_label.innerHTML = labelStr;
     };
