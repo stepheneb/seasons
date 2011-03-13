@@ -1395,6 +1395,30 @@ function angleToTimeStr24(ang) {
     return time_hours + ":" + sprintf("%02f", time_min);
 };
 
+function angleToTimeStr12(ang) {
+    var time = angleToDecimalTime(ang);
+    var time_hours = Math.round(time);
+    if (time_hours >= 12) {
+        am_pm = "PM";
+    } else {
+        am_pm = "AM";
+    }
+    if (time_hours > 12) {
+        time_hours -= 12;
+    }
+    var time_min = Math.round((time % 1) * 60)
+    return time_hours + ":" + sprintf("%02f", time_min) + " " + am_pm;
+};
+
+var time_24h =  document.getElementById("time-24h");
+
+function angleToTimeStr(ang) {
+    if (time_24h.checked) {
+        return angleToTimeStr24(ang)
+    } else {
+        return angleToTimeStr12(ang)
+    }
+};
 
 var info_label   = document.getElementById("info-label");
 var info_view   = document.getElementById("info-view");
@@ -1412,7 +1436,7 @@ function infoLabel() {
 
         var labelStr = "";
         labelStr += sprintf("Latitude: %4.1f, Longitude:  %4.1f", latitude, longitude);
-        labelStr += " Time: " + angleToTimeStr24(angle.get().angle - longitude);
+        labelStr += " Time: " + angleToTimeStr(angle.get().angle - longitude);
         info_content.innerHTML = labelStr;
 
         var canvas_properties = the_canvas.getBoundingClientRect();
