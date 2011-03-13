@@ -63,6 +63,7 @@ var rose_grid = function(scale, segments) {
     var points = [];
     var x, z, rangle;
     var angle_increment = 360 / segments;
+    points.push(0, 0, 0);
     for (var angle = 0; angle <= 180; angle += angle_increment) {
         rangle = angle * deg2rad;
         x = Math.sin(rangle) * scale;
@@ -77,8 +78,17 @@ var earth_rose_scale = earth.radius * 1.5;
 var earth_rose_grid_positions = rose_grid(earth_rose_scale, 24);
 var earth_rose_grid_indices = [];
 var earth_rose_grid_points = earth_rose_grid_positions.length / 3;
-for (var i = 0; i < earth_rose_grid_points; i += 2) { 
+for (var i = 1; i < earth_rose_grid_points; i += 2) { 
     earth_rose_grid_indices.push(i, i+1);
+};
+
+
+var latitude_rose_scale = earth.radius * 1.5;
+var latitude_rose_grid_positions = rose_grid(latitude_rose_scale, 24);
+var latitude_rose_grid_indices = [];
+var latitude_rose_grid_points = latitude_rose_grid_positions.length / 3;
+for (var i = 1; i < latitude_rose_grid_points; i += 2) { 
+    latitude_rose_grid_indices.push(0, i, 0, i+1);
 };
 
 //
@@ -168,7 +178,7 @@ SceneJS.createNode({
 
                     nodes: [
 
-                        // Simulate the milky-way with a stationary background sphere
+                        // Milky-way with a stationary background sphere
                         {
                             type: "stationary",    
     
@@ -229,6 +239,8 @@ SceneJS.createNode({
                             ]
                         },
 
+                        // Lights, one bright directional source for the Sun, two others much
+                        // dimmer to give some illumination to the dark side of the Earth
                         {
                             type: "light",
                             mode:                   "point",
@@ -262,7 +274,6 @@ SceneJS.createNode({
                         // Sun and related objects
                         {
 
-                            id: "sun",
                             type: "material",
                             baseColor:      { r: 1.0, g: 0.95, b: 0.8 },
                             specularColor:  { r: 1.0, g: 0.95, b: 0.8 },
@@ -507,18 +518,93 @@ SceneJS.createNode({
                                 },
                                 
 
+                                // Everything under this node will be tilted 23.5 degrees
                                 {
                                     type: "quaternion",
                                     x: 0.0, y: 0.0, z: 1.0, angle: earth.tilt, 
         
                                     nodes: [
+                                    
+                                        // Adjustable Latitude Line
+                                        { 
+                                            type: "material",
+                                            baseColor:      { r: 1.0, g: 0.2, b: 0.02 },
+                                            specularColor:  { r: 1.0, g: 0.2, b: 0.02 },
+                                            specular:       1.0,
+                                            shine:          1.0,
+                                            emit:           1.0,
+
+                                            nodes: [
+
+                                                // Latitude Line
+                                                {
+                                                    type: "translate",
+                                                    id: "latitude-translate",
+                                                    x: 0,
+                                                    y: earth.radius * Math.sin(latitude * deg2rad),
+                                                    z: 0,
+
+                                                    nodes: [
+
+                                                        {
+                                                            type: "scale", 
+                                                            id: "latitude-scale",
+                                                            x: Math.cos(latitude * deg2rad),
+                                                            z: Math.cos(latitude * deg2rad),
+                                                            y: 1.0,
+
+                                                            nodes: [
+                                                            
+                                                                
+
+                                                                {
+                                                                    type: "disk",
+                                                                    radius: earth.radius * 1.002,
+                                                                    innerRadius: earth.radius * 1.002,
+                                                                    height: earth.radius / 200,
+                                                                    rings: 128
+                                                                },
+                                                                
+                                                                {
+                                                                     type: "geometry",
+                                                                     primitive: "lines",
+
+                                                                     positions: latitude_rose_grid_positions,
+                                                                     indices : latitude_rose_grid_indices
+                                                                 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                
+                                                // Latitude Line
+                                                {
+                                                    type: "scale", 
+                                                    id: "latitude-scale",
+                                                    x: Math.cos(latitude * deg2rad),
+                                                    z: Math.cos(latitude * deg2rad),
+                                                    y: 1.0,
+
+                                                    nodes: [
+
+                                                        {
+                                                             type: "geometry",
+                                                             primitive: "lines",
+
+                                                             positions: latitude_rose_grid_positions,
+                                                             indices : latitude_rose_grid_indices
+                                                         }
+                                                    ]
+                                                }
+                                            ]
+                                        },
                             
                                         { 
                                             type: "rotate", id: "rotation", angle: 0, y: 1.0,
                                     
                                             nodes: [
                                 
-                                                // Latitude and Longitude Lines
+                                                // Adjustable Longitude Line
                                                 { 
                                                     type: "material",
                                                     baseColor:      { r: 1.0, g: 0.02, b: 0.02 },
@@ -529,37 +615,6 @@ SceneJS.createNode({
 
                                                     nodes: [
 
-                                                        // Latitude Line
-                                                        {
-                                                            type: "translate",
-                                                            id: "latitude-translate",
-                                                            x: 0,
-                                                            y: earth.radius * Math.sin(latitude * deg2rad),
-                                                            z: 0,
-
-                                                            nodes: [
-
-                                                                {
-                                                                    type: "scale", 
-                                                                    id: "latitude-scale",
-                                                                    x: Math.cos(latitude * deg2rad),
-                                                                    z: Math.cos(latitude * deg2rad),
-                                                                    y: 1.0,
-
-                                                                    nodes: [
-
-                                                                        {
-                                                                            type: "disk",
-                                                                            radius: earth.radius * 1.005,
-                                                                            innerRadius: earth.radius * 1.004,
-                                                                            height: earth.radius / 200,
-                                                                            rings: 128
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        },
-                                                
                                                         // Longitude Line
                                                         {
                                                             type: "rotate", 
@@ -595,7 +650,7 @@ SceneJS.createNode({
                                                     ]
                                                 },
                                         
-                                                // Earth
+                                                // Earth and it's texture layers
                                                 {
                                                     type: "material",
                                                     baseColor:      { r: 0.50, g: 0.50, b: 0.50 },
