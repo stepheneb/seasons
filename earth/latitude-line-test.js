@@ -575,26 +575,6 @@ SceneJS.createNode({
                                                             ]
                                                         }
                                                     ]
-                                                },
-                                                
-                                                // Latitude Line
-                                                {
-                                                    type: "scale", 
-                                                    id: "latitude-scale",
-                                                    x: Math.cos(latitude * deg2rad),
-                                                    z: Math.cos(latitude * deg2rad),
-                                                    y: 1.0,
-
-                                                    nodes: [
-
-                                                        {
-                                                             type: "geometry",
-                                                             primitive: "lines",
-
-                                                             positions: latitude_rose_grid_positions,
-                                                             indices : latitude_rose_grid_indices
-                                                         }
-                                                    ]
                                                 }
                                             ]
                                         },
