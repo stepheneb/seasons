@@ -1390,14 +1390,14 @@ function angleToDecimalTime(ang) {
 
 function angleToTimeStr24(ang) {
     var time = angleToDecimalTime(ang);
-    var time_hours = Math.round(time);
-    var time_min = Math.round((time % 1) * 60)
+    var time_hours = Math.floor(time);
+    var time_min = Math.floor((time % 1) * 60)
     return time_hours + ":" + sprintf("%02f", time_min);
 };
 
 function angleToTimeStr12(ang) {
     var time = angleToDecimalTime(ang);
-    var time_hours = Math.round(time);
+    var time_hours = Math.floor(time);
     if (time_hours >= 12) {
         am_pm = "PM";
     } else {
@@ -1406,8 +1406,8 @@ function angleToTimeStr12(ang) {
     if (time_hours > 12) {
         time_hours -= 12;
     }
-    var time_min = Math.round((time % 1) * 60)
-    return time_hours + ":" + sprintf("%02f", time_min) + " " + am_pm;
+    var time_min = Math.floor((time % 1) * 60)
+    return sprintf("%2f:%02f", time_hours, time_min) + " " + am_pm;
 };
 
 var time_24h =  document.getElementById("time-24h");
