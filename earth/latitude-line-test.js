@@ -381,11 +381,11 @@ SceneJS.createNode({
                                 // Square Grid
                                 {
                                     type: "material",
-                                    baseColor:      { r: 0.3, g: 0.7, b: 0.3 },
-                                    specularColor:  { r: 0.3, g: 0.7, b: 0.3 },
-                                    specular:       1.0,
-                                    shine:          2.0,
-                                    emit:           1.0,
+                                    baseColor:      { r: 0.2, g: 0.6, b: 0.2 },
+                                    specularColor:  { r: 0.2, g: 0.6, b: 0.2 },
+                                    specular:       0.8,
+                                    shine:          0.8,
+                                    emit:           0.5,
 
                                     nodes: [
 
