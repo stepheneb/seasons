@@ -1400,7 +1400,7 @@ function infoLabel() {
 
         var labelStr = "";
         labelStr += sprintf("Latitude: %4.1f, Longitude:  %4.1f", latitude, longitude);
-        labelStr += sprintf(" Time: %4.1f", ((angle.get().angle % 360 * 2 / 30) + 12) % 24);
+        labelStr += sprintf(" Time: %4.1f", (((angle.get().angle - longitude) % 360 * 2 / 30) + 12) % 24);
         info_content.innerHTML = labelStr;
 
         var canvas_properties = the_canvas.getBoundingClientRect();
