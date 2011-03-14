@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Chrome 10 input test</title>
+</head>
+<div>
+  Select a city and date:
+  <ul>
+    <li>
+      <form id="select-city-latitude">
+        <select id="selected-city-latitude" name="selected-city-latitude">
+          <option disabled selected>city ...</option>
+        </select>
+      </form>
+    </li>
+    <li>
+      <form id="select-city-month">
+        <select id="selected-city-month" name="selected-city-month">
+          <option disabled selected>date ...</option>
+          <option value="dec">Dec 21</option>
+          <option value="mar">Mar 21</option>
+          <option value="jun">Jun 21</option>
+          <option value="sep">Sep 21</option>
+        </select>
+      </form>
+    </li>
+    <li>
+      <form id="select-tilt">
+        <select id="selected-tilt" name="selected-tilt">
+          <option disabled selected>tilt ...</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </form>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <form id="city-latitude-temperature">
+        <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
+        <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
+        <input type="submit" value="Run" />
+      </form>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
