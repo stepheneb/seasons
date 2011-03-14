@@ -421,310 +421,134 @@ SceneJS.createNode({
 
                             nodes: [
                             
-                                // Square Grid
                                 {
-                                    type: "material",
-                                    baseColor:      { r: 0.2, g: 0.6, b: 0.2 },
-                                    specularColor:  { r: 0.2, g: 0.6, b: 0.2 },
-                                    specular:       0.8,
-                                    shine:          0.8,
-                                    emit:           0.5,
+                                    type: "boundingBox",
 
-                                    nodes: [
+                                    xmin: -earth.radius * 10,
+                                    ymin: -earth.radius * 10,
+                                    zmin: -earth.radius * 10,
+                                    xmax:  earth.radius * 10,
+                                    ymax:  earth.radius * 10,
+                                    zmax:  earth.radius * 10,
 
+                                    // level-of-detail selection with this boundingBox
+                                    // two representations at different sizes:
+                                    levels: [
+                                        1,    // level 1
+                                        200     // level 2
+                                    ],
+
+                                    nodes:[
+
+                                        // level 1 - a dot
                                         {
-                                            type: "scale",
-                                            x: 1,
-                                            y: 1,
-                                            z: 1,
-
-                                            nodes: [
-
-                                                {
-
-                                                    type: "selector",
-                                                    id: "earth-grid-selector",
-                                                    selection: [1],
-                                                    nodes: [ 
-
-                                                        // 0: off
-
-                                                        {  },
-
-                                                        // 1: on: square grid for Earth view
-
-                                                        {
-                                                            nodes: [
-
-                                                                {
-                                                                    type: "geometry",
-                                                                    primitive: "lines",
-
-                                                                    positions: earth_grid_positions,
-                                                                    indices : earth_grid_indices
-                                                                },
-
-                                                                // Latitude-like line in the ecliptic plane
-                                                                {
-                                                                    type: "disk",
-                                                                    radius: earth.radius + surface_line_width,
-                                                                    innerRadius: earth.radius,
-                                                                    height: surface_line_width,
-                                                                    rings: 128
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-
-                                // Rose Grid
-                                {
-                                    type: "material",
-                                    baseColor:      { r: 0.9, g: 0.8, b: 0.1 },
-                                    specularColor:  { r: 0.9, g: 0.8, b: 0.1 },
-                                    specular:       1.0,
-                                    shine:          2.0,
-                                    emit:           1.0,
-
-                                    nodes: [
-
-                                        {
-                                            type: "scale",
-                                            x: 1,
-                                            y: 1,
-                                            z: 1,
-
-                                            nodes: [
-
-                                                {
-
-                                                    type: "selector",
-                                                    id: "earth-rose-grid-selector",
-                                                    selection: [0],
-                                                    nodes: [ 
-
-                                                        // 0: off
-
-                                                        {  },
-
-                                                        // 1: on: rose grid for Earth view
-
-                                                        {
-                                                            nodes: [
-
-                                                                {
-                                                                    type: "geometry",
-                                                                    primitive: "lines",
-
-                                                                    positions: earth_rose_grid_positions,
-                                                                    indices : earth_rose_grid_indices
-                                                                },
-
-                                                                // Latitude-like line in the ecliptic plane
-                                                                {
-                                                                    type: "disk",
-                                                                    radius: earth.radius + surface_line_width,
-                                                                    innerRadius: earth.radius,
-                                                                    height: surface_line_width,
-                                                                    rings: 128
-                                                                },
-
-                                                                {
-                                                                    type: "disk",
-                                                                    radius: earth_rose_scale,
-                                                                    innerRadius: earth_rose_scale - 0.001,
-                                                                    height: surface_line_width,
-                                                                    rings: 128
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                
-                                // Longitude-like circle-line in the noon-midnight plane
-                                {
-                                    type: "node",
-
-                                    flags: {
-                                        transparent: true
-                                    },
-
-                                    nodes: [
-                                    
-                                        // Longitude-like circle-line in the noon-midnight plane
-                                        { 
                                             type: "material",
-                                            baseColor:      { r: 0.6, g: 0.5, b: 0.02 },
-                                            specularColor:  { r: 0.6, g: 0.5, b: 0.02 },
+                                            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
                                             specular:       1.0,
-                                            shine:          1.0,
-                                            emit:           0.5,
-                                            alpha:          0.6,
+                                            shine:          2.0,
 
                                             nodes: [
-                                    
+
                                                 {
-                                                    type: "selector",
-                                                    id: "sun-noon-midnight-selector",
-                                                    selection: [0],
-                                                    nodes: [ 
+                                                    type: "geometry",
+                                                    primitive: "lines",
 
-                                                        // 0: off
-
-                                                        {  },
-
-                                                        // 1: on: sun noon-midnight indicator
-
-                                                        {
-                                                            type: "rotate", 
-                                                            x: 0.0,
-                                                            z: 0.0,
-                                                            y: 1.0,
-                                                            angle: 0,
-
-                                                            nodes: [
-
-                                                                {
-                                                                    type: "rotate", 
-                                                                    x: 1.0,
-                                                                    z: 0.0,
-                                                                    y: 0.0,
-                                                                    angle: 90,
-
-                                                                    nodes: [
-
-                                                                        {
-                                                                            type: "disk",
-                                                                            radius: earth.radius + surface_line_width * 2,
-                                                                            innerRadius: earth.radius + surface_line_width,
-                                                                            height: surface_line_width,
-                                                                            rings: 128
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
+                                                    positions: [0, 0, 0, 0, 0, 0],
+                                                    indices :  [0, 1]
                                                 }
                                             ]
                                         },
-
-                                        // Longitude-like circle-line in the dawn-dusk plane
-                                        { 
-                                            type: "material",
-                                            baseColor:      { r: 0.6, g: 0.02, b: 0.5 },
-                                            specularColor:  { r: 0.6, g: 0.02, b: 0.5 },
-                                            specular:       1.0,
-                                            shine:          1.0,
-                                            emit:           0.5,
-                                            alpha:          0.3,
-
+                                        
+                                        // level 2, everything else
+                                        
+                                        {
+                                            type: "node",
+                                            
                                             nodes: [
-                                    
+                                                // Square Grid
                                                 {
-                                                    type: "selector",
-                                                    id: "sun-rise-set-selector",
-                                                    selection: [0],
-                                                    nodes: [ 
-
-                                                        // 0: off
-
-                                                        {  },
-
-                                                        // 1: on: sun rise/set indicator
-
-                                                        {
-                                                            type: "rotate", 
-                                                            x: 0.0,
-                                                            z: 0.0,
-                                                            y: 1.0,
-                                                            angle: 90,
-
-                                                            nodes: [
-
-                                                                {
-                                                                    type: "rotate", 
-                                                                    x: 1.0,
-                                                                    z: 0.0,
-                                                                    y: 0.0,
-                                                                    angle: 90,
-
-                                                                    nodes: [
-
-                                                                        {
-                                                                            type: "disk",
-                                                                            radius: earth.radius + surface_line_width * 2,
-                                                                            innerRadius: earth.radius + surface_line_width,
-                                                                            height: surface_line_width,
-                                                                            rings: 128
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-
-                                // Everything under this node will be tilted 23.5 degrees
-                                {
-                                    type: "quaternion",
-                                    x: 0.0, y: 0.0, z: 1.0, angle: earth.tilt, 
-        
-                                    nodes: [
-                                    
-                                        // Adjustable Latitude Line
-                                        { 
-                                            type: "material",
-                                            baseColor:      { r: 1.0, g: 0.2, b: 0.02 },
-                                            specularColor:  { r: 1.0, g: 0.2, b: 0.02 },
-                                            specular:       1.0,
-                                            shine:          1.0,
-                                            emit:           1.0,
-
-                                            nodes: [
-
-                                                // Latitude Line
-                                                {
-                                                    type: "translate",
-                                                    id: "latitude-translate",
-                                                    x: 0,
-                                                    y: earth.radius * Math.sin(latitude * deg2rad),
-                                                    z: 0,
+                                                    type: "material",
+                                                    baseColor:      { r: 0.3, g: 0.7, b: 0.3 },
+                                                    specularColor:  { r: 0.3, g: 0.7, b: 0.3 },
+                                                    specular:       0.8,
+                                                    shine:          0.8,
+                                                    emit:           0.8,
 
                                                     nodes: [
 
                                                         {
-                                                            type: "scale", 
-                                                            id: "latitude-scale",
-                                                            x: Math.cos(latitude * deg2rad),
-                                                            z: Math.cos(latitude * deg2rad),
-                                                            y: 1.0,
+                                                            type: "scale",
+                                                            x: 1,
+                                                            y: 1,
+                                                            z: 1,
 
                                                             nodes: [
 
                                                                 {
-                                                                    type: "disk",
-                                                                    radius: earth.radius + surface_line_width,
-                                                                    innerRadius: earth.radius,
-                                                                    height: surface_line_width,
-                                                                    rings: 128
-                                                                },
-                                                                
-                                                                {
+
                                                                     type: "selector",
-                                                                    id: "lat-hour-markers-selector",
+                                                                    id: "earth-grid-selector",
+                                                                    selection: [1],
+                                                                    nodes: [ 
+
+                                                                        // 0: off
+
+                                                                        {  },
+
+                                                                        // 1: on: square grid for Earth view
+
+                                                                        {
+                                                                            nodes: [
+
+                                                                                {
+                                                                                    type: "geometry",
+                                                                                    primitive: "lines",
+
+                                                                                    positions: earth_grid_positions,
+                                                                                    indices : earth_grid_indices
+                                                                                },
+
+                                                                                // Latitude-like line in the ecliptic plane
+                                                                                {
+                                                                                    type: "disk",
+                                                                                    radius: earth.radius + surface_line_width,
+                                                                                    innerRadius: earth.radius,
+                                                                                    height: surface_line_width,
+                                                                                    rings: 128
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+
+                                                // Rose Grid
+                                                {
+                                                    type: "material",
+                                                    baseColor:      { r: 0.9, g: 0.8, b: 0.1 },
+                                                    specularColor:  { r: 0.9, g: 0.8, b: 0.1 },
+                                                    specular:       1.0,
+                                                    shine:          2.0,
+                                                    emit:           1.0,
+
+                                                    nodes: [
+
+                                                        {
+                                                            type: "scale",
+                                                            x: 1,
+                                                            y: 1,
+                                                            z: 1,
+
+                                                            nodes: [
+
+                                                                {
+
+                                                                    type: "selector",
+                                                                    id: "earth-rose-grid-selector",
                                                                     selection: [0],
                                                                     nodes: [ 
 
@@ -732,149 +556,374 @@ SceneJS.createNode({
 
                                                                         {  },
 
-                                                                        // 1: on: sun rlatitude hour markers
+                                                                        // 1: on: rose grid for Earth view
 
                                                                         {
-                                                                             type: "geometry",
-                                                                             primitive: "lines",
+                                                                            nodes: [
 
-                                                                             positions: latitude_rose_grid_positions,
-                                                                             indices : latitude_rose_grid_indices
+                                                                                {
+                                                                                    type: "geometry",
+                                                                                    primitive: "lines",
+
+                                                                                    positions: earth_rose_grid_positions,
+                                                                                    indices : earth_rose_grid_indices
+                                                                                },
+
+                                                                                // Latitude-like line in the ecliptic plane
+                                                                                {
+                                                                                    type: "disk",
+                                                                                    radius: earth.radius + surface_line_width,
+                                                                                    innerRadius: earth.radius,
+                                                                                    height: surface_line_width,
+                                                                                    rings: 128
+                                                                                },
+
+                                                                                {
+                                                                                    type: "disk",
+                                                                                    radius: earth_rose_scale,
+                                                                                    innerRadius: earth_rose_scale - 0.001,
+                                                                                    height: surface_line_width,
+                                                                                    rings: 128
+                                                                                }
+                                                                            ]
                                                                         }
                                                                     ]
                                                                 }
                                                             ]
                                                         }
                                                     ]
-                                                }
-                                            ]
-                                        },
-                            
-                                        { 
-                                            type: "rotate", id: "rotation", angle: 0, y: 1.0,
-                                    
-                                            nodes: [
+                                                },
                                 
-                                                // Adjustable Longitude Line
-                                                { 
-                                                    type: "material",
-                                                    baseColor:      { r: 1.0, g: 0.02, b: 0.02 },
-                                                    specularColor:  { r: 1.0, g: 0.02, b: 0.02 },
-                                                    specular:       1.0,
-                                                    shine:          1.0,
-                                                    emit:           1.0,
+                                                // Longitude-like circle-line in the noon-midnight plane
+                                                {
+                                                    type: "node",
+
+                                                    flags: {
+                                                        transparent: true
+                                                    },
 
                                                     nodes: [
+                                    
+                                                        // Longitude-like circle-line in the noon-midnight plane
+                                                        { 
+                                                            type: "material",
+                                                            baseColor:      { r: 0.6, g: 0.5, b: 0.02 },
+                                                            specularColor:  { r: 0.6, g: 0.5, b: 0.02 },
+                                                            specular:       1.0,
+                                                            shine:          1.0,
+                                                            emit:           0.5,
+                                                            alpha:          0.6,
 
-                                                        // Longitude Line
-                                                        {
-                                                            type: "rotate", 
-                                                            x: 0.0,
-                                                            z: 1.0,
-                                                            y: 0.0,
-                                                            angle: -90,
+                                                            nodes: [
+                                    
+                                                                {
+                                                                    type: "selector",
+                                                                    id: "sun-noon-midnight-selector",
+                                                                    selection: [0],
+                                                                    nodes: [ 
+
+                                                                        // 0: off
+
+                                                                        {  },
+
+                                                                        // 1: on: sun noon-midnight indicator
+
+                                                                        {
+                                                                            type: "rotate", 
+                                                                            x: 0.0,
+                                                                            z: 0.0,
+                                                                            y: 1.0,
+                                                                            angle: 0,
+
+                                                                            nodes: [
+
+                                                                                {
+                                                                                    type: "rotate", 
+                                                                                    x: 1.0,
+                                                                                    z: 0.0,
+                                                                                    y: 0.0,
+                                                                                    angle: 90,
+
+                                                                                    nodes: [
+
+                                                                                        {
+                                                                                            type: "disk",
+                                                                                            radius: earth.radius + surface_line_width * 2,
+                                                                                            innerRadius: earth.radius + surface_line_width,
+                                                                                            height: surface_line_width,
+                                                                                            rings: 128
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+
+                                                        // Longitude-like circle-line in the dawn-dusk plane
+                                                        { 
+                                                            type: "material",
+                                                            baseColor:      { r: 0.6, g: 0.02, b: 0.5 },
+                                                            specularColor:  { r: 0.6, g: 0.02, b: 0.5 },
+                                                            specular:       1.0,
+                                                            shine:          1.0,
+                                                            emit:           0.5,
+                                                            alpha:          0.3,
+
+                                                            nodes: [
+                                    
+                                                                {
+                                                                    type: "selector",
+                                                                    id: "sun-rise-set-selector",
+                                                                    selection: [0],
+                                                                    nodes: [ 
+
+                                                                        // 0: off
+
+                                                                        {  },
+
+                                                                        // 1: on: sun rise/set indicator
+
+                                                                        {
+                                                                            type: "rotate", 
+                                                                            x: 0.0,
+                                                                            z: 0.0,
+                                                                            y: 1.0,
+                                                                            angle: 90,
+
+                                                                            nodes: [
+
+                                                                                {
+                                                                                    type: "rotate", 
+                                                                                    x: 1.0,
+                                                                                    z: 0.0,
+                                                                                    y: 0.0,
+                                                                                    angle: 90,
+
+                                                                                    nodes: [
+
+                                                                                        {
+                                                                                            type: "disk",
+                                                                                            radius: earth.radius + surface_line_width * 2,
+                                                                                            innerRadius: earth.radius + surface_line_width,
+                                                                                            height: surface_line_width,
+                                                                                            rings: 128
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+
+                                                // Everything under this node will be tilted 23.5 degrees
+                                                {
+                                                    type: "quaternion",
+                                                    x: 0.0, y: 0.0, z: 1.0, angle: earth.tilt, 
+        
+                                                    nodes: [
+                                    
+                                                        // Adjustable Latitude Line
+                                                        { 
+                                                            type: "material",
+                                                            baseColor:      { r: 1.0, g: 0.2, b: 0.02 },
+                                                            specularColor:  { r: 1.0, g: 0.2, b: 0.02 },
+                                                            specular:       1.0,
+                                                            shine:          1.0,
+                                                            emit:           1.0,
 
                                                             nodes: [
 
+                                                                // Latitude Line
                                                                 {
-                                                                    type: "rotate", 
-                                                                    id: "longitude-rotation",
-                                                                    x: 1.0,
-                                                                    z: 0.0,
-                                                                    y: 0.0,
-                                                                    angle: longitude + 90,
+                                                                    type: "translate",
+                                                                    id: "latitude-translate",
+                                                                    x: 0,
+                                                                    y: earth.radius * Math.sin(latitude * deg2rad),
+                                                                    z: 0,
 
                                                                     nodes: [
 
                                                                         {
-                                                                            type: "disk",
-                                                                            radius: earth.radius + surface_line_width,
-                                                                            innerRadius: earth.radius,
-                                                                            height: surface_line_width,
-                                                                            rings: 128,
-                                                                            sweep: 0.5,
+                                                                            type: "scale", 
+                                                                            id: "latitude-scale",
+                                                                            x: Math.cos(latitude * deg2rad),
+                                                                            z: Math.cos(latitude * deg2rad),
+                                                                            y: 1.0,
+
+                                                                            nodes: [
+
+                                                                                {
+                                                                                    type: "disk",
+                                                                                    radius: earth.radius + surface_line_width,
+                                                                                    innerRadius: earth.radius,
+                                                                                    height: surface_line_width,
+                                                                                    rings: 128
+                                                                                },
+                                                                
+                                                                                {
+                                                                                    type: "selector",
+                                                                                    id: "lat-hour-markers-selector",
+                                                                                    selection: [0],
+                                                                                    nodes: [ 
+
+                                                                                        // 0: off
+
+                                                                                        {  },
+
+                                                                                        // 1: on: sun rlatitude hour markers
+
+                                                                                        {
+                                                                                             type: "geometry",
+                                                                                             primitive: "lines",
+
+                                                                                             positions: latitude_rose_grid_positions,
+                                                                                             indices : latitude_rose_grid_indices
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
                                                                         }
                                                                     ]
                                                                 }
                                                             ]
-                                                        }
-                                                    ]
-                                                },
-                                        
-                                                // Earth and it's texture layers
-                                                {
-                                                    type: "material",
-                                                    baseColor:      { r: 0.50, g: 0.50, b: 0.50 },
-                                                    specularColor:  { r: 0.15, g: 0.15, b: 0.15 },
-                                                    specular:       0.00,
-                                                    shine:          0.5,
-
-                                                    nodes: [
-
-                                                        {
-                                                            type: "scale", x: earth.radius, y: earth.radius, z: earth.radius,
-
+                                                        },
+                            
+                                                        { 
+                                                            type: "rotate", id: "rotation", angle: 0, y: 1.0,
+                                    
                                                             nodes: [
-                                            
-                                                                {
+                                
+                                                                // Adjustable Longitude Line
+                                                                { 
+                                                                    type: "material",
+                                                                    baseColor:      { r: 1.0, g: 0.02, b: 0.02 },
+                                                                    specularColor:  { r: 1.0, g: 0.02, b: 0.02 },
+                                                                    specular:       1.0,
+                                                                    shine:          1.0,
+                                                                    emit:           1.0,
 
-                                                                    id: "earth-terrain-texture3",
-                                                                    type: "texture",
-                                                                    layers: [
+                                                                    nodes: [
 
-                                                                        { 
-                                                                           uri:"images/lat-long-grid-invert-units-1440x720-15.png",
-                                                                           blendMode: "add",
+                                                                        // Longitude Line
+                                                                        {
+                                                                            type: "rotate", 
+                                                                            x: 0.0,
+                                                                            z: 1.0,
+                                                                            y: 0.0,
+                                                                            angle: -90,
 
-                                                                        },
-                                                                        { 
-                                                                            uri:"images/earth3.jpg",
+                                                                            nodes: [
 
-                                                                            minFilter: "linear",
-                                                                            magFilter: "linear",
-                                                                            wrapS: "repeat",
-                                                                            wrapT: "repeat",
-                                                                            isDepth: false,
-                                                                            depthMode:"luminance",
-                                                                            depthCompareMode: "compareRToTexture",
-                                                                            depthCompareFunc: "lequal",
-                                                                            flipY: false,
-                                                                            width: 1,
-                                                                            height: 1,
-                                                                            internalFormat:"lequal",
-                                                                            sourceFormat:"alpha",
-                                                                            sourceType: "unsignedByte",
-                                                                            applyTo:"baseColor",
-                                                                            blendMode: "multiply",
+                                                                                {
+                                                                                    type: "rotate", 
+                                                                                    id: "longitude-rotation",
+                                                                                    x: 1.0,
+                                                                                    z: 0.0,
+                                                                                    y: 0.0,
+                                                                                    angle: longitude + 90,
 
-                                                                            /* Texture rotation angle in degrees
-                                                                             */
-                                                                            rotate: 180.0,
+                                                                                    nodes: [
 
-                                                                            /* Texture translation offset
-                                                                             */
-                                                                            translate : {
-                                                                                x: 0,
-                                                                                y: 0
-                                                                            },
-
-                                                                            /* Texture scale factors
-                                                                             */
-                                                                            scale : {
-                                                                                x: -1.0,
-                                                                                y: 1.0
-                                                                            }
+                                                                                        {
+                                                                                            type: "disk",
+                                                                                            radius: earth.radius + surface_line_width,
+                                                                                            innerRadius: earth.radius,
+                                                                                            height: surface_line_width,
+                                                                                            rings: 128,
+                                                                                            sweep: 0.5,
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
                                                                         }
-                                                                    ],
-                                                            
-                                                                    nodes: [ 
-                                                                        { type: "sphere" }
                                                                     ]
-                                                                }
+                                                                },
+                                        
+                                                                // Earth and it's texture layers
+                                                                {
+                                                                    type: "material",
+                                                                    baseColor:      { r: 0.50, g: 0.50, b: 0.50 },
+                                                                    specularColor:  { r: 0.15, g: 0.15, b: 0.15 },
+                                                                    specular:       0.00,
+                                                                    shine:          0.5,
+
+                                                                    nodes: [
+
+                                                                        {
+                                                                            type: "scale", x: earth.radius, y: earth.radius, z: earth.radius,
+
+                                                                            nodes: [
+                                            
+                                                                                {
+
+                                                                                    id: "earth-terrain-texture3",
+                                                                                    type: "texture",
+                                                                                    layers: [
+
+                                                                                        { 
+                                                                                           uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+                                                                                           blendMode: "add",
+
+                                                                                        },
+                                                                                        { 
+                                                                                            uri:"images/earth3.jpg",
+
+                                                                                            minFilter: "linear",
+                                                                                            magFilter: "linear",
+                                                                                            wrapS: "repeat",
+                                                                                            wrapT: "repeat",
+                                                                                            isDepth: false,
+                                                                                            depthMode:"luminance",
+                                                                                            depthCompareMode: "compareRToTexture",
+                                                                                            depthCompareFunc: "lequal",
+                                                                                            flipY: false,
+                                                                                            width: 1,
+                                                                                            height: 1,
+                                                                                            internalFormat:"lequal",
+                                                                                            sourceFormat:"alpha",
+                                                                                            sourceType: "unsignedByte",
+                                                                                            applyTo:"baseColor",
+                                                                                            blendMode: "multiply",
+
+                                                                                            /* Texture rotation angle in degrees
+                                                                                             */
+                                                                                            rotate: 180.0,
+
+                                                                                            /* Texture translation offset
+                                                                                             */
+                                                                                            translate : {
+                                                                                                x: 0,
+                                                                                                y: 0
+                                                                                            },
+
+                                                                                            /* Texture scale factors
+                                                                                             */
+                                                                                            scale : {
+                                                                                                x: -1.0,
+                                                                                                y: 1.0
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                            
+                                                                                    nodes: [ 
+                                                                                        { type: "sphere" }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                },
                                                             ]
                                                         }
                                                     ]
-                                                },
+                                                }
                                             ]
                                         }
                                     ]
