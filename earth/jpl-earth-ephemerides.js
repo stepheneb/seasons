@@ -1,3 +1,46 @@
+// Based on data from JPL:
+//
+// *******************************************************************************
+// Coordinate system description:
+// 
+//   Earth Mean Equator and Equinox of Reference Epoch
+// 
+//     Reference epoch: J2000.0
+//     xy-plane: plane of the Earth's mean equator at the reference epoch
+//     x-axis  : out along ascending node of instantaneous plane of the Earth's  ** see below **
+//               orbit and the Earth's mean equator at the reference epoch
+//     z-axis  : along the Earth mean north pole at the reference epoch
+// 
+// Symbol meaning [1 AU=149597870.691 km, 1 day=86400.0 s]:
+// 
+//     JDCT     Epoch Julian Date, Coordinate Time
+//       X      x-component of position vector (AU)                               
+//       Y      y-component of position vector (AU)                               
+//       Z      z-component of position vector (AU)                               
+//       VX     x-component of velocity vector (AU/day)                           
+//       VY     y-component of velocity vector (AU/day)                           
+//       VZ     z-component of velocity vector (AU/day)                           
+//       LT     One-way down-leg Newtonian light-time (day)                       
+//       RG     Range; distance from coordinate center (AU)                       
+//       RR     Range-rate; radial velocity wrt coord. center (AU/day)            
+// 
+// Geometric states/elements have no aberration corrections applied.
+// 
+//  Computations by ...
+//      Solar System Dynamics Group, Horizons On-Line Ephemeris System
+//      4800 Oak Grove Drive, Jet Propulsion Laboratory
+//      Pasadena, CA  91109   USA
+//      Information: http://ssd.jpl.nasa.gov/
+//      Connect    : telnet://ssd.jpl.nasa.gov:6775  (via browser)
+//                   telnet ssd.jpl.nasa.gov 6775    (via command-line)
+//      Author     : Jon.Giorgini@jpl.nasa.gov
+// *******************************************************************************
+//
+// ******* IMPORTANT NOTE ********
+//
+//   The Y and Z data have been switched in this version of the data to 
+//   match up with the axis conventions of OpenGL/WegGL
+//
 var earth_ephemerides_jpl_2010 = [
     { date: "2010-01-01T00:00:00.000Z", dayNumber:   0,  x: -1.797649421153966E-01,  y:  3.859658992048686E-01,  z:  8.902829864742468E-01, vx: -1.720173258746768E-02, vy: -1.251497699755986E-03, vz: -2.888860901671991E-03,  lt: 5.699617035710165E-03,  rg: 9.868580980912497E-01, rr:  3.782642798847245E-05 },
     { date: "2010-01-02T00:00:00.000Z", dayNumber:   1,  x: -1.969386819695067E-01,  y:  3.846549452068296E-01,  z:  8.872569691122802E-01, vx: -1.714493429540822E-02, vy: -1.370361271300405E-03, vz: -3.163041290175051E-03,  lt: 5.699851990725638E-03,  rg: 9.868987792911011E-01, rr:  4.352431624144069E-05 },
@@ -382,78 +425,77 @@ var earth_ephemerides_geometry = function(scale) {
     return { positions: points, indices: indices };
 }
 
-var earth_jpl_2010_orbit_data = earth_ephemerides_geometry(earth_orbital_radius_km);
-
-var earth_ephemerides_datum_by_month = function(month) {
-    var empherides_datum;
-    switch(month) {
-        case "dec":
-        empherides_datum = earth_ephemerides_jpl_2010[354];
-        break;
-
-        case "jan":
-        empherides_datum = earth_ephemerides_jpl_2010[19];
-        break;
-
-        case "feb":
-        empherides_datum = earth_ephemerides_jpl_2010[50];
-        break;
-
-        case "mar":
-        empherides_datum = earth_ephemerides_jpl_2010[79];
-        break;
-
-        case "apr":
-        empherides_datum = earth_ephemerides_jpl_2010[109];
-        break;
-
-        case "may":
-        empherides_datum = earth_ephemerides_jpl_2010[139];
-        break;
-
-        case "jun":
-        empherides_datum = earth_ephemerides_jpl_2010[172];
-        break;
-
-        case "jul":
-        empherides_datum = earth_ephemerides_jpl_2010[200];
-        break;
-
-        case "aug":
-        empherides_datum = earth_ephemerides_jpl_2010[231];
-        break;
-
-        case "sep":
-        empherides_datum = earth_ephemerides_jpl_2010[263];
-        break;
-
-        case "oct":
-        empherides_datum = earth_ephemerides_jpl_2010[292];
-        break;
-
-        case "nov":
-        empherides_datum = earth_ephemerides_jpl_2010[323];
-        break;
-    }
-    return empherides_datum;
-}
-
-var earth_ephemerides_location_by_month = function(month) {
-    var empherides_datum = earth_ephemerides_datum_by_month(month);
-    return [ empherides_datum.x * au2km * factor, empherides_datum.y * au2km * factor, empherides_datum.z * au2km * factor]
+var earth_ephemerides_solar_constant_by_day_number = function(daynum) {
+    var empherides_datum = earth_ephemerides_jpl_2010[daynum]
 };
 
-var earth_ephemerides_distance_from_sun_by_month = function(month) {
-    var ep = earth_ephemerides_location_by_month(month);
+var day_number_by_month = {
+    jan:  19,
+    feb:  50,
+    mar:  79,
+    apr: 109,
+    may: 139,
+    jun: 171,
+    jul: 200,
+    aug: 231,
+    sep: 263,
+    oct: 292,
+    nov: 323,
+    dec: 354
+};
+
+var date_by_day_number = {
+    19:  "Jan-21",
+    50:  "Feb-20",
+    79:  "Mar-21",
+    109: "Apr-20",
+    139: "May-20",
+    171: "Jun-21",
+    200: "Jul-20",
+    231: "Aug-20",
+    263: "Sep-21",
+    292: "Oct-20",
+    323: "Nov-20",
+    354: "Dec-21"
+};
+
+var earth_ephemerides_datum_by_month = function(month) {
+    return earth_ephemerides_jpl_2010[day_number_by_month[month]];
+}
+
+var earth_ephemerides_solar_constant_by_day_number = function(day_num) {
+    var empherides_datum = earth_ephemerides_jpl_2010[day_num];
+    var radius = empherides_datum.rg;
+    var area = fourPI * radius * radius;
+    return fourPI / area * solar_constant;
+};
+
+var earth_ephemerides_location_by_day_number = function(day_num) {
+    var empherides_datum = earth_ephemerides_jpl_2010[day_num];
+    return [ 
+        empherides_datum.x * au2km / scale_factor, 
+        empherides_datum.y * au2km / scale_factor, 
+        empherides_datum.z * au2km / scale_factor
+    ]
+};
+
+var earth_ephemerides_distance_from_sun_by_day_number = function(day_num) {
+    var empherides_datum = earth_ephemerides_jpl_2010[day_num];
+    var ep = earth_ephemerides_location_by_day_number(day_num);
     var distance = Math.sqrt(ep[0] * ep[0] + ep[1] * ep[1] + ep[2] * ep[2])
     return distance;
 };
 
+var earth_ephemerides_location_by_month = function(month) {
+    return earth_ephemerides_location_by_day_number(day_number_by_month[month]);
+};
+
+var earth_ephemerides_distance_from_sun_by_month = function(month) {
+    return earth_ephemerides_distance_from_sun_by_day_number(day_number_by_month[month]);
+};
+
 var earth_ephemerides_solar_constant_by_month = function(month) {
-    var empherides_datum = earth_ephemerides_datum_by_month(month);
-    var radius = empherides_datum.rg;
-    var area = fourPI * radius * radius;
-    return fourPI / area * solar_constant;
+    return earth_ephemerides_solar_constant_by_day_number(day_number_by_month[month]);
 };
 
 SceneJS.createNode({

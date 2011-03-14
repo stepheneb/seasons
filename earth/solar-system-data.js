@@ -1,13 +1,16 @@
 
+var AU = 149597870.691;
+
 var sun_diameter_km_actual = 1392000.0;
 var earth_diameter_km_actual = 12742.0;
-var earth_orbital_radius_km_actual = 150000000.0;
+var earth_orbital_radius_km_actual = AU;
 
-var factor = 0.001
+var scale_factor = 1000;
 
-var sun_radius_km = sun_diameter_km_actual / 2 * factor;
-var earth_radius_km = earth_diameter_km_actual / 2 * factor;
-var earth_orbital_radius_km = earth_orbital_radius_km_actual * factor;
+var sun_radius_km =             (sun_diameter_km_actual  / 2)   / scale_factor;
+var earth_radius_km =           (earth_diameter_km_actual / 2)  / scale_factor;
+var earth_orbital_radius_km =    earth_orbital_radius_km_actual / scale_factor;
+
 var milky_way_apparent_radius = earth_orbital_radius_km * 10;
 
 var earth_x_pos = -earth_orbital_radius_km;
@@ -78,4 +81,4 @@ var earthOrbitData = {
 }
 
 
-var sun_focus = earthOrbitData.eccentricity / earthOrbitData.semiMajorAxis / 2 * au2km * factor;
+var sun_focus = earthOrbitData.eccentricity / earthOrbitData.semiMajorAxis / 2 * au2km / scale_factor;
