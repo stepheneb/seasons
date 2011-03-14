@@ -1403,9 +1403,11 @@ function angleToTimeStr12(ang) {
     } else {
         am_pm = "AM";
     }
-    if (time_hours > 12) {
+    if (time_hours == 0) {
+        time_hours = 12;
+    } else if (time_hours > 12) {
         time_hours -= 12;
-    }
+    };
     var time_min = Math.floor((time % 1) * 60)
     return sprintf("%2f:%02f", time_hours, time_min) + " " + am_pm;
 };
@@ -1441,7 +1443,9 @@ function infoLabel() {
 
         var canvas_properties = the_canvas.getBoundingClientRect();
         var container_properties = container.getBoundingClientRect();
-        info_label.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - info_label.offsetHeight - 24 + "px"
+        // bottom
+        // info_label.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - info_label.offsetHeight - 24 + "px";
+        info_label.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
         info_label.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
     };
 };
@@ -1458,7 +1462,7 @@ function controlsLabel() {
     if (controls_label) {
         var canvas_properties = the_canvas.getBoundingClientRect();
         var container_properties = container.getBoundingClientRect();
-        controls_label.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
+        controls_label.style.top = canvas_properties.top + window.pageYOffset + 55 + "px";
         
         controls_label.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
         // controls_label.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - controls_label.offsetWidth + "px";
