@@ -49,6 +49,13 @@
   <p id="results"></p>
   <h4>Browser-specific status message</h4>
   <p id="status-message"></p>
+  <p>Test input element for Chrome 10 bug: <a href="http://code.google.com/p/chromium/issues/detail?id=71624">"experimental-webgl" breaks page on chrome 10</a></p>
+  <form id="form1">
+    <label id="label1" for="input1">Enter text: </label>
+    <input type="text" id="input1" name="input1" />
+    <input type="submit" value="Submit" />
+  </form>
+  <p>On Chrome 10 on Windows you will not see text you enter into the input field.</p>
   <canvas id="canvas" style="border: none;" width="100" height="100"></canvas>
 </body>
 
