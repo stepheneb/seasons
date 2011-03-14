@@ -1,10 +1,23 @@
+
+// some constants
 var deg2rad = Math.PI/180;
+var min2rad = Math.PI/(180*60);
+var sec2rad = Math.PI/(180*60*60);
+var rad2deg = 180/Math.PI;
+var au2km = 149597870.691;
+var earthMass = 5.9736e24;        // km
+var earthRadius = 6378.1;         // km
+var earthOrbitalPeriod = 365.256363004; // days
+var earthRotationPeriod = 0.99726968;   // days
+var fourPI = Math.PI * 4;
+
+var solar_constant = 1367.6;
 
 var scale_factor = 1000;
 
-var sun_diameter = 1392000.0 / scale_factor;
-var earth_diameter = 12742.0 / scale_factor;
-var earth_orbital_radius = 150000000.0 / scale_factor;
+var sun_diameter =     1392000.0 / scale_factor;
+var earth_diameter =     12742.0 / scale_factor;
+var earth_orbital_radius = au2km / scale_factor;
 
 var milky_way_apparent_radius = earth_orbital_radius * 10;
 
@@ -13,10 +26,18 @@ var sun = {
     radius: sun_diameter / 2
 };
 
+var initial_day_number = day_number_by_month['jun'];
+
 var earth = {
-    pos: { x: earth_orbital_radius, y: 0, z: 0 },
+    pos: {
+        x: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
+        y: 0,
+        z: 0
+    },
+    distance: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
     radius: earth_diameter / 2,
-    tilt: 23.5
+    tilt: 23.45,
+    day_number: initial_day_number
 };
 
 var dark_side_light = 0.25;
@@ -29,8 +50,8 @@ var surface_line_width = earth.radius / 200;
 var latitude  = 52;
 var longitude = 0;
 
-var yaw      = -60;
-var pitch    = -15;
+var yaw      = -30;
+var pitch    = -10;
 var rotation = 0;
 
 //
@@ -466,6 +487,7 @@ SceneJS.createNode({
                                             type: "node",
                                             
                                             nodes: [
+
                                                 // Square Grid
                                                 {
                                                     type: "material",
@@ -1485,9 +1507,14 @@ function infoLabel() {
             info_label.style.opacity = null;
         };
 
+        var solar_flux = earth_ephemerides_solar_constant_by_day_number(earth.day_number);
+
         var labelStr = "";
-        labelStr += sprintf("Latitude: %4.1f, Longitude:  %4.1f", latitude, longitude);
-        labelStr += " Time: " + angleToTimeStr(angle.get().angle - longitude);
+        labelStr += "Date: " + date_by_day_number[earth.day_number] + ", ";
+        labelStr += sprintf("Solar Constant:  %4.1f W/m2", solar_flux) + ", ";
+        labelStr += sprintf("Latitude: %4.1f, Longitude:  %4.1f", latitude, longitude) + ", ";
+        labelStr += "Time: " + angleToTimeStr(angle.get().angle - longitude);
+
         info_content.innerHTML = labelStr;
 
         var canvas_properties = the_canvas.getBoundingClientRect();
@@ -1511,8 +1538,7 @@ function controlsLabel() {
     if (controls_label) {
         var canvas_properties = the_canvas.getBoundingClientRect();
         var container_properties = container.getBoundingClientRect();
-        controls_label.style.top = canvas_properties.top + window.pageYOffset + 55 + "px";
-        
+        controls_label.style.top = canvas_properties.top + window.pageYOffset + 45 + "px";
         controls_label.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
         // controls_label.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - controls_label.offsetWidth + "px";
         // var labelStr = "controls";

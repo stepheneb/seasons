@@ -203,6 +203,18 @@ h4 {
     border-top-right-radius: 5px 5px;
 }
 
+#info-label {
+}
+
+#info-view {
+    margin-left: 3px;
+    margin-right: 6px;
+}
+
+#info-content {
+    float: right;
+}
+
 .webgl-canvas-label fieldset  {
     color: white;
 }
