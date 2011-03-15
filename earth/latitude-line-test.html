@@ -27,7 +27,7 @@
     <div id="webglCanvasContainer">
       <canvas id="theCanvas" height="700px", width="1000px"></canvas>
       <div id="info-label" class="webgl-canvas-label transparent-ui">
-        <label>Data<input id="info-view" type="checkbox" checked/></label><div id="info-content"></div>
+        <label><input id="info-view" type="checkbox" checked/></label><div id="info-content"></div>
       </div>
       <div id="controls-label" class="webgl-canvas-label transparent-ui">
         <form id="show-me">
@@ -40,13 +40,13 @@
           <fieldset>
             <legend>Orbital Grids</legend>
             <label><input id="earth-grid" type="checkbox"/> Square</label><br />
-            <label><input id="earth-rose-grid" type="checkbox"/> Rose</label><br />
+            <label><input id="earth-rose-grid" type="checkbox" checked/> Rose</label><br />
           </fieldset>
           <br />
           <fieldset>
             <legend>Sun</legend>
             <label><input id="sun-earth-line" type="checkbox"/> Center Ray</label><br />
-            <label><input id="sun-surface-line" type="checkbox"/> Point Ray</label><br />
+            <!-- <label><input id="sun-surface-line" type="checkbox"/> Point Ray</label><br /> -->
             <label><input id="sun-rays" type="checkbox"/> Many Rays</label><br />
             <label><input id="sun-rise-set" type="checkbox" checked/> Rise/Set</label><br />
             <label><input id="sun-noon-midnight" type="checkbox" checked/> Noon/Midnight</label><br />
@@ -65,7 +65,7 @@
         </form>
       </div>
       <div id="debug-label" class="webgl-canvas-label transparent-ui" style="font-size:90%">
-        Show debug output: <input id="debug-view" type="checkbox"/>
+        <input id="debug-view" type="checkbox"/> debugging output
         <div id="debug-content"></div>
       </div>
     </div>

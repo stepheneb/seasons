@@ -41,6 +41,11 @@
 //   The Y and Z data have been switched in this version of the data to 
 //   match up with the axis conventions of OpenGL/WegGL
 //
+
+var SOLAR_CONSTANT   = 1367.6;
+var STANDARD_SUN     = 1000;
+var SOLAR_FACTOR_AM1 = STANDARD_SUN / SOLAR_CONSTANT;
+
 var earth_ephemerides_jpl_2010 = [
     { date: "2010-01-01T00:00:00.000Z", dayNumber:   0,  x: -1.797649421153966E-01,  y:  3.859658992048686E-01,  z:  8.902829864742468E-01, vx: -1.720173258746768E-02, vy: -1.251497699755986E-03, vz: -2.888860901671991E-03,  lt: 5.699617035710165E-03,  rg: 9.868580980912497E-01, rr:  3.782642798847245E-05 },
     { date: "2010-01-02T00:00:00.000Z", dayNumber:   1,  x: -1.969386819695067E-01,  y:  3.846549452068296E-01,  z:  8.872569691122802E-01, vx: -1.714493429540822E-02, vy: -1.370361271300405E-03, vz: -3.163041290175051E-03,  lt: 5.699851990725638E-03,  rg: 9.868987792911011E-01, rr:  4.352431624144069E-05 },
@@ -425,10 +430,6 @@ var earth_ephemerides_geometry = function(scale) {
     return { positions: points, indices: indices };
 }
 
-var earth_ephemerides_solar_constant_by_day_number = function(daynum) {
-    var empherides_datum = earth_ephemerides_jpl_2010[daynum]
-};
-
 var day_number_by_month = {
     jan:  19,
     feb:  50,
@@ -467,7 +468,7 @@ var earth_ephemerides_solar_constant_by_day_number = function(day_num) {
     var empherides_datum = earth_ephemerides_jpl_2010[day_num];
     var radius = empherides_datum.rg;
     var area = fourPI * radius * radius;
-    return fourPI / area * solar_constant;
+    return fourPI / area * SOLAR_CONSTANT;
 };
 
 var earth_ephemerides_location_by_day_number = function(day_num) {

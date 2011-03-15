@@ -9,9 +9,8 @@ var earthMass = 5.9736e24;        // km
 var earthRadius = 6378.1;         // km
 var earthOrbitalPeriod = 365.256363004; // days
 var earthRotationPeriod = 0.99726968;   // days
+var twoPI  = Math.PI * 2;
 var fourPI = Math.PI * 4;
-
-var solar_constant = 1367.6;
 
 var scale_factor = 1000;
 
@@ -47,11 +46,11 @@ var distance = earth.radius * 3;
 
 var surface_line_width = earth.radius / 200;
 
-var latitude  = 52;
-var longitude = 0;
+var latitude  = 0;
+var longitude = -90;
 
-var yaw      = -30;
-var pitch    = -10;
+var yaw      = -10;
+var pitch    = -5;
 var rotation = 0;
 
 //
@@ -1055,20 +1054,20 @@ sunEarthLineHandler();
 //
 // Sun-Earth Surface Line Handler
 //
-var sun_surface_line = document.getElementById("sun-surface-line");
-var sun_surface_line_selector =  SceneJS.withNode("sun-surface-line-selector");
-
-function sunSurfaceLineHandler() {
-    if (sun_surface_line.checked) {
-        sun_surface_line_selector.set("selection", [1]);
-    } else {
-        sun_surface_line_selector.set("selection", [0]);
-    };
-};
-
-sun_surface_line.onchange = sunSurfaceLineHandler;
-sunSurfaceLineHandler();
-
+// var sun_surface_line = document.getElementById("sun-surface-line");
+// var sun_surface_line_selector =  SceneJS.withNode("sun-surface-line-selector");
+// 
+// function sunSurfaceLineHandler() {
+//     if (sun_surface_line.checked) {
+//         sun_surface_line_selector.set("selection", [1]);
+//     } else {
+//         sun_surface_line_selector.set("selection", [0]);
+//     };
+// };
+// 
+// sun_surface_line.onchange = sunSurfaceLineHandler;
+// sunSurfaceLineHandler();
+// 
 //
 // Sun rise/set surface indicator Handler
 //
@@ -1497,6 +1496,45 @@ var info_label   = document.getElementById("info-label");
 var info_view   = document.getElementById("info-view");
 var info_content = document.getElementById("info-content");
 
+function lat_long_to_cartesian(lat, lon) {
+    return [Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
+            Math.sin(lat * deg2rad),
+            Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad)]
+}
+
+function solar_altitude(lat, lon) {
+    var center   = lat_long_to_cartesian(earth.tilt, 0);
+    var loc      = lat_long_to_cartesian(lat, lon);
+    var xd = center[0] - loc[0];
+    var yd = center[1] - loc[1];
+    var zd = center[2] - loc[2];
+    var d1 = Math.sqrt(xd * xd + yd * yd + zd * zd);
+    var sqrt2 = Math.sqrt(2);
+    var alt = (Math.asin(d1 / 2) * 2 * rad2deg - 90) * -1;
+    return alt
+};
+
+function solar_flux() {
+    return earth_ephemerides_solar_constant_by_day_number(earth.day_number);
+};
+
+function solar_radiation(lat, lon) {
+    var altitude = solar_altitude(lat, lon);
+    var result = solar_flux() * Math.sin(altitude * deg2rad) * SOLAR_FACTOR_AM1;
+    return result < 0 ? 0 : result; 
+};
+
+// http://en.wikipedia.org/wiki/Airmass#CITEREFPickering2002
+function air_mass(alt) {
+    var h;
+    if (alt !== undefined) {
+        h = alt;
+    } else {
+        h = solar_altitude(latitude, longitude);
+    };
+    return 1/(Math.sin((h + 244/(165 + Math.pow(47 * h, 1.1))) * deg2rad))
+};
+
 function infoLabel() {
     if (info_label) {
         if (info_view.checked) {
@@ -1507,13 +1545,18 @@ function infoLabel() {
             info_label.style.opacity = null;
         };
 
-        var solar_flux = earth_ephemerides_solar_constant_by_day_number(earth.day_number);
+        var altitude = Math.acos(Math.cos((latitude - earth.tilt)  * deg2rad) * Math.cos((angle.get("angle") - longitude) * deg2rad)) * rad2deg;
 
+        earth.pos.y + Math.sin((latitude - earth.tilt)  * deg2rad) * earth.radius, 
+        earth.pos.z + Math.sin(-longitude * deg2rad) * earth.radius 
+        
         var labelStr = "";
         labelStr += "Date: " + date_by_day_number[earth.day_number] + ", ";
-        labelStr += sprintf("Solar Constant:  %4.1f W/m2", solar_flux) + ", ";
-        labelStr += sprintf("Latitude: %4.1f, Longitude:  %4.1f", latitude, longitude) + ", ";
-        labelStr += "Time: " + angleToTimeStr(angle.get().angle - longitude);
+        // labelStr += sprintf("Sol. Constant:  %4.1f W/m2", solar_flux()) + ", ";
+        labelStr += sprintf("Lat: %4.1f, Long:  %4.1f", latitude, longitude) + ", ";
+        labelStr += "Time: " + angleToTimeStr(angle.get().angle - longitude) + ", ";
+        labelStr += sprintf("Sun Altitude: %2.1f&deg;", solar_altitude(latitude, longitude)) + ", ";
+        labelStr += sprintf("Solar Radiation: %2.1f  W/m2", solar_radiation(latitude, longitude));
 
         info_content.innerHTML = labelStr;
 
