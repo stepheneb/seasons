@@ -46,11 +46,13 @@ var distance = earth.radius * 3;
 
 var surface_line_width = earth.radius / 200;
 
-var latitude  = 0;
-var longitude = -90;
+var latitude  = 37.75;
+var longitude = 122.5;
 
-var yaw      = -10;
-var pitch    = -5;
+var initial_angle = 100;
+
+var yaw      = -120;
+var pitch    = -15;
 var rotation = 0;
 
 //
@@ -753,8 +755,8 @@ SceneJS.createNode({
                                                         // Adjustable Latitude Line
                                                         { 
                                                             type: "material",
-                                                            baseColor:      { r: 1.0, g: 0.2, b: 0.02 },
-                                                            specularColor:  { r: 1.0, g: 0.2, b: 0.02 },
+                                                            baseColor:      { r: 1.0, g: 0.02, b: 0.02 },
+                                                            specularColor:  { r: 1.0, g: 0.02, b: 0.02 },
                                                             specular:       1.0,
                                                             shine:          1.0,
                                                             emit:           1.0,
@@ -817,7 +819,7 @@ SceneJS.createNode({
                                                         },
                             
                                                         { 
-                                                            type: "rotate", id: "rotation", angle: 0, y: 1.0,
+                                                            type: "rotate", id: "rotation", angle: initial_angle, y: 1.0,
                                     
                                                             nodes: [
                                 
@@ -1502,8 +1504,8 @@ function lat_long_to_cartesian(lat, lon) {
             Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad)]
 }
 
-function solar_altitude(lat, lon) {
-    var center   = lat_long_to_cartesian(earth.tilt, 0);
+function solar_altitude(lat, lon, earth_rotation) {
+    var center   = lat_long_to_cartesian(earth.tilt, earth_rotation);
     var loc      = lat_long_to_cartesian(lat, lon);
     var xd = center[0] - loc[0];
     var yd = center[1] - loc[1];
@@ -1518,9 +1520,8 @@ function solar_flux() {
     return earth_ephemerides_solar_constant_by_day_number(earth.day_number);
 };
 
-function solar_radiation(lat, lon) {
-    var altitude = solar_altitude(lat, lon);
-    var result = solar_flux() * Math.sin(altitude * deg2rad) * SOLAR_FACTOR_AM1;
+function solar_radiation(alt) {
+    var result = solar_flux() * Math.sin(alt * deg2rad) * SOLAR_FACTOR_AM1;
     return result < 0 ? 0 : result; 
 };
 
@@ -1530,7 +1531,8 @@ function air_mass(alt) {
     if (alt !== undefined) {
         h = alt;
     } else {
-        h = solar_altitude(latitude, longitude);
+        var earth_rot = angle.get("angle");
+        h = solar_altitude(latitude, longitude, earth_rot);
     };
     return 1/(Math.sin((h + 244/(165 + Math.pow(47 * h, 1.1))) * deg2rad))
 };
@@ -1550,13 +1552,17 @@ function infoLabel() {
         earth.pos.y + Math.sin((latitude - earth.tilt)  * deg2rad) * earth.radius, 
         earth.pos.z + Math.sin(-longitude * deg2rad) * earth.radius 
         
+        var earth_rot = angle.get("angle");
+        var solar_alt = solar_altitude(latitude, longitude, earth_rot);
+        var solar_rad = solar_radiation(solar_alt);
+
         var labelStr = "";
         labelStr += "Date: " + date_by_day_number[earth.day_number] + ", ";
         // labelStr += sprintf("Sol. Constant:  %4.1f W/m2", solar_flux()) + ", ";
         labelStr += sprintf("Lat: %4.1f, Long:  %4.1f", latitude, longitude) + ", ";
         labelStr += "Time: " + angleToTimeStr(angle.get().angle - longitude) + ", ";
-        labelStr += sprintf("Sun Altitude: %2.1f&deg;", solar_altitude(latitude, longitude)) + ", ";
-        labelStr += sprintf("Solar Radiation: %2.1f  W/m2", solar_radiation(latitude, longitude));
+        labelStr += sprintf("Sun Altitude: %2.1f&deg;", solar_alt) + ", ";
+        labelStr += sprintf("Solar Radiation: %2.1f  W/m2", solar_rad);
 
         info_content.innerHTML = labelStr;
 
