@@ -938,6 +938,70 @@ SceneJS.createNode({
                                                                                     nodes: [ 
                                                                                         { type: "sphere" }
                                                                                     ]
+                                                                                },
+                                                                                
+                                                                                {
+                                                                                    type: "node",
+                                                                                    flags: {
+                                                                                        transparent: true
+                                                                                    },
+
+                                                                                    nodes: [
+
+                                                                                        { 
+                                                                                            type: "material",
+                                                                                            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                            specular:       10,
+                                                                                            shine:          0.1,
+                                                                                            alpha:          0.2,
+
+                                                                                            nodes: [
+
+                                                                                                {
+                                                                                                    type: "quaternion",
+                                                                                                    x: 0.0, y: 0.0, z: 1.0, angle: 90.0,
+
+                                                                                                    nodes: [
+                                                                                                        {
+
+                                                                                                            type: "quaternion",
+                                                                                                            id: "earth-surface-location-longitude",
+                                                                                                            x: -1.0, y: 0.0, z: 0.0, angle: longitude,
+
+                                                                                                            nodes: [
+                                                                                                                {
+
+                                                                                                                    type: "quaternion",
+                                                                                                                    id: "earth-surface-location-latitude",
+                                                                                                                    x: 0.0, y: 0.0, z: -1.0, angle: latitude,
+
+                                                                                                                    nodes: [
+                                                                                                                        {
+
+                                                                                                                            type: "translate",
+                                                                                                                            x: 0,
+                                                                                                                            y: earth.radius / 6.3,
+                                                                                                                            z: 0,
+
+                                                                                                                            nodes: [
+                                                                                                                                {
+                                                                                                                                    type: "disk",
+                                                                                                                                    radius: 0.02,
+                                                                                                                                    height: 0.001,
+                                                                                                                                    rings: 16
+                                                                                                                                }
+                                                                                                                            ]
+                                                                                                                        }
+                                                                                                                    ]
+                                                                                                                }
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ]
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    ]
                                                                                 }
                                                                             ]
                                                                         }
@@ -1207,6 +1271,9 @@ var latitude_scale     = SceneJS.withNode("latitude-scale");
 
 var longitude_rotation = SceneJS.withNode("longitude-rotation");
 
+var earth_surface_location_longitude = SceneJS.withNode("earth-surface-location-longitude");
+var earth_surface_location_latitude  = SceneJS.withNode("earth-surface-location-latitude");
+
 var the_canvas = document.getElementById("theCanvas");
 
 function mouseDown(event) {
@@ -1243,11 +1310,14 @@ function updateLookAt() {
     debugLabel();
 };
 
+
 function setLatitude(lat) {
     latitude = lat;
     latitude_translate.set({ x: 0, y: earth.radius * Math.sin(latitude * deg2rad), z: 0 });
     var scale = Math.cos(latitude * deg2rad);
     latitude_scale.set({ x: scale, y: 1.0, z: scale });
+    earth_surface_location_latitude.set("rotation", { x: 0.0, y: 0.0, z: -1.0, angle : lat });
+    
     infoLabel();
 };
 
@@ -1266,6 +1336,7 @@ function decrementLatitude() {
 function setLongitude(lon) {
     longitude = lon;
     longitude_rotation.set({ angle: longitude + 90 });
+    earth_surface_location_longitude.set("rotation", { x: -1.0, y: 0.0, z: 0.0, angle : lon });
     infoLabel();
 };
 
