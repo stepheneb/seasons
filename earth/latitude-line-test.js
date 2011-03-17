@@ -30,7 +30,7 @@ var sun = {
 
 var initial_day_number = day_number_by_month['jun'];
 
-var initial_earth_rotation = 0;
+var initial_earth_rotation = 100;
 
 var earth = {
     pos: {
@@ -61,12 +61,7 @@ var distance = earth.radius * 3;
 
 var surface_line_width = earth.radius / 200;
 
-// San Francisco: 38, 122
-
-var latitude  = 0;
-var longitude = -90;
-
-var yaw      = -10;
+var yaw      =  -100;
 var pitch    = -10;
 var rotation = 0;
 
