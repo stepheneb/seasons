@@ -209,7 +209,7 @@ SceneJS.createNode({
                         fovy: 50.0,
                         aspect: 1.43,
                         near: 0.10,
-                        far: milky_way_apparent_radius * 10,
+                        far: milky_way_apparent_radius * 50,
                     },
 
                     nodes: [
@@ -1732,4 +1732,77 @@ function controlsLabel() {
         // controls_label.innerHTML = labelStr;
     };
 };
+
+//
+// Info Graph
+//
+
+var info_graph   = document.getElementById("info-graph");
+var graph_view   = document.getElementById("graph-view");
+var graph_canvas = document.getElementById("graph-canvas");
+var graph_ctx = graph_canvas.getContext('2d');
+
+function infoGraph() {
+    if (info_graph) {
+        if (graph_view.checked) {
+            info_graph.style.opacity = 1.0;
+            graph_canvas.style.display = null;
+        } else {
+            graph_canvas.style.display = "none";
+            info_graph.style.opacity = null;
+        };
+        
+        graph_ctx.clearRect(0,0,108,100);
+        graph_ctx.strokeStyle = "rgba(255,255,0, 1.0)";
+        
+        var radius = 75;
+        var indicator_radius = 85;
+        
+        graph_ctx.beginPath();
+        graph_ctx.arc(0,100,radius, -Math.PI / 2, 0, false);
+        graph_ctx.lineTo(0,100);
+        graph_ctx.lineTo(0,100-radius);
+        // graph_ctx.closePath();
+        graph_ctx.stroke();
+
+        var solar_alt = solar_altitude(surface.latitude, surface.longitude);
+        if (solar_alt >= 0) {
+            var x = Math.cos(solar_alt * deg2rad) * indicator_radius;
+            var y = Math.sin(solar_alt * deg2rad) * -indicator_radius + 100;
+            graph_ctx.strokeStyle = "rgba(255,0,0, 1.0)";
+            graph_ctx.beginPath();
+            graph_ctx.moveTo(0,100);
+            graph_ctx.lineTo(x, y);
+            graph_ctx.stroke();
+        };
+        graph_ctx.font = "bold 12px sans-serif";
+        graph_ctx.fillStyle = "rgb(255,255,255)";
+        graph_ctx.fillText(sprintf("Solar Altitude: %2.0f", solar_alt), 0, 12);
+
+        // positioning the graph ...
+        var canvas_properties = the_canvas.getBoundingClientRect();
+        var container_properties = container.getBoundingClientRect();
+        // info_graph.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
+        info_graph.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - info_graph.offsetHeight - 24 + "px"
+        info_graph.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
+    };
+};
+
+graph_view.onchange = infoGraph;
+
+//
+// Solar Altitude Graph Handler
+//
+var solar_altitude_graph = document.getElementById("solar-altitude-graph");
+
+function solarAltitudeGraphHandler() {
+    if (solar_altitude_graph.checked) {
+        graph_view.checked = true;
+    } else {
+        graph_view.checked = false;
+    };
+};
+
+solar_altitude_graph.onchange = solarAltitudeGraphHandler;
+solarAltitudeGraphHandler();
 

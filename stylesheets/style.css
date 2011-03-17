@@ -203,6 +203,25 @@ h4 {
     border-top-right-radius: 5px 5px;
 }
 
+.webgl-canvas-graph {
+    position: absolute;
+    font: 1.1em monospace;
+    clear: both;
+    padding: 8px;
+    overflow: hidden;
+    background: transparent;
+    color: white;
+    z-index: 2;
+    margin: 0 auto;
+    border: 1px solid;
+    text-align: left;
+    -webkit-box-shadow: #444 5px 5px 2px;
+    border-bottom-left-radius: 5px 5px;
+    border-bottom-right-radius: 5px 5px;
+    border-top-left-radius: 5px 5px;
+    border-top-right-radius: 5px 5px;
+}
+
 #info-label {
 }
 

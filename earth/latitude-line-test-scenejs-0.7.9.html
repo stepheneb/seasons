@@ -29,6 +29,10 @@
       <div id="info-label" class="webgl-canvas-label transparent-ui">
         <label><input id="info-view" type="checkbox" checked/></label><div id="info-content"></div>
       </div>
+      <div id="info-graph" class="webgl-canvas-graph transparent-ui">
+        <label><input id="graph-view" type="checkbox" checked/></label>
+        <canvas id="graph-canvas" width="108" height="100"></canvas>
+      </div>
       <div id="controls-label" class="webgl-canvas-label transparent-ui">
         <form id="show-me">
           <fieldset>
@@ -38,23 +42,25 @@
           </fieldset>
           <br />
           <fieldset>
-            <legend>Orbital Grids</legend>
-            <label><input id="earth-grid" type="checkbox"/> Square</label><br />
-            <label><input id="earth-rose-grid" type="checkbox" /> Rose</label><br />
+            <legend>Display</legend>
+            <label><input id="solar-altitude-graph" type="checkbox"/> Solar Altitude</label><br />
           </fieldset>
           <br />
           <fieldset>
-            <legend>Sun</legend>
+            <legend>Ecliptic Grids</legend>
+            <label><input id="earth-grid" type="checkbox"/> Square</label><br />
+            <label><input id="earth-rose-grid" type="checkbox"/> Rose</label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Markers</legend>
             <label><input id="sun-earth-line" type="checkbox"/> Center Ray</label><br />
             <!-- <label><input id="sun-surface-line" type="checkbox"/> Point Ray</label><br /> -->
             <label><input id="sun-rays" type="checkbox"/> Many Rays</label><br />
             <label><input id="sun-rise-set" type="checkbox" /> Rise/Set</label><br />
-            <label><input id="sun-noon-midnight" type="checkbox" /> Noon/Midnight</label><br />
-          </fieldset>
-          <br />
-          <fieldset>
-            <legend>Latitude</legend>
-            <label><input id="lat-hour-markers" type="checkbox"/> Hour Markers</label><br />
+            <label><input id="sun-noon-midnight" type="checkbox"/> Noon/Midnight</label><br />
+            <label><input id="lat-hour-markers" type="checkbox"/> Latitude Hours</label><br />
+            <label><input id="solar-altitude" type="checkbox"/> Solar Altitude</label><br />
           </fieldset>
           <br />
           <fieldset>
