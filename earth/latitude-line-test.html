@@ -30,8 +30,9 @@
         <label><input id="info-view" type="checkbox" checked/></label><div id="info-content"></div>
       </div>
       <div id="info-graph" class="webgl-canvas-graph transparent-ui">
-        <label><input id="graph-view" type="checkbox" checked/></label>
-        <canvas id="graph-canvas" width="108" height="100"></canvas>
+        <label><input id="graph-view" type="checkbox" /></label>
+        <canvas id="altitude-graph-canvas" width="1" height="1"></canvas>
+        <canvas id="radiation-graph-canvas" width="1" height="1"></canvas>
       </div>
       <div id="controls-label" class="webgl-canvas-label transparent-ui">
         <form id="show-me">
@@ -44,6 +45,7 @@
           <fieldset>
             <legend>Display</legend>
             <label><input id="solar-altitude-graph" type="checkbox"/> Solar Altitude</label><br />
+            <label><input id="solar-radiation-graph" type="checkbox"/> Solar Radiation</label><br />
           </fieldset>
           <br />
           <fieldset>
@@ -60,7 +62,6 @@
             <label><input id="sun-rise-set" type="checkbox" /> Rise/Set</label><br />
             <label><input id="sun-noon-midnight" type="checkbox"/> Noon/Midnight</label><br />
             <label><input id="lat-hour-markers" type="checkbox"/> Latitude Hours</label><br />
-            <label><input id="solar-altitude" type="checkbox"/> Solar Altitude</label><br />
           </fieldset>
           <br />
           <fieldset>
