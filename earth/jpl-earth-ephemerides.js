@@ -499,3 +499,212 @@ var earth_ephemerides_solar_constant_by_month = function(month) {
     return earth_ephemerides_solar_constant_by_day_number(day_number_by_month[month]);
 };
 
+
+// um, ETR, Water Abs, O3 Abs, Uni Abs,
+var sunlight_data = [
+    0.300,  535.9,  0,      10,     0,
+    0.305,  558.3,  0,      4.8,    0,
+    0.310,  622,    0,      2.7,    0,
+    0.315,  692.7,  0,      1.35,   0,
+    0.320,  715.1,  0,      0.8,    0,
+    0.325,  832.9,  0,      0.38,   0,
+    0.330,  961.9,  0,      0.16,   0,
+    0.335,  931.9,  0,      0.075,  0,
+    0.340,  900.6,  0,      0.04,   0,
+    0.345,  911.3,  0,      0.019,  0,
+    0.350,  975.5,  0,      0.007,  0,
+    0.360,  975.9,  0,      0,      0,
+    0.370,  1119.9, 0,      0,      0,
+    0.380,  1103.8, 0,      0,      0,
+    0.390,  1033.8, 0,      0,      0,
+    0.400,  1479.1, 0,      0,      0,
+    0.410,  1701.3, 0,      0,      0,
+    0.420,  1740.4, 0,      0,      0,
+    0.430,  1587.2, 0,      0,      0,
+    0.440,  1837,   0,      0,      0,
+    0.450,  2005,   0,      0.003,  0,
+    0.460,  2043,   0,      0.006,  0,
+    0.470,  1987,   0,      0.009,  0,
+    0.480,  2027,   0,      0.014,  0,
+    0.490,  1896,   0,      0.021,  0,
+    0.500,  1909,   0,      0.03,   0,
+    0.510,  1927,   0,      0.04,   0,
+    0.520,  1831,   0,      0.048,  0,
+    0.530,  1891,   0,      0.063,  0,
+    0.540,  1898,   0,      0.075,  0,
+    0.550,  1892,   0,      0.085,  0,
+    0.570,  1840,   0,      0.12,   0,
+    0.593,  1768,   0.075,  0.119,  0,
+    0.610,  1728,   0,      0.12,   0,
+    0.630,  1658,   0,      0.09,   0,
+    0.656,  1524,   0,      0.065,  0,
+    0.668,  1531,   0,      0.051,  0,
+    0.690,  1420,   0.016,  0.028,  0.15,
+    0.710,  1399,   0.0125, 0.018,  0,
+    0.718,  1374,   1.8,    0.015,  0,
+    0.724,  1373,   2.5,    0.012,  0,
+    0.740,  1298,   0.061,  0.01,   0,
+    0.753,  1269,   0.0008, 0.008,  0,
+    0.758,  1245,   0.0001, 0.007,  0,
+    0.763,  1223,   0.00001,0.006,  4,
+    0.768,  1205,   0.00001,0.005,  0.35,
+    0.780,  1183,   0.0006, 0,      0,
+    0.800,  1148,   0.036,  0,      0,
+    0.816,  1091,   1.6,    0,      0,
+    0.824,  1062,   2.5,    0,      0,
+    0.832,  1038,   0.5,    0,      0,
+    0.840,  1022,   0.155,  0,      0,
+    0.860,  998.7,  0.00001,0,      0,
+    0.880,  947.2,  0.0026, 0,      0,
+    0.905,  893.2,  7,      0,      0,
+    0.915,  868.2,  5,      0,      0,
+    0.925,  829.7,  5,      0,      0,
+    0.930,  830.3,  27,     0,      0,
+    0.937,  814,    55,     0,      0,
+    0.948,  786.9,  45,     0,      0,
+    0.965,  768.3,  4,      0,      0,
+    0.980,  767,    1.48,   0,      0,
+    0.994,  757.6,  0.1,    0,      0,
+    1.040,  688.1,  0.00001,0,      0,
+    1.070,  640.7,  0.001,  0,      0,
+    1.100,  606.2,  3.2,    0,      0,
+    1.120,  585.9,  115,    0,      0,
+    1.130,  570.2,  70,     0,      0,
+    1.145,  564.1,  75,     0,      0,
+    1.161,  544.2,  10,     0,      0,
+    1.170,  533.4,  5,      0,      0,
+    1.200,  501.6,  2,      0,      0,
+    1.240,  477.5,  0.002,  0,      0.05,
+    1.270,  442.7,  0.002,  0,      0.3,
+    1.290,  440,    0.1,    0,      0.02,
+    1.320,  416.8,  4,      0,      0.0002,
+    1.350,  391.4,  200,    0,      0.00011,
+    1.395,  358.9,  1000,   0,      0.00001,
+    1.443,  327.5,  185,    0,      0.05,
+    1.463,  317.5,  80,     0,      0.011,
+    1.477,  307.3,  80,     0,      0.005,
+    1.497,  300.4,  12,     0,      0.0006,
+    1.520,  292.8,  0.16,   0,      0,
+    1.539,  275.5,  0.002,  0,      0.005,
+    1.558,  272.1,  0.0005, 0,      0.13,
+    1.578,  259.3,  0.0001, 0,      0.04,
+    1.592,  246.9,  0.00001,0,      0.06,
+    1.610,  244,    0.0001, 0,      0.13,
+    1.630,  243.5,  0.001,  0,      0.001,
+    1.646,  234.8,  0.01,   0,      0.0014,
+    1.678,  220.5,  0.036,  0,      0.0001,
+    1.740,  190.8,  1.1,    0,      0.00001,
+    1.800,  171.1,  130,    0,      0.00001,
+    1.860,  144.5,  1000,   0,      0.0001,
+    1.920,  135.7,  500,    0,      0.001,
+    1.960,  123,    100,    0,      4.3,
+    1.985,  123.8,  4,      0,      0.2,
+    2.005,  113,    2.9,    0,      21,
+    2.035,  108.5,  1,      0,      0.13,
+    2.065,  97.5,   0.4,    0,      1,
+    2.100,  92.4,   0.22,   0,      0.08,
+    2.148,  82.4,   0.25,   0,      0.001,
+    2.198,  74.6,   0.33,   0,      0.00038,
+    2.270,  68.3,   0.5,    0,      0.001,
+    2.360,  63.8,   4,      0,      0.0005,
+    2.450,  49.5,   80,     0,      0.00015,
+    2.500,  48.5,   310,    0,      0.00014,
+    2.600,  38.6,   15000,  0,      0.00066,
+    2.700,  36.6,   22000,  0,      100,
+    2.800,  32,     8000,   0,      150,
+    2.900,  28.1,   650,    0,      0.13,
+    3.000,  24.8,   240,    0,      0.0095,
+    3.100,  22.1,   230,    0,      0.001,
+    3.200,  19.6,   100,    0,      0.8,
+    3.300,  17.5,   120,    0,      1.9,
+    3.400,  15.7,   19.5,   0,      1.3,
+    3.500,  14.1,   3.6,    0,      0.075,
+    3.600,  12.7,   3.1,    0,      0.01,
+    3.700,  11.5,   2.5,    0,      0.00195,
+    3.800,  10.4,   1.4,    0,      0.004,
+    3.900,  9.5,    0.17,   0,      0.29,
+    4.000,  8.6,    0.0045, 0,      0.025
+]
+
+function  rayleighTransmission(light, pressure_corrected_air_mass) {
+    var rt = Math.exp(-pressure_corrected_air_mass / (Math.pow (light.wavelength, 4) * (115.6406 - 1.335/ (light.wavelength * light.wavelength))));
+    return rt;
+};
+
+function radVecCorrection(day_number) {
+    var day_angle_in_radians = 6.283185 * (day_number - 1) / 365;
+    return 1.00011 + 0.034221 * Math.cos(day_angle_in_radians) + 0.00128 * Math.sin(day_angle_in_radians) +
+           0.000719 * Math.cos(2 * day_angle_in_radians) + 0.000077 * Math.sin(2 *day_angle_in_radians);
+};
+
+function  ozoneTransmission(light, zenith_angle_rad, total_column_ozone) {
+    var cos_zenith_angle_rad = Math.cos(zenith_angle_rad);
+    var amoz = (1 + 22 / 6370) / Math.pow((cos_zenith_angle_rad * cos_zenith_angle_rad + 2 * (22 / 6370)), 0.5);
+    return Math.exp(-light.ozone_absorption * amoz * total_column_ozone);
+};
+
+function  uniformMixedGasesTransmission(light, pressure_corrected_air_mass) {
+    return Math.exp( -1.41 * light.uniform_gas_absorption * pressure_corrected_air_mass / 
+        Math.pow((1 + 118.93 * light.uniform_gas_absorption * pressure_corrected_air_mass), 0.45))
+};
+
+function  waterVaporTransmission(light, precipitable_water, airmass) {
+    return Math.exp( -0.2385 * light.water_absorption * precipitable_water * airmass / 
+        Math.pow(1 + 20.07 * light.water_absorption * precipitable_water * airmass, 0.45))
+};
+
+function  aerosolTransmission(light, aerosol_optical_depth, alpha, airmass) {
+    var dela = aerosol_optical_depth * Math.pow((light.wavelength / 0.5), -alpha);
+    return Math.exp(-dela * airmass);
+};
+
+// http://en.wikipedia.org/wiki/Airmass#CITEREFPickering2002
+function airMass(alt) {
+    return 1/(Math.sin((alt + 244/(165 + Math.pow(47 * alt, 1.1))) * deg2rad))
+};
+
+function directInsolation(wave_index, day_number, altitude) {
+    var index = wave_index * 5;
+    var light = { 
+        wavelength:                  sunlight_data[index], 
+        extra_terrestrial_radiation: sunlight_data[index + 1],
+        water_absorption:            sunlight_data[index + 2],
+        ozone_absorption:            sunlight_data[index + 3],  
+        uniform_gas_absorption:      sunlight_data[index + 4]
+    };
+
+    // var orbital_distance_factor = earth_ephemerides_jpl_2010[day_number - 1].rg;    
+    var rad_vec_correction = radVecCorrection(day_number);
+
+    var zenith_angle_rad = (90 - altitude) * deg2rad;
+    var airmass = airMass(altitude);
+
+    var precipitable_water = 1.42
+    var aerosol_optical_depth = 0.27
+    var total_column_ozone = 0.34;
+    var alpha = 1.14
+    
+    var rayleigh_transmission = rayleighTransmission(light, airmass);
+    var ozone_transmission = ozoneTransmission(light, zenith_angle_rad, total_column_ozone);
+    var uniform_mixed_gases_transmission = uniformMixedGasesTransmission(light, airmass);
+    var water_vapor_transmission = waterVaporTransmission(light, precipitable_water, airmass);
+    var aerosol_transmission = aerosolTransmission(light, aerosol_optical_depth, alpha, airmass);
+    var direct = light.extra_terrestrial_radiation * rad_vec_correction * 
+        rayleigh_transmission * ozone_transmission * uniform_mixed_gases_transmission * 
+        water_vapor_transmission * aerosol_transmission;
+    return [light.wavelength, direct];
+}
+
+function totalDirectInsolation(day_number, altitude) {
+    var total_direct = 0;
+    var table_entries = sunlight_data.length / 5;
+    var previous_value, current_value;
+    previous_value = directInsolation(0, day_number, altitude);
+    for (var entry = 1; entry < table_entries; entry++) {
+        current_value = directInsolation(entry, day_number, altitude);
+        total_direct += 0.5 * (current_value[0] - previous_value[0]) * (current_value[1] + previous_value[1]);
+        previous_value = current_value;
+    };
+    return total_direct;
+};
+
