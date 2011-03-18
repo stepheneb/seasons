@@ -1970,7 +1970,7 @@ function drawSolarAltitudeGraph() {
     alt_ctx.font = "bold 12px sans-serif";
     alt_ctx.fillStyle = "rgb(255,255,255)";
     alt_ctx.fillText(sprintf("Lat: %3.0f ", surface.latitude) + ", Time: " + rotationToTimeStr(earth.rotation - surface.longitude), 0, 12);
-    alt_ctx.fillText(sprintf("Solar Altitude: %2.0f", solar_alt), 0, 26);
+    alt_ctx.fillText(sprintf("Solar Altitude: %2.0f degrees", solar_alt), 0, 26);
 };
 
 function updateSolarAltitudeGraph() {
