@@ -1684,7 +1684,7 @@ function debugLabel() {
 
         var canvas_properties = the_canvas.getBoundingClientRect();
         var container_properties = container.getBoundingClientRect();
-        debug_label.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - debug_label.offsetHeight - 24 + "px"
+        debug_label.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - debug_label.offsetHeight - 10 + "px"
         debug_label.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - debug_label.offsetWidth + "px";
     };
 };
@@ -1868,12 +1868,11 @@ function controlsLabel() {
 //
 // Info Graph
 //
-
 var info_graph   = document.getElementById("info-graph");
 var graph_view   = document.getElementById("graph-view");
 
 var graph_width = 150;
-var graph_height = 100;
+var graph_height = 120;
 
 //
 // Graph Dom Elements ...
@@ -1899,7 +1898,7 @@ function infoGraph() {
         var canvas_properties = the_canvas.getBoundingClientRect();
         var container_properties = container.getBoundingClientRect();
         // info_graph.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
-        info_graph.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - info_graph.offsetHeight - 24 + "px"
+        info_graph.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - info_graph.offsetHeight - 10 + "px"
         info_graph.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
     };
 };
@@ -1911,33 +1910,37 @@ graph_view.onchange = infoGraph;
 //
 
 function drawSolarAltitudeGraph() {
-    var altitude_ctx = altitude_graph_canvas.getContext('2d');
-    altitude_ctx.clearRect(0,0,graph_width,graph_height);
-    altitude_ctx.strokeStyle = "rgba(255,255,0, 1.0)";
+    var alt_ctx = altitude_graph_canvas.getContext('2d');
+    alt_ctx.clearRect(0,0,graph_width,graph_height);
+    alt_ctx.strokeStyle = "rgba(255,255,0, 1.0)";
     
-    var radius = 75;
-    var indicator_radius = 85;
+    var graph_base = graph_height - 15;
+    var graph_y_range = graph_base - 15;
+
+    var radius = graph_y_range - 20;
+    var indicator_radius = graph_y_range - 10;
     
-    altitude_ctx.beginPath();
-    altitude_ctx.arc(0,100,radius, -Math.PI / 2, 0, false);
-    altitude_ctx.lineTo(0,100);
-    altitude_ctx.lineTo(0,100-radius);
-    // altitude_ctx.closePath();
-    altitude_ctx.stroke();
+    alt_ctx.beginPath();
+    alt_ctx.arc(0, graph_base, radius, -Math.PI / 2, 0, false);
+    alt_ctx.lineTo(0, graph_base);
+    alt_ctx.lineTo(0, graph_base - radius);
+    // alt_ctx.closePath();
+    alt_ctx.stroke();
 
     var solar_alt = solar_altitude(surface.latitude, surface.longitude);
     if (solar_alt >= 0) {
         var x = Math.cos(solar_alt * deg2rad) * indicator_radius;
-        var y = Math.sin(solar_alt * deg2rad) * -indicator_radius + 100;
-        altitude_ctx.strokeStyle = "rgba(255,0,0, 1.0)";
-        altitude_ctx.beginPath();
-        altitude_ctx.moveTo(0,100);
-        altitude_ctx.lineTo(x, y);
-        altitude_ctx.stroke();
+        var y = Math.sin(solar_alt * deg2rad) * -indicator_radius + graph_base;
+        alt_ctx.strokeStyle = "rgba(255,0,0, 1.0)";
+        alt_ctx.beginPath();
+        alt_ctx.moveTo(0, graph_base);
+        alt_ctx.lineTo(x, y);
+        alt_ctx.stroke();
     };
-    altitude_ctx.font = "bold 12px sans-serif";
-    altitude_ctx.fillStyle = "rgb(255,255,255)";
-    altitude_ctx.fillText(sprintf("Solar Altitude: %2.0f", solar_alt), 0, 12);
+    alt_ctx.font = "bold 12px sans-serif";
+    alt_ctx.fillStyle = "rgb(255,255,255)";
+    alt_ctx.fillText(sprintf("Lat: %3.0f ", surface.latitude) + ", Time: " + rotationToTimeStr(earth.rotation - surface.longitude), 0, 12);
+    alt_ctx.fillText(sprintf("Solar Altitude: %2.0f", solar_alt), 0, 26);
 };
 
 function updateSolarAltitudeGraph() {
@@ -1996,44 +1999,47 @@ function drawSolarRadiationGraph() {
     var index = Math.round(time * 10);
     solar_radiation_data[index] = solar_rad;
     
-    var radiation_ctx = radiation_graph_canvas.getContext('2d');
-    radiation_ctx.clearRect(0,0,graph_width,graph_height);
+    var rad_ctx = radiation_graph_canvas.getContext('2d');
+    rad_ctx.clearRect(0,0,graph_width,graph_height);
 
     var data_length = solar_radiation_data.length;
     var graph_base = graph_height - 15;
-    var graph_y_range = graph_base - 15;
+    var graph_y_range = graph_base - 30;
     
     var x_factor = graph_width / data_length;
     var y_factor = graph_y_range / SOLAR_CONSTANT;
 
-    radiation_ctx.beginPath();
-    radiation_ctx.strokeStyle = "rgba(0,255,0, 1.0)";
-    radiation_ctx.moveTo(0, graph_base);
-    radiation_ctx.lineTo(graph_width, graph_base);
-    radiation_ctx.moveTo(graph_width / 2, graph_base);
-    radiation_ctx.lineTo(graph_width/2, graph_base + 4);
-    radiation_ctx.stroke();
+    rad_ctx.beginPath();
+    rad_ctx.strokeStyle = "rgba(0,255,0, 1.0)";
+    rad_ctx.moveTo(0, graph_base);
+    rad_ctx.lineTo(graph_width, graph_base);
+    rad_ctx.moveTo(graph_width / 2, graph_base);
+    rad_ctx.lineTo(graph_width/2, graph_base + 4);
+    rad_ctx.stroke();
 
     var x0, y0, x1, y1;
     for (var x = 0; x < data_length; x++) {
         x0 = x * x_factor;
         y0 = graph_base;
         y1 = solar_radiation_data[x] * -y_factor + graph_height - 15;
-        radiation_ctx.strokeStyle = "rgba(255,255,0, 1.0)";
-        radiation_ctx.beginPath();
-        radiation_ctx.moveTo(x0, y0);
-        radiation_ctx.lineTo(x0, y1);
-        radiation_ctx.stroke();
+        if (x == index) {
+            rad_ctx.strokeStyle = "rgba(255,0,0, 1.0)"; 
+        } else {
+            rad_ctx.strokeStyle = "rgba(255,255,0, 1.0)";
+        };
+        
+        rad_ctx.beginPath();
+        rad_ctx.moveTo(x0, y0);
+        rad_ctx.lineTo(x0, y1);
+        rad_ctx.stroke();
     }
 
-    radiation_ctx.font = "bold 12px sans-serif";
-    radiation_ctx.fillStyle = "rgb(255,255,255)";
-    radiation_ctx.fillText(sprintf("Solar Rad.: %4.0f  W/m2", solar_rad), 0, 12);
-    radiation_ctx.fillText(sprintf("total: %3.1f  kWh/m2", total_solar_radiation_data() / 1000), 0, 26);
-
-
-    radiation_ctx.fillText("noon", graph_width / 2 - 16, graph_height);
-
+    rad_ctx.font = "bold 12px sans-serif";
+    rad_ctx.fillStyle = "rgb(255,255,255)";
+    rad_ctx.fillText(sprintf("Lat: %3.0f ", surface.latitude) + ", Time: " + rotationToTimeStr(earth.rotation - surface.longitude), 0, 12);
+    rad_ctx.fillText(sprintf("Solar Rad: %3.0f  W/m2", solar_rad), 0, 26);
+    rad_ctx.fillText(sprintf("total: %3.1f kWh/m2", total_solar_radiation_data() / 1000), 0, 40);
+    rad_ctx.fillText("noon", graph_width / 2 - 16, graph_height);
 };
 
 function updateSolarRadiationGraph() {

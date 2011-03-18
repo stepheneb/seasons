@@ -234,6 +234,11 @@ h4 {
     float: right;
 }
 
+#info-graph canvas {
+    margin: 2;
+    padding: 2;
+}
+
 .webgl-canvas-label fieldset  {
     color: white;
 }
@@ -250,11 +255,11 @@ h4 {
     width: 80%;
 }
 
-canvas {
+/*canvas {
     padding-bottom: 15px;
     margin-bottom: 10px;
 }
-
+*/
 canvas:hover {
     cursor: move;    
 }
