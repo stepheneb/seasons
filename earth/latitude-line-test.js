@@ -1308,7 +1308,8 @@ function sampleAnimate(t) {
         if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
         if (earth_rotation.checked) {
             angle.set("angle", earth.rotation += 0.25);
-        }
+            clear_solar_radiation_longitude_data();
+        };
         sampleRender();
         if (debug_view.checked) debugLabel();
         infoLabel();
@@ -1418,7 +1419,6 @@ function setLatitude(lat) {
 
 function incrementLatitude() {
     clear_solar_radiation_latitude_data();
-    multiple_solar_radiation_longitude_data = true;
     surface.latitude += 1;
     if (surface.latitude > 90) surface.latitude = 90;
     setLatitude(surface.latitude);
@@ -1426,7 +1426,6 @@ function incrementLatitude() {
 
 function decrementLatitude() {
     clear_solar_radiation_latitude_data();
-    multiple_solar_radiation_longitude_data = true;
     surface.latitude -= 1;
     if (surface.latitude < -90) surface.latitude = -90;
     setLatitude(surface.latitude);
@@ -2120,6 +2119,7 @@ SolarRadiationLatitudeGraphHandler();
 // Solar Radiation Longitude Graph Handler
 //
 var solar_radiation_longitude_data = new Array(180);
+var solar_radiation_longitude_data_new = true;
 
 var solar_radiation_longitude_old_data = new Array(180);
 
@@ -2129,17 +2129,20 @@ var significant_old_solar_radiation_longitude_data = false;
 
 function clear_solar_radiation_longitude_data() {
     var i;
-    if (solar_radiation_longitude_data_cleared_count && multiple_solar_radiation_longitude_data) {
-        for (i= 0; i < solar_radiation_longitude_data.length; i++) {
-            solar_radiation_longitude_old_data[i] =  solar_radiation_longitude_data[i];
+    if (solar_radiation_longitude_data_new) {
+        if (solar_radiation_longitude_data_cleared_count && multiple_solar_radiation_longitude_data) {
+            for (i= 0; i < solar_radiation_longitude_data.length; i++) {
+                solar_radiation_longitude_old_data[i] =  solar_radiation_longitude_data[i];
+            };
+            significant_old_solar_radiation_longitude_data = true;
         };
-        significant_old_solar_radiation_longitude_data = true;
-    };
-    for (i= 0; i < solar_radiation_longitude_data.length; i++) {
-        solar_radiation_longitude_data[i] = 0;
-    };
-    multiple_solar_radiation_longitude_data = false;
-    solar_radiation_longitude_data_cleared_count++;
+        for (i= 0; i < solar_radiation_longitude_data.length; i++) {
+            solar_radiation_longitude_data[i] = 0;
+        };
+        solar_radiation_longitude_data_new = false;
+        multiple_solar_radiation_longitude_data = false;
+        solar_radiation_longitude_data_cleared_count++;
+    }
 };
 
 clear_solar_radiation_longitude_data();
@@ -2150,6 +2153,11 @@ function drawSolarRadiationLongitudeGraph() {
     var time = rotationToDecimalTime(earth.rotation - surface.longitude);
     var index = Math.round(surface.latitude + 90);
     solar_radiation_longitude_data[index] = solar_rad;
+    if (solar_radiation_longitude_data_new) {
+        multiple_solar_radiation_longitude_data = true;
+    } else {
+        solar_radiation_longitude_data_new = true;
+    };
     
     var rad_lon_ctx = radiation_lon_graph_canvas.getContext('2d');
     rad_lon_ctx.clearRect(0,0,graph_width,graph_height);
