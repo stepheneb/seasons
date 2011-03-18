@@ -235,8 +235,8 @@ h4 {
 }
 
 #info-graph canvas {
-    margin: 2;
-    padding: 2;
+    margin: 2px;
+    padding: 2px 4px 2px 4px;
 }
 
 .webgl-canvas-label fieldset  {
