@@ -1753,7 +1753,7 @@ function solar_flux() {
     return earth_ephemerides_solar_constant_by_day_number(earth.day_number);
 };
 
-function solar_radiation(alt) {
+function simpleSolarRadiation(alt) {
     var result = solar_flux() * Math.sin(alt * deg2rad) * SOLAR_FACTOR_AM1;
     return result < 0 ? 0 : result; 
 };
@@ -1777,28 +1777,43 @@ use_airmass.onchange = useAirMNassHandler;
 //     return 1/(Math.sin((h + 244/(165 + Math.pow(47 * h, 1.1))) * deg2rad))
 // };
 
-var horizontal_flux   = document.getElementById("horizontal-flux");
 
-function useHorizontalFluxHandler() {
-    clear_solar_radiation_data();
+
+var use_diffuse_correction   = document.getElementById("use-diffuse-correction");
+
+function useDiffuseCorrectionxHandler() {
+    clear_solar_radiation_latitude_data();
+    clear_solar_radiation_longitude_data();
 };
 
-horizontal_flux.onchange = useHorizontalFluxHandler;
+use_diffuse_correction.onchange = useDiffuseCorrectionxHandler;
+
+var use_horizontal_flux   = document.getElementById("use-horizontal-flux");
+
+function useHorizontalFluxHandler() {
+    clear_solar_radiation_latitude_data();
+    clear_solar_radiation_longitude_data();
+};
+
+use_horizontal_flux.onchange = useHorizontalFluxHandler;
 
 function solarRadiation(alt) {
     var rad;
     if (alt > 0) {
         if (use_airmass.checked) {
-            if (horizontal_flux.checked) {
+            if (use_horizontal_flux.checked) {
                 rad = totalHorizontalDirectInsolation(earth.day_number, alt);
             } else {
                 rad = totalDirectInsolation(earth.day_number, alt);
             };
+            if (use_diffuse_correction.checked) {
+                rad = rad * DIFFUSE_CORRECTION_FACTOR;
+            }
         } else {
-            if (horizontal_flux.checked) {
-                rad = solar_radiation(alt);
+            if (use_horizontal_flux.checked) {
+                rad = simpleSolarRadiation(alt);
             } else {
-                rad = solar_radiation(90);
+                rad = simpleSolarRadiation(90);
             };
         };
     } else {

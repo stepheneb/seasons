@@ -727,4 +727,4 @@ function totalHorizontalDirectInsolation(day_number, altitude) {
     return total_direct;
 };
 
-
+DIFFUSE_CORRECTION_FACTOR = 1.177;
