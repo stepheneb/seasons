@@ -1760,6 +1760,12 @@ function solar_radiation(alt) {
 
 var use_airmass = document.getElementById("use-airmass");
 
+function useAirMNassHandler() {
+    clear_solar_radiation_data();
+};
+
+use_airmass.onchange = useAirMNassHandler;
+
 // http://en.wikipedia.org/wiki/Airmass#CITEREFPickering2002
 // function air_mass(alt) {
 //     var h;
@@ -1771,13 +1777,29 @@ var use_airmass = document.getElementById("use-airmass");
 //     return 1/(Math.sin((h + 244/(165 + Math.pow(47 * h, 1.1))) * deg2rad))
 // };
 
+var horizontal_flux   = document.getElementById("horizontal-flux");
+
+function useHorizontalFluxHandler() {
+    clear_solar_radiation_data();
+};
+
+horizontal_flux.onchange = useHorizontalFluxHandler;
+
 function solarRadiation(alt) {
     var rad;
     if (alt > 0) {
         if (use_airmass.checked) {
-            rad = totalDirectInsolation(earth.day_number, alt)
+            if (horizontal_flux.checked) {
+                rad = totalHorizontalDirectInsolation(earth.day_number, alt);
+            } else {
+                rad = totalDirectInsolation(earth.day_number, alt);
+            };
         } else {
-            rad = solar_radiation(alt);
+            if (horizontal_flux.checked) {
+                rad = solar_radiation(alt);
+            } else {
+                rad = solar_radiation(90);
+            };
         };
     } else {
         rad = 0;

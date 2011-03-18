@@ -695,6 +695,12 @@ function directInsolation(wave_index, day_number, altitude) {
     return [light.wavelength, direct];
 }
 
+function directHorizontalInsolation(wave_index, day_number, altitude) {
+    var results = directInsolation(wave_index, day_number, altitude);
+    results[1] = Math.sin(altitude * deg2rad) * results[1];
+    return results;
+};
+
 function totalDirectInsolation(day_number, altitude) {
     var total_direct = 0;
     var table_entries = sunlight_data.length / 5;
@@ -707,4 +713,18 @@ function totalDirectInsolation(day_number, altitude) {
     };
     return total_direct;
 };
+
+function totalHorizontalDirectInsolation(day_number, altitude) {
+    var total_direct = 0;
+    var table_entries = sunlight_data.length / 5;
+    var previous_value, current_value;
+    previous_value = directInsolation(0, day_number, altitude);
+    for (var entry = 1; entry < table_entries; entry++) {
+        current_value = directHorizontalInsolation(entry, day_number, altitude);
+        total_direct += 0.5 * (current_value[0] - previous_value[0]) * (current_value[1] + previous_value[1]);
+        previous_value = current_value;
+    };
+    return total_direct;
+};
+
 
