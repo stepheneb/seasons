@@ -1429,7 +1429,7 @@ var earth_sub_graph = SceneJS.withNode("earth-sub-graph");
 //
 function lat_long_to_cartesian(lat, lon, r) {
     r = r || 1;
-    return [r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
+    return [-r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
             r * Math.sin(lat * deg2rad),
             -r * Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad), 1]
 }
@@ -1478,7 +1478,7 @@ var earth_tilt_mat4 = SceneJS._math_newMat4FromQuaternion(earth_tilt_quat);
 
 function calculateSurfaceEyeUpLook() {
     // calculate unit vector from center of Earth to surface location
-    surface_dir_v3 = lat_long_to_cartesian(surface.latitude, surface.longitude - earth.rotation);
+    surface_dir_v3 = lat_long_to_cartesian(surface.latitude, surface.longitude - earth.rotation, 1 + surface.min_height);
 
     // surface_dir_v3 = [surface_dir_v3[0] * -1, surface_dir_v3[1] * 1, surface_dir_v3[2] * -1];
     // vec3.negate(surface_dir_v3);
@@ -1490,7 +1490,9 @@ function calculateSurfaceEyeUpLook() {
     // var result_quat = SceneJS._math_mulQuaternions(result_quat, earth_tilt_quat);
     // var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
 
-    var result_mat4 = SceneJS._math_newMat4FromQuaternion(earth_tilt_quat);
+    // var result_mat4 = SceneJS._math_newMat4FromQuaternion(earth_tilt_quat);
+
+    var result_mat4 = earth_tilt_mat4;
     
     mat4.multiplyVec3(result_mat4, surface_dir_v3);
 
