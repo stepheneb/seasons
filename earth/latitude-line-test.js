@@ -256,12 +256,13 @@ SceneJS.createNode({
     
                                                 // Material for texture to apply to
                                                 {
-                                                    type: "material",
+                                                    type:           "material",
+                                                    id:             "milky-way-material",
                                                     baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
                                                     specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
                                                     specular:       0.0,
                                                     shine:          0.0,
-                                                    emit:           1.0,
+                                                    emit:           0.5,
     
                                                     nodes: [
     
@@ -290,15 +291,16 @@ SceneJS.createNode({
                         // Lights, one bright directional source for the Sun, two others much
                         // dimmer to give some illumination to the dark side of the Earth
                         {
-                            type: "light",
+                            type:                   "light",
+                            id:                     "sun-light",
                             mode:                   "point",
                             pos:                    sun.pos,
                             color:                  { r: 3.0, g: 3.0, b: 3.0 },
                             diffuse:                true,
                             specular:               true,
-                            constantAttenuation: 1.0,
-                            quadraticAttenuation: 0.0,
-                            linearAttenuation: 0.0
+                            constantAttenuation:    1.0,
+                            quadraticAttenuation:   0.0,
+                            linearAttenuation:      0.0
                         },
 
                         {
@@ -325,6 +327,7 @@ SceneJS.createNode({
                         {
 
                             type: "material",
+                            id:             "sun-material",
                             baseColor:      { r: 1.0, g: 0.95, b: 0.8 },
                             specularColor:  { r: 1.0, g: 0.95, b: 0.8 },
                             specular:       2.0,
@@ -936,7 +939,60 @@ SceneJS.createNode({
                                                                         }
                                                                     ]
                                                                 },
-                                
+                                                                
+                                                                // Earth's atmosphere
+                                                                {
+                                                                    type: "selector",
+                                                                    id: "earth-atmosphere-selector",
+                                                                    selection: [0],
+                                                                    nodes: [ 
+
+                                                                        // 0: off
+
+                                                                        {  },
+
+                                                                        {
+                                                                            type: "node",
+                                                                            id:            "atmosphere-transparent",
+                                                                            flags: {
+                                                                                transparent: true
+                                                                            },
+                                                                        
+                                                                            nodes: [
+
+                                                                                {
+                                                                                    type:          "material",
+                                                                                    id:            "atmosphere-material",
+                                                                                    baseColor:      { r: 0.0, g: 0.5, b: 1.0 },
+                                                                                    specularColor:  { r: 0.0, g: 0.5, b: 1.0 },
+                                                                                    specular:       1.0,
+                                                                                    shine:          1.0,
+                                                                                    alpha:          0.5,
+                                                                                    emit:           0.0,
+
+                                                                                    nodes: [
+
+                                                                                        {
+                                                                                            type: "scale", 
+                                                                                            x: earth.radius * 1.1, 
+                                                                                            y: earth.radius * 1.1, 
+                                                                                            z: earth.radius * 1.1,
+
+                                                                                            nodes: [
+
+                                                                                                { 
+                                                                                                    type: "sphere",
+                                                                                                    slices: 256, rings: 128 
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                },
+
                                                                 // Earth and it's texture layers
                                                                 {
                                                                     type: "material",
@@ -1456,7 +1512,32 @@ function calculateSurfaceEyeUpLook() {
     return lookat;
 };
 
+
+var sun_light                 = SceneJS.withNode("sun-light");
+var sun_material              = SceneJS.withNode("sun-material");
+var milky_way_material        = SceneJS.withNode("milky-way-material");
+
+var earth_atmosphere_selector = SceneJS.withNode("earth-atmosphere-selector");
+var atmosphere_material       = SceneJS.withNode("atmosphere-material");
+var atmosphere_transparent    = SceneJS.withNode("atmosphere-transparent");
+
+// sun-material ...
+// baseColor:      { r: 1.0, g: 0.95, b: 0.8 },
+// specularColor:  { r: 1.0, g: 0.95, b: 0.8 },
+// specular:       2.0,
+// shine:          2.0,
+// emit:           1.0,
+
 function setupSurfaceView() {
+    sun_material.set("specular", 1.0);
+    sun_material.set("shine", 1.0);
+    sun_material.set("emit", 10.0);
+
+    atmosphere_material.set("specular", 1.0);
+    atmosphere_material.set("shine", 1.0);
+    atmosphere_material.set("emit", 0.9);
+
+    earth_atmosphere_selector.set("selection", [1]);
     earth.radius = earth_diameter * 100 / 2;
     earth_sub_graph_scale.set({ x: 100, y: 100, z: 100})
     // earth_sub_graph._targetNode._setDirty();
@@ -1478,6 +1559,17 @@ function setupSurfaceView() {
 // Earth In Space View Setup
 //
 function setupEarthInSpace() {
+    sun_light.set("color", { r: 3.0, g: 3.0, b: 3.0 });
+    sun_material.set("baseColor", { r: 1.0, g: 0.95, b: 0.8 });
+    sun_material.set("specularColor", { r: 1.0, g: 0.95, b: 0.8 });
+    sun_material.set("specular", 2.0);
+    sun_material.set("shine", 2.0);
+    sun_material.set("emit", 2.0);
+
+    milky_way_material.set("emit", 0.8);
+
+
+    earth_atmosphere_selector.set("selection", [0]);
     earth.radius = earth_diameter / 2;
     earth_sub_graph_scale.set({ x: 1, y: 1, z: 1})
     // earth_sub_graph._targetNode._setDirty();
@@ -1513,7 +1605,6 @@ setupViewHandler();
 //
 // Earth in Space Handling
 //
-
 function updateEarthInSpaceLookAt() {
     var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
     var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
@@ -1976,12 +2067,21 @@ function debugLabel() {
         var eye = look_at.get("eye");
         var look = look_at.get("look");
         var up = look_at.get("up");
+        
+        var atmos_trans = atmosphere_transparent.get();
+        
+        var flags = atmosphere_transparent.get('flags');
+
+        var sun_mat =  sun_material.get();
+        var atmos = atmosphere_material.get();
 
         var labelStr = "";
 
         labelStr += "<b>Sun</b><br />";
         labelStr += sprintf("Position:  x: %4.1f y: %4.1f z: %4.1f<br>", sun.pos.x, sun.pos.y, sun.pos.z);
-        labelStr += sprintf("Radius: %4.1f<br>", sun.radius);
+        labelStr += sprintf("baseColor:  r: %1.3f g: %1.3f b: %1.3f<br>", sun_mat.baseColor.r, sun_mat.baseColor.g, sun_mat.baseColor.b);
+        labelStr += sprintf("Specular: %1.2f, Shine: %1.2f, Emit: %1.2f<br>", sun_mat.specular, sun_mat.shine, sun_mat.emit);
+        labelStr += sprintf("Radius: %4.1f, Milkyway emit: %1.2f<br>", sun.radius, milky_way_material.get().emit);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Earth</b><br />";
@@ -1997,6 +2097,12 @@ function debugLabel() {
         labelStr += sprintf("Distance from surface: %3.3f (x radius)<br>", surface.height);
         labelStr += "<br><hr><br>";
 
+        labelStr += "<b>Atmosphere</b><br />";
+        labelStr += sprintf("baseColor:  r: %1.3f g: %1.3f b: %1.3f<br>", atmos.baseColor.r, atmos.baseColor.g, atmos.baseColor.b);
+        labelStr += "Transparency: " + flags.transparent + sprintf(", Alpha: %1.2f<br>", atmos.alpha);
+        labelStr += sprintf("Specular: %1.2f, Shine: %1.2f, Emit: %1.2f<br>", atmos.specular, atmos.shine, atmos.emit, atmos.alpha);
+        labelStr += "<br><hr><br>";
+        
         labelStr += "<b>LookAt</b><br />";
         labelStr += sprintf("Eye:  x: %4.1f y: %4.1f z: %4.1f<br>", eye.x, eye.y, eye.z);
         labelStr += sprintf("Look:  x: %4.1f y: %4.1f z: %4.1f<br>", look.x, look.y, look.z);
@@ -2151,11 +2257,21 @@ function spectralSolarRadiation(alt) {
 
 function solarRadiation(alt) {
     var radiation, rad, flags;
+    flags = atmosphere_transparent.get('flags');
     if (alt > 0) {
+        flags.transparent = true;
         if (use_airmass.checked) {
             radiation = spectralSolarRadiation(alt);
+            // atmosphere_material.set("alpha", 0.8);
+            var alpha = radiation.total / 500;
+            if (alpha > 0.5) alpha = 0.5;
+            atmosphere_material.set("alpha", alpha);
+            atmosphere_material.set("emit", alpha);
+            milky_way_material.set("emit", (alpha - 0.5) * -0.5);
+            
             rad = radiation.total;
         } else {
+            atmosphere_material.set("alpha", 0);
             if (use_horizontal_flux.checked) {
                 rad = simpleSolarRadiation(alt);
             } else {
@@ -2163,8 +2279,12 @@ function solarRadiation(alt) {
             };
         };
     } else {
+        flags.transparent = true;
+        atmosphere_material.set("alpha", 0);
+        milky_way_material.set("emit", 0.8);
         rad = 0;
     };
+    atmosphere_transparent.set('flags', flags);
     return rad
 };
 
