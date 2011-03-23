@@ -1429,7 +1429,7 @@ function lat_long_to_cartesian(lat, lon, r) {
     r = r || 1;
     return [r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
             r * Math.sin(lat * deg2rad),
-            r * Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad), 1]
+            -r * Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad), 1]
 }
 
 function lat_long_to_global_cartesian(lat, lon, r) {
@@ -1441,7 +1441,7 @@ function lat_long_to_global_cartesian(lat, lon, r) {
     var global_lat_lon = [
         vec4[0] * -earth.radius + earth.pos.x,
         vec4[1] * -earth.radius + earth.pos.y,
-        vec4[2] * earth.radius + earth.pos.z];
+        vec4[2] * -earth.radius + earth.pos.z];
     return global_lat_lon;
 }
 
@@ -1477,8 +1477,8 @@ var earth_tilt_mat4 = SceneJS._math_newMat4FromQuaternion(earth_tilt_quat);
 function calculateSurfaceEyeUpLook() {
     // calculate unit vector from center of Earth to surface location
     surface_dir_v3 = lat_long_to_cartesian(surface.latitude, surface.longitude - earth.rotation);
-    
-    surface_dir_v3 = [surface_dir_v3[0] * -1, surface_dir_v3[1] * 1, surface_dir_v3[2] * -1];
+
+    // surface_dir_v3 = [surface_dir_v3[0] * -1, surface_dir_v3[1] * 1, surface_dir_v3[2] * -1];
     // vec3.negate(surface_dir_v3);
     
     // correct for the Earth's tilt, longitude, and latitude
