@@ -512,6 +512,7 @@ var sunlight_data = [
     0.335,  931.9,  0,      0.075,  0,
     0.340,  900.6,  0,      0.04,   0,
     0.345,  911.3,  0,      0.019,  0,
+    
     0.350,  975.5,  0,      0.007,  0,
     0.360,  975.9,  0,      0,      0,
     0.370,  1119.9, 0,      0,      0,
@@ -522,6 +523,7 @@ var sunlight_data = [
     0.420,  1740.4, 0,      0,      0,
     0.430,  1587.2, 0,      0,      0,
     0.440,  1837,   0,      0,      0,
+    
     0.450,  2005,   0,      0.003,  0,
     0.460,  2043,   0,      0.006,  0,
     0.470,  1987,   0,      0.009,  0,
@@ -532,6 +534,7 @@ var sunlight_data = [
     0.520,  1831,   0,      0.048,  0,
     0.530,  1891,   0,      0.063,  0,
     0.540,  1898,   0,      0.075,  0,
+    
     0.550,  1892,   0,      0.085,  0,
     0.570,  1840,   0,      0.12,   0,
     0.593,  1768,   0.075,  0.119,  0,
@@ -542,6 +545,7 @@ var sunlight_data = [
     0.690,  1420,   0.016,  0.028,  0.15,
     0.710,  1399,   0.0125, 0.018,  0,
     0.718,  1374,   1.8,    0.015,  0,
+    
     0.724,  1373,   2.5,    0.012,  0,
     0.740,  1298,   0.061,  0.01,   0,
     0.753,  1269,   0.0008, 0.008,  0,
@@ -552,6 +556,7 @@ var sunlight_data = [
     0.800,  1148,   0.036,  0,      0,
     0.816,  1091,   1.6,    0,      0,
     0.824,  1062,   2.5,    0,      0,
+    
     0.832,  1038,   0.5,    0,      0,
     0.840,  1022,   0.155,  0,      0,
     0.860,  998.7,  0.00001,0,      0,
@@ -562,6 +567,7 @@ var sunlight_data = [
     0.930,  830.3,  27,     0,      0,
     0.937,  814,    55,     0,      0,
     0.948,  786.9,  45,     0,      0,
+    
     0.965,  768.3,  4,      0,      0,
     0.980,  767,    1.48,   0,      0,
     0.994,  757.6,  0.1,    0,      0,
@@ -572,6 +578,7 @@ var sunlight_data = [
     1.130,  570.2,  70,     0,      0,
     1.145,  564.1,  75,     0,      0,
     1.161,  544.2,  10,     0,      0,
+    
     1.170,  533.4,  5,      0,      0,
     1.200,  501.6,  2,      0,      0,
     1.240,  477.5,  0.002,  0,      0.05,
@@ -582,6 +589,7 @@ var sunlight_data = [
     1.395,  358.9,  1000,   0,      0.00001,
     1.443,  327.5,  185,    0,      0.05,
     1.463,  317.5,  80,     0,      0.011,
+    
     1.477,  307.3,  80,     0,      0.005,
     1.497,  300.4,  12,     0,      0.0006,
     1.520,  292.8,  0.16,   0,      0,
@@ -592,6 +600,7 @@ var sunlight_data = [
     1.610,  244,    0.0001, 0,      0.13,
     1.630,  243.5,  0.001,  0,      0.001,
     1.646,  234.8,  0.01,   0,      0.0014,
+    
     1.678,  220.5,  0.036,  0,      0.0001,
     1.740,  190.8,  1.1,    0,      0.00001,
     1.800,  171.1,  130,    0,      0.00001,
@@ -602,6 +611,7 @@ var sunlight_data = [
     2.005,  113,    2.9,    0,      21,
     2.035,  108.5,  1,      0,      0.13,
     2.065,  97.5,   0.4,    0,      1,
+    
     2.100,  92.4,   0.22,   0,      0.08,
     2.148,  82.4,   0.25,   0,      0.001,
     2.198,  74.6,   0.33,   0,      0.00038,
@@ -612,6 +622,7 @@ var sunlight_data = [
     2.600,  38.6,   15000,  0,      0.00066,
     2.700,  36.6,   22000,  0,      100,
     2.800,  32,     8000,   0,      150,
+    
     2.900,  28.1,   650,    0,      0.13,
     3.000,  24.8,   240,    0,      0.0095,
     3.100,  22.1,   230,    0,      0.001,
@@ -622,6 +633,7 @@ var sunlight_data = [
     3.600,  12.7,   3.1,    0,      0.01,
     3.700,  11.5,   2.5,    0,      0.00195,
     3.800,  10.4,   1.4,    0,      0.004,
+    
     3.900,  9.5,    0.17,   0,      0.29,
     4.000,  8.6,    0.0045, 0,      0.025
 ]
@@ -701,30 +713,39 @@ function directHorizontalInsolation(wave_index, day_number, altitude) {
     return results;
 };
 
+// color   wavelength   wavelength-in-table   index-in-table
+// red           670                  668                36
+// green         525                  520                27
+// blue          430                  430                19
+
 function totalDirectInsolation(day_number, altitude) {
     var total_direct = 0;
     var table_entries = sunlight_data.length / 5;
     var previous_value, current_value;
+    var spectral_data = [];
     previous_value = directInsolation(0, day_number, altitude);
     for (var entry = 1; entry < table_entries; entry++) {
         current_value = directInsolation(entry, day_number, altitude);
+        spectral_data.push(current_value[1]);
         total_direct += 0.5 * (current_value[0] - previous_value[0]) * (current_value[1] + previous_value[1]);
         previous_value = current_value;
     };
-    return total_direct;
+    return { total:total_direct, red: spectral_data[36], green: spectral_data[27], blue: spectral_data[19] };
 };
 
 function totalHorizontalDirectInsolation(day_number, altitude) {
     var total_direct = 0;
     var table_entries = sunlight_data.length / 5;
     var previous_value, current_value;
+    var spectral_data = [];
     previous_value = directInsolation(0, day_number, altitude);
     for (var entry = 1; entry < table_entries; entry++) {
         current_value = directHorizontalInsolation(entry, day_number, altitude);
+        spectral_data.push(current_value[1]);
         total_direct += 0.5 * (current_value[0] - previous_value[0]) * (current_value[1] + previous_value[1]);
         previous_value = current_value;
     };
-    return total_direct;
+    return { total:total_direct, red: spectral_data[36], green: spectral_data[27], blue: spectral_data[19] };
 };
 
 DIFFUSE_CORRECTION_FACTOR = 1.177;

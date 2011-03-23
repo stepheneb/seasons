@@ -2123,18 +2123,38 @@ function useHorizontalFluxHandler() {
 
 use_horizontal_flux.onchange = useHorizontalFluxHandler;
 
+function spectralSolarRadiation(alt) {
+    var radiation, normalized, flags;
+    if (use_horizontal_flux.checked) {
+        radiation = totalHorizontalDirectInsolation(earth.day_number, alt);
+    } else {
+        radiation = totalDirectInsolation(earth.day_number, alt);
+    };
+    if (use_diffuse_correction.checked) {
+        radiation.total = radiation.total * DIFFUSE_CORRECTION_FACTOR;
+        radiation.red   = radiation.red   * DIFFUSE_CORRECTION_FACTOR;
+        radiation.green = radiation.green * DIFFUSE_CORRECTION_FACTOR;
+        radiation.blue  = radiation.blue  * DIFFUSE_CORRECTION_FACTOR;
+    }
+    if (surface_view.checked) {
+        normalized = {
+            r: radiation.red   / 450,
+            g: radiation.green / 450,
+            b: radiation.blue  / 450
+        };
+        sun_light.set("color", normalized);
+        sun_material.set("baseColor", normalized);
+        sun_material.set("specularColor", normalized);
+    };
+    return radiation;
+};
+
 function solarRadiation(alt) {
-    var rad;
+    var radiation, rad, flags;
     if (alt > 0) {
         if (use_airmass.checked) {
-            if (use_horizontal_flux.checked) {
-                rad = totalHorizontalDirectInsolation(earth.day_number, alt);
-            } else {
-                rad = totalDirectInsolation(earth.day_number, alt);
-            };
-            if (use_diffuse_correction.checked) {
-                rad = rad * DIFFUSE_CORRECTION_FACTOR;
-            }
+            radiation = spectralSolarRadiation(alt);
+            rad = radiation.total;
         } else {
             if (use_horizontal_flux.checked) {
                 rad = simpleSolarRadiation(alt);
