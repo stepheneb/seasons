@@ -2261,21 +2261,29 @@ function spectralSolarRadiation(alt) {
 
 function solarRadiation(alt) {
     var radiation, rad, flags;
-    flags = atmosphere_transparent.get('flags');
+    if (surface_view.checked) {
+        flags = atmosphere_transparent.get('flags');
+    };
     if (alt > 0) {
-        flags.transparent = true;
+        if (surface_view.checked) {
+            flags.transparent = true;
+        };
         if (use_airmass.checked) {
             radiation = spectralSolarRadiation(alt);
-            // atmosphere_material.set("alpha", 0.8);
-            var alpha = radiation.total / 500;
-            if (alpha > 0.5) alpha = 0.5;
-            atmosphere_material.set("alpha", alpha);
-            atmosphere_material.set("emit", alpha);
-            milky_way_material.set("emit", (alpha - 0.5) * -0.5);
+            if (surface_view.checked) {
+                // atmosphere_material.set("alpha", 0.8);
+                var alpha = radiation.total / 500;
+                if (alpha > 0.5) alpha = 0.5;
+                atmosphere_material.set("alpha", alpha);
+                atmosphere_material.set("emit", alpha);
+                milky_way_material.set("emit", (alpha - 0.5) * -0.5);                
+            };
             
             rad = radiation.total;
         } else {
-            atmosphere_material.set("alpha", 0);
+            if (surface_view.checked) {
+                atmosphere_material.set("alpha", 0);
+            };
             if (use_horizontal_flux.checked) {
                 rad = simpleSolarRadiation(alt);
             } else {
@@ -2283,12 +2291,16 @@ function solarRadiation(alt) {
             };
         };
     } else {
-        flags.transparent = true;
-        atmosphere_material.set("alpha", 0);
-        milky_way_material.set("emit", 0.8);
+        if (surface_view.checked) {
+            flags.transparent = true;
+            atmosphere_material.set("alpha", 0);
+            milky_way_material.set("emit", 0.8);
+        };
         rad = 0;
     };
-    atmosphere_transparent.set('flags', flags);
+    if (surface_view.checked) {
+        atmosphere_transparent.set('flags', flags);
+    };
     return rad
 };
 
