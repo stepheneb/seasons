@@ -1504,6 +1504,19 @@ function calculateSurfaceEyeUpLook() {
     vec3.scale(surface_dir_v3, earth.radius * (1 + surface.height), surface_eye_v3);
     vec3.add(surface_eye_v3, [earth.pos.x, earth.pos.y, earth.pos.z ]);
     
+    
+    // // generate a surface eye position by rotating it by the Earth's tilt
+    // mat4.multiplyVec3(result_mat4, surface_dir_v3);
+    // 
+    // // scaling the surface vector by the current size of the Earth
+    // vec3.scale(surface_dir_v3, earth.radius * (1 + surface.height), surface_eye_v3);
+    // 
+    // // and adding the Earth absolute position
+    // vec3.add(surface_eye_v3, [earth.pos.x, earth.pos.y, earth.pos.z ]);
+    // 
+    // // generate an up axis direction vector for the lookAt
+    // surface_up_v3  = [surface_dir_v3[0], surface_dir_v3[1], surface_dir_v3[2]];
+    
     // move the eye back just a bit (x, y) so we can see the cube object in the center 
     // of the surface disk and up just a bit (z)
     // vec3.subtract(surface_eye_v3, [surface.min_height * -5000, surface.min_height * -1000, surface.min_height * 300 ]);
