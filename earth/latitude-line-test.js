@@ -2549,7 +2549,7 @@ function drawSolarRadiationLatitudeGraph() {
         rad_lat_ctx.lineTo(graph_width, y_grid_px);
     };
     y_grid_px = 1000 * -y_factor + graph_height - (15 + 2);
-    for (x = x_tic_increment; x <= graph_width; x += x_tic_increment * 2) {
+    for (x = x_tic_increment * 2; x <= graph_width; x += x_tic_increment * 2) {
         rad_lat_ctx.moveTo(x, graph_base);
         rad_lat_ctx.lineTo(x, y_grid_px);
     };
@@ -2727,7 +2727,7 @@ function drawSolarRadiationLongitudeGraph() {
         rad_lon_ctx.lineTo(graph_width, y_grid_px);
     };
     y_grid_px = 1000 * -y_factor + graph_height - (15 + 2);
-    for (x = x_tic_increment; x <= graph_width; x += x_tic_increment * 2) {
+    for (x = x_tic_increment * 2; x <= graph_width; x += x_tic_increment * 2) {
         rad_lon_ctx.moveTo(x, graph_base);
         rad_lon_ctx.lineTo(x, y_grid_px);
     };
