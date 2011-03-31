@@ -1197,9 +1197,12 @@ SceneJS.createNode({
     ]
 });
 
+var scenejs_compilation = true;
+
+
 SceneJS.setDebugConfigs({
     compilation : {
-        enabled : false
+        enabled : scenejs_compilation
     }
 });
 
@@ -2126,6 +2129,9 @@ function debugLabel() {
         labelStr += sprintf("Up  x: %4.1f y: %4.1f z: %4.1f<br>", up.x, up.y, up.z);
         labelStr += sprintf("Rotation: %4.1f<br>", lookat_yaw);
         labelStr += sprintf("Distance from Earth: %4.1f<br>", distance);
+        labelStr += "<br><hr><br>";
+
+        labelStr += "SceneJS Compilation: " + scenejs_compilation + '<br>';
         labelStr += "<br><hr><br>";
 
         debug_content.innerHTML = labelStr;
