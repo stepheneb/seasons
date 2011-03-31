@@ -14,6 +14,33 @@ var milky_way_apparent_radius = earth_orbital_radius_km * 10;
 
 var earth_x_pos = 0;
 
+var initial_earth_rotation = 0;
+
+//
+// Initial lookAt: eye
+//
+var distance = earth_radius_km * -3;
+
+var initial_eye_quat;
+var initial_eye_mat4;
+var initial_eye_vec4;
+var initial_eye;
+
+function update_initial_eye(d) {
+    if (d < (earth_radius_km.radius * 1.5)) d = earth_radius_km * 1.5;
+    distance = d;
+    initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, 0);
+    initial_eye_mat4 = SceneJS._math_newMat4FromQuaternion(initial_eye_quat);
+    initial_eye_vec4 = SceneJS._math_mulMat4v4(initial_eye_mat4, [0, 0,  distance, 1]);
+    initial_eye =      { 
+        x: initial_eye_vec4[0] + earth_x_pos,
+        y: initial_eye_vec4[1],
+        z: initial_eye_vec4[2]
+    };
+}
+
+update_initial_eye(distance);
+
 SceneJS.createNode({
     
     type: "scene",
@@ -34,7 +61,7 @@ SceneJS.createNode({
             
                 {
                     type: "camera",
-                    id: "theCamera",
+                    id: "camera",
                     optics: {
                         type: "perspective",
                         fovy : 50.0,
@@ -131,171 +158,178 @@ SceneJS.createNode({
                             dir:                    { x: -1.0, y: 0.0, z: -1.0 }
                         },
 
-                        {
-                            type: "quaternion",
-                            id: "earthRotationalAxisQuaternion",
-                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-
-                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
+                        { 
+                            type: "rotate", id: "rotation", angle: initial_earth_rotation, y: 1.0,
 
                             nodes: [
-                            
+                        
                                 {
+                                    type: "quaternion",
+                                    id: "earthRotationalAxisQuaternion",
+                                    x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
 
-                                    type: "selector",
-                                    id: "earthTextureSelector",
-                                    selection: [1],
+                                    rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
+
                                     nodes: [
-
+                            
                                         {
-                                            id: "earthTemperatureTextureSelector",
+
                                             type: "selector",
-                                            selection: [0],
+                                            id: "earthTextureSelector",
+                                            selection: [1],
                                             nodes: [
 
-
-                                                // selection [0], March
                                                 {
-                                                    type: "texture",
-                                                    layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
-                                                    ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere"  } ]
+                                                    id: "earthTemperatureTextureSelector",
+                                                    type: "selector",
+                                                    selection: [0],
+                                                    nodes: [
 
+
+                                                        // selection [0], March
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere"  } ]
+
+                                                        },
+
+                                                        // selection [1], June
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere"  } ]
+
+                                                        },
+
+                                                        // selection [2], September
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere"  } ]
+
+                                                        },
+
+
+                                                        // selection [3], December
+                                                        {
+                                                            type: "texture",
+                                                            layers: [
+                                                                { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                                { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                                { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
+                                                            ],
+                                                            nodes: [ { type : "instance", target : "earth-sphere"  } ]
+
+                                                        }                                
+                                                    ]
                                                 },
 
-                                                // selection [1], June
                                                 {
+
+                                                    id: "earth-terrain-texture",
                                                     type: "texture",
                                                     layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
+
+                                                        { 
+                                                           uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+                                                           blendMode: "add",
+
+                                                        },
+                                                        { 
+                                                            uri:"images/earth3.jpg",
+
+                                                            minFilter: "linear",
+                                                            magFilter: "linear",
+                                                            wrapS: "repeat",
+                                                            wrapT: "repeat",
+                                                            isDepth: false,
+                                                            depthMode:"luminance",
+                                                            depthCompareMode: "compareRToTexture",
+                                                            depthCompareFunc: "lequal",
+                                                            flipY: false,
+                                                            width: 1,
+                                                            height: 1,
+                                                            internalFormat:"lequal",
+                                                            sourceFormat:"alpha",
+                                                            sourceType: "unsignedByte",
+                                                            applyTo:"baseColor",
+                                                            blendMode: "multiply",
+
+                                                            /* Texture rotation angle in degrees
+                                                             */
+                                                            rotate: 180.0,
+
+                                                            /* Texture translation offset
+                                                             */
+                                                            translate : {
+                                                                x: 0,
+                                                                y: 0
+                                                            },
+
+                                                            /* Texture scale factors
+                                                             */
+                                                            scale : {
+                                                                x: -1.0,
+                                                                y: 1.0
+                                                            }
+                                                        }
                                                     ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere"  } ]
-
-                                                },
-
-                                                // selection [2], September
-                                                {
-                                                    type: "texture",
-                                                    layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
-                                                    ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere"  } ]
-
-                                                },
-
-
-                                                // selection [3], December
-                                                {
-                                                    type: "texture",
-                                                    layers: [
-                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
-                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
-                                                        { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
-                                                    ],
-                                                    nodes: [ { type : "instance", target : "earth-sphere"  } ]
-
-                                                }                                
-                                            ]
-                                        },
-
-                                        {
-
-                                            id: "earth-terrain-texture",
-                                            type: "texture",
-                                            layers: [
-
-                                                { 
-                                                   uri:"images/lat-long-grid-invert-units-1440x720-15.png",
-                                                   blendMode: "add",
-
-                                                },
-                                                { 
-                                                    uri:"images/earth3.jpg",
-
-                                                    minFilter: "linear",
-                                                    magFilter: "linear",
-                                                    wrapS: "repeat",
-                                                    wrapT: "repeat",
-                                                    isDepth: false,
-                                                    depthMode:"luminance",
-                                                    depthCompareMode: "compareRToTexture",
-                                                    depthCompareFunc: "lequal",
-                                                    flipY: false,
-                                                    width: 1,
-                                                    height: 1,
-                                                    internalFormat:"lequal",
-                                                    sourceFormat:"alpha",
-                                                    sourceType: "unsignedByte",
-                                                    applyTo:"baseColor",
-                                                    blendMode: "multiply",
-
-                                                    /* Texture rotation angle in degrees
-                                                     */
-                                                    rotate: 180.0,
-
-                                                    /* Texture translation offset
-                                                     */
-                                                    translate : {
-                                                        x: 0,
-                                                        y: 0
-                                                    },
-
-                                                    /* Texture scale factors
-                                                     */
-                                                    scale : {
-                                                        x: -1.0,
-                                                        y: 1.0
-                                                    }
-                                                }
-                                            ],
-
-                                            nodes: [
-
-                                                /* Specify the amounts of ambient, diffuse and specular
-                                                 * lights our object reflects
-                                                 */
-                                                {
-                                                    id : "earth-sphere",
-                                                    type: "material",
-                                                    baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
-                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
-                                                    specular:       0.0,
-                                                    shine:          2.0,
 
                                                     nodes: [
 
+                                                        /* Specify the amounts of ambient, diffuse and specular
+                                                         * lights our object reflects
+                                                         */
                                                         {
-                                                            type: "translate",
-                                                            x: earth_x_pos,
-                                                            y: 0,
-                                                            z: 0,
+                                                            id : "earth-sphere",
+                                                            type: "material",
+                                                            baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+                                                            specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                            specular:       0.0,
+                                                            shine:          2.0,
 
                                                             nodes: [
 
                                                                 {
-
-                                                                    type: "scale",
-                                                                    x: earth_radius_km,
-                                                                    y: earth_radius_km,
-                                                                    z: earth_radius_km,
+                                                                    type: "translate",
+                                                                    x: earth_x_pos,
+                                                                    y: 0,
+                                                                    z: 0,
 
                                                                     nodes: [
 
                                                                         {
 
-                                                                            type: "rotate",
-                                                                            id: 'spin',
-                                                                            angle: 0,
-                                                                            y: 1.0,
+                                                                            type: "scale",
+                                                                            x: earth_radius_km,
+                                                                            y: earth_radius_km,
+                                                                            z: earth_radius_km,
 
-                                                                            nodes: [ { type: "sphere" } ]
+                                                                            nodes: [
+
+                                                                                {
+
+                                                                                    type: "rotate",
+                                                                                    id: 'spin',
+                                                                                    angle: 0,
+                                                                                    y: 1.0,
+
+                                                                                    nodes: [ { type: "sphere" } ]
+                                                                                }
+                                                                            ]
                                                                         }
                                                                     ]
                                                                 }
@@ -308,14 +342,6 @@ SceneJS.createNode({
                                     ]
                                 }
                             ]
-                        },
-                        {
-                            type: "interpolator",
-                            target: "spin",
-                            targetProperty: "angle",
-                            // over 1600 seconds rotate 360 degrees 20 times
-                            keys: [0.0, 1600],
-                            values: [0.0, 360.0*50]
                         }
                     ]
                 }
@@ -324,11 +350,22 @@ SceneJS.createNode({
     ]
 });
 
+SceneJS.setDebugConfigs({
+    compilation : {
+        enabled : true
+    }
+});
+
 /*----------------------------------------------------------------------
  * Scene rendering loop and mouse handler stuff follows
  *---------------------------------------------------------------------*/
 var yaw = 0;
 var pitch = 0;
+var max_pitch = 85;
+var earth_rotation = initial_earth_rotation;
+
+var lookat_yaw = 0;
+
 var lastX;
 var lastY;
 var dragging = false;
@@ -337,6 +374,13 @@ var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
 var earth_surface = document.getElementById("earth_surface");
+
+var scene = SceneJS.withNode("theScene")
+var angle = SceneJS.withNode("rotation")
+
+var look_at = SceneJS.withNode("lookAt");
+var camera = SceneJS.withNode("camera");
+
 
 // Time of year changes inclination of Earths orbit with respect to the orbital plane
 
@@ -394,6 +438,77 @@ function earthSurfaceChange() {
 earth_surface.onchange = earthSurfaceChange;
 earth_surface.onchange();
 
+
+// /* On a mouse drag, we'll re-render the scene, passing in
+//  * incremented angles in each time.
+//  */
+// function mouseMove(event) {
+//     if (dragging) {
+//         var look, eye, eye4, eye4dup, neweye, up_down, up_downQ, left_right, left_rightQ, f, up_down_axis, angle;
+//         yaw = (event.clientX - lastX);
+//         pitch = (event.clientY - lastY);
+// 
+//         lastX = event.clientX;
+//         lastY = event.clientY;
+// 
+//         look = SceneJS.withNode("lookAt");
+//         eye = look.get("eye");
+//         eye4 = [eye.x, eye.y, eye.z, 1];
+// 
+//         left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : yaw * -0.2 });
+//         left_right = left_rightQ.getMatrix();
+// 
+//         neweye = SceneJS._math_mulMat4v4(left_right, eye4);
+//         // console.log("drag   yaw: " + yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+// 
+//         eye4 = SceneJS._math_dupMat4(neweye);
+//         f = 1.0 / SceneJS._math_lenVec4(eye4);
+//         eye4dup = SceneJS._math_dupMat4(eye4);
+//         up_down_axis = SceneJS._math_mulVec4Scalar(eye4dup, f);
+//         up_downQ = new SceneJS.Quaternion({ x : up_down_axis[2], y : 0, z : up_down_axis[0], angle : pitch * -0.2 });
+//         angle = up_downQ.getRotation().angle;
+//         up_down = up_downQ.getMatrix();
+// 
+//         neweye = SceneJS._math_mulMat4v4(up_down, eye4);
+//         // console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
+// 
+//         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
+//         SceneJS.withNode("theScene").start();
+//         eye = look.get("eye");
+//         // console.log("");
+// 
+//     }
+// }
+// 
+// canvas.addEventListener('mousedown', mouseDown, true);
+// canvas.addEventListener('mousemove', mouseMove, true);
+// canvas.addEventListener('mouseup', mouseUp, true);
+// canvas.addEventListener('mouseout', mouseOut, true);
+
+
+function updateLookAt() {
+    var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
+    var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
+    if (pitch > max_pitch)  pitch =  max_pitch;
+    if (pitch < -max_pitch) pitch = -max_pitch;
+    var pitch_quat =  SceneJS._math_angleAxisQuaternion(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
+    var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
+    var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
+    var neweye = SceneJS._math_mulMat4v4(result_mat4, initial_eye_vec4);
+    look_at.set("eye", { 
+        x: neweye[0] + earth_x_pos, 
+        y: neweye[1] + 0, 
+        z: neweye[2] + 0 
+    });
+    var rot_quat = SceneJS._math_angleAxisQuaternion(0, 1, 0, lookat_yaw); 
+    var rot_mat4 = SceneJS._math_newMat4FromQuaternion(rot_quat);
+    var new_look = SceneJS._math_mulMat4v4(rot_mat4, neweye);
+    new_look[0] = (neweye[0] - new_look[0]) + earth_x_pos;
+    new_look[1] = (neweye[1] - new_look[1]) + 0;
+    new_look[2] = (neweye[2] - new_look[2]) + 0;
+    look_at.set("look", { x: new_look[0], y: new_look[1], z: new_look[2] });
+};
+
 function mouseDown(event) {
     lastX = event.clientX;
     lastY = event.clientY;
@@ -404,89 +519,78 @@ function mouseUp() {
     dragging = false;
 }
 
-function mouseOut() {
-    dragging = false;
-}
-
-function rotateEye(angle, radius)
-{
-  var eyeCfg = {
-    x: (Math.sin(angle)) * radius,
-    y: Math.cos(angle) * -radius,
-    z: 7.0
-  };
-  SceneJS.withNode("SceneLookAt").set("eye", eyeCfg);
-}
-
-/* On a mouse drag, we'll re-render the scene, passing in
- * incremented angles in each time.
- */
 function mouseMove(event) {
     if (dragging) {
-        var look, eye, eye4, eye4dup, neweye, up_down, up_downQ, left_right, left_rightQ, f, up_down_axis, angle;
-        yaw = (event.clientX - lastX);
-        pitch = (event.clientY - lastY);
+        
+        yaw   += (event.clientX - lastX) * -0.2;
+        pitch += (event.clientY - lastY) *  0.2;
 
         lastX = event.clientX;
         lastY = event.clientY;
 
-        look = SceneJS.withNode("lookAt");
-        eye = look.get("eye");
-        eye4 = [eye.x, eye.y, eye.z, 1];
+        updateLookAt();
 
-        left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : yaw * -0.2 });
-        left_right = left_rightQ.getMatrix();
-
-        neweye = SceneJS._math_mulMat4v4(left_right, eye4);
-        // console.log("drag   yaw: " + yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
-
-        eye4 = SceneJS._math_dupMat4(neweye);
-        f = 1.0 / SceneJS._math_lenVec4(eye4);
-        eye4dup = SceneJS._math_dupMat4(eye4);
-        up_down_axis = SceneJS._math_mulVec4Scalar(eye4dup, f);
-        up_downQ = new SceneJS.Quaternion({ x : up_down_axis[2], y : 0, z : up_down_axis[0], angle : pitch * -0.2 });
-        angle = up_downQ.getRotation().angle;
-        up_down = up_downQ.getMatrix();
-
-        neweye = SceneJS._math_mulMat4v4(up_down, eye4);
-        // console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
-
-        look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-        SceneJS.withNode("theScene").start();
-        eye = look.get("eye");
-        // console.log("");
-
+        if (!keepAnimating) requestAnimFrame(sampleAnimate);
     }
-}
+};
 
 canvas.addEventListener('mousedown', mouseDown, true);
 canvas.addEventListener('mousemove', mouseMove, true);
 canvas.addEventListener('mouseup', mouseUp, true);
-canvas.addEventListener('mouseout', mouseOut, true);
 
-window.render = function() {
 
-    SceneJS.withNode("theScene").start();
+//
+// Animation
+//
 
+var scene = SceneJS.withNode("theScene");
+
+var updateRate        = 30;
+var updateInterval    = 1000/updateRate;
+var nextAnimationTime = new Date().getTime(); + updateInterval;
+var keepAnimating     = true;
+
+function sampleRender() {
+    scene.render();
+};
+
+function sampleAnimate(t) {
+    sampleTime = new Date().getTime();
+    if (keepAnimating) requestAnimFrame(sampleAnimate);
+    if (sampleTime > nextAnimationTime) {
+        nextAnimationTime = nextAnimationTime + updateInterval;
+        if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
+        angle.set("angle", earth_rotation += 0.25);
+        sampleRender();
+    }
 };
 
 SceneJS.bind("error", function() {
-    window.clearInterval(pInterval);
+    keepAnimating = false;
 });
 
 SceneJS.bind("reset", function() {
-    window.clearInterval(pInterval);
+    keepAnimating = false;
 });
 
-var pInterval = setInterval("window.render()", 20);
+var displayed = false;
 
-var zBufferDepth = 0;
+SceneJS.bind("canvas-activated", function() {
+    if (!displayed) {
+        displayed = true;
+    }
+});
 
-SceneJS.withNode("theScene").bind("loading-status", 
-    function(event) {
-        if (zBufferDepth == 0) {
-            zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
-            var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
-            SceneJS._loggingModule.info(mesg);            
-        }
-    });
+window.requestAnimFrame = (function() {
+  return window.requestAnimationFrame ||
+         window.webkitRequestAnimationFrame ||
+         window.mozRequestAnimationFrame ||
+         window.oRequestAnimationFrame ||
+         window.msRequestAnimationFrame ||
+         function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+           window.setTimeout(callback, 1000/60);
+         };
+})();
+
+requestAnimFrame(sampleAnimate);
+
