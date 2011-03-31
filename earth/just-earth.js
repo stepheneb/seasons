@@ -439,53 +439,6 @@ earth_surface.onchange = earthSurfaceChange;
 earth_surface.onchange();
 
 
-// /* On a mouse drag, we'll re-render the scene, passing in
-//  * incremented angles in each time.
-//  */
-// function mouseMove(event) {
-//     if (dragging) {
-//         var look, eye, eye4, eye4dup, neweye, up_down, up_downQ, left_right, left_rightQ, f, up_down_axis, angle;
-//         yaw = (event.clientX - lastX);
-//         pitch = (event.clientY - lastY);
-// 
-//         lastX = event.clientX;
-//         lastY = event.clientY;
-// 
-//         look = SceneJS.withNode("lookAt");
-//         eye = look.get("eye");
-//         eye4 = [eye.x, eye.y, eye.z, 1];
-// 
-//         left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : yaw * -0.2 });
-//         left_right = left_rightQ.getMatrix();
-// 
-//         neweye = SceneJS._math_mulMat4v4(left_right, eye4);
-//         // console.log("drag   yaw: " + yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
-// 
-//         eye4 = SceneJS._math_dupMat4(neweye);
-//         f = 1.0 / SceneJS._math_lenVec4(eye4);
-//         eye4dup = SceneJS._math_dupMat4(eye4);
-//         up_down_axis = SceneJS._math_mulVec4Scalar(eye4dup, f);
-//         up_downQ = new SceneJS.Quaternion({ x : up_down_axis[2], y : 0, z : up_down_axis[0], angle : pitch * -0.2 });
-//         angle = up_downQ.getRotation().angle;
-//         up_down = up_downQ.getMatrix();
-// 
-//         neweye = SceneJS._math_mulMat4v4(up_down, eye4);
-//         // console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
-// 
-//         look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
-//         SceneJS.withNode("theScene").start();
-//         eye = look.get("eye");
-//         // console.log("");
-// 
-//     }
-// }
-// 
-// canvas.addEventListener('mousedown', mouseDown, true);
-// canvas.addEventListener('mousemove', mouseMove, true);
-// canvas.addEventListener('mouseup', mouseUp, true);
-// canvas.addEventListener('mouseout', mouseOut, true);
-
-
 function updateLookAt() {
     var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
     var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
