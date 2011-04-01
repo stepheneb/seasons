@@ -374,6 +374,7 @@ var activeView = 0;
 
 var canvas = document.getElementById("theCanvas");
 var earth_surface = document.getElementById("earth_surface");
+var earth_rotation_checkbox = document.getElementById("earth-rotation");
 
 var scene = SceneJS.withNode("theScene")
 var angle = SceneJS.withNode("rotation")
@@ -513,7 +514,9 @@ function sampleAnimate(t) {
     if (sampleTime > nextAnimationTime) {
         nextAnimationTime = nextAnimationTime + updateInterval;
         if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
-        angle.set("angle", earth_rotation += 0.25);
+        if (earth_rotation_checkbox.checked) {
+            angle.set("angle", earth_rotation += 0.25);
+        };
         sampleRender();
     }
 };
