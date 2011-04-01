@@ -158,20 +158,21 @@ SceneJS.createNode({
                             dir:                    { x: -1.0, y: 0.0, z: -1.0 }
                         },
 
-                        { 
-                            type: "rotate", id: "rotation", angle: initial_earth_rotation, y: 1.0,
+                        
+                        {
+                            type: "quaternion",
+                            id: "earthRotationalAxisQuaternion",
+                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+
+                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
 
                             nodes: [
-                        
-                                {
-                                    type: "quaternion",
-                                    id: "earthRotationalAxisQuaternion",
-                                    x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-
-                                    rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
+                            
+                                { 
+                                    type: "rotate", id: "rotation", angle: initial_earth_rotation, y: 1.0,
 
                                     nodes: [
-                            
+
                                         {
 
                                             type: "selector",
