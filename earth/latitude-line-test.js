@@ -1160,9 +1160,9 @@ SceneJS.createNode({
                                                                                                                             nodes: [
                                                                                                                                 {
                                                                                                                                     type: "cube",
-                                                                                                                                    xSize: 2 * earth.km,
-                                                                                                                                    ySize: 5 * earth.km,
-                                                                                                                                    zSize: 2 * earth.km
+                                                                                                                                    xSize: 0.5 * earth.km,
+                                                                                                                                    ySize: 10 * earth.km,
+                                                                                                                                    zSize: 0.5 * earth.km
                                                                                                                                 }
                                                                                                                             ]
                                                                                                                         }
