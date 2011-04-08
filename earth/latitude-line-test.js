@@ -2270,9 +2270,9 @@ function spectralSolarRadiation(alt) {
     }
     if (surface_view.checked) {
         normalized = {
-            r: radiation.red   / 450,
-            g: radiation.green / 450,
-            b: radiation.blue  / 450
+            r: radiation.red   / 45,
+            g: radiation.green / 45,
+            b: radiation.blue  / 45
         };
         sun_light.set("color", normalized);
         sun_material.set("baseColor", normalized);
@@ -2294,7 +2294,7 @@ function solarRadiation(alt) {
             radiation = spectralSolarRadiation(alt);
             if (surface_view.checked) {
                 // atmosphere_material.set("alpha", 0.8);
-                var alpha = radiation.total / 500;
+                var alpha = (1 - (1/Math.exp(radiation.total/2))) * 0.5;
                 if (alpha > 0.5) alpha = 0.5;
                 atmosphere_material.set("alpha", alpha);
                 atmosphere_material.set("emit", alpha);
@@ -2378,9 +2378,6 @@ function controlsLabel() {
         var container_properties = container.getBoundingClientRect();
         controls_label.style.top = canvas_properties.top + window.pageYOffset + 45 + "px";
         controls_label.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
-        // controls_label.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - controls_label.offsetWidth + "px";
-        // var labelStr = "controls";
-        // controls_label.innerHTML = labelStr;
     };
 };
 
