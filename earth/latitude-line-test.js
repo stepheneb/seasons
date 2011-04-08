@@ -2077,7 +2077,7 @@ var debug_content = document.getElementById("debug-content");
 function debugLabel() {
     if (debug_label) {
         if (debug_view.checked) {
-            debug_label.style.opacity = 0.8;
+            debug_label.style.opacity = 0.6;
             debug_content.style.display = null;
         } else {
             debug_content.style.display = "none";
@@ -2095,26 +2095,30 @@ function debugLabel() {
         var sun_mat =  sun_material.get();
         var atmos = atmosphere_material.get();
 
+        var solar_alt = solar_altitude(surface.latitude, surface.longitude);
+        var solar_rad = solarRadiation(solar_alt);
+        
         var labelStr = "";
 
         labelStr += "<b>Sun</b><br />";
-        labelStr += sprintf("Position:  x: %4.1f y: %4.1f z: %4.1f<br>", sun.pos.x, sun.pos.y, sun.pos.z);
+        labelStr += sprintf("Pos:  x: %4.1f y: %4.1f z: %4.1f<br>", sun.pos.x, sun.pos.y, sun.pos.z);
         labelStr += sprintf("baseColor:  r: %1.3f g: %1.3f b: %1.3f<br>", sun_mat.baseColor.r, sun_mat.baseColor.g, sun_mat.baseColor.b);
         labelStr += sprintf("Specular: %1.2f, Shine: %1.2f, Emit: %1.2f<br>", sun_mat.specular, sun_mat.shine, sun_mat.emit);
         labelStr += sprintf("Radius: %4.1f, Milkyway emit: %1.2f<br>", sun.radius, milky_way_material.get().emit);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Earth</b><br />";
-        labelStr += sprintf("Position:  x: %4.1f y: %4.1f z: %4.1f<br>", earth.pos.x, earth.pos.y, earth.pos.z);
+        labelStr += sprintf("Pos:  x: %4.1f y: %4.1f z: %4.1f<br>", earth.pos.x, earth.pos.y, earth.pos.z);
         labelStr += sprintf("Pitch: %4.1f, Yaw:  %4.1f<br>", pitch, yaw);
-        labelStr += sprintf("Rotation:  %4.1f<br>", earth.rotation);
+        labelStr += sprintf("Rot:  %4.1f<br>", earth.rotation);
         labelStr += sprintf("Angle: %4.1f, Radius: %4.1f<br>", angle.get().angle, earth.radius);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Surface</b><br />";
         labelStr += sprintf("Pitch: %4.1f, Yaw:  %4.1f<br>", surface.pitch, surface.yaw);
-        labelStr += sprintf("LookAt Rotation:  %4.1f, Pitch: %3.1f<br>", surface.lookat_yaw, surface.lookat_pitch);
-        labelStr += sprintf("Distance from surface: %3.3f (x radius)<br>", surface.height);
+        labelStr += sprintf("LookAt Rot:  %4.1f, Pitch: %3.1f<br>", surface.lookat_yaw, surface.lookat_pitch);
+        labelStr += sprintf("Distance-surface: %3.3f (x radius)<br>", surface.height);
+        labelStr += sprintf("Solar alt: %2.1f, rad: %3.0f  W/m2<br>", solar_alt, solar_rad);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Atmosphere</b><br />";
@@ -2122,13 +2126,12 @@ function debugLabel() {
         labelStr += "Transparency: " + flags.transparent + sprintf(", Alpha: %1.2f<br>", atmos.alpha);
         labelStr += sprintf("Specular: %1.2f, Shine: %1.2f, Emit: %1.2f<br>", atmos.specular, atmos.shine, atmos.emit, atmos.alpha);
         labelStr += "<br><hr><br>";
-        
+
         labelStr += "<b>LookAt</b><br />";
         labelStr += sprintf("Eye:  x: %4.1f y: %4.1f z: %4.1f<br>", eye.x, eye.y, eye.z);
         labelStr += sprintf("Look:  x: %4.1f y: %4.1f z: %4.1f<br>", look.x, look.y, look.z);
-        labelStr += sprintf("Up  x: %4.1f y: %4.1f z: %4.1f<br>", up.x, up.y, up.z);
-        labelStr += sprintf("Rotation: %4.1f<br>", lookat_yaw);
-        labelStr += sprintf("Distance from Earth: %4.1f<br>", distance);
+        labelStr += sprintf("Up  x: %1.3f y: %1.3f z: %1.3f<br>", up.x, up.y, up.z);
+        labelStr += sprintf("Rot: %4.1f, Distance-Earth: %4.1f<br>", lookat_yaw, distance);
         labelStr += "<br><hr><br>";
 
         labelStr += "SceneJS Compilation: " + scenejs_compilation + '<br>';
