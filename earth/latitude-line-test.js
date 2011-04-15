@@ -50,6 +50,7 @@ var earth = {
 // San Francisco: 38, 122
 
 var surface_line_width = earth.radius / 200;
+var surface_earth_scale_factor = 100;
 
 var surface = {
     // latitude: 38,
@@ -62,7 +63,14 @@ var surface = {
     lookat_pitch: 0,
     min_height: 0.001,
     height: 0.001,
-    max_pitch: 85
+    max_pitch: 85,
+    km: km * surface_earth_scale_factor,
+    meter: meter * surface_earth_scale_factor,
+    flagpole: {
+        radius: 5 *  meter * surface_earth_scale_factor,
+        height: 100 *  meter * surface_earth_scale_factor,
+        pos: { x: 0, y: 0, z: 0 }
+    }
 };
 
 var dark_side_light = 0.25;
@@ -180,21 +188,21 @@ for (var i = 0; i < sun_ray_points; i++) {
 
 var initial_eye_quat;
 var initial_eye_mat4;
-var initial_eye_vec4;
-var initial_eye;
+var initial_eye_vec3 = vec3.create();
+var initial_eye = {};
 
 function update_initial_eye(d) {
     if (d < (earth.radius * 1.5)) d = earth.radius * 1.5;
     distance = d;
-    initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, 0);
-    initial_eye_mat4 = SceneJS._math_newMat4FromQuaternion(initial_eye_quat);
-    initial_eye_vec4 = SceneJS._math_mulMat4v4(initial_eye_mat4, [0, 0,  distance, 1]);
+    initial_eye_quat = quat4.axisAngleDegreesCreate(1, 0, 0, 0);
+    initial_eye_mat4 = quat4.toMat4(initial_eye_quat);
+    mat4.multiplyVec3(initial_eye_mat4, [0, 0,  distance], initial_eye_vec3);
     initial_eye =      { 
-        x: initial_eye_vec4[0] + earth.pos.x,
-        y: initial_eye_vec4[1] + earth.pos.y,
-        z: initial_eye_vec4[2] + earth.pos.z
+        x: initial_eye_vec3[0] + earth.pos.x,
+        y: initial_eye_vec3[1] + earth.pos.y,
+        z: initial_eye_vec3[2] + earth.pos.z
     };
-}
+};
 
 update_initial_eye(distance);
 
@@ -1092,6 +1100,7 @@ SceneJS.createNode({
                                                                                                     x: -1.0, y: 0.0, z: 0.0, angle: surface.longitude,
 
                                                                                                     nodes: [
+
                                                                                                         {
 
                                                                                                             type: "quaternion",
@@ -1099,75 +1108,81 @@ SceneJS.createNode({
                                                                                                             x: 0.0, y: 0.0, z: -1.0, angle: surface.latitude,
 
                                                                                                             nodes: [
+                                                                                                                {
 
-                                                                                                                { 
-                                                                                                                    type: "material",
-                                                                                                                    baseColor:      { r: 0.6, g: 0.5, b: 0.5 },
-                                                                                                                    specularColor:  { r: 0.1, g: 0.1, b: 0.1 },
-
-                                                                                                                    specular:       0.5,
-                                                                                                                    shine:          0.001,
-
-                                                                                                                    // baseColor:      { r: 0.02, g: 0.04, b: 0.02 },
-                                                                                                                    // specularColor:  { r: 0.02, g: 0.04, b: 0.02 },
-                                                                                                                    // 
-                                                                                                                    // specular:       1.0,
-                                                                                                                    // shine:          0.1,
+                                                                                                                    type: "translate",
+                                                                                                                    x: 0,
+                                                                                                                    y: 1 + surface.min_height / 2,
+                                                                                                                    z: 0,
 
                                                                                                                     nodes: [
-                                                                                                                        {
 
-                                                                                                                            type: "translate",
-                                                                                                                            x: 0,
-                                                                                                                            y: 1 + surface.min_height / 2,
-                                                                                                                            z: 0,
+                                                                                                                        { 
+                                                                                                                            type: "material",
+                                                                                                                            baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
+                                                                                                                            specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
+
+                                                                                                                            specular:       0.5,
+                                                                                                                            shine:          0.001,
 
                                                                                                                             nodes: [
-                                                                                                                                {
-                                                                                                                                    // type: "disk",
-                                                                                                                                    // radius: 100 * earth.km,
-                                                                                                                                    // height: surface.min_height / 2,
-                                                                                                                                    // rings: 48
 
-                                                                                                                                    type: "cube",
-                                                                                                                                    xSize: 100 * earth.km,
-                                                                                                                                    ySize: surface.min_height / 2,
-                                                                                                                                    zSize: 100 * earth.km
+                                                                                                                                {
+                                                                                                                                    type: "disk",
+                                                                                                                                    radius: 200 * earth.km,
+                                                                                                                                    height: surface.min_height / 2,
+                                                                                                                                    rings: 48
+
+                                                                                                                                    // type: "cube",
+                                                                                                                                    // xSize: 100 * earth.km,
+                                                                                                                                    // ySize: surface.min_height / 2,
+                                                                                                                                    // zSize: 100 * earth.km
 
                                                                                                                                 }
                                                                                                                             ]
-                                                                                                                        }
-                                                                                                                    ]
-                                                                                                                },
-                                                                                        
-                                                                                                                { 
-                                                                                                                    type: "material",
-                                                                                                                    baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
-                                                                                                                    specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
+                                                                                                                        },
 
-                                                                                                                    specular:       0.5,
-                                                                                                                    shine:          0.001,
+                                                                                                                        { 
+                                                                                                                            type: "material",
+                                                                                                                            baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
+                                                                                                                            specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
 
-                                                                                                                    nodes: [
-
-                                                                                                                        {
-
-                                                                                                                            type: "translate",
-                                                                                                                            x: 0 + surface.min_height * 1,
-                                                                                                                            y: 1 + surface.min_height + 2.5 * earth.km,
-                                                                                                                            z: 0 + surface.min_height * 5,
+                                                                                                                            specular:       0.5,
+                                                                                                                            shine:          0.001,
 
                                                                                                                             nodes: [
+
                                                                                                                                 {
-                                                                                                                                    type: "cube",
-                                                                                                                                    xSize: 0.5 * earth.km,
-                                                                                                                                    ySize: 10 * earth.km,
-                                                                                                                                    zSize: 0.5 * earth.km
+
+                                                                                                                                    type: "translate",
+                                                                                                                                    // x: 0 + surface.min_height * 1,
+                                                                                                                                    // y: 1 + surface.min_height + 2.5 * earth.km,
+                                                                                                                                    // z: 0 + surface.min_height * 5,
+
+                                                                                                                                    x: surface.meter * 10,
+                                                                                                                                    y: surface.flagpole.height / 2,
+                                                                                                                                    z: surface.meter * 10,
+
+                                                                                                                                    nodes: [
+                                                                                                                                        {
+                                                                                                                                            type: "disk",
+                                                                                                                                            radius: surface.flagpole.radius,
+                                                                                                                                            height: surface.flagpole.height
+                                                                                                                                        }
+
+                                                                                                                                        // {
+                                                                                                                                        //     type: "cube",
+                                                                                                                                        //     xSize: 0.5 * earth.km,
+                                                                                                                                        //     ySize: 10 * earth.km,
+                                                                                                                                        //     zSize: 0.5 * earth.km
+                                                                                                                                        // }
+                                                                                                                                    ]
                                                                                                                                 }
                                                                                                                             ]
                                                                                                                         }
                                                                                                                     ]
                                                                                                                 }
+                                                                                                                
                                                                                                             ]
                                                                                                         }
                                                                                                     ]
@@ -1426,112 +1441,7 @@ sunRaysHandler();
 //
 
 var earth_sub_graph = SceneJS.withNode("earth-sub-graph");
-
-//
-// Surface View Setup
-//
-function lat_long_to_cartesian(lat, lon, r) {
-    r = r || 1;
-    return [-r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
-            r * Math.sin(lat * deg2rad),
-            -r * Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad), 1]
-}
-
-function lat_long_to_global_cartesian(lat, lon, r) {
-    r = r || 1;
-    var lat_lon = lat_long_to_cartesian(lat, lon - earth.rotation, r);
-    var quat = SceneJS._math_angleAxisQuaternion(0, 0, 1, earth.tilt);
-    var mat4 = SceneJS._math_newMat4FromQuaternion(quat);
-    var vec4 = SceneJS._math_mulMat4v4(mat4, [lat_lon[0], lat_lon[1],  lat_lon[2], 1]);
-    var global_lat_lon = [
-        vec4[0] * -earth.radius + earth.pos.x,
-        vec4[1] * -earth.radius + earth.pos.y,
-        vec4[2] * -earth.radius + earth.pos.z];
-    return global_lat_lon;
-}
-
-function look_at_direction(unit_vec) {
-    var far = [unit_vec[0] * milky_way_apparent_radius, 
-        unit_vec[1] * milky_way_apparent_radius, 
-        unit_vec[2] * milky_way_apparent_radius];
-    look_at.set("look", { x: far[0], y: far[1], z: far[2] });
-}
-
-// var surface_dir = lat_long_to_cartesian(surface.latitude, surface.longitude - earth.rotation);
-
-// var surface_eye_quat = SceneJS._math_angleAxisQuaternion(0, 0, 0, 1);
-// var surface_eye      = lat_long_to_cartesian(surface.latitude, surface.longitude, 1 + earth.km * 10);
-// var surface_eye_mat4 = SceneJS._math_newMat4FromQuaternion(surface_eye_quat);
-// var surface_eye_vec4 = SceneJS._math_mulMat4v4(surface_eye_mat4, [0, 0,  0, 1]);
-// var global_surface_eye = {
-//     x: surface_eye_vec4[0] * -earth.radius + earth.pos.x,
-//     y: surface_eye_vec4[1] * -earth.radius + earth.pos.y,
-//     z: surface_eye_vec4[2] *  earth.radius + earth.pos.z
-// };
-// var global_surface_look = [sun.pos.x, sun.pos.y, sun.pos.z, 1];
-
-var surface_eye_v3 = [];
-var surface_dir_v3 = [];
-var surface_up_v3 = [];
-
-earth_sub_graph_scale = SceneJS.withNode("earth-sub-graph-scale");
-
-var earth_tilt_quat = SceneJS._math_angleAxisQuaternion(0.0, 0.0, 1.0,  earth.tilt)
-var earth_tilt_mat4 = SceneJS._math_newMat4FromQuaternion(earth_tilt_quat);
-
-function calculateSurfaceEyeUpLook() {
-    // calculate unit vector from center of Earth to surface location
-    surface_dir_v3 = lat_long_to_cartesian(surface.latitude, surface.longitude - earth.rotation, 1 + surface.min_height);
-
-    // surface_dir_v3 = [surface_dir_v3[0] * -1, surface_dir_v3[1] * 1, surface_dir_v3[2] * -1];
-    // vec3.negate(surface_dir_v3);
-    
-    // correct for the Earth's tilt, longitude, and latitude
-    // var longitude_quat = SceneJS._math_angleAxisQuaternion(1.0, 0.0, 0.0,  earth.tilt)
-    // var latitude_quat = SceneJS._math_angleAxisQuaternion(0.0, 0.0, 1.0,  earth.tilt)
-    // var result_quat = SceneJS._math_mulQuaternions(latitude_quat, longitude_quat);
-    // var result_quat = SceneJS._math_mulQuaternions(result_quat, earth_tilt_quat);
-    // var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
-
-    // var result_mat4 = SceneJS._math_newMat4FromQuaternion(earth_tilt_quat);
-
-    var result_mat4 = earth_tilt_mat4;
-    
-    mat4.multiplyVec3(result_mat4, surface_dir_v3);
-
-    // generate an up axis direction vector for the lookAt
-    surface_up_v3  = [surface_dir_v3[0], surface_dir_v3[1], surface_dir_v3[2]];
-
-    // generate a surface eye position by scaling the surface vector 
-    // by the current size of the Earth and adding the Earth position
-    vec3.scale(surface_dir_v3, earth.radius * (1 + surface.height), surface_eye_v3);
-    vec3.add(surface_eye_v3, [earth.pos.x, earth.pos.y, earth.pos.z ]);
-    
-    
-    // // generate a surface eye position by rotating it by the Earth's tilt
-    // mat4.multiplyVec3(result_mat4, surface_dir_v3);
-    // 
-    // // scaling the surface vector by the current size of the Earth
-    // vec3.scale(surface_dir_v3, earth.radius * (1 + surface.height), surface_eye_v3);
-    // 
-    // // and adding the Earth absolute position
-    // vec3.add(surface_eye_v3, [earth.pos.x, earth.pos.y, earth.pos.z ]);
-    // 
-    // // generate an up axis direction vector for the lookAt
-    // surface_up_v3  = [surface_dir_v3[0], surface_dir_v3[1], surface_dir_v3[2]];
-    
-    // move the eye back just a bit (x, y) so we can see the cube object in the center 
-    // of the surface disk and up just a bit (z)
-    // vec3.subtract(surface_eye_v3, [surface.min_height * -5000, surface.min_height * -1000, surface.min_height * 300 ]);
-
-    var lookat = {
-        eye: { x: surface_eye_v3[0], y: surface_eye_v3[1], z: surface_eye_v3[2] },
-        up: { x: -surface_dir_v3[0],  y: surface_dir_v3[1],  z: surface_dir_v3[2] },
-        look: sun.pos
-    }
-    return lookat;
-};
-
+var earth_sub_graph_scale = SceneJS.withNode("earth-sub-graph-scale");
 
 var sun_light                 = SceneJS.withNode("sun-light");
 var sun_material              = SceneJS.withNode("sun-material");
@@ -1547,33 +1457,6 @@ var atmosphere_transparent    = SceneJS.withNode("atmosphere-transparent");
 // specular:       2.0,
 // shine:          2.0,
 // emit:           1.0,
-
-function setupSurfaceView() {
-    sun_material.set("specular", 1.0);
-    sun_material.set("shine", 1.0);
-    sun_material.set("emit", 10.0);
-
-    atmosphere_material.set("specular", 1.0);
-    atmosphere_material.set("shine", 1.0);
-    atmosphere_material.set("emit", 0.9);
-
-    earth_atmosphere_selector.set("selection", [1]);
-    earth.radius = earth_diameter * 100 / 2;
-    earth_sub_graph_scale.set({ x: 100, y: 100, z: 100})
-    // earth_sub_graph._targetNode._setDirty();
-    var optics = camera.get("optics");
-    optics.fovy = 50;
-    camera.set("optics", optics);
-    latitude_line_selector.set("selection",  [0]);
-    longitude_line_selector.set("selection", [0]);
-
-    // update the scenegraph lookAt
-    var lookat = calculateSurfaceEyeUpLook();
-    look_at.set("eye", lookat.eye);
-    look_at.set("up", lookat.up);
-    look_at.set("look",  lookat.look)
-
-};
 
 //
 // Earth In Space View Setup
@@ -1591,62 +1474,195 @@ function setupEarthInSpace() {
 
     earth_atmosphere_selector.set("selection", [0]);
     earth.radius = earth_diameter / 2;
+    // earth.km = km / earth.radius;
+    // earth.meter = meter /earth.radius;
     earth_sub_graph_scale.set({ x: 1, y: 1, z: 1})
     // earth_sub_graph._targetNode._setDirty();
     var optics = camera.get("optics");
     optics.fovy = 50;
     optics.near = 0.10;
     camera.set("optics", optics);
-    look_at.set("up", { x: 0.0, y: 1.0, z: 0.0 });
-    updateLookAt();
     latitude_line_selector.set("selection",  [1]);
     longitude_line_selector.set("selection", [1]);
+
+    look_at.set("up", { x: 0.0, y: 1.0, z: 0.0 });
 };
-
-//
-// Earth In Space/Surface View Handler
-//
-var surface_view = document.getElementById("surface-view");
-
-function setupViewHandler() {
-    if (surface_view.checked) {
-        setupSurfaceView();
-        updateSurfaceViewLookAt();
-        document.onkeydown = handleArrowKeysSurfaceView;
-    } else {
-        setupEarthInSpace();
-        document.onkeydown = handleArrowKeysEarthInSpace;
-    };
-};
-
-surface_view.onchange = setupViewHandler;
-setupViewHandler();
 
 //
 // Earth in Space Handling
 //
 function updateEarthInSpaceLookAt() {
-    var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
-    var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
+    // first handle yaw and pitch for our lookAt-arcball navigation around Earth
+    // background: http://rainwarrior.thenoos.net/dragon/arcball.html
+    var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, yaw);
+    var yaw_mat4 = quat4.toMat4(yaw_quat);
+
     if (pitch > max_pitch)  pitch =  max_pitch;
     if (pitch < -max_pitch) pitch = -max_pitch;
-    var pitch_quat =  SceneJS._math_angleAxisQuaternion(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
-    var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
-    var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
-    var neweye = SceneJS._math_mulMat4v4(result_mat4, initial_eye_vec4);
+
+    var pitch_quat =  quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
+    var result_quat = quat4.create();
+    quat4.multiply(pitch_quat, yaw_quat, result_quat);
+
+    // var result_mat4 = quat4.toMat4(result_quat);
+    var neweye = vec3.create();
+    quat4.multiplyVec3(result_quat, initial_eye_vec3, neweye);
+    // mat4.multiplyVec3(result_mat4, initial_eye_vec3, neweye);
     look_at.set("eye", { 
         x: neweye[0] + earth.pos.x, 
         y: neweye[1] + earth.pos.y, 
         z: neweye[2] + earth.pos.z 
     });
-    var rot_quat = SceneJS._math_angleAxisQuaternion(0, 1, 0, lookat_yaw); 
-    var rot_mat4 = SceneJS._math_newMat4FromQuaternion(rot_quat);
-    var new_look = SceneJS._math_mulMat4v4(rot_mat4, neweye);
+    
+    // next handle a possible yaw rotation to to look left or right of Earth in the ecliptic plane
+    var rot_quat = quat4.axisAngleDegreesCreate(0, 1, 0, lookat_yaw); 
+
+    // var rot_mat4 = quat4.toMat4(rot_quat);
+
+    var new_look = vec3.create();
+    quat4.multiplyVec3(rot_quat, neweye, new_look);
+
+    // mat4.multiplyVec3(rot_mat4, neweye, new_look);
+
     new_look[0] = (neweye[0] - new_look[0]) + earth.pos.x;
     new_look[1] = (neweye[1] - new_look[1]) + earth.pos.y;
     new_look[2] = (neweye[2] - new_look[2]) + earth.pos.z;
     look_at.set("look", { x: new_look[0], y: new_look[1], z: new_look[2] });
     debugLabel();
+};
+
+//
+// Surface View Setup
+//
+
+var surface_eye_vec3 = [];
+var surface_dir_vec3 = [];
+var surface_up_vec3 = [];
+
+var flagpole_global = [];
+var surface_eye_global = [];
+
+var earth_tilt_quat = quat4.axisAngleDegreesCreate(0.0, 0.0, 1.0,  earth.tilt)
+var earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
+
+function lat_long_to_cartesian(lat, lon, r) {
+    r = r || 1;
+    return [-r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
+             r * Math.sin(lat * deg2rad),
+            -r * Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad), 1]
+}
+
+function lat_long_to_cartesian_corrected_for_tilt(lat, lon, r) {
+    r = r || 1;
+    var lat_lon = lat_long_to_cartesian(lat, lon - earth.rotation, r);
+    var v3 = vec3.create();
+    quat4.multiplyVec3(earth_tilt_quat, lat_lon, v3);
+    return v3;
+};
+
+function lat_long_to_global_cartesian(lat, lon, r) {
+    r = r || 1;
+    var lat_lon = lat_long_to_cartesian_corrected_for_tilt(lat, lon, r);
+    // var v3 = vec3.create();
+
+    var global_lat_lon = vec3.create();
+    vec3.scale(lat_lon, earth.radius, global_lat_lon);
+    vec3.add(global_lat_lon, [earth.pos.x, earth.pos.y, earth.pos.z] )
+
+    return global_lat_lon;
+};
+
+function look_at_direction(unit_vec) {
+    var far = [unit_vec[0] * milky_way_apparent_radius, 
+        unit_vec[1] * milky_way_apparent_radius, 
+        unit_vec[2] * milky_way_apparent_radius];
+    look_at.set("look", { x: far[0], y: far[1], z: far[2] });
+}
+
+// var surface_dir = lat_long_to_cartesian(surface.latitude, surface.longitude - earth.rotation);
+
+// var surface_eye_quat = quat4.axisAngleDegreesCreate(0, 0, 0, 1);
+// var surface_eye      = lat_long_to_cartesian(surface.latitude, surface.longitude, 1 + earth.km * 10);
+// var surface_eye_mat4 = quat4.toMat4(surface_eye_quat);
+// var surface_eye_vec4 = SceneJS._math_mulMat4v4(surface_eye_mat4, [0, 0,  0, 1]);
+// var global_surface_eye = {
+//     x: surface_eye_vec4[0] * -earth.radius + earth.pos.x,
+//     y: surface_eye_vec4[1] * -earth.radius + earth.pos.y,
+//     z: surface_eye_vec4[2] *  earth.radius + earth.pos.z
+// };
+// var global_surface_look = [sun.pos.x, sun.pos.y, sun.pos.z, 1];
+
+function calculateSurfaceEyeUpLook(eye_pos_v3) {
+    if (eye_pos_v3 == undefined) {
+        var eye_pos_v3 = [0, 0, 0];
+    };
+    
+    // calculate unit vector from center of Earth to surface location
+    surface_dir_vec3 = lat_long_to_cartesian_corrected_for_tilt(surface.latitude, surface.longitude, 1 + surface.min_height * 10);
+    
+    // generate an up axis direction vector for the lookAt (integrates tilt)
+    surface_up_vec3  = [surface_dir_vec3[0], surface_dir_vec3[1], surface_dir_vec3[2]];
+
+    // generate a surface eye position by scaling the surface vector 
+    // by the current size of the Earth
+    vec3.scale(surface_dir_vec3, earth.radius, surface_eye_vec3);
+    
+    // and adding the Earth position
+    vec3.add(surface_eye_vec3, [earth.pos.x, earth.pos.y, earth.pos.z ]);
+
+    flagpole_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1 + surface.min_height * 5);
+    surface_eye_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1 + surface.min_height * 5);
+
+    // generate an appropriate offset from the flagpole using the cross-product
+    // of the current surface_up with a vector pointing north
+    var cross = [];
+    vec3.cross(surface_up_vec3, [0, 1, 0], cross);
+    vec3.scale(cross, 10);
+    
+    vec3.add(flagpole_global, cross, surface_eye_global);
+    
+    var lookat = {
+        // eye: { x: surface_eye_vec3[0] + 2, y: surface_eye_vec3[1], z: surface_eye_vec3[2] },
+        up: { x: surface_up_vec3[0],  y: surface_up_vec3[1],  z: surface_up_vec3[2] },
+        eye: { x: surface_eye_global[0],  y: surface_eye_global[1],  z: surface_eye_global[2] },
+        // look: sun.pos
+        look: { x: flagpole_global[0],  y: flagpole_global[1],  z: flagpole_global[2] },
+    }
+    return lookat;
+};
+
+
+function setupSurfaceView() {
+    sun_material.set("specular", 1.0);
+    sun_material.set("shine", 1.0);
+    sun_material.set("emit", 10.0);
+
+    atmosphere_material.set("specular", 1.0);
+    atmosphere_material.set("shine", 1.0);
+    atmosphere_material.set("emit", 0.9);
+
+    earth_atmosphere_selector.set("selection", [1]);
+    earth.radius = earth_diameter * 100 / 2;
+    // earth.km = km / earth.radius;
+    // earth.meter = meter / earth.radius;
+    earth_sub_graph_scale.set({ 
+        x: surface_earth_scale_factor, 
+        y: surface_earth_scale_factor, 
+        z: surface_earth_scale_factor
+    });
+    // earth_sub_graph._targetNode._setDirty();
+    var optics = camera.get("optics");
+    optics.fovy = 50;
+    camera.set("optics", optics);
+    latitude_line_selector.set("selection",  [0]);
+    longitude_line_selector.set("selection", [0]);
+
+    // update the scenegraph lookAt
+    var lookat = calculateSurfaceEyeUpLook();
+    look_at.set("eye", lookat.eye);
+    look_at.set("up", lookat.up);
+    look_at.set("look",  lookat.look)
+
 };
 
 
@@ -1657,60 +1673,70 @@ function updateEarthInSpaceLookAt() {
 
 
 function updateSurfaceViewLookAt() {
+    var result_quat = quat4.create();
     
     // update the scenegraph lookAt
     var lookat = calculateSurfaceEyeUpLook();
     look_at.set("eye", lookat.eye);
     look_at.set("up", lookat.up);
+    look_at.set("look",  lookat.look)
     
-    var yaw_quat = SceneJS._math_angleAxisQuaternion(surface_dir_v3[0], surface_dir_v3[1], surface_dir_v3[2], surface.lookat_yaw)
-    var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
+    // var yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.lookat_yaw)
+    // var yaw_mat4 = quat4.toMat4(yaw_quat);
+    // 
+    // var pitch_quat = quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], surface.lookat_pitch)
+    // 
+    // var pitch_v3 = vec3.normalize([surface_up_vec3[0], 0, surface_up_vec3[2]]);
+    // var pitch_quat = quat4.axisAngleDegreesCreate(pitch_v3[0], pitch_v3[1], pitch_v3[2], -surface.lookat_pitch);
 
-    // var pitch_quat = SceneJS._math_angleAxisQuaternion(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], surface.lookat_pitch)
+    // quat4.multiply(pitch_quat, yaw_quat, result_quat);
+    // 
+    // var result_mat4 = quat4.toMat4(result_quat);
+    // 
+    // var sun_pos_v3 = [sun.pos.x, sun.pos.y, sun.pos.z];
+    // var earth_pos_v3 = [earth.pos.x, earth.pos.y, earth.pos.z];
 
-    var pitch_quat = SceneJS._math_angleAxisQuaternion(0, 1, 0, -surface.lookat_pitch)
+    // var newlook = [];
+    // vec3.subtract(sun_pos_v3, earth_pos_v3, newlook);
+    // 
+    // mat4.multiplyVec3(result_mat4, newlook);
+    // vec3.add(newlook, earth_pos_v3);
+    // look_at.set("look", { x: newlook[0], y: newlook[1], z: newlook[2] });
 
-    var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
-    var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
 
-    var sun_pos_v3 = [sun.pos.x, sun.pos.y, sun.pos.z];
-    var earth_pos_v3 = [earth.pos.x, earth.pos.y, earth.pos.z];
-
-    var newlook = [];
-    vec3.subtract(sun_pos_v3, earth_pos_v3, newlook);
+    // var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, surface.yaw);
+    //  var yaw_mat4 = quat4.toMat4(yaw_quat);
+    // 
+    //  if (surface.pitch > surface.max_pitch)  surface.pitch =  surface.max_pitch;
+    //  if (surface.pitch < -surface.max_pitch) surface.pitch = -surface.max_pitch;
+    // 
+    //  var pitch_quat =  quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], surface.pitch);
+    // 
+    //  var result_quat = quat4.create();
+    //  quat4.multiply(pitch_quat, yaw_quat, result_quat);
+    //  var result_mat4 = quat4.toMat4(result_quat);
+    // 
+    //  var neweye = vec3.create();
+    //  mat4.multiplyVec3(result_mat4, surface_eye_vec3, neweye);
+    //     // 
+    // global_surface_eye = {
+    //     x: surface_eye_vec4[0] * -earth.radius + earth.pos.x,
+    //     y: surface_eye_vec4[1] * -earth.radius + earth.pos.y,
+    //     z: surface_eye_vec4[2] * earth.radius + earth.pos.z
+    // };
+    // look_at.set("eye", global_surface_eye);
+    // 
+    // look_at.set("up", { x: -surface_dir[0],  y: surface_dir[1],  z: surface_dir[2] });
     
-    mat4.multiplyVec3(result_mat4, newlook);
-    vec3.add(newlook, earth_pos_v3);
-    look_at.set("look", { x: newlook[0], y: newlook[1], z: newlook[2] });
-
-
-    // var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, surface.yaw);
-    // var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
-    // if (surface.pitch > surface.max_pitch)  surface.pitch =  surface.max_pitch;
-    // if (surface.pitch < -surface.max_pitch) surface.pitch = -surface.max_pitch;
-    // var pitch_quat =  SceneJS._math_angleAxisQuaternion(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], surface.pitch);
-    // var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
-    // var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
-    // var neweye = SceneJS._math_mulMat4v4(result_mat4, surface_eye_vec4);
-    // // 
-    // // global_surface_eye = {
-    // //     x: surface_eye_vec4[0] * -earth.radius + earth.pos.x,
-    // //     y: surface_eye_vec4[1] * -earth.radius + earth.pos.y,
-    // //     z: surface_eye_vec4[2] * earth.radius + earth.pos.z
-    // // };
-    // // look_at.set("eye", global_surface_eye);
-    // // 
-    // // look_at.set("up", { x: -surface_dir[0],  y: surface_dir[1],  z: surface_dir[2] });
+    // var lookat_yaw_quat = quat4.axisAngleDegreesCreate(surface_dir_vec3[0], -surface_dir_vec3[1], surface_dir_vec3[2], surface.lookat_yaw); 
+    // var lookat_pitch_quat = quat4.axisAngleDegreesCreate(0, 1, 0, surface.lookat_pitch); 
     // 
-    // var lookat_yaw_quat = SceneJS._math_angleAxisQuaternion(surface_dir[0], -surface_dir[1], surface_dir[2], surface.lookat_yaw); 
-    // var lookat_pitch_quat = SceneJS._math_angleAxisQuaternion(0, 1, 0, surface.lookat_pitch); 
-    // 
-    // var result_quat = SceneJS._math_mulQuaternions(lookat_yaw_quat, lookat_pitch_quat)
-    // var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
+    // result_quat = SceneJS._math_mulQuaternions(lookat_yaw_quat, lookat_pitch_quat)
+    // var result_mat4 = quat4.toMat4(result_quat);
     // var new_look = SceneJS._math_mulMat4v4(result_mat4, [1, 0, 0, 1]);
-    // // new_look[0] = (neweye[0] - new_look[0]);
-    // // new_look[1] = (neweye[1] - new_look[1]);
-    // // new_look[2] = (neweye[2] - new_look[2]);
+    // new_look[0] = (neweye[0] - new_look[0]);
+    // new_look[1] = (neweye[1] - new_look[1]);
+    // new_look[2] = (neweye[2] - new_look[2]);
     // look_at_direction(new_look);
     debugLabel();
 };
@@ -1724,58 +1750,25 @@ function updateLookAt() {
 };
 
 //
-// Animation
+// Earth In Space/Surface View Handler
 //
+var surface_view = document.getElementById("surface-view");
 
-function sampleAnimate(t) {
-    sampleTime = new Date().getTime();
-    if (keepAnimating) requestAnimFrame(sampleAnimate);
-    if (sampleTime > nextAnimationTime) {
-        nextAnimationTime = nextAnimationTime + updateInterval;
-        if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
-        if (earth_rotation.checked) {
-            angle.set("angle", earth.rotation += 0.25);
-            updateLookAt();
-            clear_solar_radiation_longitude_data();
-        };
-        sampleRender();
-        if (debug_view.checked) debugLabel();
-        infoLabel();
-        infoGraph();
-    }
+function setupViewHandler() {
+    if (surface_view.checked) {
+        setupSurfaceView();
+        updateLookAt();
+        document.onkeydown = handleArrowKeysSurfaceView;
+    } else {
+        setupEarthInSpace();
+        updateLookAt();
+        document.onkeydown = handleArrowKeysEarthInSpace;
+    };
 };
 
-SceneJS.bind("error", function() {
-    keepAnimating = false;
-});
+surface_view.onchange = setupViewHandler;
+setupViewHandler();
 
-SceneJS.bind("reset", function() {
-    keepAnimating = false;
-});
-
-var displayed = false;
-
-SceneJS.bind("canvas-activated", function() {
-    if (!displayed) {
-        displayed = true;
-        setLongitude(surface.longitude);
-        debugLabel();
-        controlsLabel();
-        infoLabel();
-        infoGraph();
-    }
-});
-
-window.requestAnimFrame = (function() {
-  return window.requestAnimationFrame ||
-         window.webkitRequestAnimationFrame ||
-         window.mozRequestAnimationFrame ||
-         window.oRequestAnimationFrame ||
-         window.msRequestAnimationFrame ||
-         function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
-           window.setTimeout(callback, 1000/60);
-         };
-})();
 
 //
 // General Mouse handling
@@ -1963,19 +1956,18 @@ function handleArrowKeysSurfaceView(evt) {
     if (evt) {
         switch (evt.keyCode) {
             case 37:                                    // left arrow
-                if (evt.ctrlKey) {
+                if (evt.ctrlKey) {                      // control left-arrow
                     evt.preventDefault();
-                } else if (evt.metaKey) {
+                } else if (evt.metaKey) {               // option left-arrow
                     evt.preventDefault();
-                } else if (evt.altKey) {
+                } else if (evt.altKey) {                // alt left-arrow
                     incrementLongitude(); 
                     evt.preventDefault();
-                } else if (evt.shiftKey) {
-                    surface.lookat_yaw += 2; 
+                } else if (evt.shiftKey) {              // shift left-arrow 
+                    surface.lookat_yaw += 2;
                     evt.preventDefault();
                 } else {
-                    surface.yaw -= 2; 
-                    updateLookAt();
+                    surface.yaw -= 2;                   // left arrow
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -2119,6 +2111,7 @@ function debugLabel() {
         labelStr += sprintf("LookAt Rot:  %4.1f, Pitch: %3.1f<br>", surface.lookat_yaw, surface.lookat_pitch);
         labelStr += sprintf("Distance-surface: %3.3f (x radius)<br>", surface.height);
         labelStr += sprintf("Solar alt: %2.1f, rad: %3.0f  W/m2<br>", solar_alt, solar_rad);
+        labelStr += sprintf("earth.km: %1.6f<br>", earth.km);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Atmosphere</b><br />";
@@ -2821,9 +2814,56 @@ function SolarRadiationLongitudeGraphHandler() {
 solar_radiation_longitude_graph.onchange = SolarRadiationLongitudeGraphHandler;
 SolarRadiationLongitudeGraphHandler();
 
+
+//
+// Animation
+//
+
+function sampleAnimate(t) {
+    sampleTime = new Date().getTime();
+    if (sampleTime > nextAnimationTime) {
+        nextAnimationTime = nextAnimationTime + updateInterval;
+        if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
+        if (earth_rotation.checked) {
+            angle.set("angle", earth.rotation += 0.25);
+            clear_solar_radiation_longitude_data();
+        };
+        updateLookAt();
+        sampleRender();
+        if (debug_view.checked) debugLabel();
+        infoLabel();
+        infoGraph();
+    }
+};
+
+SceneJS.bind("error", function() {
+    keepAnimating = false;
+});
+
+SceneJS.bind("reset", function() {
+    keepAnimating = false;
+});
+
+var displayed = false;
+
+SceneJS.bind("canvas-activated", function() {
+    if (!displayed) {
+        displayed = true;
+        setLongitude(surface.longitude);
+        debugLabel();
+        controlsLabel();
+        infoLabel();
+        infoGraph();
+    }
+});
+
 //
 // Startup
 //
 
-requestAnimFrame(sampleAnimate);
+scene.start({
+    idleFunc: function() {
+        sampleAnimate();
+    }
+});
 
