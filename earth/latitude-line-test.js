@@ -1538,12 +1538,31 @@ function updateEarthInSpaceLookAt() {
 var surface_eye_vec3 = [];
 var surface_dir_vec3 = [];
 var surface_up_vec3 = [];
-
+var surface_up_minus_90_vec3 = [];
+var surface_cross_vec3 = [];
 var flagpole_global = [];
 var surface_eye_global = [];
 
 var earth_tilt_quat = quat4.axisAngleDegreesCreate(0.0, 0.0, 1.0,  earth.tilt)
 var earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
+
+function calculate_surface_cross(lat, lon) {
+    if (lat == undefined) {
+        var lat = surface.latitude;
+        var lon = surface.longitude;
+    };
+    lat += 90;
+    if (lat > 90 ) {
+        lat -= surface.latitude * 2;
+        lon = -lon;
+    } else if (lat < -90) {
+        lat -= surface.latitude * 2;
+        lon = -lon;        
+    };
+    surface_up_minus_90_vec3 = lat_long_to_cartesian_corrected_for_tilt(lat, lon);
+    vec3.cross(surface_up_vec3, surface_up_minus_90_vec3, surface_cross_vec3);
+    return surface_cross_vec3;
+};
 
 function lat_long_to_cartesian(lat, lon, r) {
     r = r || 1;
@@ -1579,19 +1598,6 @@ function look_at_direction(unit_vec) {
     look_at.set("look", { x: far[0], y: far[1], z: far[2] });
 }
 
-// var surface_dir = lat_long_to_cartesian(surface.latitude, surface.longitude - earth.rotation);
-
-// var surface_eye_quat = quat4.axisAngleDegreesCreate(0, 0, 0, 1);
-// var surface_eye      = lat_long_to_cartesian(surface.latitude, surface.longitude, 1 + earth.km * 10);
-// var surface_eye_mat4 = quat4.toMat4(surface_eye_quat);
-// var surface_eye_vec4 = SceneJS._math_mulMat4v4(surface_eye_mat4, [0, 0,  0, 1]);
-// var global_surface_eye = {
-//     x: surface_eye_vec4[0] * -earth.radius + earth.pos.x,
-//     y: surface_eye_vec4[1] * -earth.radius + earth.pos.y,
-//     z: surface_eye_vec4[2] *  earth.radius + earth.pos.z
-// };
-// var global_surface_look = [sun.pos.x, sun.pos.y, sun.pos.z, 1];
-
 function calculateSurfaceEyeUpLook(eye_pos_v3) {
     if (eye_pos_v3 == undefined) {
         var eye_pos_v3 = [0, 0, 0];
@@ -1613,19 +1619,15 @@ function calculateSurfaceEyeUpLook(eye_pos_v3) {
     flagpole_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1 + surface.min_height * 5);
     surface_eye_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1 + surface.min_height * 5);
 
-    // generate an appropriate offset from the flagpole using the cross-product
-    // of the current surface_up with a vector pointing north
-    var cross = [];
-    vec3.cross(surface_up_vec3, [0, 1, 0], cross);
-    vec3.scale(cross, 10);
-    
-    vec3.add(flagpole_global, cross, surface_eye_global);
+    // generate an appropriate offset from the flagpole using the cross-product of the
+    // current surface_up with the surface_up vector rotated 90 degrees northward
+    calculate_surface_cross();
+    vec3.scale(surface_cross_vec3, 10, surface_eye_vec3);    
+    vec3.add(flagpole_global, surface_eye_vec3, surface_eye_global);
     
     var lookat = {
-        // eye: { x: surface_eye_vec3[0] + 2, y: surface_eye_vec3[1], z: surface_eye_vec3[2] },
-        up: { x: surface_up_vec3[0],  y: surface_up_vec3[1],  z: surface_up_vec3[2] },
         eye: { x: surface_eye_global[0],  y: surface_eye_global[1],  z: surface_eye_global[2] },
-        // look: sun.pos
+        up: { x: surface_up_vec3[0],  y: surface_up_vec3[1],  z: surface_up_vec3[2] },
         look: { x: flagpole_global[0],  y: flagpole_global[1],  z: flagpole_global[2] },
     }
     return lookat;
