@@ -1747,6 +1747,7 @@ function setLatitude(lat) {
     var scale = Math.cos(surface.latitude * deg2rad);
     latitude_scale.set({ x: scale, y: 1.0, z: scale });
     earth_surface_location_latitude.set("rotation", { x: 0.0, y: 0.0, z: -1.0, angle : lat });
+    $("#latitude-slider").data().rangeinput.setValue(surface.latitude);
     infoLabel();
 };
 
