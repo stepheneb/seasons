@@ -59,6 +59,7 @@ var surface = {
     longitude: 90,
     yaw: 0,
     pitch: 0,
+    distance: 3,
     lookat_yaw: 0,
     lookat_pitch: 0,
     min_height: 0.001,
@@ -67,8 +68,8 @@ var surface = {
     km: km * surface_earth_scale_factor,
     meter: meter * surface_earth_scale_factor,
     flagpole: {
-        radius: 5 *  meter * surface_earth_scale_factor,
-        height: 100 *  meter * surface_earth_scale_factor,
+        radius: 1 *  meter * surface_earth_scale_factor,
+        height: 25 *  meter * surface_earth_scale_factor,
         pos: { x: 0, y: 0, z: 0 }
     }
 };
@@ -1108,6 +1109,7 @@ SceneJS.createNode({
                                                                                                             x: 0.0, y: 0.0, z: -1.0, angle: surface.latitude,
 
                                                                                                             nodes: [
+
                                                                                                                 {
 
                                                                                                                     type: "translate",
@@ -1159,9 +1161,9 @@ SceneJS.createNode({
                                                                                                                                     // y: 1 + surface.min_height + 2.5 * earth.km,
                                                                                                                                     // z: 0 + surface.min_height * 5,
 
-                                                                                                                                    x: surface.meter * 10,
+                                                                                                                                    x: surface.meter * 0,
                                                                                                                                     y: surface.flagpole.height / 2,
-                                                                                                                                    z: surface.meter * 10,
+                                                                                                                                    z: surface.meter * 0,
 
                                                                                                                                     nodes: [
                                                                                                                                         {
@@ -1169,13 +1171,6 @@ SceneJS.createNode({
                                                                                                                                             radius: surface.flagpole.radius,
                                                                                                                                             height: surface.flagpole.height
                                                                                                                                         }
-
-                                                                                                                                        // {
-                                                                                                                                        //     type: "cube",
-                                                                                                                                        //     xSize: 0.5 * earth.km,
-                                                                                                                                        //     ySize: 10 * earth.km,
-                                                                                                                                        //     zSize: 0.5 * earth.km
-                                                                                                                                        // }
                                                                                                                                     ]
                                                                                                                                 }
                                                                                                                             ]
@@ -1504,20 +1499,16 @@ function updateEarthInSpaceLookAt() {
     var result_quat = quat4.create();
     quat4.multiply(pitch_quat, yaw_quat, result_quat);
 
-    // var result_mat4 = quat4.toMat4(result_quat);
     var neweye = vec3.create();
     quat4.multiplyVec3(result_quat, initial_eye_vec3, neweye);
-    // mat4.multiplyVec3(result_mat4, initial_eye_vec3, neweye);
     look_at.set("eye", { 
         x: neweye[0] + earth.pos.x, 
         y: neweye[1] + earth.pos.y, 
         z: neweye[2] + earth.pos.z 
     });
     
-    // next handle a possible yaw rotation to to look left or right of Earth in the ecliptic plane
+    // next handle a possible yaw rotation to look left or right of Earth in the ecliptic plane
     var rot_quat = quat4.axisAngleDegreesCreate(0, 1, 0, lookat_yaw); 
-
-    // var rot_mat4 = quat4.toMat4(rot_quat);
 
     var new_look = vec3.create();
     quat4.multiplyVec3(rot_quat, neweye, new_look);
@@ -1536,12 +1527,18 @@ function updateEarthInSpaceLookAt() {
 //
 
 var surface_eye_vec3 = [];
+var new_surface_eye_vec3 = [];
 var surface_dir_vec3 = [];
 var surface_up_vec3 = [];
+var surface_look_vec3 = [];
+var new_surface_look_vec3 = [];
 var surface_up_minus_90_vec3 = [];
 var surface_cross_vec3 = [];
 var flagpole_global = [];
 var surface_eye_global = [];
+var new_surface_eye_global = [];
+var surface_look_global = [];
+var new_surface_look_global = [];
 
 var earth_tilt_quat = quat4.axisAngleDegreesCreate(0.0, 0.0, 1.0,  earth.tilt)
 var earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
@@ -1604,31 +1601,26 @@ function calculateSurfaceEyeUpLook(eye_pos_v3) {
     };
     
     // calculate unit vector from center of Earth to surface location
-    surface_dir_vec3 = lat_long_to_cartesian_corrected_for_tilt(surface.latitude, surface.longitude, 1 + surface.min_height * 10);
+    surface_dir_vec3 = lat_long_to_cartesian_corrected_for_tilt(surface.latitude, surface.longitude);
     
     // generate an up axis direction vector for the lookAt (integrates tilt)
-    surface_up_vec3  = [surface_dir_vec3[0], surface_dir_vec3[1], surface_dir_vec3[2]];
+    surface_up_vec3 = vec3.create(surface_dir_vec3);
 
-    // generate a surface eye position by scaling the surface vector 
-    // by the current size of the Earth
-    vec3.scale(surface_dir_vec3, earth.radius, surface_eye_vec3);
-    
-    // and adding the Earth position
-    vec3.add(surface_eye_vec3, [earth.pos.x, earth.pos.y, earth.pos.z ]);
-
-    flagpole_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1 + surface.min_height * 5);
-    surface_eye_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1 + surface.min_height * 5);
+    flagpole_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1.002);
+    x = (earth.radius + surface.min_height + surface.flagpole.height / 2) / earth.radius;
 
     // generate an appropriate offset from the flagpole using the cross-product of the
     // current surface_up with the surface_up vector rotated 90 degrees northward
     calculate_surface_cross();
-    vec3.scale(surface_cross_vec3, 10, surface_eye_vec3);    
+    vec3.scale(surface_cross_vec3, surface.distance, surface_eye_vec3);    
     vec3.add(flagpole_global, surface_eye_vec3, surface_eye_global);
+
+    surface_look_global = vec3.create(flagpole_global);
     
     var lookat = {
         eye: { x: surface_eye_global[0],  y: surface_eye_global[1],  z: surface_eye_global[2] },
         up: { x: surface_up_vec3[0],  y: surface_up_vec3[1],  z: surface_up_vec3[2] },
-        look: { x: flagpole_global[0],  y: flagpole_global[1],  z: flagpole_global[2] },
+        look: { x: surface_look_global[0],  y: surface_look_global[1],  z: surface_look_global[2] },
     }
     return lookat;
 };
@@ -1679,67 +1671,34 @@ function updateSurfaceViewLookAt() {
     
     // update the scenegraph lookAt
     var lookat = calculateSurfaceEyeUpLook();
-    look_at.set("eye", lookat.eye);
+    // look_at.set("eye", lookat.eye);
     look_at.set("up", lookat.up);
     look_at.set("look",  lookat.look)
+
+    vec3.scale(surface_cross_vec3, surface.distance, surface_eye_vec3);    
+
+    if (surface.pitch > max_pitch)  surface.pitch =  max_pitch;
+    if (surface.pitch < -max_pitch) surface.pitch = -max_pitch;
+
+    var yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.yaw);
+    var pitch_quat = quat4.axisAngleDegreesCreate(surface_up_minus_90_vec3[0], surface_up_minus_90_vec3[1], surface_up_minus_90_vec3[2], surface.pitch);
+    quat4.multiply(pitch_quat, yaw_quat, result_quat);
     
-    // var yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.lookat_yaw)
-    // var yaw_mat4 = quat4.toMat4(yaw_quat);
-    // 
-    // var pitch_quat = quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], surface.lookat_pitch)
-    // 
-    // var pitch_v3 = vec3.normalize([surface_up_vec3[0], 0, surface_up_vec3[2]]);
-    // var pitch_quat = quat4.axisAngleDegreesCreate(pitch_v3[0], pitch_v3[1], pitch_v3[2], -surface.lookat_pitch);
+    quat4.multiplyVec3(result_quat, surface_eye_vec3, new_surface_eye_vec3);
+    vec3.add(surface_look_global, new_surface_eye_vec3, new_surface_eye_global);
+    look_at.set("eye", { x: new_surface_eye_global[0],  y: new_surface_eye_global[1],  z: new_surface_eye_global[2] });
 
-    // quat4.multiply(pitch_quat, yaw_quat, result_quat);
-    // 
-    // var result_mat4 = quat4.toMat4(result_quat);
-    // 
-    // var sun_pos_v3 = [sun.pos.x, sun.pos.y, sun.pos.z];
-    // var earth_pos_v3 = [earth.pos.x, earth.pos.y, earth.pos.z];
+    // var lookat_yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.yaw);
+    // var lookat_pitch_quat = quat4.axisAngleDegreesCreate(surface_up_minus_90_vec3[0], surface_up_minus_90_vec3[1], surface_up_minus_90_vec3[2], surface.pitch);
+    // var surface_look_global = [];
+    // var new_surface_look_global = [];
 
-    // var newlook = [];
-    // vec3.subtract(sun_pos_v3, earth_pos_v3, newlook);
-    // 
-    // mat4.multiplyVec3(result_mat4, newlook);
-    // vec3.add(newlook, earth_pos_v3);
-    // look_at.set("look", { x: newlook[0], y: newlook[1], z: newlook[2] });
-
-
-    // var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, surface.yaw);
-    //  var yaw_mat4 = quat4.toMat4(yaw_quat);
-    // 
-    //  if (surface.pitch > surface.max_pitch)  surface.pitch =  surface.max_pitch;
-    //  if (surface.pitch < -surface.max_pitch) surface.pitch = -surface.max_pitch;
-    // 
-    //  var pitch_quat =  quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], surface.pitch);
-    // 
-    //  var result_quat = quat4.create();
-    //  quat4.multiply(pitch_quat, yaw_quat, result_quat);
-    //  var result_mat4 = quat4.toMat4(result_quat);
-    // 
-    //  var neweye = vec3.create();
-    //  mat4.multiplyVec3(result_mat4, surface_eye_vec3, neweye);
-    //     // 
-    // global_surface_eye = {
-    //     x: surface_eye_vec4[0] * -earth.radius + earth.pos.x,
-    //     y: surface_eye_vec4[1] * -earth.radius + earth.pos.y,
-    //     z: surface_eye_vec4[2] * earth.radius + earth.pos.z
-    // };
-    // look_at.set("eye", global_surface_eye);
-    // 
-    // look_at.set("up", { x: -surface_dir[0],  y: surface_dir[1],  z: surface_dir[2] });
+    // next handle a possible yaw rotation to to look left or right of the flagpole in the surface POV
+    var rot_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.lookat_yaw); 
     
-    // var lookat_yaw_quat = quat4.axisAngleDegreesCreate(surface_dir_vec3[0], -surface_dir_vec3[1], surface_dir_vec3[2], surface.lookat_yaw); 
-    // var lookat_pitch_quat = quat4.axisAngleDegreesCreate(0, 1, 0, surface.lookat_pitch); 
-    // 
-    // result_quat = SceneJS._math_mulQuaternions(lookat_yaw_quat, lookat_pitch_quat)
-    // var result_mat4 = quat4.toMat4(result_quat);
-    // var new_look = SceneJS._math_mulMat4v4(result_mat4, [1, 0, 0, 1]);
-    // new_look[0] = (neweye[0] - new_look[0]);
-    // new_look[1] = (neweye[1] - new_look[1]);
-    // new_look[2] = (neweye[2] - new_look[2]);
-    // look_at_direction(new_look);
+    quat4.multiplyVec3(rot_quat, new_surface_eye_vec3, new_surface_look_vec3);
+    vec3.subtract(surface_look_global, new_surface_look_vec3, new_surface_look_global);
+    look_at.set("look", { x: new_surface_look_global[0],  y: new_surface_look_global[1],  z: new_surface_look_global[2] });
     debugLabel();
 };
 
@@ -1841,8 +1800,8 @@ function mouseMove(event) {
     if (dragging) {
         
         if (surface_view.checked) {
-            surface.lookat_yaw   += (event.clientX - lastX) * -0.2;
-            surface.lookat_pitch += (event.clientY - lastY) * -0.2;
+            surface.yaw   += (event.clientX - lastX) * -0.2;
+            surface.pitch += (event.clientY - lastY) * -0.2;
         } else {
             yaw   += (event.clientX - lastX) * -0.2;
             pitch += (event.clientY - lastY) * -0.2;
@@ -1946,11 +1905,23 @@ function handleArrowKeysEarthInSpace(evt) {
     };
 };
 
-function update_surface_distance(d) {
+function update_surface_height(d) {
     if (d >= surface.min_height) {
         surface.height = d;
     }
 }
+
+function decrementSurfaceDistance() {
+    if (surface.distance > 2) {
+        surface.distance -= 0.1;
+    };
+};
+
+function incrementSurfaceDistance() {
+    if (surface.distance < 10) {
+        surface.distance += 0.1;
+    };    
+};
 
 function handleArrowKeysSurfaceView(evt) {
     var distanceIncrementFactor = 30;
@@ -1977,8 +1948,7 @@ function handleArrowKeysSurfaceView(evt) {
 
             case 38:                                    // up arrow
                 if (evt.ctrlKey) {
-                    var increment = surface.height / distanceIncrementFactor;
-                    update_surface_distance(surface.height - increment);
+                    decrementSurfaceDistance();
                     evt.preventDefault();
                 } else if (evt.altKey) {
                     incrementLatitude(); 
@@ -1989,7 +1959,7 @@ function handleArrowKeysSurfaceView(evt) {
                     surface.lookat_pitch += 2; 
                     evt.preventDefault();
                 } else {
-                    surface.pitch -= 2; 
+                    surface.pitch += 2; 
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -2015,8 +1985,7 @@ function handleArrowKeysSurfaceView(evt) {
 
             case 40:                                    // down arrow
                 if (evt.ctrlKey) {
-                    var increment = surface.height / distanceIncrementFactor;
-                    update_surface_distance(surface.height + increment);
+                    incrementSurfaceDistance();
                     evt.preventDefault();
                 } else if (evt.altKey) {
                     decrementLatitude(); 
@@ -2027,7 +1996,7 @@ function handleArrowKeysSurfaceView(evt) {
                     surface.lookat_pitch -= 2; 
                     evt.preventDefault();
                 } else {
-                    surface.pitch += 2; 
+                    surface.pitch -= 2; 
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
