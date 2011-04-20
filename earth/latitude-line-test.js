@@ -30,7 +30,7 @@ var sun = {
 
 var initial_day_number = day_number_by_month['jun'];
 
-var initial_earth_rotation = 0;
+var initial_earth_rotation = -25;
 
 var earth = {
     pos: {
@@ -2028,6 +2028,33 @@ function elementGetY(el) {
 };
 
 var container = document.getElementById("container");
+
+//
+// Latitude Slider
+//
+
+$(":range").rangeinput();
+
+var latitude_slider_div     = document.getElementById("latitude-slider-div");
+var latitude_slider         = document.getElementById("latitude-slider");
+
+function latitudeSlider() {
+    var canvas_properties = the_canvas.getBoundingClientRect();
+    var container_properties = container.getBoundingClientRect();
+    latitude_slider_div.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - latitude_slider_div.offsetHeight - 200 + "px"
+    latitude_slider_div.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - latitude_slider_div.offsetWidth + "px";
+};
+
+latitudeSlider();
+
+function latitudeSliderHandler() {
+    surface.latitude = Number(latitude_slider.value);
+    clear_solar_radiation_latitude_data();
+    setLatitude(surface.latitude);
+    updateLookAt();
+};
+
+latitude_slider.onchange = latitudeSliderHandler;
 
 //
 // DebugLabel

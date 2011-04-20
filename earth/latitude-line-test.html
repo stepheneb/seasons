@@ -3,10 +3,40 @@
 <html>
 <head>
     <title>Latitude/Longitude Line Test</title>
-    <link href="../stylesheets/style.css"        rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets/rangeinput.css" rel="stylesheet" type="text/css" />
+
+    <script src="http://cdn.jquerytools.org/1.2.5/full/jquery.tools.min.js"></script>
+
     <script type="text/javascript" src="../lib/scenejs-0.8.0/scenejs.js"></script>
     <script type="text/javascript" src="../lib/glmatrix.js"></script>
     <script type="text/javascript" src="../lib/sprintf.js"></script>
+    
+    <style>
+
+  	/* Override skin1.css to make it vertical */
+
+  	/* height is now larger than width  */
+  	.slider {
+  		height:300px;
+  		width:9px;
+  		margin:0 0 0 60px;
+  	}
+
+  	/* tweak drag handle position */
+  	.handle {
+  		top:0;
+  		left:-10px;		
+  	}
+
+  	/* position progressbar on the bottom edge */
+  	.progress {
+  		width:9px; 
+  		position:absolute;
+  		bottom:0;	
+  	}
+  	</style>
+  	
 </head>
 <div id="container">
   <div id="header-inner">
@@ -85,6 +115,9 @@
         <div id="debug-content"></div>
         <div id="debug-checkbox"><label >debugging output <input id="debug-view" type="checkbox"/></label></div>
       </div>
+    </div>
+    <div id="latitude-slider-div" class="webgl-canvas-label transparent-ui" style="font-size:90%">
+      <input id="latitude-slider" name="latitude-slider" type="range" min="-90" max="90" value="0">
     </div>
     <div id="info">
     <div id="log">
