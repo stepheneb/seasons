@@ -23,6 +23,12 @@
   		margin:0 0 0 60px;
   	}
 
+  	.vertical .slider {
+  		height:300px;
+  		width:9px;
+  		margin:20px 8px 12px 24px;
+  	}
+
   	/* tweak drag handle position */
   	.handle {
   		top:0;
@@ -35,6 +41,31 @@
   		position:absolute;
   		bottom:0;	
   	}
+  	
+  	.range {
+        background: none repeat scroll 0 0 transparent;
+        border: 0 none;
+        border-radius: 2px 2px 2px 2px;
+        color: #FFFFFF;
+        float: left;
+        font-size: 12px;
+        margin: -5px 0 10px;
+        text-align: center;
+        width: 30px;
+    }
+
+  	.vertical .range {
+        background: none repeat scroll 0 0 transparent;
+        border: 0 none;
+        border-radius: 2px 2px 2px 2px;
+        color: #FFFFFF;
+        float: left;
+        font-size: 14px;
+        margin: -8px 12px 0px -26px;
+        text-align: center;
+        width: 30px;
+    }
+
   	</style>
   	
 </head>
@@ -116,8 +147,8 @@
         <div id="debug-checkbox"><label >debugging output <input id="debug-view" type="checkbox"/></label></div>
       </div>
     </div>
-    <div id="latitude-slider-div" class="webgl-canvas-label transparent-ui" style="font-size:90%">
-      <input id="latitude-slider" name="latitude-slider" type="range" min="-90" max="90" value="0">
+    <div id="latitude-slider-div" class="webgl-canvas-label transparent-ui vertical" style="font-size:90%">
+        <input id="latitude-slider" name="latitude-slider" type="range" min="-90" max="90" value="0">
     </div>
     <div id="info">
     <div id="log">
