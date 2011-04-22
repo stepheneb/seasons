@@ -505,20 +505,14 @@ var updateInterval    = 1000/updateRate;
 var nextAnimationTime = new Date().getTime(); + updateInterval;
 var keepAnimating     = true;
 
-function sampleRender() {
-    scene.render();
-};
-
 function sampleAnimate(t) {
     sampleTime = new Date().getTime();
-    if (keepAnimating) requestAnimFrame(sampleAnimate);
     if (sampleTime > nextAnimationTime) {
         nextAnimationTime = nextAnimationTime + updateInterval;
         if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
         if (earth_rotation_checkbox.checked) {
             angle.set("angle", earth_rotation += 0.25);
         };
-        sampleRender();
     }
 };
 
@@ -538,16 +532,8 @@ SceneJS.bind("canvas-activated", function() {
     }
 });
 
-window.requestAnimFrame = (function() {
-  return window.requestAnimationFrame ||
-         window.webkitRequestAnimationFrame ||
-         window.mozRequestAnimationFrame ||
-         window.oRequestAnimationFrame ||
-         window.msRequestAnimationFrame ||
-         function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
-           window.setTimeout(callback, 1000/60);
-         };
-})();
-
-requestAnimFrame(sampleAnimate);
-
+scene.start({
+    idleFunc: function() {
+        sampleAnimate();
+    }
+});
