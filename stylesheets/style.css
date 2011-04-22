@@ -252,6 +252,16 @@ h4 {
     padding: 0.5em;
 }
 
+.webgl-canvas-label select  {
+    font-size: 0.9em;
+    padding: 0.1em 0.1em;
+}
+
+.webgl-canvas-label option  {
+    font-size: 0.9em;
+    padding: 0.3em 0.0em;
+}
+
 .checkbox, .radio {
   width: 19px;
   height: 25px;

@@ -110,9 +110,17 @@
             <label><input id="lat-hour-markers" type="checkbox"/> Latitude Hours</label><br />
           </fieldset>
           <br />
+          <form id="select-city">
+            <fieldset>
+              <legend>Select city</legend>
+              <select id="selected-city" name="selected-city">City
+                <option disabled selected>city ...</option>
+              </select>
+            </fieldset>
+          </form>
           <form id="choose-month">
             <fieldset>
-              <legend>Choose month</legend>
+              <legend>Month</legend>
               <label><input type="radio" name="month" value="jun" checked> Jun</input></label>
               <label><input type="radio" name="month" value="sep"> Sep</input></label><br />
               <label><input type="radio" name="month" value="dec"> Dec</input></label>
@@ -127,6 +135,10 @@
             </fieldset>          
           </form>
         </form>
+      </div>
+      <div id="experiment-label" class="webgl-canvas-label transparent-ui" style="font-size:90%">
+        <div id="experiment-content"></div>
+        <div id="experiment-checkbox"><label >Experiment <input id="experiment-view" type="checkbox"/></label></div>
       </div>
       <div id="debug-label" class="webgl-canvas-label transparent-ui" style="font-size:90%">
         <div id="debug-content"></div>
@@ -145,6 +157,8 @@
   </div>
 </div>
 <script type="text/javascript" src="jpl-earth-ephemerides.js"></script>
+<script type="text/javascript" src="cities.js"></script>
 <script type="text/javascript" src="latitude-line-test.js"></script>
+<script type="text/javascript" src="seasons4.js"></script>
 </body>
 </html>
