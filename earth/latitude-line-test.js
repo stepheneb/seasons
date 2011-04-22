@@ -1,3 +1,26 @@
+var use_diffuse_correction   = document.getElementById("use-diffuse-correction") || { checked: true, onchange: null };
+var use_airmass = document.getElementById("use-airmass") || { checked: true, onchange: null  };
+var time_24h =  document.getElementById("time-24h") || { checked: false, onchange: null };
+var graph_view   = document.getElementById("graph-view") || { checked: false, onchange: null };
+var earth_rose_grid = document.getElementById("earth-rose-grid") || { checked: false, onchange: null };
+var sun_grid = document.getElementById("sun-grid") || { checked: false, onchange: null };
+var sun_rise_set = document.getElementById("sun-rise-set") || { checked: false, onchange: null };
+var sun_earth_line = document.getElementById("sun-earth-line") || { checked: false, onchange: null };
+var back_light = document.getElementById("back-light") || { checked: false, onchange: null  };
+var use_horizontal_flux   = document.getElementById("use-horizontal-flux") || { checked: false, onchange: null };
+var sun_earth_line = document.getElementById("sun-earth-line");
+var sun_noon_midnight = document.getElementById("sun-noon-midnight") || { checked: false, onchange: null };
+var lat_hour_markers = document.getElementById("lat-hour-markers") || { checked: false, onchange: null };
+var sun_rays = document.getElementById("sun-rays") || { checked: false, onchange: null };
+var surface_view = document.getElementById("surface-view") || { checked: false, onchange: null };
+
+
+var solar_altitude_graph = document.getElementById("solar-altitude-graph") || 
+    { checked: false, onchange: null, style: { display: null } };
+var solar_radiation_latitude_graph = document.getElementById("solar-radiation-latitude-graph") || 
+    { checked: false, onchange: null, style: { display: null } };
+var solar_radiation_longitude_graph = document.getElementById("solar-radiation-longitude-graph") ||
+    { checked: false, onchange: null, style: { display: null } };
 
 // some constants
 var deg2rad = Math.PI/180;
@@ -1245,7 +1268,6 @@ var keepAnimating = true;
 //
 // Back Lighting Handler
 //
-var back_light = document.getElementById("back-light");
 var back_light1 =  SceneJS.withNode("back-light1");
 var back_light2 =  SceneJS.withNode("back-light2");
 
@@ -1298,7 +1320,6 @@ earthGridHandler();
 //
 // Earth Rose Grid Handler
 //
-var earth_rose_grid = document.getElementById("earth-rose-grid");
 var earth_rose_grid_selector =  SceneJS.withNode("earth-rose-grid-selector");
 
 function earthRoseGridHandler() {
@@ -1315,7 +1336,6 @@ earthRoseGridHandler();
 //
 // Sun Square Grid Handler
 //
-var sun_grid = document.getElementById("sun-grid");
 var sun_grid_selector =  SceneJS.withNode("sun-grid-selector");
 
 function sunGridHandler() {
@@ -1332,7 +1352,7 @@ sunGridHandler();
 //
 // Sun-Earth Line Handler
 //
-var sun_earth_line = document.getElementById("sun-earth-line");
+
 var sun_earth_line_selector =  SceneJS.withNode("sun-earth-line-selector");
 
 function sunEarthLineHandler() {
@@ -1366,7 +1386,6 @@ sunEarthLineHandler();
 //
 // Sun rise/set surface indicator Handler
 //
-var sun_rise_set = document.getElementById("sun-rise-set");
 var sun_rise_set_selector =  SceneJS.withNode("sun-rise-set-selector");
 
 function sunRiseSetHandler() {
@@ -1383,7 +1402,7 @@ sunRiseSetHandler();
 //
 // Sun noon/midnight surface indicator Handler
 //
-var sun_noon_midnight = document.getElementById("sun-noon-midnight");
+
 var sun_noon_midnight_selector =  SceneJS.withNode("sun-noon-midnight-selector");
 
 function sunNoonMidnightHandler() {
@@ -1400,7 +1419,6 @@ sunNoonMidnightHandler();
 //
 // Latitude hour markers Handler
 //
-var lat_hour_markers = document.getElementById("lat-hour-markers");
 var lat_hour_markers_selector =  SceneJS.withNode("lat-hour-markers-selector");
 
 function latHourMarkersHandler() {
@@ -1417,7 +1435,6 @@ latHourMarkersHandler();
 //
 // Sun Rays Line Handler
 //
-var sun_rays = document.getElementById("sun-rays");
 var sun_rays_selector =  SceneJS.withNode("sun-rays-selector");
 
 function sunRaysHandler() {
@@ -1713,8 +1730,6 @@ function updateLookAt() {
 //
 // Earth In Space/Surface View Handler
 //
-var surface_view = document.getElementById("surface-view");
-
 function setupViewHandler() {
     if (surface_view.checked) {
         setupSurfaceView();
@@ -2172,8 +2187,6 @@ function earthRotationToTimeStr12(rot) {
     return sprintf("%2f:%02f", time_hours, time_min) + " " + am_pm;
 };
 
-var time_24h =  document.getElementById("time-24h");
-
 function earthRotationToTimeStr(rot) {
     if (time_24h.checked) {
         return earthRotationToTimeStr24(rot)
@@ -2207,8 +2220,6 @@ function simpleSolarRadiation(alt) {
     return result < 0 ? 0 : result; 
 };
 
-var use_airmass = document.getElementById("use-airmass");
-
 function useAirMNassHandler() {
     clear_solar_radiation_latitude_data();
     clear_solar_radiation_longitude_data();
@@ -2229,16 +2240,14 @@ use_airmass.onchange = useAirMNassHandler;
 
 
 
-var use_diffuse_correction   = document.getElementById("use-diffuse-correction");
+// var use_diffuse_correction   = document.getElementById("use-diffuse-correction") || { checked: true, onchange: null };
 
-function useDiffuseCorrectionxHandler() {
+function useDiffuseCorrectionHandler() {
     clear_solar_radiation_latitude_data();
     clear_solar_radiation_longitude_data();
 };
 
-use_diffuse_correction.onchange = useDiffuseCorrectionxHandler;
-
-var use_horizontal_flux   = document.getElementById("use-horizontal-flux");
+use_diffuse_correction.onchange = useDiffuseCorrectionHandler;
 
 function useHorizontalFluxHandler() {
     clear_solar_radiation_latitude_data();
@@ -2377,7 +2386,6 @@ function controlsLabel() {
 // Info Graph
 //
 var info_graph   = document.getElementById("info-graph");
-var graph_view   = document.getElementById("graph-view");
 
 var graph_width = 150;
 var graph_height = 120;
@@ -2385,9 +2393,6 @@ var graph_height = 120;
 //
 // Graph Dom Elements ...
 //
-var solar_altitude_graph = document.getElementById("solar-altitude-graph");
-var solar_radiation_latitude_graph = document.getElementById("solar-radiation-latitude-graph");
-var solar_radiation_longitude_graph = document.getElementById("solar-radiation-longitude-graph");
 
 var altitude_graph_canvas = document.getElementById("altitude-graph-canvas");
 var radiation_lat_graph_canvas = document.getElementById("radiation-lat-graph-canvas");
@@ -2614,7 +2619,7 @@ function updateSolarRadiationLatitudeGraph() {
         drawSolarRadiationLatitudeGraph();
     } else {
         radiation_lat_graph_canvas.width = 1;
-        radiation_lat_graph_canvas.height =1;
+        radiation_lat_graph_canvas.height = 1;
         radiation_lat_graph_canvas.style.display = null;
     };
 };

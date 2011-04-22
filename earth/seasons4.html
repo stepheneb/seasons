@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Latitude/Longitude Line Test</title>
+    <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets/rangeinput.css" rel="stylesheet" type="text/css" />
+
+    <script src="http://cdn.jquerytools.org/1.2.5/full/jquery.tools.min.js"></script>
+
+    <script type="text/javascript" src="../lib/scenejs-0.8.0/scenejs.js"></script>
+    <script type="text/javascript" src="../lib/glmatrix.js"></script>
+    <script type="text/javascript" src="../lib/sprintf.js"></script>
+    
+    <style>
+
+  	/* Override skin1.css to make it vertical */
+
+  	/* height is now larger than width  */
+  	.slider {
+  		height:300px;
+  		width:9px;
+  		margin:0 0 0 60px;
+  	}
+
+  	.vertical .slider {
+  		height:300px;
+  		width:9px;
+  		margin:20px 8px 12px 24px;
+  	}
+
+  	/* tweak drag handle position */
+  	.handle {
+  		top:0;
+  		left:-10px;		
+  	}
+
+  	/* position progressbar on the bottom edge */
+  	.progress {
+  		width:9px; 
+  		position:absolute;
+  		bottom:0;	
+  	}
+  	
+  	.range {
+        background: none repeat scroll 0 0 transparent;
+        border: 0 none;
+        border-radius: 2px 2px 2px 2px;
+        color: #FFFFFF;
+        float: left;
+        font-size: 12px;
+        margin: -5px 0 10px;
+        text-align: center;
+        width: 30px;
+    }
+
+  	.vertical .range {
+        background: none repeat scroll 0 0 transparent;
+        border: 0 none;
+        border-radius: 2px 2px 2px 2px;
+        color: #FFFFFF;
+        float: left;
+        font-size: 14px;
+        margin: -8px 12px 0px -26px;
+        text-align: center;
+        width: 30px;
+    }
+
+  	</style>
+  	
+</head>
+<div id="container">
+  <div id="header-inner">
+    <h1 id="title">Latitude/Longitude Line Test</h1>
+    <p><i>Using <b>v0.8.0</b> of <a href="http://scenejs.org/">SceneJS</a>, same content with <b><a href="latitude-line-test-scenejs-0.7.9.html">v0.7.9</a></b></i></p>
+    <p>
+      In this UI experiment the Earth is stationary in its orbit and is tilted and illuminated as if the date is June 21.<br />
+      Your location is what changes when either arrow-keys or dragging is used. Learn more about this prototype <a href="https://docs.google.com/document/pub?id=12K6Jz8w9DysqvUZ7N5TUnuyBwZrfwYpILJ-CgV8HYXQ">here</a>.
+    </p>
+    <p>
+      Either <b>drag</b> with the mouse or use the <b>arrow</b> keys to change the location you are viewing the Earth from.<br />
+      Use the <b>control</b> key along with the <b>up or down arrow</b> keys to move closer or further away from the Earth.<br />
+      Use the <b>shift</b> key along with the <b>left or right arrow</b> keys to change the direction you are facing.<br />
+      Use the <b>alt or option</b> key along with the <b>arrows</b> keys to adjust the latitude or longitude lines.
+    </p>
+  </div>
+  <div id="content">
+    <div id="webglCanvasContainer">
+      <canvas id="theCanvas" height="700px", width="1000px"></canvas>
+      <div id="info-label" class="webgl-canvas-label transparent-ui">
+        <label><input id="info-view" type="checkbox" checked/></label><div id="info-content"></div>
+      </div>
+      <div id="info-graph" class="webgl-canvas-graph transparent-ui">
+        <label><input id="graph-view" type="checkbox" /></label>
+        <canvas id="altitude-graph-canvas" width="1" height="1"></canvas>
+        <canvas id="radiation-lon-graph-canvas" width="1" height="1"></canvas>
+        <canvas id="radiation-lat-graph-canvas" width="1" height="1"></canvas>
+      </div>
+      <div id="controls-label" class="webgl-canvas-label transparent-ui">
+        <form id="show-me">
+          <fieldset>
+            <legend>Controls</legend>
+            <label><input id="earth-rotation" type="checkbox"/> Rotation</label><br />
+            <label><input id="surface-view" type="checkbox"/> Surface View</label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Display</legend>
+            <label><input id="solar-altitude-graph" type="checkbox" checked/> Solar Altitude</label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Ecliptic Grids</legend>
+            <label><input id="earth-grid" type="checkbox"/> Earth Square</label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Markers</legend>
+            <label><input id="sun-earth-line" type="checkbox" checked/> Center Ray</label><br />
+            <label><input id="sun-rise-set" type="checkbox" /> Rise/Set</label><br />
+            <label><input id="lat-hour-markers" type="checkbox"/> Latitude Hours</label><br />
+          </fieldset>
+          <br />
+        </form>
+      </div>
+      <div id="debug-label" class="webgl-canvas-label transparent-ui" style="font-size:90%">
+        <div id="debug-content"></div>
+        <div id="debug-checkbox"><label >debugging output <input id="debug-view" type="checkbox"/></label></div>
+      </div>
+    </div>
+    <div id="latitude-slider-div" class="webgl-canvas-label transparent-ui vertical" style="font-size:90%">
+        <input id="latitude-slider" name="latitude-slider" type="range" min="-90" max="90" value="0">
+    </div>
+    <div id="info">
+    <div id="log">
+      <h3>SceneJS Log</h3>
+      <div id="theLoggingDiv"></div>
+    </div> 
+  </div>
+</div>
+<script type="text/javascript" src="jpl-earth-ephemerides.js"></script>
+<script type="text/javascript" src="latitude-line-test.js"></script>
+</body>
+</html>
