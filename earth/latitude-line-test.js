@@ -53,7 +53,7 @@ var sun = {
 
 var initial_day_number = day_number_by_month['jun'];
 
-var initial_earth_rotation = -25;
+var initial_earth_rotation = 12;
 
 var earth = {
     pos: {
@@ -76,10 +76,10 @@ var surface_line_width = earth.radius / 200;
 var surface_earth_scale_factor = 100;
 
 var surface = {
-    // latitude: 38,
-    // longitude: 122,
-    latitude: 0,
-    longitude: 90,
+    latitude: 38,
+    longitude: 122,
+    // latitude: 0,
+    // longitude: 90,
     yaw: 0,
     pitch: 0,
     distance: 3,
