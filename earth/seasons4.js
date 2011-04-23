@@ -53,15 +53,18 @@ function chooseTiltHandler(event) {
     var tilt = getRadioSelection(event.currentTarget);
     switch (tilt) {
         case "yes":
-            earth_tilt_quaternion.set("rotation", { x : 0, y : 0, z : 1, angle : 23.45 });
-            earth.tilt = 23.45;
+            earth.tilt = orbitalTilt;
             break;
 
         case "no":
-            earth_tilt_quaternion.set("rotation", { x : 0, y : 0, z : 1, angle : 0 });
             earth.tilt = 0;
             break;
     };
+    earth_tilt_quaternion.set("rotation", { 
+        x: earth_tilt_axis[0], 
+        y: earth_tilt_axis[1], 
+        z: earth_tilt_axis[2],
+        angle : earth.tilt });
     infoLabel();
 };
 

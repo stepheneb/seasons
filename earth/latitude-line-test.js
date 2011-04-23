@@ -35,6 +35,7 @@ var earthRotationPeriod = 0.99726968;   // days
 var twoPI  = Math.PI * 2;
 var fourPI = Math.PI * 4;
 var sqrt2 = Math.sqrt(2);
+var orbitalTilt = 23.45;
 
 var AU = 149597870.691;
 
@@ -72,7 +73,7 @@ var earth = {
     },
     distance: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
     radius:  earth_diameter / 2,
-    tilt: 23.45,
+    tilt: orbitalTilt,
     tilt_axis: { x: earth_tilt_axis[0], y: earth_tilt_axis[1], z: earth_tilt_axis[2] },
     day_number: initial_day_number,
     rotation: initial_earth_rotation,
