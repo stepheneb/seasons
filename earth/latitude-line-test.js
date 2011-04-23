@@ -34,11 +34,16 @@ var earthOrbitalPeriod = 365.256363004; // days
 var earthRotationPeriod = 0.99726968;   // days
 var twoPI  = Math.PI * 2;
 var fourPI = Math.PI * 4;
+var sqrt2 = Math.sqrt(2);
+
+var AU = 149597870.691;
 
 var scale_factor = 1000;
 
-var sun_diameter =     1392000.0 / scale_factor;
-var earth_diameter =     12742.0 / scale_factor;
+var sun_diameter =         1392000.0 / scale_factor;
+var earth_diameter =         12742.0 / scale_factor;
+var earth_orbital_radius =        AU / scale_factor;
+
 var km =                     1.0 / scale_factor;
 var meter =                   km / 1000;
 
@@ -53,22 +58,41 @@ var sun = {
 
 var initial_day_number = day_number_by_month['jun'];
 
-var initial_earth_rotation = 12;
+var initial_earth_pos_vec3 = earth_ephemerides_location_by_day_number(initial_day_number);
+
+var earth_tilt_axis = vec3.normalize(earth_ephemerides_location_by_month('sep'));
+
+var initial_earth_rotation = 0;
 
 var earth = {
     pos: {
-        x: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
-        y: 0,
-        z: 0
+        x: initial_earth_pos_vec3[0],
+        y: initial_earth_pos_vec3[1],
+        z: initial_earth_pos_vec3[2]
     },
     distance: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
     radius:  earth_diameter / 2,
     tilt: 23.45,
+    tilt_axis: { x: earth_tilt_axis[0], y: earth_tilt_axis[1], z: earth_tilt_axis[2] },
     day_number: initial_day_number,
     rotation: initial_earth_rotation,
     km: km / (earth_diameter / 2),
     meter: meter / (earth_diameter / 2)
 };
+
+var earthOrbitData = {
+  aphelion: 1.01671388,
+  perihelion: 0.98329134,
+  semiMajorAxis: 1.00000261,
+  radius: 1.00,
+  period: 1.00,
+  inclination: 7.25*deg2rad,
+  eccentricity : 0.01671123,
+  longitude : 348.73936*deg2rad,
+  argument : 114.20783*deg2rad
+};
+
+var sun_focus = earthOrbitData.eccentricity / earthOrbitData.semiMajorAxis / 2 * au2km / scale_factor;
 
 // San Francisco: 38, 122
 
@@ -76,10 +100,10 @@ var surface_line_width = earth.radius / 200;
 var surface_earth_scale_factor = 100;
 
 var surface = {
-    latitude: 38,
-    longitude: 122,
-    // latitude: 0,
-    // longitude: 90,
+    // latitude: 38,
+    // longitude: 122,
+    latitude: 0,
+    longitude: 0,
     yaw: 0,
     pitch: 0,
     distance: 3,
@@ -102,7 +126,7 @@ var max_pitch = 85;
 
 var distance = earth.radius * 3;
 
-var yaw      =  -130;
+var yaw      =  -30;
 var pitch    = -15;
 
 var lookat_yaw = 0;
@@ -721,7 +745,7 @@ SceneJS.createNode({
                             
                                                                 {
                                                                     type: "selector",
-                                                                    id: "sun-noon-midnight-selector",
+                                                                    id: "noon-midnight-selector",
                                                                     selection: [0],
                                                                     nodes: [ 
 
@@ -742,6 +766,7 @@ SceneJS.createNode({
 
                                                                                 {
                                                                                     type: "rotate", 
+                                                                                    id: "noon-midnight-rotation",
                                                                                     x: 1.0,
                                                                                     z: 0.0,
                                                                                     y: 0.0,
@@ -779,7 +804,7 @@ SceneJS.createNode({
                             
                                                                 {
                                                                     type: "selector",
-                                                                    id: "sun-rise-set-selector",
+                                                                    id: "sunrise-set-selector",
                                                                     selection: [0],
                                                                     nodes: [ 
 
@@ -800,6 +825,7 @@ SceneJS.createNode({
 
                                                                                 {
                                                                                     type: "rotate", 
+                                                                                    id: "sunrise-set-rotation",
                                                                                     x: 1.0,
                                                                                     z: 0.0,
                                                                                     y: 0.0,
@@ -829,7 +855,9 @@ SceneJS.createNode({
                                                 {
                                                     type: "quaternion",
                                                     id:   "earth-tilt-quaternion",
-                                                    x: 0.0, y: 0.0, z: 1.0, 
+                                                    x: earth_tilt_axis[0], 
+                                                    y: earth_tilt_axis[1], 
+                                                    z: earth_tilt_axis[2],
                                                     angle: earth.tilt, 
 
                                                     nodes: [
@@ -913,295 +941,308 @@ SceneJS.createNode({
                                                         },
                     
                                                         { 
-                                                            type: "rotate", id: "rotation", angle: initial_earth_rotation, y: 1.0,
-                            
+                                                            type: "rotate", 
+                                                            id: "day-of-year-angle-node", 
+                                                            angle: 90, 
+                                                            y: 1.0,
+                                                            
                                                             nodes: [
+                            
+                                                                { 
+                                                                    type: "rotate",
+                                                                    id: "rotation", 
+                                                                    angle: initial_earth_rotation, 
+                                                                    y: 1.0,
+                            
+                                                                    nodes: [
                         
-                                                                // Adjustable Longitude Line
-                                                                {
-                                                                    type: "selector",
-                                                                    id: "longitude-line-selector",
-                                                                    selection: [1],
-                                                                    nodes: [ 
+                                                                        // Adjustable Longitude Line
+                                                                        {
+                                                                            type: "selector",
+                                                                            id: "longitude-line-selector",
+                                                                            selection: [1],
+                                                                            nodes: [ 
 
-                                                                        // 0: off
+                                                                                // 0: off
 
-                                                                        {  },
+                                                                                {  },
 
-                                                                        { 
-                                                                            type: "material",
-                                                                            baseColor:      { r: 1.0, g: 0.02, b: 0.02 },
-                                                                            specularColor:  { r: 1.0, g: 0.02, b: 0.02 },
-                                                                            specular:       1.0,
-                                                                            shine:          1.0,
-                                                                            emit:           1.0,
-
-                                                                            nodes: [
-
-                                                                                // Longitude Line
-                                                                                {
-                                                                                    type: "rotate", 
-                                                                                    x: 0.0,
-                                                                                    z: 1.0,
-                                                                                    y: 0.0,
-                                                                                    angle: -90,
+                                                                                { 
+                                                                                    type: "material",
+                                                                                    baseColor:      { r: 1.0, g: 0.02, b: 0.02 },
+                                                                                    specularColor:  { r: 1.0, g: 0.02, b: 0.02 },
+                                                                                    specular:       1.0,
+                                                                                    shine:          1.0,
+                                                                                    emit:           1.0,
 
                                                                                     nodes: [
 
+                                                                                        // Longitude Line
                                                                                         {
                                                                                             type: "rotate", 
-                                                                                            id: "longitude-rotation",
-                                                                                            x: 1.0,
-                                                                                            z: 0.0,
+                                                                                            x: 0.0,
+                                                                                            z: 1.0,
                                                                                             y: 0.0,
-                                                                                            angle: surface.longitude + 90,
+                                                                                            angle: -90,
 
                                                                                             nodes: [
 
                                                                                                 {
-                                                                                                    type: "disk",
-                                                                                                    radius: earth.radius + surface_line_width,
-                                                                                                    innerRadius: earth.radius,
-                                                                                                    height: surface_line_width,
-                                                                                                    rings: 128,
-                                                                                                    sweep: 0.5,
+                                                                                                    type: "rotate", 
+                                                                                                    id: "longitude-rotation",
+                                                                                                    x: 1.0,
+                                                                                                    z: 0.0,
+                                                                                                    y: 0.0,
+                                                                                                    angle: surface.longitude + 90,
+
+                                                                                                    nodes: [
+
+                                                                                                        {
+                                                                                                            type: "disk",
+                                                                                                            radius: earth.radius + surface_line_width,
+                                                                                                            innerRadius: earth.radius,
+                                                                                                            height: surface_line_width,
+                                                                                                            rings: 128,
+                                                                                                            sweep: 0.5,
+                                                                                                        }
+                                                                                                    ]
                                                                                                 }
                                                                                             ]
                                                                                         }
                                                                                     ]
                                                                                 }
                                                                             ]
-                                                                        }
-                                                                    ]
-                                                                },
+                                                                        },
                                                                 
-                                                                // Earth's atmosphere
-                                                                {
-                                                                    type: "selector",
-                                                                    id: "earth-atmosphere-selector",
-                                                                    selection: [0],
-                                                                    nodes: [ 
-
-                                                                        // 0: off
-
-                                                                        {  },
-
+                                                                        // Earth's atmosphere
                                                                         {
-                                                                            type: "node",
-                                                                            id:            "atmosphere-transparent",
-                                                                            flags: {
-                                                                                transparent: true
-                                                                            },
-                                                                        
-                                                                            nodes: [
+                                                                            type: "selector",
+                                                                            id: "earth-atmosphere-selector",
+                                                                            selection: [0],
+                                                                            nodes: [ 
+
+                                                                                // 0: off
+
+                                                                                {  },
 
                                                                                 {
-                                                                                    type:          "material",
-                                                                                    id:            "atmosphere-material",
-                                                                                    baseColor:      { r: 0.0, g: 0.5, b: 1.0 },
-                                                                                    specularColor:  { r: 0.0, g: 0.5, b: 1.0 },
-                                                                                    specular:       1.0,
-                                                                                    shine:          1.0,
-                                                                                    alpha:          0.5,
-                                                                                    emit:           0.0,
-
+                                                                                    type: "node",
+                                                                                    id:            "atmosphere-transparent",
+                                                                                    flags: {
+                                                                                        transparent: true
+                                                                                    },
+                                                                        
                                                                                     nodes: [
 
                                                                                         {
-                                                                                            type: "scale", 
-                                                                                            x: earth.radius * 1.1, 
-                                                                                            y: earth.radius * 1.1, 
-                                                                                            z: earth.radius * 1.1,
+                                                                                            type:          "material",
+                                                                                            id:            "atmosphere-material",
+                                                                                            baseColor:      { r: 0.0, g: 0.5, b: 1.0 },
+                                                                                            specularColor:  { r: 0.0, g: 0.5, b: 1.0 },
+                                                                                            specular:       1.0,
+                                                                                            shine:          1.0,
+                                                                                            alpha:          0.5,
+                                                                                            emit:           0.0,
 
                                                                                             nodes: [
 
+                                                                                                {
+                                                                                                    type: "scale", 
+                                                                                                    x: earth.radius * 1.1, 
+                                                                                                    y: earth.radius * 1.1, 
+                                                                                                    z: earth.radius * 1.1,
+
+                                                                                                    nodes: [
+
+                                                                                                        { 
+                                                                                                            type: "sphere",
+                                                                                                            slices: 256, rings: 128 
+                                                                                                        }
+                                                                                                    ]
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        },
+
+                                                                        // Earth and it's texture layers
+                                                                        {
+                                                                            type: "material",
+                                                                            baseColor:      { r: 0.50, g: 0.50, b: 0.50 },
+                                                                            specularColor:  { r: 0.15, g: 0.15, b: 0.15 },
+                                                                            specular:       0.00,
+                                                                            shine:          0.5,
+
+                                                                            nodes: [
+
+                                                                                {
+                                                                                    type: "scale", x: earth.radius, y: earth.radius, z: earth.radius,
+
+                                                                                    nodes: [
+                                    
+                                                                                        {
+
+                                                                                            id: "earth-terrain-texture",
+                                                                                            type: "texture",
+                                                                                            layers: [
+
+                                                                                                { 
+                                                                                                   uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+                                                                                                   blendMode: "add",
+                                                                                        
+                                                                                                },
+
+                                                                                                { 
+                                                                                                    uri:"images/earth3.jpg",
+
+                                                                                                    minFilter: "linear",
+                                                                                                    magFilter: "linear",
+                                                                                                    wrapS: "repeat",
+                                                                                                    wrapT: "repeat",
+                                                                                                    isDepth: false,
+                                                                                                    depthMode:"luminance",
+                                                                                                    depthCompareMode: "compareRToTexture",
+                                                                                                    depthCompareFunc: "lequal",
+                                                                                                    flipY: false,
+                                                                                                    width: 1,
+                                                                                                    height: 1,
+                                                                                                    internalFormat:"lequal",
+                                                                                                    sourceFormat:"alpha",
+                                                                                                    sourceType: "unsignedByte",
+                                                                                                    applyTo:"baseColor",
+                                                                                                    blendMode: "multiply",
+
+                                                                                                    /* Texture rotation angle in degrees
+                                                                                                     */
+                                                                                                    rotate: 180.0,
+
+                                                                                                    /* Texture translation offset
+                                                                                                     */
+                                                                                                    translate : {
+                                                                                                        x: 0,
+                                                                                                        y: 0
+                                                                                                    },
+
+                                                                                                    /* Texture scale factors
+                                                                                                     */
+                                                                                                    scale : {
+                                                                                                        x: -1.0,
+                                                                                                        y: 1.0
+                                                                                                    }
+                                                                                                }
+                                                                                            ],
+                                                    
+                                                                                            nodes: [ 
                                                                                                 { 
                                                                                                     type: "sphere",
                                                                                                     slices: 256, rings: 128 
                                                                                                 }
                                                                                             ]
-                                                                                        }
-                                                                                    ]
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    ]
-                                                                },
-
-                                                                // Earth and it's texture layers
-                                                                {
-                                                                    type: "material",
-                                                                    baseColor:      { r: 0.50, g: 0.50, b: 0.50 },
-                                                                    specularColor:  { r: 0.15, g: 0.15, b: 0.15 },
-                                                                    specular:       0.00,
-                                                                    shine:          0.5,
-
-                                                                    nodes: [
-
-                                                                        {
-                                                                            type: "scale", x: earth.radius, y: earth.radius, z: earth.radius,
-
-                                                                            nodes: [
-                                    
-                                                                                {
-
-                                                                                    id: "earth-terrain-texture",
-                                                                                    type: "texture",
-                                                                                    layers: [
-
-                                                                                        { 
-                                                                                           uri:"images/lat-long-grid-invert-units-1440x720-15.png",
-                                                                                           blendMode: "add",
-                                                                                        
                                                                                         },
-
-                                                                                        { 
-                                                                                            uri:"images/earth3.jpg",
-
-                                                                                            minFilter: "linear",
-                                                                                            magFilter: "linear",
-                                                                                            wrapS: "repeat",
-                                                                                            wrapT: "repeat",
-                                                                                            isDepth: false,
-                                                                                            depthMode:"luminance",
-                                                                                            depthCompareMode: "compareRToTexture",
-                                                                                            depthCompareFunc: "lequal",
-                                                                                            flipY: false,
-                                                                                            width: 1,
-                                                                                            height: 1,
-                                                                                            internalFormat:"lequal",
-                                                                                            sourceFormat:"alpha",
-                                                                                            sourceType: "unsignedByte",
-                                                                                            applyTo:"baseColor",
-                                                                                            blendMode: "multiply",
-
-                                                                                            /* Texture rotation angle in degrees
-                                                                                             */
-                                                                                            rotate: 180.0,
-
-                                                                                            /* Texture translation offset
-                                                                                             */
-                                                                                            translate : {
-                                                                                                x: 0,
-                                                                                                y: 0
+                                                                        
+                                                                        
+                                                                                        // Earth Surface Indicator
+                                                                                        {
+                                                                                            type: "node",
+                                                                                            flags: {
+                                                                                                transparent: false
                                                                                             },
 
-                                                                                            /* Texture scale factors
-                                                                                             */
-                                                                                            scale : {
-                                                                                                x: -1.0,
-                                                                                                y: 1.0
-                                                                                            }
-                                                                                        }
-                                                                                    ],
-                                                    
-                                                                                    nodes: [ 
-                                                                                        { 
-                                                                                            type: "sphere",
-                                                                                            slices: 256, rings: 128 
-                                                                                        }
-                                                                                    ]
-                                                                                },
-                                                                        
-                                                                        
-                                                                                // Earth Surface Indicator
-                                                                                {
-                                                                                    type: "node",
-                                                                                    flags: {
-                                                                                        transparent: false
-                                                                                    },
-
-                                                                                    nodes: [
-
-                                                                                        {
-                                                                                            type: "quaternion",
-                                                                                            x: 0.0, y: 0.0, z: 1.0, angle: 90.0,
-
                                                                                             nodes: [
-                                                                                                {
 
+                                                                                                {
                                                                                                     type: "quaternion",
-                                                                                                    id: "earth-surface-location-longitude",
-                                                                                                    x: -1.0, y: 0.0, z: 0.0, angle: surface.longitude,
+                                                                                                    x: 0.0, y: 0.0, z: 1.0, angle: 90.0,
 
                                                                                                     nodes: [
-
                                                                                                         {
 
                                                                                                             type: "quaternion",
-                                                                                                            id: "earth-surface-location-latitude",
-                                                                                                            x: 0.0, y: 0.0, z: -1.0, angle: surface.latitude,
+                                                                                                            id: "earth-surface-location-longitude",
+                                                                                                            x: -1.0, y: 0.0, z: 0.0, angle: surface.longitude,
 
                                                                                                             nodes: [
 
                                                                                                                 {
 
-                                                                                                                    type: "translate",
-                                                                                                                    x: 0,
-                                                                                                                    y: 1 + surface.min_height / 2,
-                                                                                                                    z: 0,
+                                                                                                                    type: "quaternion",
+                                                                                                                    id: "earth-surface-location-latitude",
+                                                                                                                    x: 0.0, y: 0.0, z: -1.0, angle: surface.latitude,
 
                                                                                                                     nodes: [
 
-                                                                                                                        { 
-                                                                                                                            type: "material",
-                                                                                                                            baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
-                                                                                                                            specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
+                                                                                                                        {
 
-                                                                                                                            specular:       0.5,
-                                                                                                                            shine:          0.001,
-
-                                                                                                                            nodes: [
-
-                                                                                                                                {
-                                                                                                                                    type: "disk",
-                                                                                                                                    radius: 200 * earth.km,
-                                                                                                                                    height: surface.min_height / 2,
-                                                                                                                                    rings: 48
-
-                                                                                                                                    // type: "cube",
-                                                                                                                                    // xSize: 100 * earth.km,
-                                                                                                                                    // ySize: surface.min_height / 2,
-                                                                                                                                    // zSize: 100 * earth.km
-
-                                                                                                                                }
-                                                                                                                            ]
-                                                                                                                        },
-
-                                                                                                                        { 
-                                                                                                                            type: "material",
-                                                                                                                            baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
-                                                                                                                            specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
-
-                                                                                                                            specular:       0.5,
-                                                                                                                            shine:          0.001,
+                                                                                                                            type: "translate",
+                                                                                                                            x: 0,
+                                                                                                                            y: 1 + surface.min_height / 2,
+                                                                                                                            z: 0,
 
                                                                                                                             nodes: [
 
-                                                                                                                                {
+                                                                                                                                { 
+                                                                                                                                    type: "material",
+                                                                                                                                    baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
+                                                                                                                                    specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
 
-                                                                                                                                    type: "translate",
-                                                                                                                                    // x: 0 + surface.min_height * 1,
-                                                                                                                                    // y: 1 + surface.min_height + 2.5 * earth.km,
-                                                                                                                                    // z: 0 + surface.min_height * 5,
-
-                                                                                                                                    x: surface.meter * 0,
-                                                                                                                                    y: surface.flagpole.height / 2,
-                                                                                                                                    z: surface.meter * 0,
+                                                                                                                                    specular:       0.5,
+                                                                                                                                    shine:          0.001,
 
                                                                                                                                     nodes: [
+
                                                                                                                                         {
                                                                                                                                             type: "disk",
-                                                                                                                                            radius: surface.flagpole.radius,
-                                                                                                                                            height: surface.flagpole.height
+                                                                                                                                            radius: 200 * earth.km,
+                                                                                                                                            height: surface.min_height / 2,
+                                                                                                                                            rings: 48
+
+                                                                                                                                            // type: "cube",
+                                                                                                                                            // xSize: 100 * earth.km,
+                                                                                                                                            // ySize: surface.min_height / 2,
+                                                                                                                                            // zSize: 100 * earth.km
+
+                                                                                                                                        }
+                                                                                                                                    ]
+                                                                                                                                },
+
+                                                                                                                                { 
+                                                                                                                                    type: "material",
+                                                                                                                                    baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
+                                                                                                                                    specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
+
+                                                                                                                                    specular:       0.5,
+                                                                                                                                    shine:          0.001,
+
+                                                                                                                                    nodes: [
+
+                                                                                                                                        {
+
+                                                                                                                                            type: "translate",
+                                                                                                                                            // x: 0 + surface.min_height * 1,
+                                                                                                                                            // y: 1 + surface.min_height + 2.5 * earth.km,
+                                                                                                                                            // z: 0 + surface.min_height * 5,
+
+                                                                                                                                            x: surface.meter * 0,
+                                                                                                                                            y: surface.flagpole.height / 2,
+                                                                                                                                            z: surface.meter * 0,
+
+                                                                                                                                            nodes: [
+                                                                                                                                                {
+                                                                                                                                                    type: "disk",
+                                                                                                                                                    radius: surface.flagpole.radius,
+                                                                                                                                                    height: surface.flagpole.height
+                                                                                                                                                }
+                                                                                                                                            ]
                                                                                                                                         }
                                                                                                                                     ]
                                                                                                                                 }
                                                                                                                             ]
                                                                                                                         }
+                                                                                                                
                                                                                                                     ]
                                                                                                                 }
-                                                                                                                
                                                                                                             ]
                                                                                                         }
                                                                                                     ]
@@ -1211,9 +1252,9 @@ SceneJS.createNode({
                                                                                     ]
                                                                                 }
                                                                             ]
-                                                                        }
+                                                                        },
                                                                     ]
-                                                                },
+                                                                }
                                                             ]
                                                         }
                                                     ]
@@ -1387,13 +1428,14 @@ sunEarthLineHandler();
 //
 // Sun rise/set surface indicator Handler
 //
-var sun_rise_set_selector =  SceneJS.withNode("sun-rise-set-selector");
+var sunrise_set_selector =  SceneJS.withNode("sunrise-set-selector");
+var sunrise_set_rotation =  SceneJS.withNode("sunrise-set-rotation");
 
 function sunRiseSetHandler() {
     if (sun_rise_set.checked) {
-        sun_rise_set_selector.set("selection", [1]);
+        sunrise_set_selector.set("selection", [1]);
     } else {
-        sun_rise_set_selector.set("selection", [0]);
+        sunrise_set_selector.set("selection", [0]);
     };
 };
 
@@ -1404,18 +1446,19 @@ sunRiseSetHandler();
 // Sun noon/midnight surface indicator Handler
 //
 
-var sun_noon_midnight_selector =  SceneJS.withNode("sun-noon-midnight-selector");
+var noon_midnight_selector =  SceneJS.withNode("noon-midnight-selector");
+var noon_midnight_rotation =  SceneJS.withNode("noon-midnight-rotation");
 
-function sunNoonMidnightHandler() {
+function noonMidnightHandler() {
     if (sun_noon_midnight.checked) {
-        sun_noon_midnight_selector.set("selection", [1]);
+        noon_midnight_selector.set("selection", [1]);
     } else {
-        sun_noon_midnight_selector.set("selection", [0]);
+        noon_midnight_selector.set("selection", [0]);
     };
 };
 
-sun_noon_midnight.onchange = sunNoonMidnightHandler;
-sunNoonMidnightHandler();
+sun_noon_midnight.onchange = noonMidnightHandler;
+noonMidnightHandler();
 
 //
 // Latitude hour markers Handler
@@ -1456,6 +1499,30 @@ sunRaysHandler();
 var earth_sub_graph = SceneJS.withNode("earth-sub-graph");
 var earth_sub_graph_scale = SceneJS.withNode("earth-sub-graph-scale");
 
+var day_of_year_angle = (365 - earth.day_number)/365 * 360 - 101.342;
+var day_of_year_angle_node = SceneJS.withNode("day-of-year-angle-node");
+
+var earth_pos_normalized_vec3 = [];
+
+function setEarthPositionByDay(day_number) {
+    var previous_yaw_angle = earth.day_number/365 * 360;
+    var pos = earth_ephemerides_location_by_day_number(day_number);
+    earth.pos = { x: pos[0], y: pos[1], z: pos[2] };
+    earth.day_number = day_number;
+    var new_yaw_angle = earth.day_number/365 * 360;
+    earth_sub_graph.set(earth.pos);
+    earth_pos_normalized_vec3 = vec3.normalize([earth.pos.x, earth.pos.y, earth.pos.z])
+    sunrise_set_rotation.set({ x: earth_pos_normalized_vec3[0], y: earth_pos_normalized_vec3[1], z: earth_pos_normalized_vec3[2] });
+    day_of_year_angle = (365 - earth.day_number)/365 * 360 - 101.342;
+    day_of_year_angle_node.set("angle", day_of_year_angle);
+    // yaw -= earth.day_number/365 * 360;
+    yaw -= (new_yaw_angle - previous_yaw_angle);
+};
+
+function setEarthPositionByMon(mon) {
+    setEarthPositionByDay(day_number_by_month[mon]);
+};
+
 var sun_light                 = SceneJS.withNode("sun-light");
 var sun_material              = SceneJS.withNode("sun-material");
 var milky_way_material        = SceneJS.withNode("milky-way-material");
@@ -1463,6 +1530,8 @@ var milky_way_material        = SceneJS.withNode("milky-way-material");
 var earth_atmosphere_selector = SceneJS.withNode("earth-atmosphere-selector");
 var atmosphere_material       = SceneJS.withNode("atmosphere-material");
 var atmosphere_transparent    = SceneJS.withNode("atmosphere-transparent");
+
+
 
 // sun-material ...
 // baseColor:      { r: 1.0, g: 0.95, b: 0.8 },
@@ -1491,6 +1560,8 @@ function setupEarthInSpace() {
     // earth.meter = meter /earth.radius;
     earth_sub_graph_scale.set({ x: 1, y: 1, z: 1})
     // earth_sub_graph._targetNode._setDirty();
+    
+    setEarthPositionByDay(earth.day_number)
     var optics = camera.get("optics");
     optics.fovy = 50;
     optics.near = 0.10;
@@ -1558,7 +1629,7 @@ var new_surface_eye_global = [];
 var surface_look_global = [];
 var new_surface_look_global = [];
 
-var earth_tilt_quat = quat4.axisAngleDegreesCreate(0.0, 0.0, 1.0,  earth.tilt)
+var earth_tilt_quat = quat4.axisAngleDegreesCreate(earth.tilt_axis.x, earth.tilt_axis.z, earth.tilt_axis.z,  earth.tilt)
 var earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
 
 function calculate_surface_cross(lat, lon) {
@@ -2201,13 +2272,14 @@ var info_view   = document.getElementById("info-view");
 var info_content = document.getElementById("info-content");
 
 function solar_altitude(lat, lon) {
-    var center   = lat_long_to_cartesian(earth.tilt, earth.rotation);
+    var corrected_tilt = Math.sin(day_of_year_angle * deg2rad) * earth.tilt;
+    var center   = lat_long_to_cartesian(corrected_tilt, earth.rotation);
+
     var loc      = lat_long_to_cartesian(lat, lon);
     var xd = center[0] - loc[0];
     var yd = center[1] - loc[1];
     var zd = center[2] - loc[2];
     var d1 = Math.sqrt(xd * xd + yd * yd + zd * zd);
-    var sqrt2 = Math.sqrt(2);
     var alt = (Math.asin(d1 / 2) * 2 * rad2deg - 90) * -1;
     return alt
 };
@@ -2338,8 +2410,6 @@ function infoLabel() {
             info_label.style.opacity = null;
         };
 
-        var altitude = Math.acos(Math.cos((surface.latitude - earth.tilt)  * deg2rad) * Math.cos((earth.rotation - surface.longitude) * deg2rad)) * rad2deg;
-
         earth.pos.y + Math.sin((surface.latitude - earth.tilt)  * deg2rad) * earth.radius, 
         earth.pos.z + Math.sin(-surface.longitude * deg2rad) * earth.radius 
         
@@ -2351,6 +2421,7 @@ function infoLabel() {
         // labelStr += sprintf("Sol. Constant:  %4.1f W/m2", solar_flux()) + ", ";
         labelStr += sprintf("Lat: %4.1f, Long:  %4.1f", surface.latitude, surface.longitude) + ", ";
         labelStr += "Time: " + earthRotationToTimeStr(earth.rotation - surface.longitude) + ", ";
+        // labelStr += "<br />";
         labelStr += sprintf("Solar Altitude: %2.1f&deg;", solar_alt) + ", ";
         labelStr += sprintf("Solar Radiation: %2.1f  W/m2", solar_rad);
 

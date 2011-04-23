@@ -1,4 +1,5 @@
 
+
 function getRadioSelection(form_element) {
     for(var i = 0; i < form_element.elements.length; i++) {
         if (form_element.elements[i].checked) {
@@ -39,15 +40,8 @@ selected_city.onchange = selectedCityHandler;
 var choose_month = document.getElementById("choose-month");
 
 function chooseMonthHandler(event) {
-    var month = choose_month.value;
-    // for(var i = 0; i < choose_month.elements.length; i++) {
-    //     if (choose_month.elements[i].value === month) {
-    //         choose_month.elements[i].checked = true;
-    //     } else {
-    //         choose_month.elements[i].checked = false;
-    //     }
-    // }
-    // scene3._timeOfYearChange(month);
+    var mon = getRadioSelection(event.currentTarget);
+    setEarthPositionByMon(mon)
 };
 
 choose_month.onchange = chooseMonthHandler;
@@ -72,3 +66,5 @@ function chooseTiltHandler(event) {
 };
 
 choose_tilt.onchange = chooseTiltHandler;
+
+
