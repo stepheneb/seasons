@@ -57,11 +57,28 @@ var sun = {
     radius: sun_diameter / 2
 };
 
-var initial_day_number = day_number_by_month['jun'];
+var jun_day_number = day_number_by_month['jun'];
+var sep_day_number = day_number_by_month['sep'];
+var dec_day_number = day_number_by_month['dec'];
+var mar_day_number = day_number_by_month['mar'];
 
-var initial_earth_pos_vec3 = earth_ephemerides_location_by_day_number(initial_day_number);
+var earth_pos_jun_21_vec3 = earth_ephemerides_location_by_day_number(jun_day_number);
+var earth_pos_sep_21_vec3 = earth_ephemerides_location_by_day_number(sep_day_number);
+var earth_pos_dec_21_vec3 = earth_ephemerides_location_by_day_number(dec_day_number);
+var earth_pos_mar_21_vec3 = earth_ephemerides_location_by_day_number(mar_day_number);
 
-var earth_tilt_axis = vec3.normalize(earth_ephemerides_location_by_month('sep'));
+var earth_pos_jun_21_normalized_vec3 = []; vec3.normalize(earth_pos_jun_21_vec3, earth_pos_jun_21_normalized_vec3);
+var earth_pos_sep_21_normalized_vec3 = []; vec3.normalize(earth_pos_sep_21_vec3, earth_pos_sep_21_normalized_vec3);
+var earth_pos_dec_21_normalized_vec3 = []; vec3.normalize(earth_pos_dec_21_vec3, earth_pos_dec_21_normalized_vec3);
+var earth_pos_mar_21_normalized_vec3 = []; vec3.normalize(earth_pos_mar_21_vec3, earth_pos_mar_21_normalized_vec3);
+
+var initial_day_number = jun_day_number;
+var initial_earth_pos_vec3 = earth_pos_jun_21_vec3;
+
+var up = []; vec3.cross(earth_pos_jun_21_normalized_vec3, earth_pos_sep_21_normalized_vec3, up);
+
+// var earth_tilt_axis = vec3.normalize(earth_ephemerides_location_by_month('sep'));
+var earth_tilt_axis = []; vec3.cross(up, earth_pos_jun_21_normalized_vec3, earth_tilt_axis);
 
 var initial_earth_rotation = 0;
 
@@ -220,14 +237,12 @@ var sun_rays = function() {
     return points;
 }
 
-
 var sun_ray_positions = sun_rays();
 var sun_ray_indices = [];
 var sun_ray_points = sun_ray_positions.length / 3 - 1;
 for (var i = 0; i < sun_ray_points; i++) { 
     sun_ray_indices.push(0, i);
 };
-
 
 //
 // Initial lookAt: eye
@@ -475,19 +490,62 @@ SceneJS.createNode({
                                         // 0: off
                                         {  },
 
-                                        // 1: on
+                                        // 1: June 21
                                         {
                                             type: "geometry",
                                             primitive: "lines",
 
                                             positions: [
                                                 sun.pos.x, sun.pos.y, sun.pos.z,
-                                                earth.pos.x, earth.pos.y, earth.pos.z 
+                                                earth_pos_jun_21_vec3[0], earth_pos_jun_21_vec3[1], earth_pos_jun_21_vec3[2]
                                             ],
 
                                             indices : [ 0, 1 ]
 
-                                        }
+                                        },
+
+                                        // 2: Sep 21
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+
+                                            positions: [
+                                                sun.pos.x, sun.pos.y, sun.pos.z,
+                                                earth_pos_sep_21_vec3[0], earth_pos_sep_21_vec3[1], earth_pos_sep_21_vec3[2]
+                                            ],
+
+                                            indices : [ 0, 1 ]
+
+                                        },
+
+                                        // 3: Dec 21
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+
+                                            positions: [
+                                                sun.pos.x, sun.pos.y, sun.pos.z,
+                                                earth_pos_dec_21_vec3[0], earth_pos_dec_21_vec3[1], earth_pos_dec_21_vec3[2]
+                                            ],
+
+                                            indices : [ 0, 1 ]
+
+                                        },
+
+                                        // 4: Mar 21
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+
+                                            positions: [
+                                                sun.pos.x, sun.pos.y, sun.pos.z,
+                                                earth_pos_mar_21_vec3[0], earth_pos_mar_21_vec3[1], earth_pos_mar_21_vec3[2]
+                                            ],
+
+                                            indices : [ 0, 1 ]
+
+                                        },
+                                        
                                     ]
                                 },
                                 
@@ -1398,7 +1456,23 @@ var sun_earth_line_selector =  SceneJS.withNode("sun-earth-line-selector");
 
 function sunEarthLineHandler() {
     if (sun_earth_line.checked) {
-        sun_earth_line_selector.set("selection", [1]);
+        switch (earth.day_number) {
+        case day_number_by_month.jun: 
+            sun_earth_line_selector.set("selection", [1]);
+            break;
+        case day_number_by_month.sep: 
+            sun_earth_line_selector.set("selection", [2]);
+            break;
+        case day_number_by_month.dec: 
+            sun_earth_line_selector.set("selection", [3]);
+            break;
+        case day_number_by_month.mar: 
+            sun_earth_line_selector.set("selection", [4]);
+            break;
+        default:
+            sun_earth_line_selector.set("selection", [0]);
+            break;
+        };
     } else {
         sun_earth_line_selector.set("selection", [0]);
     };
@@ -1516,6 +1590,7 @@ function setEarthPositionByDay(day_number) {
     day_of_year_angle_node.set("angle", day_of_year_angle);
     // yaw -= earth.day_number/365 * 360;
     yaw -= (new_yaw_angle - previous_yaw_angle);
+    sunEarthLineHandler();
 };
 
 function setEarthPositionByMon(mon) {
