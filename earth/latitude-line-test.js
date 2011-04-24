@@ -1904,6 +1904,7 @@ function setupViewHandler() {
     };
 };
 
+setEarthPositionByDay(earth.day_number);
 surface_view.onchange = setupViewHandler;
 setupViewHandler();
 
