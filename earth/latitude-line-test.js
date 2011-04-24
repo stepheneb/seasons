@@ -1765,9 +1765,6 @@ function updateSurfaceViewLookAt() {
 
     vec3.scale(surface_cross_vec3, surface.distance, surface_eye_vec3);    
 
-    if (surface.pitch > max_pitch)  surface.pitch =  max_pitch;
-    if (surface.pitch < -max_pitch) surface.pitch = -max_pitch;
-
     var yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.yaw);
     var pitch_quat = quat4.axisAngleDegreesCreate(surface_up_minus_90_vec3[0], surface_up_minus_90_vec3[1], surface_up_minus_90_vec3[2], surface.pitch);
     quat4.multiply(pitch_quat, yaw_quat, result_quat);
