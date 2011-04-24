@@ -4,7 +4,7 @@ var time_24h =  document.getElementById("time-24h") || { checked: false, onchang
 var graph_view   = document.getElementById("graph-view") || { checked: false, onchange: null };
 var earth_rose_grid = document.getElementById("earth-rose-grid") || { checked: false, onchange: null };
 var sun_grid = document.getElementById("sun-grid") || { checked: false, onchange: null };
-var sun_rise_set = document.getElementById("sun-rise-set") || { checked: false, onchange: null };
+var sunrise_set = document.getElementById("sun-rise-set") || { checked: false, onchange: null };
 var sun_earth_line = document.getElementById("sun-earth-line") || { checked: false, onchange: null };
 var back_light = document.getElementById("back-light") || { checked: false, onchange: null  };
 var use_horizontal_flux   = document.getElementById("use-horizontal-flux") || { checked: false, onchange: null };
@@ -1433,14 +1433,14 @@ var sunrise_set_selector =  SceneJS.withNode("sunrise-set-selector");
 var sunrise_set_rotation =  SceneJS.withNode("sunrise-set-rotation");
 
 function sunRiseSetHandler() {
-    if (sun_rise_set.checked) {
+    if (sunrise_set.checked) {
         sunrise_set_selector.set("selection", [1]);
     } else {
         sunrise_set_selector.set("selection", [0]);
     };
 };
 
-sun_rise_set.onchange = sunRiseSetHandler;
+sunrise_set.onchange = sunRiseSetHandler;
 sunRiseSetHandler();
 
 //
