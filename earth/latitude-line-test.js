@@ -202,7 +202,6 @@ for (var i = 1; i < earth_rose_grid_points; i += 2) {
     earth_rose_grid_indices.push(i, i+1);
 };
 
-
 var latitude_rose_scale = earth.radius * 1.25;
 var latitude_rose_grid_positions = rose_grid(latitude_rose_scale, 24);
 var latitude_rose_grid_indices = [];
@@ -1584,7 +1583,13 @@ function setEarthPositionByDay(day_number) {
     earth.day_number = day_number;
     var new_yaw_angle = earth.day_number/365 * 360;
     earth_sub_graph.set(earth.pos);
-    earth_pos_normalized_vec3 = vec3.normalize([earth.pos.x, earth.pos.y, earth.pos.z])
+
+    earth_pos_normalized_vec3 = vec3.normalize([earth.pos.x, earth.pos.y, earth.pos.z]);
+    
+    earth_orbit_axis_correction_vec3 = vec3.cross([1,0,0], earth_pos_normalized_vec3);
+    earth_orbit_angle_correction = Math.acos(vec3.dot([1,0,0], earth_pos_normalized_vec3)) * rad2deg;
+    earth_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(earth_orbit_axis_correction_vec3, earth_orbit_angle_correction);
+
     sunrise_set_rotation.set({ x: earth_pos_normalized_vec3[0], y: earth_pos_normalized_vec3[1], z: earth_pos_normalized_vec3[2] });
     day_of_year_angle = (365 - earth.day_number)/365 * 360 - 101.342;
     day_of_year_angle_node.set("angle", day_of_year_angle);
@@ -1635,7 +1640,7 @@ function setupEarthInSpace() {
     earth_sub_graph_scale.set({ x: 1, y: 1, z: 1})
     // earth_sub_graph._targetNode._setDirty();
     
-    setEarthPositionByDay(earth.day_number)
+    // setEarthPositionByDay(earth.day_number)
     var optics = camera.get("optics");
     optics.fovy = 50;
     optics.near = 0.10;
@@ -1712,8 +1717,12 @@ var new_surface_eye_global = [];
 var surface_look_global = [];
 var new_surface_look_global = [];
 
-var earth_tilt_quat = quat4.axisAngleDegreesCreate(earth.tilt_axis.x, earth.tilt_axis.z, earth.tilt_axis.z,  earth.tilt)
-var earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
+
+var earth_orbit_axis_correction_vec3 = vec3.create();
+var earth_orbit_angle_correction;
+var earth_orbit_correction_quat = quat4.create();
+
+var earth_tilt_quat = quat4.axisAngleDegreesCreate(0, 0, 1,  earth.tilt);
 
 function calculate_surface_cross(lat, lon) {
     if (lat == undefined) {
@@ -1729,6 +1738,7 @@ function calculate_surface_cross(lat, lon) {
         lon = -lon;        
     };
     surface_up_minus_90_vec3 = lat_long_to_cartesian_corrected_for_tilt(lat, lon);
+    quat4.multiplyVec3(earth_orbit_correction_quat, surface_up_minus_90_vec3);
     vec3.cross(surface_up_vec3, surface_up_minus_90_vec3, surface_cross_vec3);
     return surface_cross_vec3;
 };
@@ -1755,6 +1765,9 @@ function lat_long_to_global_cartesian(lat, lon, r) {
 
     var global_lat_lon = vec3.create();
     vec3.scale(lat_lon, earth.radius, global_lat_lon);
+    
+    quat4.multiplyVec3(earth_orbit_correction_quat, global_lat_lon);
+
     vec3.add(global_lat_lon, [earth.pos.x, earth.pos.y, earth.pos.z] )
 
     return global_lat_lon;
@@ -1767,18 +1780,19 @@ function look_at_direction(unit_vec) {
     look_at.set("look", { x: far[0], y: far[1], z: far[2] });
 }
 
-function calculateSurfaceEyeUpLook(eye_pos_v3) {
-    if (eye_pos_v3 == undefined) {
-        var eye_pos_v3 = [0, 0, 0];
-    };
+function calculateSurfaceEyeUpLook() {
     
     // calculate unit vector from center of Earth to surface location
     surface_dir_vec3 = lat_long_to_cartesian_corrected_for_tilt(surface.latitude, surface.longitude);
+    
+    quat4.multiplyVec3(earth_orbit_correction_quat, surface_dir_vec3);
     
     // generate an up axis direction vector for the lookAt (integrates tilt)
     surface_up_vec3 = vec3.create(surface_dir_vec3);
 
     flagpole_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1.002);
+    // flagpole_global[1] += 0.05;
+    // flagpole_global[2] -= 9;
     x = (earth.radius + surface.min_height + surface.flagpole.height / 2) / earth.radius;
 
     // generate an appropriate offset from the flagpole using the cross-product of the
@@ -1790,9 +1804,9 @@ function calculateSurfaceEyeUpLook(eye_pos_v3) {
     surface_look_global = vec3.create(flagpole_global);
     
     var lookat = {
-        eye: { x: surface_eye_global[0],  y: surface_eye_global[1],  z: surface_eye_global[2] },
-        up: { x: surface_up_vec3[0],  y: surface_up_vec3[1],  z: surface_up_vec3[2] },
-        look: { x: surface_look_global[0],  y: surface_look_global[1],  z: surface_look_global[2] },
+        eye:  { x: surface_eye_global[0],  y: surface_eye_global[1],  z: surface_eye_global[2]  },
+        up:   { x: surface_up_vec3[0],     y: surface_up_vec3[1],     z: surface_up_vec3[2]     },
+        look: { x: surface_look_global[0], y: surface_look_global[1], z: surface_look_global[2] },
     }
     return lookat;
 };
@@ -1873,11 +1887,14 @@ function updateSurfaceViewLookAt() {
     // var new_surface_look_global = [];
 
     // next handle a possible yaw rotation to to look left or right of the flagpole in the surface POV
-    var rot_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.lookat_yaw); 
+    if (surface.lookat_yaw) {
+        var rot_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.lookat_yaw); 
     
-    quat4.multiplyVec3(rot_quat, new_surface_eye_vec3, new_surface_look_vec3);
-    vec3.subtract(surface_look_global, new_surface_look_vec3, new_surface_look_global);
-    look_at.set("look", { x: new_surface_look_global[0],  y: new_surface_look_global[1],  z: new_surface_look_global[2] });
+        quat4.multiplyVec3(rot_quat, new_surface_eye_vec3, new_surface_look_vec3);
+        vec3.subtract(new_surface_eye_vec3, new_surface_look_vec3, new_surface_look_vec3);
+        vec3.add(surface_look_global, new_surface_look_vec3, new_surface_look_global);
+        look_at.set("look", { x: new_surface_look_global[0],  y: new_surface_look_global[1],  z: new_surface_look_global[2] });
+    };
     debugLabel();
 };
 
