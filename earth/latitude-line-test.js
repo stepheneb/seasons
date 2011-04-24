@@ -2053,7 +2053,7 @@ function decrementSurfaceDistance() {
 };
 
 function incrementSurfaceDistance() {
-    if (surface.distance < 10) {
+    if (surface.distance < 25) {
         surface.distance += 0.1;
     };    
 };
