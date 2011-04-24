@@ -49,8 +49,8 @@ choose_month.onchange = chooseMonthHandler;
 var choose_tilt = document.getElementById("choose-tilt");
 var earth_tilt_quaternion = SceneJS.withNode("earth-tilt-quaternion");
 
-function chooseTiltHandler(event) {
-    var tilt = getRadioSelection(event.currentTarget);
+function chooseTiltHandler() {
+    var tilt = getRadioSelection(choose_tilt);
     switch (tilt) {
         case "yes":
             earth.tilt = orbitalTilt;
@@ -60,6 +60,8 @@ function chooseTiltHandler(event) {
             earth.tilt = 0;
             break;
     };
+    earth_tilt_quat = quat4.axisAngleDegreesCreate(0, 0, 1,  earth.tilt);
+    earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
     earth_tilt_quaternion.set("rotation", { 
         x: earth_tilt_axis[0], 
         y: earth_tilt_axis[1], 
@@ -69,5 +71,5 @@ function chooseTiltHandler(event) {
 };
 
 choose_tilt.onchange = chooseTiltHandler;
-
+chooseTiltHandler();
 
