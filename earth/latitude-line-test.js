@@ -93,8 +93,6 @@ var earthOrbitData = {
   argument : 114.20783*deg2rad
 };
 
-var sun_focus = earthOrbitData.eccentricity / earthOrbitData.semiMajorAxis / 2 * au2km / scale_factor;
-
 // San Francisco: 38, 122
 
 var surface_line_width = earth.radius / 200;
