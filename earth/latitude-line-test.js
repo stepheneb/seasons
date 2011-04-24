@@ -1580,9 +1580,6 @@ function updateEarthInSpaceLookAt() {
     var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, yaw);
     var yaw_mat4 = quat4.toMat4(yaw_quat);
 
-    if (pitch > max_pitch)  pitch =  max_pitch;
-    if (pitch < -max_pitch) pitch = -max_pitch;
-
     var pitch_quat =  quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
     var result_quat = quat4.create();
     quat4.multiply(pitch_quat, yaw_quat, result_quat);
