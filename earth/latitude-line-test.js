@@ -1589,7 +1589,7 @@ function setEarthPositionByDay(day_number) {
     day_of_year_angle = (365 - earth.day_number)/365 * 360 - 101.342;
     day_of_year_angle_node.set("angle", day_of_year_angle);
     // yaw -= earth.day_number/365 * 360;
-    yaw -= (new_yaw_angle - previous_yaw_angle);
+    incrementYaw(-(new_yaw_angle - previous_yaw_angle));
     sunEarthLineHandler();
 };
 
