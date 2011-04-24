@@ -1568,6 +1568,18 @@ function setupEarthInSpace() {
     latitude_line_selector.set("selection",  [1]);
     longitude_line_selector.set("selection", [1]);
 
+    if (was_earth_grid_checked) {
+        earth_grid.checked = true;
+        earthGridHandler();
+        was_earth_grid_checked = false;
+    };
+
+    if (was_sunrise_set_checked) {
+        sunrise_set.checked = true;
+        sunRiseSetHandler();
+        was_sunrise_set_checked = false;
+    };
+
     look_at.set("up", { x: 0.0, y: 1.0, z: 0.0 });
 };
 
@@ -1710,8 +1722,18 @@ function calculateSurfaceEyeUpLook(eye_pos_v3) {
     return lookat;
 };
 
+var was_earth_grid_checked = false;
+var was_sunrise_set_checked = false;
 
 function setupSurfaceView() {
+    
+    was_earth_grid_checked = earth_grid.checked;
+    earth_grid.checked = false;
+    earthGridHandler();
+    was_sunrise_set_checked = sunrise_set.checked;
+    sunrise_set.checked = false;
+    sunRiseSetHandler();
+
     sun_material.set("specular", 1.0);
     sun_material.set("shine", 1.0);
     sun_material.set("emit", 10.0);
