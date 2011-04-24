@@ -127,7 +127,7 @@ var max_pitch = 85;
 
 var distance = earth.radius * 3;
 
-var yaw      =  -30;
+var yaw      =  330;
 var pitch    = -15;
 
 var lookat_yaw = 0;
@@ -1874,6 +1874,50 @@ function decrementLongitude() {
     setLongitude(surface.longitude);
 };
 
+function incrementYaw(num) {
+    yaw += num;
+    yaw = modulo(yaw, 360);
+    return yaw;
+};
+
+function incrementPitch(num) {
+    pitch += num;
+    if (pitch > max_pitch)  pitch =  max_pitch;
+    if (pitch < -max_pitch) pitch = -max_pitch;
+    return pitch;
+};
+
+function incrementLookatYaw(num) {
+    lookat_yaw += num;
+    lookat_yaw = modulo(lookat_yaw, 360);
+    return lookat_yaw;
+};
+
+function incrementSurfaceYaw(num) {
+    surface.yaw += num;
+    surface.yaw = modulo(surface.yaw, 360);
+    return surface.yaw;
+};
+
+function incrementSurfacePitch(num) {
+    surface.pitch += num;
+    if (surface.pitch > max_pitch)  surface.pitch =  max_pitch;
+    if (surface.pitch < -max_pitch) surface.pitch = -max_pitch;
+    return surface.pitch;
+};
+
+function incrementSurfaceLookatYaw(num) {
+    surface.lookat_yaw += num;
+    surface.lookat_yaw = modulo(surface.lookat_yaw, 360);
+    return surface.lookat_yaw;
+};
+
+function incrementSurfaceLookatPitch(num) {
+    surface.lookat_pitch += num;
+    if (surface.lookat_pitch > max_pitch)  surface.lookat_pitch =  max_pitch;
+    if (surface.lookat_pitch < -max_pitch) surface.lookat_pitch = -max_pitch;
+    return surface.lookat_pitch;
+};
 
 function mouseDown(event) {
     lastX = event.clientX;
@@ -1884,6 +1928,14 @@ function mouseDown(event) {
 function mouseUp() {
     dragging = false;
 }
+
+function modulo(num, mod) {
+    if (num < 0) {
+        num = mod - (Math.abs(num) % mod);
+    };
+    num = num % mod;
+    return num;
+};
 
 function mouseMove(event) {
     if (dragging) {
@@ -1922,11 +1974,10 @@ function handleArrowKeysEarthInSpace(evt) {
                     incrementLongitude(); 
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    lookat_yaw += 2; 
-                    updateLookAt();
+                    incrementLookatYaw(2);
                     evt.preventDefault();
                 } else {
-                    yaw -= 2; 
+                    incrementYaw(-2); 
                     updateLookAt();
                     evt.preventDefault();
                 }
@@ -1946,7 +1997,7 @@ function handleArrowKeysEarthInSpace(evt) {
                 } else if (evt.shiftKey) {
                     evt.preventDefault();
                 } else {
-                    pitch -= 2; 
+                    incrementPitch(-2);
                     updateLookAt();
                     evt.preventDefault();
                 }
@@ -1961,11 +2012,11 @@ function handleArrowKeysEarthInSpace(evt) {
                     decrementLongitude(); 
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    lookat_yaw -= 2; 
+                    incrementLookatYaw(-2);
                     updateLookAt();
                     evt.preventDefault();
                 } else {
-                    yaw += 2; 
+                    incrementYaw(2); 
                     updateLookAt();
                     evt.preventDefault();
                 }
@@ -1985,7 +2036,7 @@ function handleArrowKeysEarthInSpace(evt) {
                 } else if (evt.shiftKey) {
                     evt.preventDefault();
                 } else {
-                    pitch += 2; 
+                    incrementPitch(2); 
                     updateLookAt();
                     evt.preventDefault();
                 }
@@ -2025,11 +2076,11 @@ function handleArrowKeysSurfaceView(evt) {
                 } else if (evt.altKey) {                // alt left-arrow
                     incrementLongitude(); 
                     evt.preventDefault();
-                } else if (evt.shiftKey) {              // shift left-arrow 
-                    surface.lookat_yaw += 2;
+                } else if (evt.shiftKey) {              // shift left-arrow
+                    incrementSurfaceLookatYaw(2);
                     evt.preventDefault();
                 } else {
-                    surface.yaw -= 2;                   // left arrow
+                    incrementSurfaceYaw(-2);                   // left arrow
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -2045,10 +2096,10 @@ function handleArrowKeysSurfaceView(evt) {
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    surface.lookat_pitch += 2; 
+                    incrementSurfaceLookatPitch(2); 
                     evt.preventDefault();
                 } else {
-                    surface.pitch += 2; 
+                    incrementSurfacePitch(-2);
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -2063,10 +2114,10 @@ function handleArrowKeysSurfaceView(evt) {
                     decrementLongitude(); 
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    surface.lookat_yaw -= 2; 
+                    incrementSurfaceLookatYaw(-2); 
                     evt.preventDefault();
                 } else {
-                    surface.yaw += 2; 
+                    incrementSurfaceYaw(2); 
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -2082,10 +2133,10 @@ function handleArrowKeysSurfaceView(evt) {
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    surface.lookat_pitch -= 2; 
+                    incrementSurfaceLookatPitch(-2); 
                     evt.preventDefault();
                 } else {
-                    surface.pitch -= 2; 
+                    incrementSurfacePitch(2);
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -2188,15 +2239,16 @@ function debugLabel() {
 
         labelStr += "<b>Earth</b><br />";
         labelStr += sprintf("Pos:  x: %4.1f y: %4.1f z: %4.1f<br>", earth.pos.x, earth.pos.y, earth.pos.z);
-        labelStr += sprintf("Pitch: %4.1f, Yaw:  %4.1f<br>", pitch, yaw);
+        labelStr += sprintf("Yaw:  %3.0f, Pitch: %4.1f<br>", yaw, pitch);
+        labelStr += sprintf("LookAt Yaw:  %4.1f<br>", lookat_yaw);
         labelStr += sprintf("Rot:  %4.1f<br>", earth.rotation);
         labelStr += sprintf("Angle: %4.1f, Radius: %4.1f<br>", angle.get().angle, earth.radius);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Surface</b><br />";
-        labelStr += sprintf("Pitch: %4.1f, Yaw:  %4.1f<br>", surface.pitch, surface.yaw);
-        labelStr += sprintf("LookAt Rot:  %4.1f, Pitch: %3.1f<br>", surface.lookat_yaw, surface.lookat_pitch);
-        labelStr += sprintf("Distance-surface: %3.3f (x radius)<br>", surface.height);
+        labelStr += sprintf("Yaw:  %4.1f, Pitch: %4.1f<br>", surface.yaw, surface.pitch);
+        labelStr += sprintf("LookAt Yaw:  %4.1f, Pitch: %3.1f<br>", surface.lookat_yaw, surface.lookat_pitch);
+        labelStr += sprintf("Distance-surface: %3.3f (x radius)<br>", surface.distance);
         labelStr += sprintf("Solar alt: %2.1f, rad: %3.0f  W/m2<br>", solar_alt, solar_rad);
         labelStr += sprintf("earth.km: %1.6f<br>", earth.km);
         labelStr += "<br><hr><br>";
