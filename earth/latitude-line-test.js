@@ -75,10 +75,30 @@ var earth_pos_mar_21_normalized_vec3 = []; vec3.normalize(earth_pos_mar_21_vec3,
 var initial_day_number = jun_day_number;
 var initial_earth_pos_vec3 = earth_pos_jun_21_vec3;
 
-var up = []; vec3.cross(earth_pos_jun_21_normalized_vec3, earth_pos_sep_21_normalized_vec3, up);
+var up = []; vec3.cross(earth_pos_jun_21_normalized_vec3, earth_pos_mar_21_normalized_vec3, up);
 
 // var earth_tilt_axis = vec3.normalize(earth_ephemerides_location_by_month('sep'));
-var earth_tilt_axis = []; vec3.cross(up, earth_pos_jun_21_normalized_vec3, earth_tilt_axis);
+var earth_tilt_axis = []; vec3.cross(earth_pos_jun_21_normalized_vec3, up, earth_tilt_axis);
+
+var jun_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_jun_21_normalized_vec3[1], -1], earth_pos_jun_21_normalized_vec3)) * rad2deg;
+var jun_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, jun_orbit_correction_degrees);
+var jun_orbit_correction_mat4 = [];
+quat4.toMat4(jun_orbit_correction_quat, jun_orbit_correction_mat4);
+
+var sep_orbit_correction_degrees = Math.acos(vec3.dot([1, earth_pos_sep_21_normalized_vec3[1], 0], earth_pos_sep_21_normalized_vec3)) * rad2deg;
+var sep_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, sep_orbit_correction_degrees);
+var sep_orbit_correction_mat4 = [];
+quat4.toMat4(sep_orbit_correction_quat, sep_orbit_correction_mat4);
+
+var dec_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_dec_21_normalized_vec3[1], 1], earth_pos_dec_21_normalized_vec3)) * rad2deg;
+var dec_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, dec_orbit_correction_degrees);
+var dec_orbit_correction_mat4 = [];
+quat4.toMat4(dec_orbit_correction_quat, dec_orbit_correction_mat4);
+
+var mar_orbit_correction_degrees = Math.acos(vec3.dot([-1, earth_pos_mar_21_normalized_vec3[1], 0], earth_pos_mar_21_normalized_vec3)) * rad2deg;
+var mar_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, mar_orbit_correction_degrees);
+var mar_orbit_correction_mat4 = [];
+quat4.toMat4(mar_orbit_correction_quat, mar_orbit_correction_mat4);
 
 var initial_earth_rotation = 0;
 
@@ -119,10 +139,10 @@ var surface = {
     // latitude: 38,
     // longitude: 122,
     latitude: 0,
-    longitude: 0,
+    longitude: 90,
     yaw: 0,
     pitch: 0,
-    distance: 3,
+    distance: 8,
     lookat_yaw: 0,
     lookat_pitch: 0,
     min_height: 0.001,
@@ -142,15 +162,14 @@ var max_pitch = 85;
 
 var distance = earth.radius * 3;
 
-var yaw      =  330;
-var pitch    = -15;
+var yaw      =  280;
+var pitch    = -5;
 
 var lookat_yaw = 0;
 
 //
 // Square Grid
 //
-
 var square_grid = function(scale, segments) {
     var points = [];
     var p;
@@ -178,7 +197,6 @@ for (var i = 0; i < sun_grid_points; i++) { sun_grid_indices.push(i) };
 //
 // Rose Grid
 //
-
 var rose_grid = function(scale, segments) {
     var points = [];
     var x, z, rangle;
@@ -213,7 +231,6 @@ for (var i = 1; i < latitude_rose_grid_points; i += 2) {
 //
 // Sun Rays
 //
-
 var sun_rays = function() {
     var points = [];
     var x, y, z, rangle;
@@ -246,7 +263,6 @@ for (var i = 0; i < sun_ray_points; i++) {
 //
 // Initial lookAt: eye
 //
-
 var initial_eye_quat;
 var initial_eye_mat4;
 var initial_eye_vec3 = vec3.create();
@@ -280,7 +296,7 @@ SceneJS.createNode({
             id: "lookAt",
             eye:  initial_eye,
             look: earth.pos,
-            up:   { x: 0.0, y: 1.0, z: 0.0 },
+            up:   { x: up[0], y: up[1], z: up[2] },
 
             nodes: [
 
@@ -645,7 +661,9 @@ SceneJS.createNode({
                                     nodes: [
                             
                                         {
-                                            type: "node",
+                                            type: "matrix",
+                                            id: "orbit-matrix-node",
+                                            elements: jun_orbit_correction_mat4,
                                     
                                             nodes: [
 
@@ -1571,12 +1589,45 @@ sunRaysHandler();
 var earth_sub_graph = SceneJS.withNode("earth-sub-graph");
 var earth_sub_graph_scale = SceneJS.withNode("earth-sub-graph-scale");
 
-var day_of_year_angle = (365 - earth.day_number)/365 * 360 - 101.342;
+// modulo((365 - day_number_by_month.jun)/365 * 360 - 101.34246575342468, 360)
+// 90
+// 
+// modulo((365 - day_number_by_month.sep)/365 * 360 - 98.63013698630135, 360)
+// 1.4210854715202004e-14
+// 
+// modulo((365 - day_number_by_month.dec)/365 * 360 - 99.863013698630137, 360)
+// 270
+// 
+// modulo((365 - day_number_by_month.mar)/365 * 360 - 103.0684931506849, 360)
+// 180
+function day_of_year_angle_by_mon(mon) {
+    var day_angle;
+    switch (mon) {
+        case 'jun':
+            day_angle = modulo((365 - day_number_by_month.jun)/365 * 360 - (101.34246575342468 - jun_orbit_correction_degrees), 360);
+            break;
+        case 'sep':
+            day_angle = modulo((365 - day_number_by_month.sep)/365 * 360 - (98.63013698630135 - sep_orbit_correction_degrees), 360);
+            break;
+        case 'dec':
+            day_angle = modulo((365 - day_number_by_month.dec)/365 * 360 - (99.86301369863014 - dec_orbit_correction_degrees), 360);
+            break;
+        case 'mar':
+            day_angle = modulo((365 - day_number_by_month.mar)/365 * 360 - (103.0684931506849 - mar_orbit_correction_degrees), 360);
+            break;
+    };
+    return day_angle;
+};
+
+var day_of_year_angle = day_of_year_angle_by_mon('jun')
 var day_of_year_angle_node = SceneJS.withNode("day-of-year-angle-node");
 
 var earth_pos_normalized_vec3 = [];
 
-function setEarthPositionByDay(day_number) {
+var orbit_matrix_node = SceneJS.withNode("orbit-matrix-node");
+
+function setEarthPositionByMon(mon) {
+    var day_number = day_number_by_month[mon];
     var previous_yaw_angle = earth.day_number/365 * 360;
     var pos = earth_ephemerides_location_by_day_number(day_number);
     earth.pos = { x: pos[0], y: pos[1], z: pos[2] };
@@ -1591,15 +1642,14 @@ function setEarthPositionByDay(day_number) {
     earth_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(earth_orbit_axis_correction_vec3, earth_orbit_angle_correction);
 
     sunrise_set_rotation.set({ x: earth_pos_normalized_vec3[0], y: earth_pos_normalized_vec3[1], z: earth_pos_normalized_vec3[2] });
-    day_of_year_angle = (365 - earth.day_number)/365 * 360 - 101.342;
+
+    day_of_year_angle = day_of_year_angle_by_mon(mon);
     day_of_year_angle_node.set("angle", day_of_year_angle);
+
     // yaw -= earth.day_number/365 * 360;
     incrementYaw(-(new_yaw_angle - previous_yaw_angle));
     sunEarthLineHandler();
-};
-
-function setEarthPositionByMon(mon) {
-    setEarthPositionByDay(day_number_by_month[mon]);
+    
 };
 
 var sun_light                 = SceneJS.withNode("sun-light");
@@ -1660,7 +1710,7 @@ function setupEarthInSpace() {
         was_sunrise_set_checked = false;
     };
 
-    look_at.set("up", { x: 0.0, y: 1.0, z: 0.0 });
+    look_at.set("up", { x: up[0], y: up[1], z: up[2] });
 };
 
 //
@@ -1921,7 +1971,7 @@ function setupViewHandler() {
     };
 };
 
-setEarthPositionByDay(earth.day_number);
+setEarthPositionByMon('jun');
 surface_view.onchange = setupViewHandler;
 setupViewHandler();
 
@@ -2348,7 +2398,7 @@ function debugLabel() {
         labelStr += sprintf("Pos:  x: %4.1f y: %4.1f z: %4.1f<br>", earth.pos.x, earth.pos.y, earth.pos.z);
         labelStr += sprintf("Yaw:  %3.0f, Pitch: %4.1f<br>", yaw, pitch);
         labelStr += sprintf("LookAt Yaw:  %4.1f<br>", lookat_yaw);
-        labelStr += sprintf("Rot:  %4.1f<br>", earth.rotation);
+        labelStr += sprintf("Rot:  %4.1f, Day angle: %3.3f<br>", earth.rotation, day_of_year_angle);
         labelStr += sprintf("Angle: %4.1f, Radius: %4.1f<br>", angle.get().angle, earth.radius);
         labelStr += "<br><hr><br>";
 
@@ -2369,7 +2419,7 @@ function debugLabel() {
         labelStr += "<b>LookAt</b><br />";
         labelStr += sprintf("Eye:  x: %4.1f y: %4.1f z: %4.1f<br>", eye.x, eye.y, eye.z);
         labelStr += sprintf("Look:  x: %4.1f y: %4.1f z: %4.1f<br>", look.x, look.y, look.z);
-        labelStr += sprintf("Up  x: %1.3f y: %1.3f z: %1.3f<br>", up.x, up.y, up.z);
+        labelStr += sprintf("Up  x: %1.5f y: %1.5f z: %1.5f<br>", up.x, up.y, up.z);
         labelStr += sprintf("Rot: %4.1f, Distance-Earth: %4.1f<br>", lookat_yaw, distance);
         labelStr += "<br><hr><br>";
 
