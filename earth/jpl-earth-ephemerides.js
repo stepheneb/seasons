@@ -493,34 +493,35 @@ var earth_ephemerides_geometry = function(scale) {
     return { positions: points, indices: indices };
 }
 
+// for 2010
 var day_number_by_month = {
     jan:  19,
     feb:  50,
-    mar:  79,
+    mar:  78,  // mar 20 17:42
     apr: 109,
     may: 139,
-    jun: 171,
+    jun: 171,  // jun 21 17:16
     jul: 200,
     aug: 231,
-    sep: 263,
+    sep: 265,  // sep 23 09:04
     oct: 292,
     nov: 323,
-    dec: 354
+    dec: 355   // dec 22 05:30
 };
 
 var date_by_day_number = {
     19:  "Jan-21",
     50:  "Feb-20",
-    79:  "Mar-21",
+    78:  "Mar-20",
     109: "Apr-20",
     139: "May-20",
     171: "Jun-21",
     200: "Jul-20",
     231: "Aug-20",
-    263: "Sep-21",
+    265: "Sep-23",
     292: "Oct-20",
     323: "Nov-20",
-    354: "Dec-21"
+    355: "Dec-22"
 };
 
 var earth_ephemerides_datum_by_month = function(month) {
