@@ -40,11 +40,12 @@ selected_city.onchange = selectedCityHandler;
 var choose_month = document.getElementById("choose-month");
 
 function chooseMonthHandler(event) {
-    var mon = getRadioSelection(event.currentTarget);
+    var mon = getRadioSelection(choose_month);
     setEarthPositionByMon(mon)
 };
 
 choose_month.onchange = chooseMonthHandler;
+chooseMonthHandler();
 
 var choose_tilt = document.getElementById("choose-tilt");
 var earth_tilt_quaternion = SceneJS.withNode("earth-tilt-quaternion");
