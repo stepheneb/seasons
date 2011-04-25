@@ -1255,28 +1255,92 @@ SceneJS.createNode({
                                                                                                                             z: 0,
 
                                                                                                                             nodes: [
-
+                                                                                                                                                                                                                                                            
+                                                                                                                                {
+                                                                                                                                    type: "node",
+                                                                                                                                    // wireframe: false,
+                                                                                                                                    // lineWidth: 1,
+                                                                                                                                     
+                                                                                                                                    nodes: [
+                                                                                                                                    
+                                                                                                                                       { 
+                                                                                                                                           type: "material",
+                                                                                                                                           baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
+                                                                                                                                           specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
+                                                                                                                                    
+                                                                                                                                           specular:       0.5,
+                                                                                                                                           shine:          0.001,
+                                                                                                                                    
+                                                                                                                                           nodes: [
+                                                                                                                                    
+                                                                                                                                               {
+                                                                                                                                                   type: "disk",
+                                                                                                                                                   radius: 200 * earth.km,
+                                                                                                                                                   height: surface.min_height / 2,
+                                                                                                                                                   rings: 48
+                                                                                                                                    
+                                                                                                                                               },
+                                                                                                                                           ]
+                                                                                                                                       },
+                                                                                                                                    ]
+                                                                                                                                },
+                                                                                                                                
                                                                                                                                 { 
                                                                                                                                     type: "material",
-                                                                                                                                    baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
-                                                                                                                                    specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
+                                                                                                                                    baseColor:      { r: 0.5, g: 0.1, b: 0.1 },
+                                                                                                                                    specularColor:  { r: 0.5, g: 0.1, b: 0.1 },
 
                                                                                                                                     specular:       0.5,
-                                                                                                                                    shine:          0.001,
+                                                                                                                                    shine:          0.1,
+                                                                                                                                    emit:           0.5,
 
                                                                                                                                     nodes: [
 
                                                                                                                                         {
-                                                                                                                                            type: "disk",
-                                                                                                                                            radius: 200 * earth.km,
-                                                                                                                                            height: surface.min_height / 2,
-                                                                                                                                            rings: 48
+                                                                                                                                            type: "translate",
+                                                                                                                                            x: 0,
+                                                                                                                                            y: 0.0003,
+                                                                                                                                            z: 0,
+                                                                                                                                        
+                                                                                                                                            nodes: [
 
-                                                                                                                                            // type: "cube",
-                                                                                                                                            // xSize: 100 * earth.km,
-                                                                                                                                            // ySize: surface.min_height / 2,
-                                                                                                                                            // zSize: 100 * earth.km
+                                                                                                                                                {
+                                                                                                                                                    type: "rotate",
+                                                                                                                                                    angle: 90,
+                                                                                                                                                    x: 1.0,
+                                                                                                                                                
+                                                                                                                                                    nodes: [
 
+                                                                                                                                                        {
+                                                                                                                                                            type: "quad",
+                                                                                                                                                            xSize: 200 * earth.km,
+                                                                                                                                                            ySize: 0.5 * earth.km
+                                                                                                                                                        }
+                                                                                                                                                    ]
+                                                                                                                                                },
+                                                                                                                                        
+                                                                                                                                                {
+                                                                                                                                                    type: "rotate",
+                                                                                                                                                    angle: 90,
+                                                                                                                                                    y: 1.0,
+                                                                                                                                                    
+                                                                                                                                                    nodes: [
+                                                                                                                                                        {
+                                                                                                                                                            type: "rotate",
+                                                                                                                                                            angle: 90,
+                                                                                                                                                            x: 1.0,
+
+                                                                                                                                                            nodes: [
+                                                                                                                                                                {
+                                                                                                                                                                    type: "quad",
+                                                                                                                                                                    xSize: 200 * earth.km,
+                                                                                                                                                                    ySize: 0.5 * earth.km
+                                                                                                                                                                }
+                                                                                                                                                            ]
+                                                                                                                                                        }
+                                                                                                                                                    ]
+                                                                                                                                                }
+                                                                                                                                            ]
                                                                                                                                         }
                                                                                                                                     ]
                                                                                                                                 },
