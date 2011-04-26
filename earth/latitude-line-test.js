@@ -1295,7 +1295,58 @@ SceneJS.createNode({
                                                                                                                                     emit:           0.5,
 
                                                                                                                                     nodes: [
+                                                                                                                                    
+                                                                                                                                        {
+                                                                                                                                            type: "translate",
+                                                                                                                                            x: 10,
+                                                                                                                                            y: 0.1,
+                                                                                                                                            z: 10,
+                                                                                                                                    
+                                                                                                                                            nodes: [
+                                                                                                                                            
+                                                                                                                                                {
+                                                                                                                                                    type: "billboard",
+                                                                                                                                                    nodes: [
+                                                                                                                                                        {
+                                                                                                                                                            type: "texture",
+                                                                                                                                                            layers: [ { uri: "images/east2.png" } ],
+                                                                                                                                                            nodes: [
+                                                                                                                                                            
+                                                                                                                                                                {
+                                                                                                                                                                    type: "node",
 
+                                                                                                                                                                    flags: {
+                                                                                                                                                                        transparent: true
+                                                                                                                                                                    },
+
+                                                                                                                                                                    nodes: [
+
+                                                                                                                                                                        {
+
+                                                                                                                                                                            type: "material",
+                                                                                                                                                                            specular: 0.0,
+                                                                                                                                                                            emit: 10,
+
+                                                                                                                                                                            nodes: [
+
+                                                                                                                                                                
+                                                                                                                                                                                {
+                                                                                                                                                                                    type: "quad",
+                                                                                                                                                                                    xSize: 200 * earth.km,
+                                                                                                                                                                                    ySize: 200 * earth.km
+                                                                                                                                                                                }
+                                                                                                                                                                            ]
+                                                                                                                                                                        }
+                                                                                                                                                                    ]
+                                                                                                                                                                }
+                                                                                                                                                            ]
+                                                                                                                                                        }
+                                                                                                                                                    ]
+                                                                                                                                                }
+                                                                                                                                            ]
+                                                                                                                                        },
+                                                                                                                                        
+                                                                                                                                        
                                                                                                                                         {
                                                                                                                                             type: "translate",
                                                                                                                                             x: 0,
@@ -1344,6 +1395,7 @@ SceneJS.createNode({
                                                                                                                                         }
                                                                                                                                     ]
                                                                                                                                 },
+                                                                                                                                
 
                                                                                                                                 { 
                                                                                                                                     type: "material",
@@ -2273,7 +2325,7 @@ function update_surface_height(d) {
 }
 
 function decrementSurfaceDistance() {
-    if (surface.distance > 2) {
+    if (surface.distance > 1) {
         surface.distance -= 0.1;
     };
 };
