@@ -339,6 +339,73 @@ function update_initial_eye(d) {
 
 update_initial_eye(distance);
 
+
+SceneJS.createNode({
+    id: "x-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/x3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: 0.05, ySize: 0.05 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "y-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/y3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: 0.05, ySize: 0.05 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "z-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/z3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: 0.05, ySize: 0.05 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
 SceneJS.createNode({
     type: "scene",
     id: "theScene",
@@ -577,33 +644,31 @@ SceneJS.createNode({
                                                         },
                                                         
                                                         {
-                                                            type: "translate",
-                                                            x: 0,
-                                                            y: 0,
-                                                            z: 0,
-                                            
-                                                            nodes: [
+                                                            // type: "node",
+                                                            type: "material",
+                                                            // baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                            // specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                            // specular: 1.0, shine: 1.0, 
+                                                            // emit: 0.5, alpha: 0.1,
                                                             
+                                                            nodes: [
                                                                 {
-                                                                    type: "billboard",
-                                                                    nodes: [
-                                                                        {
-                                                                            type: "texture",
-                                                                            layers: [ { uri: "images/east3.png" } ],
-                                                                            nodes: [
-                                                                                {
-                                                                                    type: "quad",
-                                                                                    xSize: 200 * earth.km,
-                                                                                    ySize: 200 * earth.km
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    ]
+                                                                    type: "translate",
+                                                                    x: 16,  y: 0, z: 0,
+                                                                    nodes: [ { type: "instance", target: "x-label" } ]
+                                                                },
+                                                                {
+                                                                    type: "translate",
+                                                                    x: 0,  y: 16, z: 0,
+                                                                    nodes: [ { type: "instance", target: "y-label" } ]
+                                                                },
+                                                                {
+                                                                    type: "translate",
+                                                                    x: 0,  y: 0, z: 16,
+                                                                    nodes: [ { type: "instance", target: "z-label" } ]
                                                                 }
                                                             ]
-                                                        },
-
-                                                        
+                                                        }
                                                     ] 
                                                 }
                                             ]
