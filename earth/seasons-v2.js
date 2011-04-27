@@ -13,6 +13,7 @@ var sun_noon_midnight = document.getElementById("sun-noon-midnight") || { checke
 var lat_hour_markers = document.getElementById("lat-hour-markers") || { checked: false, onchange: null };
 var sun_rays = document.getElementById("sun-rays") || { checked: false, onchange: null };
 var surface_view = document.getElementById("surface-view") || { checked: false, onchange: null };
+var debug_view   = document.getElementById("debug-view") || { checked: false, onchange: null };
 
 
 var solar_altitude_graph = document.getElementById("solar-altitude-graph") || 
