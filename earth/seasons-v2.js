@@ -574,7 +574,36 @@ SceneJS.createNode({
                                                                     nodes: [ { type: "cube", xSize: 0.3, ySize: 0.3, zSize: 8.0 } ]
                                                                 }
                                                             ]
-                                                        }
+                                                        },
+                                                        
+                                                        {
+                                                            type: "translate",
+                                                            x: 0,
+                                                            y: 0,
+                                                            z: 0,
+                                            
+                                                            nodes: [
+                                                            
+                                                                {
+                                                                    type: "billboard",
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "texture",
+                                                                            layers: [ { uri: "images/east3.png" } ],
+                                                                            nodes: [
+                                                                                {
+                                                                                    type: "quad",
+                                                                                    xSize: 200 * earth.km,
+                                                                                    ySize: 200 * earth.km
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+
+                                                        
                                                     ] 
                                                 }
                                             ]
@@ -1441,17 +1470,15 @@ SceneJS.createNode({
                                                                                                                                     shine:          0.0001,
                                                                                                                                 
                                                                                                                                     nodes: [
-                                                                                                                                
                                                                                                                                         {
                                                                                                                                             type: "disk",
                                                                                                                                             radius: 200 * earth.km,
                                                                                                                                             height: surface.min_height / 2,
                                                                                                                                             rings: 48
-                                                                                                                                
-                                                                                                                                        },
+                                                                                                                                        }
                                                                                                                                     ]
                                                                                                                                 },
-
+                                                                                                                                
                                                                                                                                 {
                                                                                                                                     type: "node",
                                                                                                                                     flags: { transparent: true },
@@ -1469,46 +1496,6 @@ SceneJS.createNode({
 
                                                                                                                                             nodes: [
                                                                                                                                     
-                                                                                                                                                {
-                                                                                                                                                    type: "translate",
-                                                                                                                                                    x: 10,
-                                                                                                                                                    y: 0.1,
-                                                                                                                                                    z: 10,
-                                                                                                                                    
-                                                                                                                                                    nodes: [
-                                                                                                                                            
-                                                                                                                                                        {
-                                                                                                                                                            type: "billboard",
-                                                                                                                                                            nodes: [
-                                                                                                                                                                {
-                                                                                                                                                                    type: "texture",
-                                                                                                                                                                    layers: [ { uri: "images/east2.png" } ],
-                                                                                                                                                                    nodes: [
-                                                                                                                                                            
-
-                                                                                                                                                                        {
-
-                                                                                                                                                                            type: "material",
-                                                                                                                                                                            specular: 0.0,
-                                                                                                                                                                            emit: 10,
-
-                                                                                                                                                                            nodes: [
-
-                                                                                                                                                        
-                                                                                                                                                                                {
-                                                                                                                                                                                    type: "quad",
-                                                                                                                                                                                    xSize: 200 * earth.km,
-                                                                                                                                                                                    ySize: 200 * earth.km
-                                                                                                                                                                                }
-                                                                                                                                                                            ]
-                                                                                                                                                                        }
-                                                                                                                                                                    ]
-                                                                                                                                                                }
-                                                                                                                                                            ]
-                                                                                                                                                        }
-                                                                                                                                                    ]
-                                                                                                                                                },
-
                                                                                                                                                 {
                                                                                                                                                     type: "translate",
                                                                                                                                                     x: 0,
