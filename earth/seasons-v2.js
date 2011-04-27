@@ -6,7 +6,7 @@ var earth_rose_grid = document.getElementById("earth-rose-grid") || { checked: f
 var sun_grid = document.getElementById("sun-grid") || { checked: false, onchange: null };
 var sunrise_set = document.getElementById("sun-rise-set") || { checked: false, onchange: null };
 var sun_earth_line = document.getElementById("sun-earth-line") || { checked: false, onchange: null };
-var back_light = document.getElementById("back-light") || { checked: false, onchange: null  };
+var backlight = document.getElementById("backlight") || { checked: true, onchange: null  };
 var use_horizontal_flux   = document.getElementById("use-horizontal-flux") || { checked: false, onchange: null };
 var sun_earth_line = document.getElementById("sun-earth-line");
 var sun_noon_midnight = document.getElementById("sun-noon-midnight") || { checked: false, onchange: null };
@@ -392,13 +392,49 @@ SceneJS.createNode({
                         },
 
                         {
-                            type: "light",
-                            id:   "back-light1",
-                            mode:                   "dir",
-                            color:                  { r: dark_side_light, g: dark_side_light, b: dark_side_light },
-                            diffuse:                true,
-                            specular:               true,
-                            dir:                    { x: 1.0, y: 0.0, z: -0.75 }
+                            type: "quaternion",
+                            id: "backlight-quaternion",
+                            x: 0, y: 1, z: 0,
+                            angle: 90,
+                            
+                            nodes: [
+                            
+                                {
+                                    type: "translate",
+                                    x: earth.pos.x * 2, 
+                                    y: earth.pos.y * 2, 
+                                    z: earth.pos.z * 2,
+                                    
+                                    nodes: [
+
+                                        {
+                                            type: "light",
+                                            id:   "backlight-node1",
+                                            mode:                   "point",
+                                            pos:                    -2 * earth_orbital_radius,
+                                            color:                  { r: 1.0, g: 1.0, b: 1.0 },
+                                            diffuse:                true,
+                                            specular:               true,
+                                            constantAttenuation:    1.0,
+                                            quadraticAttenuation:   0.0,
+                                            linearAttenuation:      0.0
+                                        },
+
+                                        {
+                                            type: "light",
+                                            id:   "backlight-node2",
+                                            mode:                   "point",
+                                            pos:                    2 * earth_orbital_radius,
+                                            color:                  { r: 1.0, g: 1.0, b: 1.0 },
+                                            diffuse:                true,
+                                            specular:               true,
+                                            constantAttenuation:    1.0,
+                                            quadraticAttenuation:   0.0,
+                                            linearAttenuation:      0.0
+                                        }
+                                    ]
+                                }
+                            ]
                         },
         
                         {
@@ -1501,21 +1537,22 @@ var keepAnimating = true;
 //
 // Back Lighting Handler
 //
-var back_light1 =  SceneJS.withNode("back-light1");
-var back_light2 =  SceneJS.withNode("back-light2");
+var backlight_node1 =  SceneJS.withNode("backlight-node1");
+var backlight_node2 =  SceneJS.withNode("backlight-node2");
+var backlight_quaternion =  SceneJS.withNode("backlight-quaternion");
 
 function backLightHandler() {
     var colors;
-    if (back_light.checked) {
-        colors = { r: 2.0, g: 2.0, b: 2.0 };
+    if (backlight.checked) {
+        colors = { r: 1.0, g: 1.0, b: 1.0 };
     } else {
         colors = { r: dark_side_light, g: dark_side_light, b: dark_side_light };
     };
-    back_light1.set("color", colors);
-    back_light2.set("color", colors);
+    backlight_node1.set("color", colors);
+    backlight_node2.set("color", colors);
 };
 
-back_light.onchange = backLightHandler;
+backlight.onchange = backLightHandler;
 backLightHandler();
 
 //
@@ -1706,37 +1743,21 @@ sunRaysHandler();
 var earth_sub_graph = SceneJS.withNode("earth-sub-graph");
 var earth_sub_graph_scale = SceneJS.withNode("earth-sub-graph-scale");
 
-// modulo((365 - day_number_by_month.jun)/365 * 360 - 101.34246575342468, 360)
-// 90
-// 
-// modulo((365 - day_number_by_month.sep)/365 * 360 - 98.63013698630135, 360)
-// 1.4210854715202004e-14
-// 
-// modulo((365 - day_number_by_month.dec)/365 * 360 - 99.863013698630137, 360)
-// 270
-// 
-// modulo((365 - day_number_by_month.mar)/365 * 360 - 103.0684931506849, 360)
-// 180
-function day_of_year_angle_by_mon(mon) {
-    var day_angle;
-    switch (mon) {
-        case 'jun':
-            day_angle = modulo((365 - day_number_by_month.jun)/365 * 360 - (101.34246575342468 - jun_orbit_correction_degrees), 360);
-            break;
-        case 'sep':
-            day_angle = modulo((365 - day_number_by_month.sep)/365 * 360 - (98.63013698630135 - sep_orbit_correction_degrees), 360);
-            break;
-        case 'dec':
-            day_angle = modulo((365 - day_number_by_month.dec)/365 * 360 - (99.86301369863014 - dec_orbit_correction_degrees), 360);
-            break;
-        case 'mar':
-            day_angle = modulo((365 - day_number_by_month.mar)/365 * 360 - (103.0684931506849 - mar_orbit_correction_degrees), 360);
-            break;
-    };
-    return day_angle;
+var day_of_year_angle_by_mon = {
+    jun: 90,
+    sep: 0,
+    dec: 270,
+    mar: 180
 };
 
-var day_of_year_angle = day_of_year_angle_by_mon('jun')
+var yaw_angle_by_mon = {
+    jun: 270,
+    sep: 180,
+    dec: 90,
+    mar: 0
+};
+
+var day_of_year_angle = day_of_year_angle_by_mon['jun'];
 var day_of_year_angle_node = SceneJS.withNode("day-of-year-angle-node");
 
 var earth_pos_normalized_vec3 = [];
@@ -1762,6 +1783,7 @@ function setEarthPositionByMon(mon) {
 
     day_of_year_angle = day_of_year_angle_by_mon(mon);
     day_of_year_angle_node.set("angle", day_of_year_angle);
+    backlight_quaternion.set("rotation", { x:0, y:1, z: 0, angle: yaw_angle_by_mon[mon] + 90 });
 
     // yaw -= earth.day_number/365 * 360;
     incrementYaw(-(new_yaw_angle - previous_yaw_angle));
