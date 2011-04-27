@@ -30,7 +30,7 @@ var sun = {
 
 var initial_day_number = day_number_by_month['jun'];
 
-var initial_earth_rotation = -25;
+var initial_earth_rotation = 0;
 
 var earth = {
     pos: {
