@@ -154,7 +154,46 @@ var surface = {
     flagpole: {
         radius: 1 *  meter * surface_earth_scale_factor,
         height: 25 *  meter * surface_earth_scale_factor,
-        pos: { x: 0, y: 0, z: 0 }
+        pos: { x: 0, y: 0, z: 0 },
+        material: {
+            day: {
+                baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
+                specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
+                specular:       0.5,
+                shine:          0.001,
+                emit:           0
+            },
+            night: {
+                baseColor:      { r: 0.1, g: 0.1, b: 0.1 },
+                specularColor:  { r: 0.1, g: 0.1, b: 0.1 },
+                specular:       0.001,
+                shine:          0.001,
+                emit:           0.0
+            }
+        }
+    },
+    disk: {
+        material: {
+            day: {
+                baseColor:      { r: 0.01, g: 0.1, b: 0.0 },
+                specularColor:  { r: 0.01, g: 0.1, b: 0.0 },
+                specular:       0.0001,
+                shine:          0.0001,
+                emit:           0
+            },
+            night: {
+                baseColor:      { r: 0.01, g: 0.5, b: 0.0 },
+                specularColor:  { r: 0.01, g: 0.5, b: 0.0 },
+                specular:       0.1,
+                shine:          0.1,
+                emit:           0.0
+                // baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
+                // specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
+                // specular:       0.05,
+                // shine:          0.05,
+                // emit:           0.5
+            }
+        }
     }
 };
 
@@ -1799,7 +1838,8 @@ var earth_atmosphere_selector = SceneJS.withNode("earth-atmosphere-selector");
 var atmosphere_material       = SceneJS.withNode("atmosphere-material");
 var atmosphere_transparent    = SceneJS.withNode("atmosphere-transparent");
 
-
+var surface_disk_material = SceneJS.withNode("surface-disk-material");
+var flagpole_material = SceneJS.withNode("flagpole-material");
 
 // sun-material ...
 // baseColor:      { r: 1.0, g: 0.95, b: 0.8 },
@@ -2011,6 +2051,7 @@ function setupSurfaceView() {
     was_sunrise_set_checked = sunrise_set.checked;
     sunrise_set.checked = false;
     sunRiseSetHandler();
+    milky_way_material.set("emit", 0.8);
 
     sun_material.set("specular", 1.0);
     sun_material.set("shine", 1.0);
@@ -2716,12 +2757,15 @@ function solarRadiation(alt) {
         if (use_airmass.checked) {
             radiation = spectralSolarRadiation(alt);
             if (surface_view.checked) {
+                // day time material settings
                 // atmosphere_material.set("alpha", 0.8);
                 var alpha = (1 - (1/Math.exp(radiation.total/2))) * 0.5;
                 if (alpha > 0.5) alpha = 0.5;
                 atmosphere_material.set("alpha", alpha);
                 atmosphere_material.set("emit", alpha);
                 milky_way_material.set("emit", (alpha - 0.5) * -0.5);                
+                surface_disk_material.set(surface.disk.material.day);
+                flagpole_material.set(surface.flagpole.material.day);
             };
             
             rad = radiation.total;
@@ -2737,9 +2781,12 @@ function solarRadiation(alt) {
         };
     } else {
         if (surface_view.checked) {
+            // night time material settings
             flags.transparent = true;
             atmosphere_material.set("alpha", 0);
             milky_way_material.set("emit", 0.8);
+            surface_disk_material.set(surface.disk.material.night);
+            flagpole_material.set(surface.flagpole.material.night);
         };
         rad = 0;
     };
