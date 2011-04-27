@@ -156,6 +156,7 @@ var surface = {
         }
     },
     disk: {
+        width: 200 * earth.km,
         material: {
             day: {
                 baseColor:      { r: 0.01, g: 0.1, b: 0.0 },
@@ -397,6 +398,96 @@ SceneJS.createNode({
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
                                 { type: "quad", xSize: 0.05, ySize: 0.05 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "east-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/east3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                // { type: "quad", xSize: 300, ySize: 100.0 }
+                                // { type: "quad", xSize: 3.0, ySize: 1.0 }
+                                { type: "quad", xSize: surface.flagpole.height * 3, ySize: surface.flagpole.height }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "north-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/north3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: 0.0, ySize: 0.1 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "west-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/west3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: 0.3, ySize: 0.1 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "south-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/south3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: 0.3, ySize: 0.1 }
                             ]
                         }
                     ]
@@ -1537,12 +1628,36 @@ SceneJS.createNode({
                                                                                                                                     nodes: [
                                                                                                                                         {
                                                                                                                                             type: "disk",
-                                                                                                                                            radius: 200 * earth.km,
+                                                                                                                                            radius: surface.disk.width,
                                                                                                                                             height: surface.min_height / 2,
                                                                                                                                             rings: 48
                                                                                                                                         }
                                                                                                                                     ]
                                                                                                                                 },
+                                                                                                                                
+                                                                                                                                {
+                                                                                                                                    type: "translate",
+                                                                                                                                    x: 0,  y: surface.flagpole.height, z: 0,
+                                                                                                                                    nodes: [ { type: "instance", target: "east-label" } ]
+                                                                                                                                },
+
+                                                                                                                                // {
+                                                                                                                                //     type: "translate",
+                                                                                                                                //     x: 0,  y: 0, z: surface.disk.width,
+                                                                                                                                //     nodes: [ { type: "instance", target: "north-label" } ]
+                                                                                                                                // },
+                                                                                                                                // 
+                                                                                                                                // {
+                                                                                                                                //     type: "translate",
+                                                                                                                                //     x: -surface.disk.width,  y: 0, z: 0,
+                                                                                                                                //     nodes: [ { type: "instance", target: "west-label" } ]
+                                                                                                                                // },
+                                                                                                                                // 
+                                                                                                                                // {
+                                                                                                                                //     type: "translate",
+                                                                                                                                //     x: 0,  y: 0, z: surface.disk.width,
+                                                                                                                                //     nodes: [ { type: "instance", target: "south-label" } ]
+                                                                                                                                // },
                                                                                                                                 
                                                                                                                                 {
                                                                                                                                     type: "node",
