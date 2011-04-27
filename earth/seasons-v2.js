@@ -475,15 +475,97 @@ SceneJS.createNode({
                                 }
                             ]
                         },
-        
+
+                        // surface lookat bubble
+                        
+                        // bubble
                         {
-                            type: "light",
-                            id:   "back-light2",
-                            mode:                   "dir",
-                            color:                  { r: dark_side_light, g: dark_side_light, b: dark_side_light },
-                            diffuse:                true,
-                            specular:               true,
-                            dir:                    { x: 1.0, y: 0.0, z: 0.75 }
+                            type: "translate",
+                            id: "surface-lookat-bubble-pos",
+                            x: sun.pos.x,
+                            y: sun.pos.y,
+                            z: sun.pos.z,
+
+                            nodes: [
+                                {
+                                    type: "scale",
+                                    id: "surface-lookat-bubble-scale",
+                                    x: 0.03,
+                                    y: 0.03,
+                                    z: 0.03,
+                                    
+                                    nodes: [
+
+                                        {
+
+                                            type: "selector",
+                                            id: "surface-lookat-bubble-selector",
+                                            selection: [0],
+                                            nodes: [ 
+
+                                                // 0: off
+
+                                                {  },
+
+                                                // 1: on:
+
+                                                {
+                                                    type: "node",
+                                                    flags: { transparent: true },
+                                                    
+                                                    nodes: [  
+                                                    
+                                                        {
+                                                            type: "material",
+                                                            baseColor:      { r: 1.0, g: 0.05, b: 0.05 },
+                                                            specularColor:  { r: 1.0, g: 0.05, b: 0.05 },
+                                                            specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
+                                                            nodes: [ { type: "sphere", slices: 48, rings: 48, radius: 4 } ]
+                                                        },
+                                                        {
+                                                            type: "material",
+                                                            baseColor:      { r: 1.0, g: 0.05, b: 0.05 },
+                                                            specularColor:  { r: 1.0, g: 0.05, b: 0.05 },
+                                                            specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
+                                                            nodes: [ 
+                                                                {
+                                                                    type: "translate", x: 4.5, y: 0.0, z: 0.0,
+                                                                    nodes: [ { type: "cube", xSize: 8.0, ySize: 0.3, zSize: 0.3 } ]
+                                                                }
+                                                            ]
+                                                        },
+
+                                                        {
+                                                            type: "material",
+                                                            baseColor:      { r: 0.05, g: 1.0, b: 0.05 },
+                                                            specularColor:  { r: 0.05, g: 1.0, b: 0.05 },
+                                                            specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
+                                                            nodes: [ 
+                                                                {
+                                                                    type: "translate", x: 0.0, y: 4.5, z: 0.0,
+                                                                    nodes: [ { type: "cube", xSize: 0.3, ySize: 8.0, zSize: 0.3 } ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            type: "material",
+                                                            baseColor:      { r: 0.05, g: 0.05, b: 1.0 },
+                                                            specularColor:  { r: 0.05, g: 0.05, b: 1.0 },
+                                                            specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
+                                                            nodes: [ 
+                                                                {
+                                                                    type: "translate", x: 0.0, y: 0.0, z: 4.5,
+                                                                    nodes: [ { type: "cube", xSize: 0.3, ySize: 0.3, zSize: 8.0 } ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ] 
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         },
 
                         // Sun and related objects
@@ -1296,9 +1378,7 @@ SceneJS.createNode({
                                                                                         // Earth Surface Indicator
                                                                                         {
                                                                                             type: "node",
-                                                                                            flags: {
-                                                                                                transparent: false
-                                                                                            },
+                                                                                            flags: { transparent: false },
 
                                                                                             nodes: [
 
@@ -1331,71 +1411,61 @@ SceneJS.createNode({
                                                                                                                             z: 0,
 
                                                                                                                             nodes: [
-                                                                                                                                                                                                                                                            
-                                                                                                                                {
-                                                                                                                                    type: "node",
-                                                                                                                                    // wireframe: false,
-                                                                                                                                    // lineWidth: 1,
-                                                                                                                                     
-                                                                                                                                    nodes: [
-                                                                                                                                    
-                                                                                                                                       { 
-                                                                                                                                           type: "material",
-                                                                                                                                           baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
-                                                                                                                                           specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
-                                                                                                                                    
-                                                                                                                                           specular:       0.5,
-                                                                                                                                           shine:          0.001,
-                                                                                                                                    
-                                                                                                                                           nodes: [
-                                                                                                                                    
-                                                                                                                                               {
-                                                                                                                                                   type: "disk",
-                                                                                                                                                   radius: 200 * earth.km,
-                                                                                                                                                   height: surface.min_height / 2,
-                                                                                                                                                   rings: 48
-                                                                                                                                    
-                                                                                                                                               },
-                                                                                                                                           ]
-                                                                                                                                       },
-                                                                                                                                    ]
-                                                                                                                                },
-                                                                                                                                
+
                                                                                                                                 { 
                                                                                                                                     type: "material",
-                                                                                                                                    baseColor:      { r: 0.5, g: 0.1, b: 0.1 },
-                                                                                                                                    specularColor:  { r: 0.5, g: 0.1, b: 0.1 },
+                                                                                                                                    id:   "surface-disk-material",
+                                                                                                                                    baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
+                                                                                                                                    specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
+                                                                                                                                
+                                                                                                                                    specular:       0.05,
+                                                                                                                                    shine:          0.0001,
+                                                                                                                                
+                                                                                                                                    nodes: [
+                                                                                                                                
+                                                                                                                                        {
+                                                                                                                                            type: "disk",
+                                                                                                                                            radius: 200 * earth.km,
+                                                                                                                                            height: surface.min_height / 2,
+                                                                                                                                            rings: 48
+                                                                                                                                
+                                                                                                                                        },
+                                                                                                                                    ]
+                                                                                                                                },
 
-                                                                                                                                    specular:       0.5,
-                                                                                                                                    shine:          0.1,
-                                                                                                                                    emit:           0.5,
+                                                                                                                                {
+                                                                                                                                    type: "node",
+                                                                                                                                    flags: { transparent: true },
 
                                                                                                                                     nodes: [
-                                                                                                                                    
-                                                                                                                                        {
-                                                                                                                                            type: "translate",
-                                                                                                                                            x: 10,
-                                                                                                                                            y: 0.1,
-                                                                                                                                            z: 10,
-                                                                                                                                    
+                                                                                                                                        { 
+                                                                                                                                            type: "material",
+                                                                                                                                            baseColor:      { r: 0.5, g: 0.05, b: 0.05 },
+                                                                                                                                            specularColor:  { r: 0.5, g: 0.05, b: 0.05 },
+
+                                                                                                                                            specular:       0.5,
+                                                                                                                                            shine:          0.1,
+                                                                                                                                            emit:           0.5,
+                                                                                                                                            alpha:          0.5,
+
                                                                                                                                             nodes: [
-                                                                                                                                            
+                                                                                                                                    
                                                                                                                                                 {
-                                                                                                                                                    type: "billboard",
+                                                                                                                                                    type: "translate",
+                                                                                                                                                    x: 10,
+                                                                                                                                                    y: 0.1,
+                                                                                                                                                    z: 10,
+                                                                                                                                    
                                                                                                                                                     nodes: [
+                                                                                                                                            
                                                                                                                                                         {
-                                                                                                                                                            type: "texture",
-                                                                                                                                                            layers: [ { uri: "images/east2.png" } ],
+                                                                                                                                                            type: "billboard",
                                                                                                                                                             nodes: [
-                                                                                                                                                            
                                                                                                                                                                 {
-                                                                                                                                                                    type: "node",
-
-                                                                                                                                                                    flags: {
-                                                                                                                                                                        transparent: true
-                                                                                                                                                                    },
-
+                                                                                                                                                                    type: "texture",
+                                                                                                                                                                    layers: [ { uri: "images/east2.png" } ],
                                                                                                                                                                     nodes: [
+                                                                                                                                                            
 
                                                                                                                                                                         {
 
@@ -1405,7 +1475,7 @@ SceneJS.createNode({
 
                                                                                                                                                                             nodes: [
 
-                                                                                                                                                                
+                                                                                                                                                        
                                                                                                                                                                                 {
                                                                                                                                                                                     type: "quad",
                                                                                                                                                                                     xSize: 200 * earth.km,
@@ -1418,50 +1488,49 @@ SceneJS.createNode({
                                                                                                                                                             ]
                                                                                                                                                         }
                                                                                                                                                     ]
-                                                                                                                                                }
-                                                                                                                                            ]
-                                                                                                                                        },
-                                                                                                                                        
-                                                                                                                                        
-                                                                                                                                        {
-                                                                                                                                            type: "translate",
-                                                                                                                                            x: 0,
-                                                                                                                                            y: 0.0003,
-                                                                                                                                            z: 0,
-                                                                                                                                        
-                                                                                                                                            nodes: [
-
-                                                                                                                                                {
-                                                                                                                                                    type: "rotate",
-                                                                                                                                                    angle: 90,
-                                                                                                                                                    x: 1.0,
-                                                                                                                                                
-                                                                                                                                                    nodes: [
-
-                                                                                                                                                        {
-                                                                                                                                                            type: "quad",
-                                                                                                                                                            xSize: 200 * earth.km,
-                                                                                                                                                            ySize: 0.5 * earth.km
-                                                                                                                                                        }
-                                                                                                                                                    ]
                                                                                                                                                 },
-                                                                                                                                        
+
                                                                                                                                                 {
-                                                                                                                                                    type: "rotate",
-                                                                                                                                                    angle: 90,
-                                                                                                                                                    y: 1.0,
-                                                                                                                                                    
+                                                                                                                                                    type: "translate",
+                                                                                                                                                    x: 0,
+                                                                                                                                                    y: 0.0003,
+                                                                                                                                                    z: 0,
+                                                                                                                                
                                                                                                                                                     nodes: [
+
                                                                                                                                                         {
                                                                                                                                                             type: "rotate",
                                                                                                                                                             angle: 90,
                                                                                                                                                             x: 1.0,
-
+                                                                                                                                        
                                                                                                                                                             nodes: [
+
                                                                                                                                                                 {
                                                                                                                                                                     type: "quad",
                                                                                                                                                                     xSize: 200 * earth.km,
                                                                                                                                                                     ySize: 0.5 * earth.km
+                                                                                                                                                                }
+                                                                                                                                                            ]
+                                                                                                                                                        },
+                                                                                                                                
+                                                                                                                                                        {
+                                                                                                                                                            type: "rotate",
+                                                                                                                                                            angle: 90,
+                                                                                                                                                            y: 1.0,
+                                                                                                                                            
+                                                                                                                                                            nodes: [
+                                                                                                                                                                {
+                                                                                                                                                                    type: "rotate",
+                                                                                                                                                                    angle: 90,
+                                                                                                                                                                    x: 1.0,
+
+                                                                                                                                                                    nodes: [
+                                                                                                                                                                        {
+                                                                                                                                                                            type: "quad",
+                                                                                                                                                                            xSize: 200 * earth.km,
+                                                                                                                                                                            ySize: 0.5 * earth.km
+                                                                                                                                                                        }
+                                                                                                                                                                    ]
                                                                                                                                                                 }
                                                                                                                                                             ]
                                                                                                                                                         }
@@ -1475,9 +1544,9 @@ SceneJS.createNode({
 
                                                                                                                                 { 
                                                                                                                                     type: "material",
+                                                                                                                                    id:   "flagpole-material",
                                                                                                                                     baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
                                                                                                                                     specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
-
                                                                                                                                     specular:       0.5,
                                                                                                                                     shine:          0.001,
 
@@ -2043,6 +2112,10 @@ function calculateSurfaceEyeUpLook() {
 var was_earth_grid_checked = false;
 var was_sunrise_set_checked = false;
 
+var surface_lookat_bubble_selector = SceneJS.withNode("surface-lookat-bubble-selector");
+var surface_lookat_bubble_pos = SceneJS.withNode("surface-lookat-bubble-pos");
+var surface_lookat_bubble_scale = SceneJS.withNode("surface-lookat-bubble-scale");
+
 function setupSurfaceView() {
     
     was_earth_grid_checked = earth_grid.checked;
@@ -2070,6 +2143,9 @@ function setupSurfaceView() {
         y: surface_earth_scale_factor, 
         z: surface_earth_scale_factor
     });
+    
+    var surface_300m = surface.meter * 300;
+    surface_lookat_bubble_scale.set({ x: surface_300m, y: surface_300m, z: surface_300m });
     // earth_sub_graph._targetNode._setDirty();
     var optics = camera.get("optics");
     optics.fovy = 50;
@@ -2124,6 +2200,8 @@ function updateSurfaceViewLookAt() {
         vec3.subtract(new_surface_eye_vec3, new_surface_look_vec3, new_surface_look_vec3);
         vec3.add(surface_look_global, new_surface_look_vec3, new_surface_look_global);
         look_at.set("look", { x: new_surface_look_global[0],  y: new_surface_look_global[1],  z: new_surface_look_global[2] });
+    if (debug_view.checked) {
+        surface_lookat_bubble_pos.set(lookat.look);
     };
     debugLabel();
 };
@@ -2389,15 +2467,28 @@ function update_surface_height(d) {
 }
 
 function decrementSurfaceDistance() {
-    if (surface.distance > 1) {
+    if (debug_view.checked) {
+        surface.distance -= 10;
+    } else {
         surface.distance -= 0.1;
+    };
+    if (surface.distance < 1) {
+        surface.distance = 1;
     };
 };
 
 function incrementSurfaceDistance() {
-    if (surface.distance < 25) {
+    if (debug_view.checked) {
+        surface.distance += 10;
+        if (surface.distance > 2500) {
+            surface.distance = 2500;
+        };
+    } else {
         surface.distance += 0.1;
-    };    
+        if (surface.distance > 25) {
+            surface.distance = 25;
+        };
+    };
 };
 
 function handleArrowKeysSurfaceView(evt) {
@@ -2546,9 +2637,11 @@ function debugLabel() {
         if (debug_view.checked) {
             debug_label.style.opacity = 0.6;
             debug_content.style.display = null;
+            surface_lookat_bubble_selector.set("selection", [1]);
         } else {
             debug_content.style.display = "none";
             debug_label.style.opacity = null;
+            surface_lookat_bubble_selector.set("selection", [0]);
         };
 
         var eye = look_at.get("eye");
