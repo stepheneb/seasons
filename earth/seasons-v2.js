@@ -117,7 +117,7 @@ var earthOrbitData = {
 // San Francisco: 38, 122
 
 var surface_line_width = earth.radius / 200;
-var surface_earth_scale_factor = 100;
+var surface_earth_scale_factor = 50;
 
 var surface = {
     // latitude: 38,
@@ -126,7 +126,8 @@ var surface = {
     longitude: 90,
     yaw: 0,
     pitch: 0,
-    distance: 4,
+    distance: 150 * km * surface_earth_scale_factor,
+    min_distance: 10 * km * surface_earth_scale_factor,
     lookat_yaw: 0,
     lookat_pitch: 0,
     min_height: 10 *  meter * surface_earth_scale_factor,
@@ -135,8 +136,8 @@ var surface = {
     km: km * surface_earth_scale_factor,
     meter: meter * surface_earth_scale_factor,
     flagpole: {
-        radius: 0.5 *  meter * surface_earth_scale_factor,
-        height: 10 *  meter * surface_earth_scale_factor,
+        radius: 5 *  meter * surface_earth_scale_factor,
+        height: 100 *  meter * surface_earth_scale_factor,
         pos: { x: 0, y: 0, z: 0 },
         material: {
             day: {
@@ -156,8 +157,8 @@ var surface = {
         }
     },
     disk: {
-        width: 100 * earth.km,
-        height: 10 *  meter * surface_earth_scale_factor,
+        width: 500 * earth.km,
+        height: earth.km,
         material: {
             day: {
                 baseColor:      { r: 0.01, g: 0.1, b: 0.0 },
@@ -181,6 +182,13 @@ var surface = {
         }
     }
 };
+
+
+var bubble_gnomon_radius = 40000 * surface.flagpole.radius;
+var bubble_gnomon_length = bubble_gnomon_radius * 2.5;
+var bubble_gnomon_width  = bubble_gnomon_radius / 10;
+var gnomon_label_size = bubble_gnomon_width * surface_earth_scale_factor * 0.001;
+
 
 var earth_tilt_quat = quat4.axisVecAngleDegreesCreate(earth_tilt_axis,  earth.tilt);
 
@@ -351,7 +359,7 @@ SceneJS.createNode({
                     nodes: [ 
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
-                                { type: "quad", xSize: 0.05, ySize: 0.05 }
+                                { type: "quad", xSize: gnomon_label_size, ySize: gnomon_label_size }
                             ]
                         }
                     ]
@@ -373,7 +381,7 @@ SceneJS.createNode({
                     nodes: [ 
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
-                                { type: "quad", xSize: 0.05, ySize: 0.05 }
+                                { type: "quad", xSize: gnomon_label_size, ySize: gnomon_label_size }
                             ]
                         }
                     ]
@@ -395,7 +403,7 @@ SceneJS.createNode({
                     nodes: [ 
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
-                                { type: "quad", xSize: 0.05, ySize: 0.05 }
+                                { type: "quad", xSize: gnomon_label_size, ySize: gnomon_label_size }
                             ]
                         }
                     ]
@@ -662,14 +670,16 @@ SceneJS.createNode({
                                 {
                                     type: "scale",
                                     id: "surface-lookat-bubble-scale",
-                                    x: 0.03,
-                                    y: 0.03,
-                                    z: 0.03,
+                                    // x: 0.001,
+                                    // y: 0.001,
+                                    // z: 0.001,
+                                    // x: surface.meter * 500,
+                                    // y: surface.meter * 500,
+                                    // z: surface.meter * 500,
                                     
                                     nodes: [
 
                                         {
-
                                             type: "selector",
                                             id: "surface-lookat-bubble-selector",
                                             selection: [0],
@@ -692,7 +702,7 @@ SceneJS.createNode({
                                                             baseColor:      { r: 1.0, g: 0.05, b: 0.05 },
                                                             specularColor:  { r: 1.0, g: 0.05, b: 0.05 },
                                                             specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
-                                                            nodes: [ { type: "sphere", slices: 48, rings: 48, radius: 4 } ]
+                                                            nodes: [ { type: "sphere", slices: 48, rings: 48, radius: bubble_gnomon_radius } ]
                                                         },
                                                         {
                                                             type: "material",
@@ -701,8 +711,8 @@ SceneJS.createNode({
                                                             specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
                                                             nodes: [ 
                                                                 {
-                                                                    type: "translate", x: 4.5, y: 0.0, z: 0.0,
-                                                                    nodes: [ { type: "cube", xSize: 8.0, ySize: 0.3, zSize: 0.3 } ]
+                                                                    type: "translate", x: bubble_gnomon_length, y: 0.0, z: 0.0,
+                                                                    nodes: [ { type: "cube", xSize: bubble_gnomon_length, ySize: bubble_gnomon_width, zSize: bubble_gnomon_width } ]
                                                                 }
                                                             ]
                                                         },
@@ -714,8 +724,8 @@ SceneJS.createNode({
                                                             specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
                                                             nodes: [ 
                                                                 {
-                                                                    type: "translate", x: 0.0, y: 4.5, z: 0.0,
-                                                                    nodes: [ { type: "cube", xSize: 0.3, ySize: 8.0, zSize: 0.3 } ]
+                                                                    type: "translate", x: 0.0, y: bubble_gnomon_length, z: 0.0,
+                                                                    nodes: [ { type: "cube", xSize: bubble_gnomon_width, ySize: bubble_gnomon_length, zSize: bubble_gnomon_width } ]
                                                                 }
                                                             ]
                                                         },
@@ -726,8 +736,8 @@ SceneJS.createNode({
                                                             specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
                                                             nodes: [ 
                                                                 {
-                                                                    type: "translate", x: 0.0, y: 0.0, z: 4.5,
-                                                                    nodes: [ { type: "cube", xSize: 0.3, ySize: 0.3, zSize: 8.0 } ]
+                                                                    type: "translate", x: 0.0, y: 0.0, z: bubble_gnomon_length,
+                                                                    nodes: [ { type: "cube", xSize: bubble_gnomon_width, ySize: bubble_gnomon_width, zSize: bubble_gnomon_length } ]
                                                                 }
                                                             ]
                                                         },
@@ -743,17 +753,17 @@ SceneJS.createNode({
                                                             nodes: [
                                                                 {
                                                                     type: "translate",
-                                                                    x: 16,  y: 0, z: 0,
+                                                                    x: bubble_gnomon_length * 2.2,  y: 0, z: 0,
                                                                     nodes: [ { type: "instance", target: "x-label" } ]
                                                                 },
                                                                 {
                                                                     type: "translate",
-                                                                    x: 0,  y: 16, z: 0,
+                                                                    x: 0,  y: bubble_gnomon_length * 2.2, z: 0,
                                                                     nodes: [ { type: "instance", target: "y-label" } ]
                                                                 },
                                                                 {
                                                                     type: "translate",
-                                                                    x: 0,  y: 0, z: 16,
+                                                                    x: 0,  y: 0, z: bubble_gnomon_length * 2.2,
                                                                     nodes: [ { type: "instance", target: "z-label" } ]
                                                                 }
                                                             ]
