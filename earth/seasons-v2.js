@@ -2859,33 +2859,22 @@ function update_surface_height(d) {
 }
 
 function decrementSurfaceDistance() {
-    if (debug_view.checked) {
-        surface.distance -= 10;
-    } else {
-        surface.distance -= 0.1;
-    };
-    if (surface.distance < 1) {
-        surface.distance = 1;
+    surface.distance -= Math.log(surface.distance + surface.min_distance * 2) / 10;
+    if (surface.distance < surface.min_distance) {
+        surface.distance = surface.min_distance;
     };
 };
 
-function incrementSurfaceDistance(num) {
-    if (num == undefined) {
-        var num = debug_view.checked ? 10 : 0.1
-    };
+function incrementSurfaceDistance() {
+    surface.distance += Math.log(surface.distance + surface.min_distance * 2) / 10;
     if (debug_view.checked) {
-        surface.distance += 10;
-        if (surface.distance > 2500) {
-            surface.distance = 2500;
+        if (surface.distance > surface.max_distance * 100) {
+            surface.distance = surface.max_distance * 100;
         };
     } else {
-        surface.distance += 0.1;
-        if (surface.distance > 25) {
-            surface.distance = 25;
+        if (surface.distance > surface.max_distance) {
+            surface.distance = surface.max_distance;
         };
-    };
-    if (surface.distance < 1) {
-        surface.distance = 1;
     };
 };
 
