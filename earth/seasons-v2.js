@@ -2758,6 +2758,7 @@ function decrementDistance() {
 the_canvas.addEventListener('mousedown', mouseDown, true);
 the_canvas.addEventListener('mousemove', mouseMove, true);
 the_canvas.addEventListener('mouseup', mouseUp, true);
+the_canvas.addEventListener('mousewheel', mouseWheel, true);
 
 function handleArrowKeysEarthInSpace(evt) {
     var distanceIncrementFactor = 40;
