@@ -1481,8 +1481,8 @@ SceneJS.createNode({
                                                                                         {
                                                                                             type:          "material",
                                                                                             id:            "atmosphere-material",
-                                                                                            baseColor:      { r: 0.0, g: 0.5, b: 1.0 },
-                                                                                            specularColor:  { r: 0.0, g: 0.5, b: 1.0 },
+                                                                                            baseColor:      { r: 0.0, g: 0.2, b: 1.0 },
+                                                                                            specularColor:  { r: 0.0, g: 0.2, b: 1.0 },
                                                                                             specular:       1.0,
                                                                                             shine:          1.0,
                                                                                             alpha:          0.5,
@@ -3223,9 +3223,9 @@ function spectralSolarRadiation(alt) {
     }
     if (surface_view.checked) {
         normalized = {
-            r: radiation.red   / 45,
-            g: radiation.green / 45,
-            b: radiation.blue  / 45
+            r: Math.max(0, (Math.log(radiation.red   / 10) * 2 + 16) / 4),
+            g: Math.max(0, (Math.log(radiation.green / 10) * 2 + 16) / 4),
+            b: Math.max(0, (Math.log(radiation.blue  / 10) * 2 + 16) / 4)
         };
         sun_light.set("color", normalized);
         sun_material.set("baseColor", normalized);
@@ -3827,4 +3827,3 @@ scene.start({
         sampleAnimate();
     }
 });
-
