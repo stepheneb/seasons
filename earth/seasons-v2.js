@@ -40,7 +40,7 @@ var orbitalTilt = 23.45;
 
 var AU = 149597870.691;
 
-var scale_factor = 500;
+var scale_factor = 1000;
 
 var sun_diameter =         1392000.0 / scale_factor;
 var earth_diameter =         12742.0 / scale_factor;
