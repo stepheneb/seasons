@@ -2933,7 +2933,7 @@ function debugLabel() {
         labelStr += sprintf("Yaw:  %3.0f, Pitch: %4.1f<br>", yaw, pitch);
         labelStr += sprintf("LookAt Yaw:  %4.1f<br>", lookat_yaw);
         labelStr += sprintf("Rot:  %4.1f, Day angle: %3.3f<br>", earth.rotation, day_of_year_angle);
-        labelStr += sprintf("Angle: %4.1f, Radius: %4.1f<br>", angle.get().angle, earth.radius);
+        labelStr += sprintf("Angle: %4.1f, Radius: %4.1f, Dist: %4.1f<br>", angle.get().angle, earth.radius, distance);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Surface</b><br />";
