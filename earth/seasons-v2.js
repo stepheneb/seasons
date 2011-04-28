@@ -3104,7 +3104,7 @@ function solarRadiation(alt) {
     if (surface_view.checked) {
         flags = atmosphere_transparent.get('flags');
     };
-    if (alt > 0) {
+    if (alt >= 0) {
         if (surface_view.checked) {
             flags.transparent = true;
         };
