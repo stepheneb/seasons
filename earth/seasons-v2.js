@@ -325,9 +325,7 @@ var initial_eye_mat4;
 var initial_eye_vec3 = vec3.create();
 var initial_eye = {};
 
-function update_initial_eye(d) {
-    if (d < (earth.radius * 1.5)) d = earth.radius * 1.5;
-    distance = d;
+function update_initial_eye() {
     initial_eye_quat = quat4.axisAngleDegreesCreate(1, 0, 0, 0);
     initial_eye_mat4 = quat4.toMat4(initial_eye_quat);
     mat4.multiplyVec3(initial_eye_mat4, [0, 0,  distance], initial_eye_vec3);
@@ -338,8 +336,7 @@ function update_initial_eye(d) {
     };
 };
 
-update_initial_eye(distance);
-
+update_initial_eye();
 
 SceneJS.createNode({
     id: "x-label",
@@ -2239,26 +2236,6 @@ var new_surface_eye_global = [];
 var surface_look_global = [];
 var new_surface_look_global = [];
 
-
-function calculate_surface_cross(lat, lon) {
-    if (lat == undefined) {
-        var lat = surface.latitude;
-        var lon = surface.longitude;
-    };
-    lat += 90;
-    if (lat > 90 ) {
-        lat -= surface.latitude * 2;
-        lon = -lon;
-    } else if (lat < -90) {
-        lat -= surface.latitude * 2;
-        lon = -lon;        
-    };
-    surface_up_minus_90_vec3 = lat_long_to_cartesian_corrected_for_tilt(lat, lon);
-    quat4.multiplyVec3(orbit_correction_quat, surface_up_minus_90_vec3);
-    vec3.cross(surface_up_vec3, surface_up_minus_90_vec3, surface_cross_vec3);
-    return surface_cross_vec3;
-};
-
 function lat_long_to_cartesian(lat, lon, r) {
     r = r || 1;
     return [-r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
@@ -2339,6 +2316,25 @@ function lat_long_to_global_cartesian(lat, lon, r) {
 
 };
 
+function calculate_surface_cross(lat, lon) {
+    if (lat == undefined) {
+        var lat = surface.latitude;
+        var lon = surface.longitude;
+    };
+    lat += 90;
+    if (lat > 90 ) {
+        lat -= surface.latitude * 2;
+        lon = -lon;
+    } else if (lat < -90) {
+        lat -= surface.latitude * 2;
+        lon = -lon;        
+    };
+    surface_up_minus_90_vec3 = lat_long_to_cartesian_corrected_for_tilt(lat, lon);
+    quat4.multiplyVec3(orbit_correction_quat, surface_up_minus_90_vec3);
+    vec3.cross(surface_up_vec3, surface_up_minus_90_vec3, surface_cross_vec3);
+    return surface_cross_vec3;
+};
+
 function calculateSurfaceEyeUpLook() {
     
     // calculate unit vector from center of Earth to surface location
@@ -2373,6 +2369,67 @@ function calculateSurfaceEyeUpLook() {
 
 var was_earth_grid_checked = false;
 var was_sunrise_set_checked = false;
+function calculateSurfacePitchAxis(up, yaw) {
+    var pitch_axis = [];
+    var yaw_normalized = vec3.normalize(yaw);
+    vec3.cross(up, yaw, pitch_axis);
+    return pitch_axis;
+};
+
+//
+// inputs: 
+//    surface.yaw, surface.pitch
+//    surface.lookat_yaw, surface.lookat_pitch
+
+function updateSurfaceViewLookAt() {
+    var result_quat = quat4.create();
+    
+    // update the scenegraph lookAt
+    var lookat = calculateSurfaceEyeUpLook();
+    // look_at.set("eye", lookat.eye);
+    look_at.set("up", lookat.up);
+    
+    vec3.scale(surface_cross_vec3, surface.distance * 10000 * surface.meter, surface_eye_vec3);    
+
+    // calculate a yaw quaternion for rotation left-right around the lookAt point
+    var yaw_quat = quat4.axisVecAngleDegreesCreate(surface_up_vec3, surface.yaw);
+    
+    // calculate a yaw vector for calculating a pitch axis
+    var yaw_vec3 = []; quat4.multiplyVec3(yaw_quat, surface_eye_vec3, yaw_vec3);
+    
+    // calculate a pitch axis and quat for rotation up-down around the lookAt point
+    var pitch_axis = calculateSurfacePitchAxis(surface_up_vec3, yaw_vec3);
+    var pitch_quat =  quat4.axisVecAngleDegreesCreate(pitch_axis, -surface.pitch);
+
+    // combine the yaw and pitch quats and apply to the initial surface_eye
+    quat4.multiply(pitch_quat, yaw_quat, result_quat);
+    quat4.multiplyVec3(result_quat, surface_eye_vec3, new_surface_eye_vec3);
+
+    // update the global surface eye
+    vec3.add(surface_look_global, new_surface_eye_vec3, new_surface_eye_global);
+    look_at.set("eye", { x: new_surface_eye_global[0],  y: new_surface_eye_global[1],  z: new_surface_eye_global[2] });
+
+    // calculate pitch and yaw rotation of where you are looking at in the surface POV
+    var lookat_pitch_quat = quat4.axisVecAngleDegreesCreate(pitch_axis, -surface.lookat_pitch); 
+    quat4.multiplyVec3(lookat_pitch_quat, new_surface_eye_vec3, new_surface_look_vec3);
+    var lookat_yaw_quat = quat4.axisVecAngleDegreesCreate(surface_up_vec3, surface.lookat_yaw); 
+    quat4.multiplyVec3(lookat_yaw_quat, new_surface_eye_vec3, new_surface_look_vec3);
+
+    // combine the lookat pitch and yaw quats and apply to the initial surface lookAt
+    quat4.multiply(lookat_pitch_quat, lookat_yaw_quat, result_quat);
+
+    quat4.multiplyVec3(result_quat, new_surface_eye_vec3, new_surface_look_vec3);
+    vec3.subtract(new_surface_eye_vec3, new_surface_look_vec3, new_surface_look_vec3);
+    vec3.add(surface_look_global, new_surface_look_vec3, new_surface_look_global);
+    lookat.look = { x: new_surface_look_global[0],  y: new_surface_look_global[1],  z: new_surface_look_global[2] };
+
+    look_at.set("look",  lookat.look);
+    if (debug_view.checked) {
+        surface_lookat_bubble_pos.set(lookat.look);
+    };
+    debugLabel();
+};
+
 
 var surface_lookat_bubble_selector = SceneJS.withNode("surface-lookat-bubble-selector");
 var surface_lookat_bubble_pos = SceneJS.withNode("surface-lookat-bubble-pos");
@@ -2423,50 +2480,6 @@ function setupSurfaceView() {
 
 };
 
-
-//
-// inputs: 
-//    surface.yaw, surface.pitch
-//    surface.lookat_yaw, surface.lookat_pitch
-
-function updateSurfaceViewLookAt() {
-    var result_quat = quat4.create();
-    
-    // update the scenegraph lookAt
-    var lookat = calculateSurfaceEyeUpLook();
-    // look_at.set("eye", lookat.eye);
-    look_at.set("up", lookat.up);
-
-    vec3.scale(surface_cross_vec3, surface.distance * 10000 * surface.meter, surface_eye_vec3);    
-
-    var yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.yaw);
-    var pitch_quat = quat4.axisAngleDegreesCreate(surface_up_minus_90_vec3[0], surface_up_minus_90_vec3[1], surface_up_minus_90_vec3[2], surface.pitch);
-    quat4.multiply(pitch_quat, yaw_quat, result_quat);
-    
-    quat4.multiplyVec3(result_quat, surface_eye_vec3, new_surface_eye_vec3);
-    vec3.add(surface_look_global, new_surface_eye_vec3, new_surface_eye_global);
-    look_at.set("eye", { x: new_surface_eye_global[0],  y: new_surface_eye_global[1],  z: new_surface_eye_global[2] });
-
-    // var lookat_yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.yaw);
-    // var lookat_pitch_quat = quat4.axisAngleDegreesCreate(surface_up_minus_90_vec3[0], surface_up_minus_90_vec3[1], surface_up_minus_90_vec3[2], surface.pitch);
-    // var surface_look_global = [];
-    // var new_surface_look_global = [];
-
-    // next handle a possible yaw rotation to to look left or right of the flagpole in the surface POV
-    if (surface.lookat_yaw) {
-        var rot_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.lookat_yaw); 
-    
-        quat4.multiplyVec3(rot_quat, new_surface_eye_vec3, new_surface_look_vec3);
-        vec3.subtract(new_surface_eye_vec3, new_surface_look_vec3, new_surface_look_vec3);
-        vec3.add(surface_look_global, new_surface_look_vec3, new_surface_look_global);
-        lookat.look = { x: new_surface_look_global[0],  y: new_surface_look_global[1],  z: new_surface_look_global[2] };
-    };
-    look_at.set("look",  lookat.look);
-    if (debug_view.checked) {
-        surface_lookat_bubble_pos.set(lookat.look);
-    };
-    debugLabel();
-};
 
 function updateLookAt() {
     if (surface_view.checked) {
@@ -2590,7 +2603,7 @@ function incrementSurfaceLookatYaw(num) {
 };
 
 function incrementSurfaceLookatPitch(num) {
-    surface.lookat_pitch += num;
+    surface.lookat_pitch -= num;
     if (surface.lookat_pitch > max_pitch)  surface.lookat_pitch =  max_pitch;
     if (surface.lookat_pitch < -max_pitch) surface.lookat_pitch = -max_pitch;
     return surface.lookat_pitch;
@@ -2619,7 +2632,7 @@ function mouseMove(event) {
         
         if (surface_view.checked) {
             surface.yaw   += (event.clientX - lastX) * -0.2;
-            surface.pitch += (event.clientY - lastY) * -0.2;
+            surface.lookat_pitch -= (event.clientY - lastY) * -0.2;
         } else {
             yaw   += (event.clientX - lastX) * -0.2;
             pitch += (event.clientY - lastY) * -0.2;
@@ -2632,6 +2645,28 @@ function mouseMove(event) {
         if (!keepAnimating) requestAnimFrame(sampleAnimate);
     }
 }
+
+
+var distanceIncrementFactor = 30;
+var distanceIincrement = distance / distanceIncrementFactor;
+
+function setDistance(d) {
+    if (d < (earth.radius * 1.5)) d = earth.radius * 1.5;
+    distance = d;
+    return distance;
+};
+
+function incrementDistance() {
+    distanceIincrement = distance / distanceIncrementFactor;
+    setDistance(distance + distanceIincrement);
+    update_initial_eye();
+};
+
+function decrementDistance() {
+    distanceIincrement = distance / distanceIncrementFactor;
+    setDistance(distance - distanceIincrement);
+    update_initial_eye();
+};
 
 the_canvas.addEventListener('mousedown', mouseDown, true);
 the_canvas.addEventListener('mousemove', mouseMove, true);
@@ -2662,8 +2697,7 @@ function handleArrowKeysEarthInSpace(evt) {
 
             case 38:                                    // up arrow
                 if (evt.ctrlKey) {
-                    var increment = distance / distanceIncrementFactor;
-                    update_initial_eye(distance - increment);
+                    decrementDistance();
                     updateLookAt();
                     evt.preventDefault();
                 } else if (evt.altKey) {
@@ -2701,9 +2735,7 @@ function handleArrowKeysEarthInSpace(evt) {
 
             case 40:                                    // down arrow
                 if (evt.ctrlKey) {
-                    var increment = distance / distanceIncrementFactor;
-                    update_initial_eye(distance + increment);
-                    updateLookAt();
+                    incrementDistance();
                     evt.preventDefault();
                 } else if (evt.altKey) {
                     decrementLatitude(); 
@@ -2739,7 +2771,10 @@ function decrementSurfaceDistance() {
     };
 };
 
-function incrementSurfaceDistance() {
+function incrementSurfaceDistance(num) {
+    if (num == undefined) {
+        var num = debug_view.checked ? 10 : 0.1
+    };
     if (debug_view.checked) {
         surface.distance += 10;
         if (surface.distance > 2500) {
@@ -2751,10 +2786,12 @@ function incrementSurfaceDistance() {
             surface.distance = 25;
         };
     };
+    if (surface.distance < 1) {
+        surface.distance = 1;
+    };
 };
 
 function handleArrowKeysSurfaceView(evt) {
-    var distanceIncrementFactor = 30;
     evt = (evt) ? evt : ((window.event) ? event : null); 
     if (evt) {
         switch (evt.keyCode) {
@@ -2786,10 +2823,10 @@ function handleArrowKeysSurfaceView(evt) {
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    incrementSurfaceLookatPitch(2); 
+                    incrementSurfacePitch(2);
                     evt.preventDefault();
                 } else {
-                    incrementSurfacePitch(-2);
+                    incrementSurfaceLookatPitch(2); 
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -2823,10 +2860,10 @@ function handleArrowKeysSurfaceView(evt) {
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    incrementSurfaceLookatPitch(-2); 
+                    incrementSurfacePitch(-2);
                     evt.preventDefault();
                 } else {
-                    incrementSurfacePitch(2);
+                    incrementSurfaceLookatPitch(-2); 
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
