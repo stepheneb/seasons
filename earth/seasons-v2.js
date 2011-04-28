@@ -520,7 +520,7 @@ SceneJS.createNode({
                         fovy: 50.0,
                         aspect: 1.43,
                         near: 0.05,
-                        far: milky_way_apparent_radius * 10,
+                        far: milky_way_apparent_radius * 20,
                     },
 
                     nodes: [
