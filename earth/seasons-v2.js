@@ -2179,6 +2179,12 @@ function setupEarthInSpace() {
         was_sunrise_set_checked = false;
     };
 
+    if (was_sun_earth_line_checked) {
+        sun_earth_line.checked = true;
+        sunEarthLineHandler();
+        was_sun_earth_line_checked = false;
+    };
+
     look_at.set("up", { x: up[0], y: up[1], z: up[2] });
 };
 
@@ -2367,8 +2373,6 @@ function calculateSurfaceEyeUpLook() {
     return lookat;
 };
 
-var was_earth_grid_checked = false;
-var was_sunrise_set_checked = false;
 function calculateSurfacePitchAxis(up, yaw) {
     var pitch_axis = [];
     var yaw_normalized = vec3.normalize(yaw);
@@ -2430,6 +2434,9 @@ function updateSurfaceViewLookAt() {
     debugLabel();
 };
 
+var was_earth_grid_checked = earth_grid.checked;
+var was_sunrise_set_checked = sunrise_set.checked;
+var was_sun_earth_line_checked = sun_earth_line.checked;
 
 var surface_lookat_bubble_selector = SceneJS.withNode("surface-lookat-bubble-selector");
 var surface_lookat_bubble_pos = SceneJS.withNode("surface-lookat-bubble-pos");
@@ -2440,9 +2447,15 @@ function setupSurfaceView() {
     was_earth_grid_checked = earth_grid.checked;
     earth_grid.checked = false;
     earthGridHandler();
+
     was_sunrise_set_checked = sunrise_set.checked;
     sunrise_set.checked = false;
     sunRiseSetHandler();
+
+    was_sun_earth_line_checked = sun_earth_line.checked;
+    sun_earth_line.checked = false;
+    sunEarthLineHandler();
+
     milky_way_material.set("emit", 0.8);
 
     sun_material.set("specular", 1.0);
