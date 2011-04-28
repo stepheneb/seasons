@@ -2660,6 +2660,37 @@ function mouseMove(event) {
     }
 }
 
+function mouseWheel(event) {
+    var delta = 0;
+    if (!event) event = window.event;
+    if (event.wheelDelta) {
+        delta = event.wheelDelta / 120;
+        if (window.opera) delta = -delta;
+    } else if (event.detail) {
+        delta = -event.detail / 3;
+    }
+    if (surface_view.checked) {
+        if (delta > 0) {
+            incrementSurfaceDistance();
+        } else {
+            decrementSurfaceDistance();
+        };
+    } else {
+        if (delta > 0) {
+            incrementDistance();
+        } else {
+            decrementDistance();
+        };
+    };
+    updateLookAt();
+    if (!keepAnimating) {
+        requestAnimFrame(sampleAnimate);
+    };
+    if (event.preventDefault) {
+        event.preventDefault();
+    };
+    event.returnValue = false;
+};
 
 var distanceIncrementFactor = 30;
 var distanceIincrement = distance / distanceIncrementFactor;
