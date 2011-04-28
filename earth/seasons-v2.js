@@ -2467,7 +2467,8 @@ function setupSurfaceView() {
     surface_lookat_bubble_scale.set({ x: surface_300m, y: surface_300m, z: surface_300m });
     // earth_sub_graph._targetNode._setDirty();
     var optics = camera.get("optics");
-    optics.fovy = 50;
+    optics.fovy = 65;
+    optics.near = 0.10;
     camera.set("optics", optics);
     latitude_line_selector.set("selection",  [0]);
     longitude_line_selector.set("selection", [0]);
