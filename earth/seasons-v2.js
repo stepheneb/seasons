@@ -1797,6 +1797,49 @@ SceneJS.createNode({
                                                                                                                                                                     ]
                                                                                                                                                                 }
                                                                                                                                                             ]
+                                                                                                                                                        },
+                                                                                                                                                        
+                                                                                                                                                        // Solar Panel
+                                                                                                                                                        {
+                                                                                                                                                            type: "translate",
+                                                                                                                                                            x: surface.flagpole.height * 1.5,
+                                                                                                                                                            y: 0,
+                                                                                                                                                            z: 0,
+
+                                                                                                                                                            nodes: [
+                                                                                                                                                            
+                                                                                                                                                                { 
+                                                                                                                                                                    type: "material",
+                                                                                                                                                                    baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                                                                                    specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                                                                                    specular:       0.1 ,
+                                                                                                                                                                    shine:          1.0,
+
+                                                                                                                                                                    nodes: [
+
+                                                                                                                                                                        {
+                                                                                                                                                                            type: "texture",
+                                                                                                                                                                            layers: [ 
+                                                                                                                                                                                { 
+                                                                                                                                                                                    uri: "images/solarpanel1.jpg",
+                                                                                                                                                                                    applyTo: "baseColor",
+                                                                                                                                                                                    blendMode: "multiply" ,
+                                                                                                                                                                                    wrapS: "repeat",
+                                                                                                                                                                                    wrapT: "repeat",
+                                                                                                                                                                                } 
+                                                                                                                                                                            ],
+                                                                                                                                                                            nodes: [
+                                                                                                                                                                                {
+                                                                                                                                                                                    type: "box",
+                                                                                                                                                                                    xSize: surface.flagpole.height / 2,
+                                                                                                                                                                                    ySize: surface.flagpole.radius / 4,
+                                                                                                                                                                                    zSize: surface.flagpole.height / 2
+                                                                                                                                                                                }
+                                                                                                                                                                            ]
+                                                                                                                                                                        }
+                                                                                                                                                                    ]
+                                                                                                                                                                }
+                                                                                                                                                            ]
                                                                                                                                                         }
                                                                                                                                                     ]
                                                                                                                                                 }
