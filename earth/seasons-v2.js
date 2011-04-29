@@ -170,8 +170,8 @@ var surface = {
             night: {
                 baseColor:      { r: 0.01, g: 0.5, b: 0.0 },
                 specularColor:  { r: 0.01, g: 0.5, b: 0.0 },
-                specular:       0.1,
-                shine:          0.1,
+                specular:       0.5,
+                shine:          0.5,
                 emit:           0.0
                 // baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
                 // specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
@@ -222,7 +222,7 @@ var orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction
 var orbit_correction_mat4 = [];
 quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
 
-var dark_side_light = 0.25;
+var dark_side_light = 0.1;
 var max_pitch = 85;
 
 var distance = earth.radius * 3;
@@ -614,15 +614,15 @@ SceneJS.createNode({
                             type: "quaternion",
                             id: "backlight-quaternion",
                             x: 0, y: 1, z: 0,
-                            angle: 90,
+                            angle: 0,
                             
                             nodes: [
                             
                                 {
                                     type: "translate",
-                                    x: earth.pos.x * 2, 
-                                    y: earth.pos.y * 2, 
-                                    z: earth.pos.z * 2,
+                                    x: earth_orbital_radius * 1.5, 
+                                    y: earth_orbital_radius * 1.5, 
+                                    z: earth_orbital_radius * 1.5,
                                     
                                     nodes: [
 
@@ -630,7 +630,7 @@ SceneJS.createNode({
                                             type: "light",
                                             id:   "backlight-node1",
                                             mode:                   "point",
-                                            pos:                    -2 * earth_orbital_radius,
+                                            pos:                    { x: -1 * earth_orbital_radius, y: 0, z: 0 },
                                             color:                  { r: 1.0, g: 1.0, b: 1.0 },
                                             diffuse:                true,
                                             specular:               true,
@@ -643,7 +643,7 @@ SceneJS.createNode({
                                             type: "light",
                                             id:   "backlight-node2",
                                             mode:                   "point",
-                                            pos:                    2 * earth_orbital_radius,
+                                            pos:                    { x: 1 * earth_orbital_radius, y: 0, z: 0  },
                                             color:                  { r: 1.0, g: 1.0, b: 1.0 },
                                             diffuse:                true,
                                             specular:               true,
@@ -806,7 +806,7 @@ SceneJS.createNode({
 
                                             nodes: [  { type: "sphere", slices: 60, rings: 60 } ]
                                         },
-                                        
+
                                         // Sun Square Grid
                                         {
                                             type: "material",
@@ -2161,7 +2161,7 @@ function setEarthPositionByMon(mon) {
     earth.pos = { x: pos[0], y: pos[1], z: pos[2] };
     earth_sub_graph.set(earth.pos);
 
-    backlight_quaternion.set("rotation", { x:0, y:1, z: 0, angle: yaw_angle_by_mon[mon] + 90 });
+    backlight_quaternion.set("rotation", { x:0, y:1, z: 0, angle: yaw_angle_by_mon[mon] - 135 });
 
     yaw = yaw_angle_by_mon[mon];
     incrementYaw(yaw_difference);
