@@ -10,7 +10,7 @@ SceneJS.createNode({
         {
             type: "lookAt",
             id: "lookAt",
-            eye:  { x: 5, y: 3,  z: 5 },
+            eye:  { x: 0.01, y: 0.01,  z: 0.01 },
             look: { x: 0,  y: 0,  z: 0  },
             up:   { x: 0,  y: 1,  z: 0  },
 
@@ -23,7 +23,7 @@ SceneJS.createNode({
                         type: "perspective",
                         fovy: 50.0,
                         aspect: 1.43,
-                        near: 0.05,
+                        near: 0.0001,
                         far: 100,
                     },
 
@@ -68,9 +68,9 @@ SceneJS.createNode({
                                     nodes: [
                                         {
                                             type: "box",
-                                            xSize: 2,
-                                            ySize: 0.1,
-                                            zSize: 2
+                                            xSize: 0.002,
+                                            ySize: 0.002,
+                                            zSize: 0.002
                                         }
                                     ]
                                 }
