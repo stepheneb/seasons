@@ -1500,7 +1500,7 @@ SceneJS.createNode({
 
                                                                                                         { 
                                                                                                             type: "sphere",
-                                                                                                            slices: 256, rings: 128 
+                                                                                                            slices: 128, rings: 128 
                                                                                                         }
                                                                                                     ]
                                                                                                 }
