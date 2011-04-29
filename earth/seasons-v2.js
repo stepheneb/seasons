@@ -117,7 +117,7 @@ var earthOrbitData = {
 // San Francisco: 38, 122
 
 var surface_line_width = earth.radius / 200;
-var surface_earth_scale_factor = 50;
+var surface_earth_scale_factor = 100;
 
 var surface = {
     // latitude: 38,
@@ -126,7 +126,7 @@ var surface = {
     longitude: 90,
     yaw: 0,
     pitch: 0,
-    distance: 150 * km * surface_earth_scale_factor,
+    distance: 200 * km * surface_earth_scale_factor,
     min_distance: 10 * km * surface_earth_scale_factor,
     lookat_yaw: 0,
     lookat_pitch: 0,
