@@ -203,6 +203,25 @@ h4 {
     border-top-right-radius: 5px 5px;
 }
 
+.webgl-canvas-panel {
+    position: absolute;
+    font: 1.1em monospace;
+    clear: both;
+    padding: 8px;
+    overflow: hidden;
+    background: blue;
+    color: white;
+    z-index: 5;
+    margin: 0 auto;
+    border: 1px solid;
+    text-align: left;
+    -webkit-box-shadow: #444 5px 5px 2px;
+    border-bottom-left-radius: 5px 5px;
+    border-bottom-right-radius: 5px 5px;
+    border-top-left-radius: 5px 5px;
+    border-top-right-radius: 5px 5px;
+}
+
 .webgl-canvas-label p {
     color: white;
 }
@@ -243,6 +262,34 @@ h4 {
 }
 
 #info-graph canvas {
+    margin: 2px;
+    padding: 2px 4px 2px 4px;
+}
+
+#experiment-panel {
+    color: white;
+}
+
+#experiment-content {
+    clear: both;
+    color: white;
+}
+
+/*#controls-label {
+    padding-top: 0px;
+}
+*/
+#experiment-view {
+    float: right;
+    margin-left: 3px;
+    margin-right: 6px;
+}
+
+#experiment-checkbox {
+    float: right;
+}
+
+#experiment-graph canvas {
     margin: 2px;
     padding: 2px 4px 2px 4px;
 }

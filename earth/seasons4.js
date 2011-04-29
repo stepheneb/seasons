@@ -74,3 +74,42 @@ function chooseTiltHandler() {
 choose_tilt.onchange = chooseTiltHandler;
 chooseTiltHandler();
 
+
+//
+// Experiment Panel
+//
+
+var experiment_panel   = document.getElementById("experiment-panel");
+var experiment_content = document.getElementById("experiment-content");
+var experiment_view = document.getElementById("experiment-view");
+
+function experimentPanel() {
+    if (experiment_panel) {
+        if (experiment_view.checked) {
+            experiment_panel.style.opacity = 0.6;
+            experiment_content.style.display = null;
+        } else {
+            experiment_content.style.display = "none";
+            experiment_panel.style.opacity = null;
+        };
+
+        // var panelStr = "";
+        // panelStr += "<br><hr><br>";
+        // panelStr += "prediction ...<br />";
+        // panelStr += "<br><hr><br>";
+        // panelStr += "table ...<br />";
+        // panelStr += "<br><hr><br>";
+        // panelStr += "graph ...<br />";
+        // panelStr += "<br><hr><br>";
+        // experiment_content.innerHTML = panelStr;
+
+        var canvas_properties = the_canvas.getBoundingClientRect();
+        var container_properties = container.getBoundingClientRect();
+        
+        experiment_panel.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
+        experiment_panel.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - experiment_panel.offsetWidth + "px";
+    };
+};
+
+experiment_view.onchange = experimentPanel;
+experimentPanel();

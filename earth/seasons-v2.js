@@ -3335,10 +3335,10 @@ function infoLabel() {
 
         var labelStr = "";
         labelStr += "Date: " + date_by_day_number[earth.day_number] + ", ";
+        labelStr += earthRotationToTimeStr(earth.rotation - surface.longitude) + ", ";
         // labelStr += sprintf("Sol. Constant:  %4.1f W/m2", solar_flux()) + ", ";
         labelStr += sprintf("Lat: %4.1f, Long:  %4.1f", surface.latitude, surface.longitude) + ", ";
-        labelStr += "Time: " + earthRotationToTimeStr(earth.rotation - surface.longitude) + ", ";
-        // labelStr += "<br />";
+        labelStr += "<br />";
         labelStr += sprintf("Solar Altitude: %2.1f&deg;", solar_alt) + ", ";
         labelStr += sprintf("Solar Radiation: %2.1f  W/m2", solar_rad);
 
@@ -3366,7 +3366,7 @@ function controlsLabel() {
     if (controls_label) {
         var canvas_properties = the_canvas.getBoundingClientRect();
         var container_properties = container.getBoundingClientRect();
-        controls_label.style.top = canvas_properties.top + window.pageYOffset + 45 + "px";
+        controls_label.style.top = canvas_properties.top + window.pageYOffset + 90 + "px";
         controls_label.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
     };
 };

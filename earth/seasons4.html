@@ -5,13 +5,19 @@
     <title>Seasons 4: Investigating Earth's tilt and hours of daylight</title>
     <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
     <link href="../stylesheets/rangeinput.css" rel="stylesheet" type="text/css" />
+    <link href="../stylesheets/table.css" rel="stylesheet" type="text/css" />
 
     <script src="http://cdn.jquerytools.org/1.2.5/full/jquery.tools.min.js"></script>
 
     <script type="text/javascript" src="../lib/scenejs-0.8.0/scenejs.js"></script>
     <script type="text/javascript" src="../lib/glmatrix.js"></script>
     <script type="text/javascript" src="../lib/sprintf.js"></script>
-    
+
+    <script type="text/javascript" src="../lib/modernizr-1.6.js"></script>
+
+		<script type="text/javascript" src="../lib/table/fastinit.js"></script>
+		<script type="text/javascript" src="../lib/table/tablesort.js"></script>
+		
     <style>
 
   	/* Override skin1.css to make it vertical */
@@ -76,7 +82,8 @@
     <div id="webglCanvasContainer">
       <canvas id="theCanvas" height="700px", width="1000px"></canvas>
       <div id="info-label" class="webgl-canvas-label transparent-ui">
-        <label><input id="info-view" type="checkbox" checked/></label><div id="info-content"></div>
+        <label><input id="info-view" type="checkbox" checked/></label>
+        <div id="info-content"></div>
       </div>
       <div id="info-graph" class="webgl-canvas-graph transparent-ui">
         <label><input id="graph-view" type="checkbox" /></label>
@@ -135,9 +142,39 @@
           </form>
         </form>
       </div>
-      <div id="experiment-label" class="webgl-canvas-label transparent-ui" style="font-size:90%">
-        <div id="experiment-content"></div>
-        <div id="experiment-checkbox"><label >Experiment <input id="experiment-view" type="checkbox"/></label></div>
+      <div id="experiment-panel" class="webgl-canvas-panel transparent-ui">
+        <div id="experiment-checkbox"><label ><b>Experiment Panel</b><input id="experiment-view" type="checkbox"/></label></div>
+        <div id="experiment-content">
+          <br />
+          First select a city and date ... then predict the number
+          <form id="daylight-hours-prediction">
+            <label id="daylight-hours-prediction-label" for="daylight-hours-prediction">of daylight hours:</label>
+            <input type="text" id="daylight-hours-prediction" name="daylight-hours-prediction" />
+            <input type="submit" value="Check" />
+          </form>
+          
+          <table id='city-data-table' class='sortable'>
+            <thead>
+              <tr>
+                <th class='sortfirstasc text'>City</th>
+                <th class='text'>Month</th>
+                <th class='number'>Daylight Hours</th>
+                <th class='number'>Prediction</th>
+                <th class="nosort">Season ?</th>
+                <th class="nosort">Graph</th>
+            </thead>
+            <tbody id="city-data-table-body">
+              <tr>
+                <td class='sortfirstasc text'>San Francisco</td>
+                <td class='text'>June</td>
+                <td class='number'>13.3</td>
+                <td class='number'>12</td>
+                <td class="nosort">Fall</td>
+                <td class="nosort">Graph</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div id="debug-label" class="webgl-canvas-label transparent-ui" style="font-size:90%">
         <div id="debug-content"></div>
