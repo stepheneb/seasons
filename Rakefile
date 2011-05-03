@@ -6,7 +6,6 @@ wise4_node = 'wise4/node'
 
 catalina_home = ENV['CATALINA_HOME']
 seasons_node_path = '/webapps/vlewrapper/vle/node/seasons'
-wise4_vle_seasons_node_path = catalina_home + seasons_node_path
 
 namespace :wise4 do
   desc "generate WISE4 step in: #{File.expand_path(wise4_dist_node_seasons)}"
@@ -20,8 +19,13 @@ namespace :wise4 do
   
   desc "copy WISE4 seasons step to local vle: $CATALINA_HOME#{seasons_node_path}"
   task :copy_step_to_local_vle => [ :generate_step ] do
-    rm_rf(wise4_vle_seasons_node_path) if File.exists?(wise4_vle_seasons_node_path)
-    mkdir(wise4_vle_seasons_node_path)
-    cp_r(wise4_dist_node_seasons + '/.', wise4_vle_seasons_node_path)
+    if catalina_home
+      wise4_vle_seasons_node_path = catalina_home + seasons_node_path
+      rm_rf(wise4_vle_seasons_node_path) if File.exists?(wise4_vle_seasons_node_path)
+      mkdir(wise4_vle_seasons_node_path)
+      cp_r(wise4_dist_node_seasons + '/.', wise4_vle_seasons_node_path)
+    else
+      raise "\n*** $CATALINA_HOME must be defined in your environment to use this task.\n"
+    end
   end
 end
