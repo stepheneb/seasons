@@ -127,7 +127,7 @@ SEASONS.prototype.save = function() {
 	// $("#modelIFrame").scene.month
 	
 	var scene = window.frames["modelIFrame"].scene;
-	var state = JSON.stringify(scene);
+	var json_str = JSON.stringify(scene);
 	
 	// var response = $('#studentResponseTextArea').val();
 	
@@ -152,7 +152,7 @@ SEASONS.prototype.save = function() {
 	 * and in that file you would define QUIZSTATE and therefore
 	 * would change the SEASONSSTATE to QUIZSTATE below
 	 */
-	var seasonsState = new SEASONSSTATE(state);
+	var seasonsState = new SEASONSSTATE(json_str);
 	
 	/*
 	 * fire the event to push this state to the global view.states object.
