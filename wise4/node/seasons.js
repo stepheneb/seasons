@@ -71,11 +71,9 @@ SEASONS.prototype.render = function() {
 		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons4.html");
 	} 
 	
-	//display any prompts to the student
-	$('#promptDiv').html(this.content.prompt);
-	
 	//load any previous responses the student submitted for this step
 	var latestState = this.getLatestState();
+	var scene = window.frames["modelIFrame"].scene;
 	
 	if(latestState != null) {
 		/*
@@ -83,10 +81,13 @@ SEASONS.prototype.render = function() {
 		 * just provided as an example. you may use whatever variables you
 		 * would like from the state object (look at seasonsstate.js)
 		 */
-		var latestResponse = latestState.response;
-		
-		//set the previous student work into the text area
-		$('#studentResponseTextArea').val(latestResponse); 
+		// json str
+		var json_str = latestState.response;
+
+		var state = JSON.parse(json_str);
+
+		//set the previous student work into the scene object
+		scene.fromJSON(state)
 	}
 };
 
@@ -122,7 +123,13 @@ SEASONS.prototype.getLatestState = function() {
  */
 SEASONS.prototype.save = function() {
 	//get the answer the student wrote
-	var response = $('#studentResponseTextArea').val();
+	
+	// $("#modelIFrame").scene.month
+	
+	var scene = window.frames["modelIFrame"].scene;
+	var state = JSON.stringify(scene);
+	
+	// var response = $('#studentResponseTextArea').val();
 	
 	/*
 	 * create the student state that will store the new work the student
@@ -145,7 +152,7 @@ SEASONS.prototype.save = function() {
 	 * and in that file you would define QUIZSTATE and therefore
 	 * would change the SEASONSSTATE to QUIZSTATE below
 	 */
-	var seasonsState = new SEASONSSTATE(response);
+	var seasonsState = new SEASONSSTATE(state);
 	
 	/*
 	 * fire the event to push this state to the global view.states object.
