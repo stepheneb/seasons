@@ -69,27 +69,10 @@ SEASONS.prototype.render = function() {
 		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-3.html");
 	} else if (modelType == "tiltAndHoursOfDaylight") {		
 		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons4.html");
-	} 
-	
-	//load any previous responses the student submitted for this step
-	var latestState = this.getLatestState();
-	var scene = window.frames["modelIFrame"].scene;
-	
-	if(latestState != null) {
-		/*
-		 * get the response from the latest state. the response variable is
-		 * just provided as an example. you may use whatever variables you
-		 * would like from the state object (look at seasonsstate.js)
-		 */
-		// json str
-		var json_str = latestState.response;
-
-		var state = JSON.parse(json_str);
-
-		//set the previous student work into the scene object
-		scene.fromJSON(state)
-	}
+	} 	
 };
+
+
 
 /**
  * This function retrieves the latest student work
@@ -123,14 +106,10 @@ SEASONS.prototype.getLatestState = function() {
  */
 SEASONS.prototype.save = function() {
 	//get the answer the student wrote
-	
-	// $("#modelIFrame").scene.month
-	
-	var scene = window.frames["modelIFrame"].scene;
+	var scene = window.document.getElementById("modelIFrame").contentWindow.scene;
 	var json_str = JSON.stringify(scene);
-	
-	// var response = $('#studentResponseTextArea').val();
-	
+	console.log("save, json_str:" + json_str);
+			
 	/*
 	 * create the student state that will store the new work the student
 	 * just submitted
@@ -163,6 +142,34 @@ SEASONS.prototype.save = function() {
 
 	//push the state object into this or object's own copy of states
 	this.states.push(seasonsState);
+};
+
+/**
+ * Updates the content's prompt to match that of what the user input
+ * 
+ * TODO: rename TemplateNode
+ */
+SEASONS.prototype.modelIFrameLoaded = function(){
+	var scene = window.document.getElementById("modelIFrame").contentWindow.scene;
+	
+	console.log("modelIFrameLoaded, scene:" + scene);
+	//load any previous responses the student submitted for this step
+	var latestState = this.getLatestState();
+	
+	if(latestState != null) {
+		/*
+		 * get the response from the latest state. the response variable is
+		 * just provided as an example. you may use whatever variables you
+		 * would like from the state object (look at seasonsstate.js)
+		 */
+		var json_str = latestState.response;
+		console.log("modelIFrameLoaded, json_str:" + json_str);
+
+		var state = JSON.parse(json_str);
+		
+		// TODO: UNCOMMENT WHEN setState is implemented.
+		scene.fromJSON(state);
+	}
 };
 
 //used to notify scriptloader that this script has finished loading

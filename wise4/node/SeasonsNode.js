@@ -218,6 +218,14 @@ SeasonsNode.prototype.getHTMLContentTemplate = function() {
 	return createContent('node/seasons/seasons.html');
 };
 
+/**
+ * Callback when the iFrame has completed loading the model.
+ * @return
+ */
+SeasonsNode.prototype.modelIFrameLoaded = function() {
+	this.contentPanel.seasons.modelIFrameLoaded();
+};
+
 /*
  * Add this node to the node factory so the vle knows it exists.
  * TODO: rename both occurrences of SeasonsNode

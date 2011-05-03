@@ -22,7 +22,9 @@ View.prototype.seasonsDispatcher = function(type,args,obj){
 		 * TODO: rename TemplateNode
 		 * wait until you implement the authoring before you rename this 
 		 */
-		obj.TemplateNode.updatePrompt();
+		obj.SeasonsNode.updatePrompt();
+	} else if (type == 'seasonsModelIFrameLoaded') {
+		obj.getCurrentNode().modelIFrameLoaded();
 	}
 };
 
@@ -36,7 +38,8 @@ var events = [
 	 * TODO: rename seasonsUpdatePrompt
 	 * wait until you implement the authoring before you rename this
 	 */
-	'seasonsUpdatePrompt'
+	'seasonsUpdatePrompt',
+	'seasonsModelIFrameLoaded'
 ];
 
 /*
