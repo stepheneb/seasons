@@ -9,7 +9,7 @@ There are rake tasks for generating and locally deploying the WISE4 step version
 
 * rake wise4:generate_step
 
-  generate WISE4 step in: /Users/stephen/dev/test/visual-demos-git/seasons/wise4/dist/node/seasons
+   generate WISE4 step in: ./wise4/dist/node/seasons
 
 * rake wise4:copy_step_to_local_vle
 
