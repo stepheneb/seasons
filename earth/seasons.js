@@ -106,10 +106,9 @@ seasons.Scene = function(options) {
         this.earth_info_label   = document.getElementById(options.earth_info_label || "earth-info-label");
     };
 
-    this.choose_tilt        = options.choose_tilt || false;
-    this.tilt;
+    this.choose_tilt        = (options.choose_tilt || false);
     if (this.choose_tilt) {
-        this.choose_tilt   = document.getElementById(this.choose_tilt);
+        this.choose_tilt = document.getElementById(options.choose_tilt || "choose-tilt");
     };
 
     this.earth_position      = SceneJS.withNode(options.earth_position || "earth-position");
@@ -280,14 +279,19 @@ seasons.Scene = function(options) {
 };
 
 seasons.Scene.prototype.toJSON = function() {
-    return { 
+    return {
         month: this.month,
-        circle_orbit: scene.circle_orbit ? scene.circle_orbit.checked : scene.circle_orbit,
-        orbital_grid: scene.orbital_grid ? scene.orbital_grid.checked : scene.orbital_grid,
+        circle_orbit: this.circle_orbit ? this.circle_orbit.checked : this.circle_orbit,
+        orbital_grid: this.orbital_grid ? this.orbital_grid.checked : this.orbital_grid,
         tilt: this.choose_tilt,
         view_selection: this.view_selection,
-        look_at: this.look_at_selection,
-    };
+        look_at_selection: this.look_at_selection,
+        look_at: {
+            eye: JSON.stringify(this.look.get("eye")),
+            look: JSON.stringify(this.look.get("look")),
+            up: JSON.stringify(this.look.get("up")),
+        }
+    }
 };
 
 seasons.Scene.prototype.fromJSON = function(state) {
@@ -296,6 +300,9 @@ seasons.Scene.prototype.fromJSON = function(state) {
     this._orbitalGridChange(state.orbital_grid);
     this._perspectiveChange(state.view_selection);
     this.look_at_selection = state.look_at_selection;
+    this.look.set("eye", JSON.parse(state.look_at.eye));
+    this.look.set("up", JSON.parse(state.look_at.up));
+    this.look.set("look", JSON.parse(state.look_at.look));
 };
 
 seasons.Scene.prototype.render = function() {
@@ -777,6 +784,37 @@ seasons.Scene.prototype._orbitalGridChange = function(orbital_grid) {
   };
 };
 
+var seasonsActivity = {};
+
+seasons.Activity = function(options) {
+    this.version = options.version;
+    this.scenes = options.scenes;
+};
+
+seasons.Activity.prototype.toJSON = function() {
+    return { 
+        version: this.version,
+        scenes: this.scenes
+    };
+};
+
+seasons.Activity.prototype.fromJSON = function(state) {
+    switch (state.version) {
+        case 1.1:
+        this.scenes.scene.fromJSON(state.scenes.scene)
+        break;
+
+        case 1.2:
+        this.scenes.scene1.fromJSON(state.scenes.scene1)
+        this.scenes.scene3.fromJSON(state.scenes.scene3)
+        break;
+
+        case 1.3:
+        this.scenes.scene1.fromJSON(state.scenes.scene1)
+        this.scenes.scene3.fromJSON(state.scenes.scene3)
+        break;
+    }
+};
 
 // export namespace
 if (root !== 'undefined') root.seasons = seasons;

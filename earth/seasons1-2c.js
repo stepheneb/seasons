@@ -895,6 +895,11 @@ var scene3 = new seasons.Scene({
     debugging:                   true,
 });
 
+var seasons_activity = new seasons.Activity({
+    version: 1.2, 
+    scenes: { scene1: scene1, scene3: scene3 }
+});
+
 // scene1.linked_scene = scene3;
 
 SceneJS.setDebugConfigs({

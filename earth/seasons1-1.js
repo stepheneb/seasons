@@ -223,6 +223,11 @@ var scene = new seasons.Scene({
     choose_month:                "choose-month"
 });
 
+var seasons_activity = new seasons.Activity({
+    version: 1.1, 
+    scenes: { scene: scene }
+});
+
 window.render = function() {
     SceneJS.withNode("theScene").start();
 };

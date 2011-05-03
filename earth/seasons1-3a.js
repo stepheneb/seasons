@@ -991,13 +991,18 @@ var scene3 = new seasons.Scene({
     earth_tilt:                  "earthRotationalAxisQuaternion3",
     choose_view:                 "choose-view",
     choose_month:                "choose-month",
-    choose_tilt:                 "choose-tilt",
+    // choose_tilt:                 "choose-tilt",
     linked_scene:                scene1,
     earth_surface_location:      true,
     earth_pointer:               false,
     earth_label:                 false,
     earth_info_label:            "earth-info-label3",
     debugging:                   true,
+});
+
+var seasons_activity = new seasons.Activity({
+    version: 1.3, 
+    scenes: { scene1: scene1, scene3: scene3 }
 });
 
 // scene1.linked_scene = scene3;
