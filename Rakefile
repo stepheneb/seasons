@@ -5,7 +5,8 @@ wise4_dist_node_seasons = 'wise4/dist/node/seasons'
 wise4_node = 'wise4/node'
 
 catalina_home = ENV['CATALINA_HOME']
-wise4_vle_seasons_node_path = '/webapps/vlewrapper/vle/node/seasons'
+seasons_node_path = '/webapps/vlewrapper/vle/node/seasons'
+wise4_vle_seasons_node_path = catalina_home + seasons_node_path
 
 namespace :wise4 do
   desc "generate WISE4 step in: #{File.expand_path(wise4_dist_node_seasons)}"
@@ -17,7 +18,7 @@ namespace :wise4 do
     cp_r(%w{ stylesheets images lib earth}, wise4_dist_node_seasons)
   end
   
-  desc "copy WISE4 seasons step to local vle: $CATALINA_HOME#{wise4_vle_seasons_node_path}"
+  desc "copy WISE4 seasons step to local vle: $CATALINA_HOME#{seasons_node_path}"
   task :copy_step_to_local_vle => [ :generate_step ] do
     rm_rf(wise4_vle_seasons_node_path) if File.exists?(wise4_vle_seasons_node_path)
     mkdir(wise4_vle_seasons_node_path)
