@@ -279,6 +279,25 @@ seasons.Scene = function(options) {
     
 };
 
+seasons.Scene.prototype.toJSON = function() {
+    return { 
+        month: this.month,
+        circle_orbit: scene.circle_orbit ? scene.circle_orbit.checked : scene.circle_orbit,
+        orbital_grid: scene.orbital_grid ? scene.orbital_grid.checked : scene.orbital_grid,
+        tilt: this.choose_tilt,
+        view_selection: this.view_selection,
+        look_at: this.look_at_selection,
+    };
+};
+
+seasons.Scene.prototype.fromJSON = function(state) {
+    this._timeOfYearChange(state.month);
+    this._circleOrbitPathChange(state.circle_orbit);
+    this._orbitalGridChange(state.orbital_grid);
+    this._perspectiveChange(state.view_selection);
+    this.look_at_selection = state.look_at_selection;
+};
+
 seasons.Scene.prototype.render = function() {
     this.scene.render();
 };
@@ -712,7 +731,11 @@ seasons.Scene.prototype._timeOfYearChange = function(month) {
 // Orbital Paths Indicators
 
 seasons.Scene.prototype.circleOrbitPathChange = function(checkbox) {
-  if (checkbox.checked) {
+    this._circleOrbitPathChange(checkbox.checked);
+};
+
+seasons.Scene.prototype._circleOrbitPathChange = function(circle_orbit) {
+  if (circle_orbit) {
       switch(this.look_at_selection) {
          case "orbit": this.circleOrbit.set("selection", [2]);
           break;
@@ -723,13 +746,17 @@ seasons.Scene.prototype.circleOrbitPathChange = function(checkbox) {
   } else {
       this.circleOrbit.set("selection", [0]);
   }
-}
+};
 
 
 // Orbital Grid
 
 seasons.Scene.prototype.orbitalGridChange = function(checkbox) {
-  if (checkbox.checked) {
+  this._orbitalGridChange(checkbox.checked)
+};
+
+seasons.Scene.prototype._orbitalGridChange = function(orbital_grid) {
+  if (orbital_grid) {
       switch(this.look_at_selection) {
           case "orbit":
               this.orbitGridSelector.set("selection", [2]);
@@ -744,12 +771,11 @@ seasons.Scene.prototype.orbitalGridChange = function(checkbox) {
       }
   } else {
       this.orbitGridSelector.set("selection", [0]);
-  }
-
-  if (this.linked_scene) {
-      this.linked_scene.orbitalGridChange(checkbox);
   };
-}
+  if (this.linked_scene) {
+      this.linked_scene._orbitalGridChange(orbital_grid);
+  };
+};
 
 
 // export namespace
