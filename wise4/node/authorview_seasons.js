@@ -65,34 +65,37 @@ View.prototype.SeasonsNode.generatePage = function(view){
 	var pageDiv = createElement(document, 'div', {id:'dynamicPage', style:'width:100%;height:100%'});
 	
 	//create the label for the textarea that the author will write the prompt in
-	var promptText = document.createTextNode("Prompt for Student:");
+	var promptText = document.createTextNode("Select Model Type:");
 	
 	/*
-	 * create the textarea that the author will write the prompt in
+	 * create the modelType dropdown
 	 * 
-	 * onkeyup will fire the 'seasonsUpdatePrompt' event which will
-	 * be handled in the <new step type name>Events.js file
-	 * 
-	 * For example if you are creating a quiz step you would look in
-	 * your quizEvents.js file.
-	 * 
-	 * when you add new authoring components you will need to create
-	 * new events in the <new step type name>Events.js file and then
-	 * create new functions to handle the event
+	 * onchange will fire the 'seasonsModelTypeUpdated' event which will
+	 * be handled in the seasonsEvents.js file
 	 */
-	var promptTextArea = createElement(document, 'textarea', {id: 'promptTextArea', rows:'20', cols:'85', onkeyup:"eventManager.fire('seasonsUpdatePrompt')"});
+	var modelTypeDropDownHtml = '<select id="modelTypeDropDown" onchange="eventManager.fire(\'seasonsModelTypeUpdated\')">' + 
+	'<option value="distanceAndShape">distanceAndShape</option>' +
+	'<option value="distanceAndTemperature">distanceAndTemperature</option>' +
+	'<option value="tiltAndTemperature">tiltAndTemperature</option>' +
+	'<option value="tiltAndHoursOfDaylight">tiltAndHoursOfDaylight</option>' +
+	'</select>';
+		
+	//var promptTextArea = createElement(document, 'textarea', {id: 'promptTextArea', rows:'20', cols:'85', onkeyup:"eventManager.fire('seasonsUpdatePrompt')"});
 	
 	//add the authoring components to the page
 	pageDiv.appendChild(promptText);
 	pageDiv.appendChild(createBreak());
-	pageDiv.appendChild(promptTextArea);
+	pageDiv.innerHTML+=modelTypeDropDownHtml;
 	pageDiv.appendChild(createBreak());
 
 	//add the page to the parent
 	parent.appendChild(pageDiv);
 	
+	// show the selected model type in the drop down
+	$("#modelTypeDropDown").val(this.content.modelType);
+	
 	//populate the prompt if this step has been authored before
-	this.populatePrompt();
+	//this.populatePrompt();
 };
 
 /**
@@ -127,9 +130,20 @@ View.prototype.SeasonsNode.populatePrompt = function() {
 };
 
 /**
+ * Updates the content's modeltype to match that of what the user specified
+ */
+View.prototype.SeasonsNode.updateModelType = function(){
+	/* update content */
+	this.content.modelType = $('#modelTypeDropDown').val();
+	
+	/*
+	 * fire source updated event, this will update the preview
+	 */
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
  * Updates the content's prompt to match that of what the user input
- * 
- * TODO: rename SeasonsNode
  */
 View.prototype.SeasonsNode.updatePrompt = function(){
 	/* update content */

@@ -23,6 +23,8 @@ View.prototype.seasonsDispatcher = function(type,args,obj){
 		 * wait until you implement the authoring before you rename this 
 		 */
 		obj.SeasonsNode.updatePrompt();
+	} else if (type == 'seasonsModelTypeUpdated') {
+		obj.SeasonsNode.updateModelType();
 	} else if (type == 'seasonsModelIFrameLoaded') {
 		obj.getCurrentNode().modelIFrameLoaded();
 	}
@@ -39,6 +41,7 @@ var events = [
 	 * wait until you implement the authoring before you rename this
 	 */
 	'seasonsUpdatePrompt',
+	'seasonsModelTypeUpdated',
 	'seasonsModelIFrameLoaded'
 ];
 
