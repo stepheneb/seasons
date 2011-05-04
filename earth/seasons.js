@@ -165,8 +165,6 @@ seasons.Scene = function(options) {
     this.month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
 
     this.seasons = ["Fall", "Winter", "Spring", "Summer"];
-    
-
 
     // Setting up callbacks for ...
     var self = this;
@@ -279,11 +277,11 @@ seasons.Scene = function(options) {
 };
 
 seasons.Scene.prototype.toJSON = function() {
-    return {
+    var state = {
         month: this.month,
         circle_orbit: this.circle_orbit ? this.circle_orbit.checked : this.circle_orbit,
         orbital_grid: this.orbital_grid ? this.orbital_grid.checked : this.orbital_grid,
-        tilt: this.choose_tilt,
+        tilt: this.choose_tilt ? getRadioSelection(this.choose_tilt) : this.choose_tilt, 
         view_selection: this.view_selection,
         look_at_selection: this.look_at_selection,
         look_at: {
@@ -291,7 +289,8 @@ seasons.Scene.prototype.toJSON = function() {
             look: JSON.stringify(this.look.get("look")),
             up: JSON.stringify(this.look.get("up")),
         }
-    }
+    };
+    return state
 };
 
 seasons.Scene.prototype.fromJSON = function(state) {
