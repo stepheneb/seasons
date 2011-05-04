@@ -75,31 +75,24 @@ var earthSphere = SceneJS.createNode({
                                 },
                             
                                 {
-                                    type: "texture",
-                                
+                                    type: "selector",
+                                    id: "earthAxisSelector",
+                                    selection: [1],
+
                                     nodes: [
                                 
+                                        // 0: no axis indicator
+                                        { },
+
+                                        // 1: display axis indicator
                                         {
-                                            type: "selector",
-                                            id: "earthAxisSelector",
-                                            selection: [1],
+                                    
+                                            type: "scale",
+                                            x: earth_radius_km * 0.02,
+                                            y: earth_radius_km * 1.2,
+                                            z: earth_radius_km * 0.02,
 
-                                            nodes: [
-                                        
-                                                // 0: no axis indicator
-                                                { },
-
-                                                // 1: display axis indicator
-                                                {
-                                            
-                                                    type: "scale",
-                                                    x: earth_radius_km * 0.02,
-                                                    y: earth_radius_km * 1.2,
-                                                    z: earth_radius_km * 0.02,
-
-                                                    nodes: [ { type: "sphere" } ]
-                                                }
-                                            ]
+                                            nodes: [ { type: "sphere" } ]
                                         }
                                     ]
                                 }
