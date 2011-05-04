@@ -949,6 +949,14 @@ SceneJS.createNode({
     ]
 });
 
+var scenejs_compilation = false;
+
+SceneJS.setDebugConfigs({
+    compilation : {
+        enabled : scenejs_compilation
+    }
+});
+
 /*----------------------------------------------------------------------
  * Scene rendering loop and mouse handler stuff follows
  *---------------------------------------------------------------------*/
@@ -991,7 +999,7 @@ var scene3 = new seasons.Scene({
     earth_tilt:                  "earthRotationalAxisQuaternion3",
     choose_view:                 "choose-view",
     choose_month:                "choose-month",
-    // choose_tilt:                 "choose-tilt",
+    choose_tilt:                 "choose-tilt",
     linked_scene:                scene1,
     earth_surface_location:      true,
     earth_pointer:               false,

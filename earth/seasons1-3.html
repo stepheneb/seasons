@@ -269,19 +269,15 @@
   
   window.onload=function() {
     var webGLEnabled = Modernizr.webgl;
-    // webGLEnabled = false;
     if (webGLEnabled){
       myRequire([
         "../lib/sprintf.js",
-        "../lib/scenejs-0.7.9/scenejs.js",
+        "../lib/scenejs-0.8.0/scenejs.js",
         "solar-system-data.js",
-        // "sky-sphere.js",
         "earth-axis.js",
-        // "earth-sphere.js",
         "sun.js",
         "earth.js",
         "earth-orbit.js",
-        // "earth-sun-line.js",
         "jpl-earth-ephemerides.js",
         "orbit-grid.js",
         "seasons.js",

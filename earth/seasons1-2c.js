@@ -841,7 +841,13 @@ SceneJS.createNode({
     ]
 });
 
+var scenejs_compilation = true;
 
+SceneJS.setDebugConfigs({
+    compilation : {
+        enabled : scenejs_compilation
+    }
+});
 
 /*----------------------------------------------------------------------
  * Scene rendering loop and mouse handler stuff follows
