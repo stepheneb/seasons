@@ -183,6 +183,10 @@ seasons.Scene = function(options) {
     
     // Selecting the time of year: jun, sep, dec, mar
     this.choose_month = document.getElementById(options.choose_month || "choose-month");
+
+    // optional dom element to update textContent with long name of month
+    this.selected_month = document.getElementById(options.selected_month || "selected-month");
+
     this.month = getRadioSelection(this.choose_month);
     this.choose_month.onchange = (function() {
         return function() {
@@ -727,7 +731,9 @@ seasons.Scene.prototype._timeOfYearChange = function(month) {
     this.setEarthSunLine();
     this.earthLabel();
     this.earthPointer();
-
+    if (this.selected_month) {
+        this.selected_month.textContent = this.month_data[this.month].long_name;
+    };
     if (this.linked_scene) {
         this.linked_scene._timeOfYearChange(month);
     };
