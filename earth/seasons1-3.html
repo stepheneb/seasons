@@ -84,13 +84,15 @@
             <div class="underCanvasUI">
               <ul class="hlist">
                 <li>
-                  <form id="choose-month">
+                  <form>
                     <fieldset>
                       <legend>Choose month</legend>
-                      <label><input type="radio" name="month" value="jun" checked> Jun</input></label>
-                      <label><input type="radio" name="month" value="sep"> Sep</input></label>
-                      <label><input type="radio" name="month" value="dec"> Dec</input></label>
-                      <label><input type="radio" name="month" value="mar"> Mar</input></label>
+                      <select id="choose-month" name="chosen-month">
+                        <option value="jun" selected>June</option>
+                        <option value="sep">September</option>
+                        <option value="dec">December</option>
+                        <option value="mar">March</option>
+                      </select>
                     </fieldset>
                   </form>
                 </li>

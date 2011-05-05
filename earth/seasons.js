@@ -189,7 +189,7 @@ seasons.Scene = function(options) {
     // optional dom element to update textContent with long name of month
     this.selected_month = document.getElementById(options.selected_month || "selected-month");
 
-    this.month = getRadioSelection(this.choose_month);
+    this.month = this.choose_month.value
     this.choose_month.onchange = (function() {
         return function() {
             self.timeOfYearChange(this);
@@ -722,7 +722,7 @@ seasons.Scene.prototype.setEarthSunLine = function() {
 
 
 seasons.Scene.prototype.timeOfYearChange = function(form_element) {
-    this._timeOfYearChange(getRadioSelection(form_element));
+    this._timeOfYearChange(this.choose_month.value);
 };
 
 seasons.Scene.prototype._timeOfYearChange = function(month) {

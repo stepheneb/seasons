@@ -1106,8 +1106,6 @@ var month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep"
 
 var seasons = ["Fall", "Winter", "Spring", "Summer"];
 
-var choose_month = document.getElementById("choose-month");
-
 var selected_city_latitude = document.getElementById("selected-city-latitude");
 var city_option;
 var active_cities = [];
@@ -1130,8 +1128,6 @@ for (var i = 0; i < active_cities.length; i++) {
 var city_latitude_temperature = document.getElementById("city-latitude-temperature");
 var city_latitude_temperature_label = document.getElementById("city-latitude-temperature-label");
 var city_latitude_temperature_prediction = document.getElementById("city-latitude-temperature-prediction");
-
-var selected_city_latitude = document.getElementById("selected-city-latitude");
 
 function updateLatitudeLineAndCity() {
     var city_index = Number(selected_city_latitude.value);
