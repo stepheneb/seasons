@@ -410,11 +410,12 @@ SceneJS.createNode({
                                 near : earth_view_small_offset,
                                 far : milky_way_apparent_radius * 10,
                             },
+
                             nodes: [
                             
                                 {
                                     type: "node",
-                                    flags: { lineWidth: 2 },
+                                    // lineWidth: 3,
                                 
                                     nodes: [
                             
