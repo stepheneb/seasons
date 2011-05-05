@@ -1274,6 +1274,7 @@ function addExperimentData() {
     var graph_checkbox = document.createElement('input');
     graph_checkbox.id = city_element_id;    
     graph_checkbox.type = "checkbox";
+    graph_checkbox.checked = true;
     table_data.appendChild(graph_checkbox);
     table_row.appendChild(table_data);
 
