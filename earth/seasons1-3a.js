@@ -92,8 +92,8 @@ SceneJS.createNode({
                             nodes: [
                             
                                 {
-                                    type: "renderer",
-                                    flags: { lineWidth: 20 },
+                                    type: "node",
+                                    // lineWidth: 3,
                                     
                                     nodes: [
                         
