@@ -77,12 +77,11 @@ var earthCircleOrbit = SceneJS.createNode({
                     
                                     type: "material",
                     
-                                    baseColor:          { r: 1.0, g: 0.8, b: 0.1 },
-                                    specularColor:      { r: 1.0, g: 0.8, b: 0.1 },
+                                    baseColor:          { r: 1.0, g: 0.01, b: 1.0 },
+                                    specularColor:      { r: 1.0, g: 0.01, b: 1.0 },
                                     specular:           1.0,
                                     shine:              2.0,
-                                    emit:               2.0,
-                                    alpha:              0.4,
+                                    emit:               20.0,
                     
                                     nodes: [
                             
@@ -256,12 +255,11 @@ var earthEllipseOrbit = SceneJS.createNode({
                     
                                     type: "material",
 
-                                    baseColor:          { r: 0.1, g: 0.8, b: 2.0 },
-                                    specularColor:      { r: 0.1, g: 0.8, b: 2.0 },
-                                    specular:           1.0,
-                                    shine:              2.0,
-                                    emit:               2.0,
-                                    alpha:              0.4,
+                                    baseColor:          { r: 1.0, g: 1.0, b: 0.0 },
+                                    specularColor:      { r: 1.0, g: 1.0, b: 0.0 },
+                                    specular:           5.0,
+                                    shine:              5.0,
+                                    emit:               20.0,
 
                                     nodes: [
                             
