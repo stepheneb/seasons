@@ -1252,7 +1252,11 @@ function addExperimentData() {
     var select, option;
     select = document.createElement('select');
     select.name = 'season_city_' + city_element_id;
-    select.id = 'season_city_' + city_element_id; 
+    select.id = 'season_city_' + city_element_id;
+    option = document.createElement('option');
+    option.disabled = true;
+    option.textContent = "pick...";
+    select.appendChild(option);
     for (i = 0; i < seasons.length; i++) {
         option = document.createElement('option');
         option.value = seasons[i];
@@ -1261,7 +1265,7 @@ function addExperimentData() {
     };
     option = document.createElement('option');
     option.value = "I'm not sure";
-    option.textContent = "I'm not sure";
+    option.textContent = "not sure";
     select.appendChild(option);
     table_data.appendChild(select);
     table_row.appendChild(table_data);
