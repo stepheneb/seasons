@@ -495,6 +495,11 @@ fieldset label  {
     font-size: 90%;
 }
 
+.glCanvasQuarterFrame fieldset select  {
+    margin: -1px 3px -1px 3px;
+    font-size: 90%;
+}
+
 .underCanvasUI {
     height: 100%;
     vertical-align: middle;
