@@ -43,13 +43,15 @@
           </form>  
         </li>
         <li>
-          <form id="choose-month">
+          <form>
             <fieldset>
-              <legend>Choose month: </legend>
-              <label><input type="radio" name="month" value="jun" checked> Jun 21</input></label>
-              <label><input type="radio" name="month" value="sep"> Sep 21</input></label>
-              <label><input type="radio" name="month" value="dec"> Dec 21</input></label>
-              <label><input type="radio" name="month" value="mar"> Mar 21</input></label>
+              <legend>Choose month</legend>
+              <select id="choose-month" name="chosen-month">
+                <option value="jun" selected>June</option>
+                <option value="sep">September</option>
+                <option value="dec">December</option>
+                <option value="mar">March</option>
+              </select>
             </fieldset>
           </form>
         </li>
