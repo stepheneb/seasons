@@ -52,99 +52,89 @@
             <p>View: Earth from Space</p>
             <canvas id="theCanvas3">
             </canvas>
-            <ul class="hlist">
-              <li>
-                <form id="choose-view">
-                  <fieldset>
-                    <legend>Choose view: </legend>
-                    <label><input type="radio" name="view" value="top"> Top</input></label>
-                    <label><input type="radio" name="view" value="side" checked> Side</input></label>
-                  </fieldset>
-                </form>
-              </li>
-              <li>
-                <form id="show-me">
-                  <fieldset>
-                    <legend>Show me: </legend>
-                    <label><input id="orbital-grid" type="checkbox"/> Grid: </label>
-                    <label><input id="earth-rotation" type="checkbox" checked/> Rotation</label>
-                  </fieldset>
-                </form>  
-              </li>
-              <li>
-                <form id="choose-month">
-                  <fieldset>
-                    <legend>Choose month</legend>
-                    <label><input type="radio" name="month" value="jun" checked> Jun 21</input></label>
-                    <label><input type="radio" name="month" value="sep"> Sep 21</input></label>
-                    <label><input type="radio" name="month" value="dec"> Dec 21</input></label>
-                    <label><input type="radio" name="month" value="mar"> Mar 21</input></label>
-                  </fieldset>
-                </form>
-              </li>
-              <li>
-                <form id="choose-tilt">
-                  <fieldset>
-                    <legend>Tilt of Earth</legend>
-                    <label><input type="radio" name="tilt" value="yes" checked> Yes</input></label>
-                    <label><input type="radio" name="tilt" value="no"> No</input></label>
-                  </fieldset>
-                </form>
-              </li>
-            </ul>
+            <div class="underCanvasUI">
+              <ul class="hlist">
+                <li>
+                  <form id="select-city-latitude">
+                    <label for="selected-city-latitude">Select a city:</label>
+                    <select id="selected-city-latitude" name="selected-city-latitude">
+                      <option disabled selected>city ...</option>
+                    </select>
+                  </form>
+                </li>
+                <li>
+                  Selected month: <span id="selected-month"></span> and tilt: <span id="selected-tilt"></span>
+                </li>
+                <li>
+                  <form id="city-latitude-temperature">
+                    <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
+                    <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
+                    <input type="submit" value="Run" />
+                  </form>
+                </li>
+              </ul>
+            </div>
           </div>
         </li>
         <li>
-          
-          
+          <div class="glCanvasQuarterFrame">
+            <p>View: Sun-Earth System</p>
+            <canvas id="theCanvas1">
+            </canvas>
+            <div class="underCanvasUI">
+              <ul class="hlist">
+                <li>
+                  <form id="choose-month">
+                    <fieldset>
+                      <legend>Choose month</legend>
+                      <label><input type="radio" name="month" value="jun" checked> Jun</input></label>
+                      <label><input type="radio" name="month" value="sep"> Sep</input></label>
+                      <label><input type="radio" name="month" value="dec"> Dec</input></label>
+                      <label><input type="radio" name="month" value="mar"> Mar</input></label>
+                    </fieldset>
+                  </form>
+                </li>
+                <li>
+                  <form id="choose-tilt">
+                    <fieldset>
+                      <legend>Tilt of Earth</legend>
+                      <label><input type="radio" name="tilt" value="yes" checked> Yes</input></label>
+                      <label><input type="radio" name="tilt" value="no"> No</input></label>
+                    </fieldset>
+                  </form>
+                </li>
+                <li>
+                  <form id="choose-view">
+                    <fieldset>
+                      <legend>Choose view: </legend>
+                      <label><input type="radio" name="view" value="top"> Top</input></label>
+                      <label><input type="radio" name="view" value="side" checked> Side</input></label>
+                    </fieldset>
+                  </form>
+                </li>
+                <li>
+                  <form id="show-me">
+                    <fieldset>
+                      <legend>Show me: </legend>
+                      <label><input id="orbital-grid" type="checkbox"/> Grid: </label>
+                      <label><input id="earth-rotation" type="checkbox" checked/> Rotation</label>
+                    </fieldset>
+                  </form>  
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <ul class="hlist">
+        <li>
           <div class="editorQuarterFrame">
-            Select a city and date:
-            <ul class="hlist">
-              <li>
-                <form id="select-city-latitude">
-                  <!-- <label for="selected-city-latitude">City/Latitude:</label> -->
-                  <select id="selected-city-latitude" name="selected-city-latitude">
-                    <option disabled selected>city ...</option>
-                  </select>
-                </form>
-              </li>
-              <li>
-                <form id="select-city-month">
-                  <!-- <label for="selected-city-month">Month:</label> -->
-                  <select id="selected-city-month" name="selected-city-month">
-                    <option disabled selected>date ...</option>
-                    <option value="dec">Dec 21</option>
-                    <option value="mar">Mar 21</option>
-                    <option value="jun">Jun 21</option>
-                    <option value="sep">Sep 21</option>
-                  </select>
-                </form>
-              </li>
-              <li>
-                <form id="select-tilt">
-                  <!-- <label for="selected-city-month">Month:</label> -->
-                  <select id="selected-tilt" name="selected-tilt">
-                    <option disabled selected>tilt ...</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
-                </form>
-              </li>
-            </ul>
-            <ul class="hlist">
-              <li>
-                <form id="city-latitude-temperature">
-                  <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
-                  <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
-                  <input type="submit" value="Run" />
-                </form>
-              </li>
-            </ul>
             <div class="tableFrame">
               <table id='city-data-table' class='sortable'>
                 <thead>
                   <tr>
-                    <th class='sortfirstasc text'>City</th>
+                    <th class='sortfirstasc number'></th>
+                    <th class='text'>City</th>
                     <th class='text'>Month</th>
                     <th class='number'>Tilt</th>
                     <th class='number'>Temp</th>
@@ -157,15 +147,6 @@
               </table>
             </div>
             <!-- <div class="editorFrame" id="editor">results ...</div> -->
-          </div>
-        </li>
-      </ul>
-      <ul class="hlist">
-        <li>
-          <div class="glCanvasQuarterFrame">
-            <p>View: Sun-Earth System</p>
-            <canvas id="theCanvas1">
-            </canvas>
           </div>
         </li>
         <li>

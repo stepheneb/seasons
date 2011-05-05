@@ -342,7 +342,7 @@ canvas:hover {
     border-top: 2px solid lightgray;
     border-bottom: 1px solid lightgray;
     background: #ffffff;
-    padding: 10px 15px 10px 15px;
+    padding: 5px 5px 5px 5px;
     height: 3000px;
 }
 
@@ -471,6 +471,10 @@ fieldset  {
     font-weight: bold;
 }
 
+#selected-tilt {
+    font-weight: bold;
+}
+
 fieldset img {
     vertical-align: text-top;
     margin: 0px;
@@ -574,7 +578,7 @@ fieldset label  {
 #content ul.hlist li  {
     line-height: 1.4em;
     color: #444444 !important;
-    margin-left: 5px;
+    margin-left: 0px;
     margin-bottom: 5px;
     display: inline-table;
     vertical-align: top;

@@ -1054,10 +1054,11 @@ function addExperimentData() {
         city_latitude_temperature_prediction.value == '') {
         return false;
     }
-    var the_month = scene1.month;
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
     var city_location = city.location;
+
+    var the_month = scene1.month;
     var month = month_data[the_month];
     var city_element_id = 'city_' + city_index + '_' + the_month;
     
