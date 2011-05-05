@@ -323,17 +323,20 @@ seasons.Scene.prototype.updateTilt = function(form_element) {
 
 seasons.Scene.prototype._updateTilt = function(tilt) {
     this.tilt = tilt;
+    var tilt_str;
     switch (tilt) {
         case "yes":
             this.earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 23.5 });
+            tilt_str = "Tilted";
             break;
 
         case "no":
             this.earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 0 });
+            tilt_str = "No Tilt";
             break;
     };
     if (this.selected_tilt) {
-        this.selected_tilt.textContent = tilt;
+        this.selected_tilt.textContent = tilt_str;
     }
 };
 
