@@ -869,6 +869,7 @@ var scene1 = new seasons.Scene({
 
     choose_view:                 "choose-view",
     choose_month:                "choose-month",
+    selected_month:              "selected-month",
     earth_pointer:               "earth-pointer1",
     earth_label:                 true,
     earth_info_label:            "earth-info-label1",
@@ -964,6 +965,27 @@ requestAnimFrame(seasonsAnimate);
 // city data experiment table and graph
 //
 
+var month_data = {
+    "jan": { index:  0, num:   1, short_name: 'Jan', long_name: 'January' },
+    "feb": { index:  1, num:   2, short_name: 'Feb', long_name: 'February' },
+    "mar": { index:  2, num:   3, short_name: 'Mar', long_name: 'March' },
+    "apr": { index:  3, num:   4, short_name: 'Apr', long_name: 'April' },
+    "may": { index:  4, num:   5, short_name: 'May', long_name: 'May' },
+    "jun": { index:  5, num:   6, short_name: 'Jun', long_name: 'June' },
+    "jul": { index:  6, num:   7, short_name: 'Jul', long_name: 'July' },
+    "aug": { index:  7, num:   8, short_name: 'Aug', long_name: 'August' },
+    "sep": { index:  8, num:   9, short_name: 'Sep', long_name: 'September' },
+    "oct": { index:  9, num:  10, short_name: 'Oct', long_name: 'October' },
+    "nov": { index: 10, num:  11, short_name: 'Nov', long_name: 'Novemeber' },
+    "dec": { index: 11, num:  12, short_name: 'Dec', long_name: 'December' }
+};
+
+var month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+
+var seasons = ["Fall", "Winter", "Spring", "Summer"];
+
+var choose_month = document.getElementById("choose-month");
+
 var selected_city_latitude = document.getElementById("selected-city-latitude");
 var city_option;
 var active_cities = [];
@@ -983,24 +1005,6 @@ for (var i = 0; i < active_cities.length; i++) {
     selected_city_latitude.appendChild(city_option);
 }
 
-var select_city_month = document.getElementById("select-city-month");
-var selected_city_month = document.getElementById("selected-city-month");
-var choose_month = document.getElementById("choose-month");
-
-function updateMonth() {
-    var month = selected_city_month.value;
-    for(var i = 0; i < choose_month.elements.length; i++) {
-        if (choose_month.elements[i].value === month) {
-            choose_month.elements[i].checked = true;
-        } else {
-            choose_month.elements[i].checked = false;
-        }
-    }
-    scene3._timeOfYearChange(month);
-};
-
-selected_city_month.onchange = updateMonth;
-
 var city_latitude_temperature = document.getElementById("city-latitude-temperature");
 var city_latitude_temperature_label = document.getElementById("city-latitude-temperature-label");
 var city_latitude_temperature_prediction = document.getElementById("city-latitude-temperature-prediction");
@@ -1019,25 +1023,6 @@ selected_city_latitude.onchange = updateLatitudeLineAndCity;
 
 var city_data_table = document.getElementById("city-data-table");
 var city_data_table_body = document.getElementById("city-data-table-body");
-
-var month_data = {
-    "jan": { index:  0, num:   1, short_name: 'Jan', long_name: 'January' },
-    "feb": { index:  1, num:   2, short_name: 'Feb', long_name: 'February' },
-    "mar": { index:  2, num:   3, short_name: 'Mar', long_name: 'March' },
-    "apr": { index:  3, num:   4, short_name: 'Apr', long_name: 'April' },
-    "may": { index:  4, num:   5, short_name: 'May', long_name: 'May' },
-    "jun": { index:  5, num:   6, short_name: 'Jun', long_name: 'June' },
-    "jul": { index:  6, num:   7, short_name: 'Jul', long_name: 'July' },
-    "aug": { index:  7, num:   8, short_name: 'Aug', long_name: 'August' },
-    "sep": { index:  8, num:   9, short_name: 'Sep', long_name: 'September' },
-    "oct": { index:  9, num:  10, short_name: 'Oct', long_name: 'October' },
-    "nov": { index: 10, num:  11, short_name: 'Nov', long_name: 'Novemeber' },
-    "dec": { index: 11, num:  12, short_name: 'Dec', long_name: 'December' }
-};
-
-var month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
-
-var seasons = ["Fall", "Winter", "Spring", "Summer"];
 
 var table_row, table_data;
 
@@ -1062,23 +1047,31 @@ for (var i = 0; i < 12; i++) {
     city_x_axis_tics.push([i, month_data[month_names[i]].long_name]);
 };
 
+var table_row_index = 0;
+
 function addExperimentData() {
-    if (selected_city_latitude.value == 'city ...' || 
-        selected_city_month.value == 'month ...' ||
+    if (selected_city_latitude.value == 'city ...' ||
         city_latitude_temperature_prediction.value == '') {
         return false;
     }
+    var the_month = scene1.month;
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
     var city_location = city.location;
-    var month = month_data[selected_city_month.value];
-    var city_element_id = 'city_' + city_index + '_' + selected_city_month.value;
+    var month = month_data[the_month];
+    var city_element_id = 'city_' + city_index + '_' + the_month;
     
     // if the City/Month row already exists in the 
     // data table return without adding a new one
     if (document.getElementById(city_element_id)) return false;
     
     table_row = document.createElement('tr');
+    
+    table_row_index++;
+    table_data = document.createElement('td');
+    table_data.textContent = table_row_index;
+    table_row.appendChild(table_data);
+    
     table_data = document.createElement('td');
     table_data.textContent = city.name;
     table_row.appendChild(table_data);
@@ -1128,33 +1121,39 @@ function addExperimentData() {
     var graph_checkbox = document.createElement('input');
     graph_checkbox.id = city_element_id;    
     graph_checkbox.type = "checkbox";
+    graph_checkbox.checked = true;
     table_data.appendChild(graph_checkbox);
     table_row.appendChild(table_data);
 
     var graph_checkbox_callback = function(event) {
-        var id_parts = this.id.split(/_/)
-        var city_index = id_parts[1];
-        var city_data = city_data_to_plot[city_index];
-        var city = active_cities[city_index];
-        var city_location = city.location;
-        var month = month_data[id_parts[2]];
-        var temperature = city.average_temperatures[month.index];
-        if (use_fahrenheit) temperature = temperature * 9 / 5 + 32;
-        if (this.checked) {
-            city_data.data[month.index] = [month.index, temperature]
-        } else {
-            city_data.data[month.index] = [month.index, null]
-        };
-        plotCityData();
+        _graph_checkbox_callback(this);
     };
-    
+
     graph_checkbox_callbacks[graph_checkbox.id] = graph_checkbox_callback;
     graph_checkbox.onchange = graph_checkbox_callback;
+    _graph_checkbox_callback(graph_checkbox);
 
     city_data_table_body.appendChild(table_row);
     SortableTable.load();
     return false;
 }
+
+function _graph_checkbox_callback(element) {
+    var id_parts = element.id.split(/_/)
+    var city_index = id_parts[1];
+    var city_data = city_data_to_plot[city_index];
+    var city = active_cities[city_index];
+    var city_location = city.location;
+    var month = month_data[id_parts[2]];
+    var temperature = city.average_temperatures[month.index];
+    if (use_fahrenheit) temperature = temperature * 9 / 5 + 32;
+    if (element.checked) {
+        city_data.data[month.index] = [month.index, temperature]
+    } else {
+        city_data.data[month.index] = [month.index, null]
+    };
+    plotCityData();
+};
 
 city_latitude_temperature.onsubmit = addExperimentData;
 
