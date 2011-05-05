@@ -110,6 +110,8 @@ seasons.Scene = function(options) {
     if (this.choose_tilt) {
         this.choose_tilt = document.getElementById(options.choose_tilt || "choose-tilt");
     };
+    
+    this.selected_tilt = document.getElementById(options.selected_tilt || "selected-tilt");
 
     this.earth_position      = SceneJS.withNode(options.earth_position || "earth-position");
     this.earth_rotation      = SceneJS.withNode(options.earth_rotation || "earth-rotation");
@@ -217,13 +219,16 @@ seasons.Scene = function(options) {
 
     // Selecting an Earth Tilt: yes, no 
     if (this.choose_tilt) {
+        this.tilt = getRadioSelection(this.choose_tilt);
         this.choose_tilt.onchange = (function() {
             return function() {
                 self.updateTilt(this);
             }
         })();
         this.choose_tilt.onchange();
-    };
+    } else {
+        this.tilt = true;
+    }
 
     //
     // Rendering bits ...
@@ -326,6 +331,9 @@ seasons.Scene.prototype._updateTilt = function(tilt) {
         case "no":
             this.earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 0 });
             break;
+    };
+    if (this.selected_tilt) {
+        this.selected_tilt.textContent = tilt;
     }
 };
 
