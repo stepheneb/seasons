@@ -34,7 +34,7 @@ var initial_earth_camera = {
 }
 
 var sun_view_small_offset = earth_orbital_radius_km * 0.3;
-var sun_view_large_offset =  earth_orbital_radius_km * 3.0;
+var sun_view_large_offset =  earth_orbital_radius_km * 2.5;
 
 var initial_sun_eye = { x: sun_x_pos, y: sun_view_small_offset, z: sun_view_large_offset };
 var initial_sun_eye_side = initial_sun_eye;
