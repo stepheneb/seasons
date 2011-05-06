@@ -47,10 +47,10 @@ var initial_sun_camera = {
 }
 
 var earth_orbit_line_size_med = earth_radius_km / 100;
-var earth_orbit_line_size_large = earth_radius_km * 50;
+var earth_orbit_line_size_large = earth_radius_km * 150;
 
 var sun_earth_line_size_med =   earth_radius_km / 250;
-var sun_earth_line_size_large = earth_radius_km * 50;
+var sun_earth_line_size_large = earth_radius_km * 150;
 
 monthNamesShort = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 

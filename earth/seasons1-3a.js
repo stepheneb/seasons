@@ -1253,10 +1253,12 @@ function addExperimentData() {
     select = document.createElement('select');
     select.name = 'season_city_' + city_element_id;
     select.id = 'season_city_' + city_element_id;
+
     option = document.createElement('option');
     option.disabled = true;
     option.textContent = "pick...";
     select.appendChild(option);
+
     for (i = 0; i < seasons.length; i++) {
         option = document.createElement('option');
         option.value = seasons[i];
