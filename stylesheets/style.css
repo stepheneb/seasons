@@ -481,8 +481,6 @@ canvas:hover {
     margin-bottom: 2px;
     padding-top: 2px;
     padding-bottom: 2px;
-    display: inline-block;
-    list-style-type: none;
 }
 
 /*fieldset {
@@ -554,9 +552,7 @@ fieldset label  {
 */
 #webglCanvasContainer ul.hlist li  {
     line-height: 1.4em;
-    color: #444444 !important;    
-    display: inline-block;
-    list-style-type: none;
+    color: #444444 !important;
 }
 
 #webglCanvasContainer p {
@@ -611,20 +607,12 @@ fieldset label  {
 
 #content ul {
     padding-top: 2px;
-    padding-bottom: 2px;
+    padding-bottom: 0px;
 }
 
-#content ul li {
+#content ul.hlist li {
     line-height: 1.4em;
     color: #444444 !important;    
-    margin-left: 20px;
-}
-
-#content ul.hlist li  {
-    line-height: 1.4em;
-    color: #444444 !important;
-    margin-left: 0px;
-    margin-bottom: 5px;
     display: inline-table;
     vertical-align: top;
     list-style-type: none;
