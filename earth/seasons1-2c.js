@@ -1045,7 +1045,8 @@ for (var i = 0; i < active_cities.length; i++) {
 
 var city_x_axis_tics = [];
 for (var i = 0; i < 12; i++) {
-    city_x_axis_tics.push([i, month_data[month_names[i]].long_name]);
+    var shifted_index = (i + 1) % 12;
+    city_x_axis_tics.push([i , month_data[month_names[shifted_index]].long_name]);
 };
 
 var table_row_index = 0;
@@ -1155,10 +1156,11 @@ function _graph_checkbox_callback(element) {
     var month = month_data[id_parts[2]];
     var temperature = city.average_temperatures[month.index];
     if (use_fahrenheit) temperature = temperature * 9 / 5 + 32;
+    var shifted_index = month.index - 1;
     if (element.checked) {
-        city_data.data[month.index] = [month.index, temperature]
+        city_data.data[shifted_index] = [shifted_index, temperature]
     } else {
-        city_data.data[month.index] = [month.index, null]
+        city_data.data[shifted_index] = [shifted_index, null]
     };
     plotCityData();
 };
