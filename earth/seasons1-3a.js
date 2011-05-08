@@ -1205,9 +1205,11 @@ function addExperimentData() {
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
     var city_location = city.location;
+
+    // FIXME: hard-coded to scene3
+    var the_tilt = scene3.tilt;
     
     var the_month = scene1.month;
-    var the_tilt = scene1.tilt ? "yes" : "no";
     var month = month_data[the_month];
     var city_element_id = 'city_' + city_index + '_' + the_month + '_' + the_tilt;
 
