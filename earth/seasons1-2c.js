@@ -1101,7 +1101,7 @@ function addExperimentData() {
 
     option = document.createElement('option');
     option.disabled = true;
-    option.textContent = "pick...";
+    option.textContent = "choose...";
     select.appendChild(option);
 
     for (i = 0; i < seasons.length; i++) {

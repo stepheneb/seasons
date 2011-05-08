@@ -7,6 +7,12 @@
     font-size: 80%;
 }
 
+#city-data-table select {
+    margin: 0px;
+    padding-top: 1px;
+    font-size: 90%;
+}
+
 .scroll-table-head {
   width: 460;
 }
