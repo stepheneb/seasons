@@ -1190,7 +1190,13 @@ function calc_ave_temp(average_temperatures, month_index, tilt_value) {
         for (i = 1; i < average_temperatures.length; i++) {
             ave_temp += average_temperatures[i];
         };
-        ave_temp = ave_temp / average_temperatures.length;
+        var seasonal_shift = 2;
+        var seasonal_shift_factor = 12 - seasonal_shift;
+        var galapagos_variation = 5.5;
+        var shifted_day_number = day_number_by_month[month_names[(month_index + seasonal_shift_factor) % 12]]
+        var seasonal_offset = Math.cos(shifted_day_number / 365 * 2 * Math.PI) * (galapagos_variation / 2);
+        // var seasonal_factor = earth_ephemerides_solar_constant_by_month(month_names[month_index]) / SOLAR_CONSTANT
+        ave_temp = (ave_temp / average_temperatures.length) + seasonal_offset;
     }
     return ave_temp;
 }
