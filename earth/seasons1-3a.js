@@ -1153,6 +1153,7 @@ for (var i = 0; i < active_cities.length; i++) {
     var city_data = city_data_to_plot[i * 2];
     var city = active_cities[i];
     city_data.label = city.name;
+    city_data.color = city.color;
     city_data.lines = { show: true };
     city_data.points = { show: true };
     city_data.data = [];
@@ -1163,6 +1164,7 @@ for (var i = 0; i < active_cities.length; i++) {
     city_data_to_plot.push({});
     city_data = city_data_to_plot[i * 2 + 1];
     city_data.label = city.name + ' no tilt';
+    city_data.color = city.color;
     city_data.lines = { show: true };
     city_data.points = { show: true };
     city_data.data = [];
@@ -1378,6 +1380,43 @@ function plotCityData() {
 
 plotCityData();
 
+var city_color_keys = document.getElementById("city-color-keys");
+
+function generateCityColorKeys() {
+    // remove the existing list
+    var color_key_list = document.getElementById("color-key-list");
+    city_color_keys.removeChild(color_key_list);
+
+    // create a new color-key-list
+    var color_key_list = document.createElement('ul');
+    // color_key_list.className = "vlist";
+    color_key_list.id = "color-key-list";
+
+    for (var i = 0; i < active_cities.length; i++) {
+        var city = active_cities[i];
+
+        // create a list item
+        var color_key_item = document.createElement('li');
+
+        // create and add a colored patch
+        var color_patch = document.createElement('div');
+        color_patch.className = "colorKeyPatch";
+        color_patch.style.backgroundColor = city.color;
+        color_key_item.appendChild(color_patch);
+        
+        // add the city name
+        var city_name = document.createElement('span');
+        city_name.textContent = city.name;
+        color_key_item.appendChild(city_name);
+        
+        // add the new list item to the list
+        color_key_list.appendChild(color_key_item);
+    }
+    // insert the new color key list into the document
+    city_color_keys.appendChild(color_key_list);
+};
+
+generateCityColorKeys();
 
 var dark_green = '#355506';
 

@@ -389,6 +389,21 @@ canvas:hover {
     width: 480px;
 }
 
+#city-color-keys {
+    margin: 0px 10px;
+    text-align: center;
+}
+
+.colorKeyPatch {
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    float: left;
+    padding: 1px;
+    margin: 2px 4px 2px 20px;
+    border: 1px solid lightgray;
+}
+
 .editorQuarterFrame {
     width: 480px;
     margin-left: 5px;
