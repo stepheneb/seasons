@@ -443,6 +443,11 @@ canvas:hover {
     line-height: 1.5em;
 }
 
+#content .glCanvasQuarterFrame .tip {
+    font-weight: bold;
+    font-size: 110%;
+}
+
 #content .glCanvasQuarterFrame ul.hlist  {
     line-height: 1.0em;
     color: #444444 !important;    
