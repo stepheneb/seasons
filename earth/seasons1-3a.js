@@ -1363,7 +1363,8 @@ function plotCityData() {
         title: "Average Monthly Temperatures",
         grid:{ verticalLines: true, backgroundColor: 'white' },
         HtmlText: false,
-        legend: { position: 'nw', margin: 1, backgroundOpacity: 0.1 },
+        legend: false,
+        // legend: { position: 'nw', margin: 1, backgroundOpacity: 0.1 },
         mouse:{
           track: true,
           lineColor: 'purple',
