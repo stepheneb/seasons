@@ -346,15 +346,6 @@ h4 {
     width: 80%;
 }
 
-/*canvas {
-    padding-bottom: 15px;
-    margin-bottom: 10px;
-}
-*/
-canvas:hover {
-    cursor: move;    
-}
-
 #content {
     overflow: auto;
     text-align: left;
@@ -382,7 +373,7 @@ canvas:hover {
 }
 
 #content .glCanvasFullFrame canvas:hover {
-    cursor: move;    
+    cursor: pointer;    
 }
 
 .quarterFrame {
@@ -446,7 +437,7 @@ canvas:hover {
 }
 
 #content .glCanvasQuarterFrame canvas:hover {
-    cursor: move;    
+    cursor: pointer;    
 }
 
 #content .glCanvasQuarterFrame p {
