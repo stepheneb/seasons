@@ -824,26 +824,34 @@ seasons.Activity = function(options) {
 };
 
 seasons.Activity.prototype.toJSON = function() {
+    var scenes= {};
+    scenes.scene1 = this.scenes.scene1.toJSON();
+    if (this.version !== "1.1") {
+        scenes.scene3 = this.scenes.scene3.toJSON();
+    }
     return { 
         version: this.version,
-        scenes: this.scenes
+        scenes: scenes,
+        table: experimentDataToJSON()
     };
 };
 
 seasons.Activity.prototype.fromJSON = function(state) {
     switch (state.version) {
         case 1.1:
-        this.scenes.scene.fromJSON(state.scenes.scene)
+        this.scenes.scene.fromJSON(state.scenes.scene);
         break;
 
         case 1.2:
-        this.scenes.scene1.fromJSON(state.scenes.scene1)
-        this.scenes.scene3.fromJSON(state.scenes.scene3)
+        this.scenes.scene1.fromJSON(state.scenes.scene1);
+        this.scenes.scene3.fromJSON(state.scenes.scene3);
+        experimentDataFromJSON(state.table);
         break;
 
         case 1.3:
-        this.scenes.scene1.fromJSON(state.scenes.scene1)
-        this.scenes.scene3.fromJSON(state.scenes.scene3)
+        this.scenes.scene1.fromJSON(state.scenes.scene1);
+        this.scenes.scene3.fromJSON(state.scenes.scene3);
+        experimentDataFromJSON(state.table);
         break;
     }
 };
