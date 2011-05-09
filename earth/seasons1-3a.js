@@ -1112,7 +1112,10 @@ var city_option;
 var active_cities = [];
 var city, city_location;
 
+// FIXME: refactor access to key
 for (var c = 0; c < cities.length; c++) {
+    var this_city = cities[c];
+    this_city.key = this_city.name.replace(/\W/, '_') + '_' + c + '_' + this_city.location.latitude + '_' + this_city.location.longitude;
     if (cities[c].active) active_cities.push(cities[c]);
 };
 
@@ -1217,7 +1220,16 @@ function addExperimentData() {
     
     var the_month = scene1.month;
     var month = month_data[the_month];
-    var city_element_id = 'city_' + city_index + '_' + the_month + '_' + the_tilt;
+
+
+    // FIXME: refactor so this can be changed without affecting _graph_checkbox_callback
+    // 0: "Fairbanks"
+    // 1: "0"
+    // 2: "64.51"
+    // 3: "147.43"
+    // 4: "jun"
+    // 5: "no"
+    var city_element_id = city.key + '_' + the_month + '_' + the_tilt;;
 
     var ave_temp;
     
@@ -1226,6 +1238,7 @@ function addExperimentData() {
     if (document.getElementById(city_element_id)) return false;
     
     table_row = document.createElement('tr');
+    table_row.id = city_element_id;
     
     table_row_index++;
     table_data = document.createElement('td');
@@ -1262,8 +1275,8 @@ function addExperimentData() {
     table_data = document.createElement('td');
     var select, option;
     select = document.createElement('select');
-    select.name = 'season_city_' + city_element_id;
-    select.id = 'season_city_' + city_element_id;
+    select.name = 'season_' + city_element_id;
+    // select.id = 'season_city_' + city_element_id;
 
     option = document.createElement('option');
     option.disabled = true;
@@ -1285,7 +1298,7 @@ function addExperimentData() {
 
     table_data = document.createElement('td');
     var graph_checkbox = document.createElement('input');
-    graph_checkbox.id = city_element_id;    
+    graph_checkbox.id = 'graph_' + city_element_id;    
     graph_checkbox.type = "checkbox";
     graph_checkbox.checked = true;
     table_data.appendChild(graph_checkbox);
@@ -1304,21 +1317,25 @@ function addExperimentData() {
     return false;
 }
 
+// 0: "graph"
+// 1: "Fairbanks"
+// 2: "64.51"
+// 3: "147.43"
+// 4: "jun"
+// 5: "yes"
 function _graph_checkbox_callback(element) {
-    var id_parts = element.id.split(/_/)
-    var city_index = id_parts[1];
-
-    var tilt = id_parts[3];
+    var graph_id_parts = element.id.split(/_/)
+    var city_index = graph_id_parts[2];
+    var tilt = graph_id_parts[6];
     var city_data;
     if (tilt === "yes") {
          city_data = city_data_to_plot[city_index * 2];
     } else {
         city_data = city_data_to_plot[city_index * 2 + 1];
     };
-    
     var city = active_cities[city_index];
     var city_location = city.location;
-    var month = month_data[id_parts[2]];
+    var month = month_data[graph_id_parts[5]];
     var temperature = calc_ave_temp(city.average_temperatures, month.index, tilt);
     if (use_fahrenheit) temperature = temperature * 9 / 5 + 32;
     var shifted_index = month.index - 1;
