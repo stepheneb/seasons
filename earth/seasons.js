@@ -39,9 +39,9 @@ function setRadioSelection (form_element, value) {
 // The Main Object: seasons.Scene
 
 seasons.Scene = function(options) {
-    if (!options) options = {};
+    options = options || {};
 
-    this.debugging             = (options.debugging || false);
+    this.debugging          = (options.debugging || false);
 
     // Setting up the scene ...
     
