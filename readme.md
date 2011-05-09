@@ -18,3 +18,28 @@ There are rake tasks for generating and locally deploying the WISE4 step version
 The copy_step_to_local_vle task is useful for testing the seasons step if you have a local instance of WISE4 running.
 
 See: https://code.google.com/p/wise4/wiki/StableWISEDeploymentModel
+
+These three Seasons Activities all now support persistence to json:
+
+1) [Investigation 1: What Temperature Patterns Do You See?](http://visual-demos.dev.concord.org/seasons/earth/seasons1-2a.html)
+2) [Investigation 2: What Is the Shape of Earth's Orbit?](http://visual-demos.dev.concord.org/seasons/earth/seasons1-1.html)
+3) [Investigation 3: How Does Earth’s Tilt Affect Temperature?](http://visual-demos.dev.concord.org/seasons/earth/seasons1-3.html)
+
+
+When any one of these activities are loaded a seasons_activity object is created:
+
+Startup activity and save initial state:
+
+    a1 = seasons_activity.toJSON()
+
+Add rows to experiment table save new state:
+
+    a2 = seasons_activity.toJSON()
+
+Restore initial activity state:
+
+    seasons_activity.fromJSON(a1)
+
+Restore second activity state:
+
+    seasons_activity.fromJSON(a2)
