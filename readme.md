@@ -21,25 +21,25 @@ See: https://code.google.com/p/wise4/wiki/StableWISEDeploymentModel
 
 These three Seasons Activities all now support persistence to json:
 
-1) [Investigation 1: What Temperature Patterns Do You See?](http://visual-demos.dev.concord.org/seasons/earth/seasons1-2a.html)
-2) [Investigation 2: What Is the Shape of Earth's Orbit?](http://visual-demos.dev.concord.org/seasons/earth/seasons1-1.html)
-3) [Investigation 3: How Does Earth’s Tilt Affect Temperature?](http://visual-demos.dev.concord.org/seasons/earth/seasons1-3.html)
+1. [Investigation 1: What Temperature Patterns Do You See?](http://visual-demos.dev.concord.org/seasons/earth/seasons1-2a.html)
+2. [Investigation 2: What Is the Shape of Earth's Orbit?](http://visual-demos.dev.concord.org/seasons/earth/seasons1-1.html)
+3. [Investigation 3: How Does Earth’s Tilt Affect Temperature?](http://visual-demos.dev.concord.org/seasons/earth/seasons1-3.html)
 
 
-When any one of these activities are loaded a seasons_activity object is created:
+When any one of these activities are loaded a seasons_activity object is created with ```toJSON()``` and ```fromJSON()``` methods:
 
 Startup activity and save initial state:
 
     a1 = seasons_activity.toJSON()
 
-Add rows to experiment table save new state:
+Add rows to experiment table, manipulate your view of the Earth and save a new state:
 
     a2 = seasons_activity.toJSON()
 
-Restore initial activity state:
+Restore initial activity state: the experiment table and graph will be empty and the position of the Earth will be as it was when the visualization first started.
 
     seasons_activity.fromJSON(a1)
 
-Restore second activity state:
+Restore second activity state: the experiment table and graph will be filled as before and the position of the Earth will be as it was when the state was saved the second time.
 
     seasons_activity.fromJSON(a2)
