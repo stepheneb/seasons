@@ -407,6 +407,7 @@ seasons.Scene.prototype.mouseDown = function(event, element) {
             break;
     }
     this.dragging = true;
+    this.canvas.style.cursor = "pointer";
 }
 
 seasons.Scene.prototype.mouseUp = function(event, element) {
@@ -422,6 +423,7 @@ seasons.Scene.prototype.mouseOut = function(event, element) {
 seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch, linked) {
     if (this.dragging) {
 
+        this.canvas.style.cursor = "pointer";
         var look, eye, eye4, neweye;
         var up_downQ, up_downQM, left_rightQ, left_rightQM;
         var f, up_down_axis, angle, new_yaw, new_pitch;
