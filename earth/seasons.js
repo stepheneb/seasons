@@ -302,6 +302,10 @@ seasons.Scene.prototype.toJSON = function() {
     return state
 };
 
+seasons.Scene.prototype.toJSONStr = function() {
+    return JSON.stringify(this.toJSON());
+};
+
 seasons.Scene.prototype.fromJSON = function(state) {
     this._timeOfYearChange(state.month);
     this._circleOrbitPathChange(state.circle_orbit);
@@ -311,6 +315,10 @@ seasons.Scene.prototype.fromJSON = function(state) {
     this.look.set("eye", JSON.parse(state.look_at.eye));
     this.look.set("up", JSON.parse(state.look_at.up));
     this.look.set("look", JSON.parse(state.look_at.look));
+};
+
+seasons.Scene.prototype.fromJSONstr = function(json_state_str) {
+    this.fromJSON(JSON.parse(json_state_str));
 };
 
 seasons.Scene.prototype.render = function() {
