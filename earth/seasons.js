@@ -357,6 +357,14 @@ seasons.Scene.prototype.set_earth_position = function(newpos) {
     this.earth_position.set({ x: newpos[0], y: newpos[1], z: newpos[2] })
 }
 
+seasons.Scene.prototype.get_earth_distance = function() {
+    return earth_ellipse_distance_from_sun_by_month(this.month);
+}
+
+seasons.Scene.prototype.get_solar_flux = function() {
+    return earth_ephemerides_solar_constant_by_month(this.month);
+}
+
 seasons.Scene.prototype.get_normalized_earth_eye = function() {
     var normalized_eye = {};
     var eye = this.lookat.get("eye");
