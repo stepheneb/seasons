@@ -827,15 +827,21 @@ seasons.Activity = function(options) {
 
 seasons.Activity.prototype.toJSON = function() {
     var scenes= {};
-    scenes.scene1 = this.scenes.scene1.toJSON();
-    if (this.version !== "1.1") {
+    if (this.version == "1.1") {
+        scenes.scene = this.scenes.scene.toJSON();
+        return { 
+            version: this.version,
+            scenes: scenes,
+        };
+    } else {
+        scenes.scene = this.scenes.scene1.toJSON();
         scenes.scene3 = this.scenes.scene3.toJSON();
+        return { 
+            version: this.version,
+            scenes: scenes,
+            table: experimentDataToJSON()
+        };
     }
-    return { 
-        version: this.version,
-        scenes: scenes,
-        table: experimentDataToJSON()
-    };
 };
 
 seasons.Activity.prototype.fromJSON = function(state) {
