@@ -1,5 +1,5 @@
 {
    "prompt": "",
-   "modelType":"distanceAndShape",
+   "modelType":"whatTemperaturePatternsDoYouSee",
    "type": "Seasons"
 }

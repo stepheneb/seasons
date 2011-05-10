@@ -61,11 +61,11 @@ SEASONS.prototype.render = function() {
 	// get type of model
 	var modelType = this.content.modelType;
 	
-	if (modelType == "distanceAndShape") {		
+	if (modelType == "whatIstheShapeofEarthsOrbit") {		
 		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-1.html");
-	} else if (modelType == "distanceAndTemperature") {		
+	} else if (modelType == "whatTemperaturePatternsDoYouSee") {		
 		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-2a.html");
-	} else if (modelType == "tiltAndTemperature") {		
+	} else if (modelType == "howDoesEarthsTiltAffectTemperature") {		
 		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-3.html");
 	} else if (modelType == "tiltAndHoursOfDaylight") {		
 		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons4.html");

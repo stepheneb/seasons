@@ -74,10 +74,9 @@ View.prototype.SeasonsNode.generatePage = function(view){
 	 * be handled in the seasonsEvents.js file
 	 */
 	var modelTypeDropDownHtml = '<select id="modelTypeDropDown" onchange="eventManager.fire(\'seasonsModelTypeUpdated\')">' + 
-	'<option value="distanceAndShape">distanceAndShape</option>' +
-	'<option value="distanceAndTemperature">distanceAndTemperature</option>' +
-	'<option value="tiltAndTemperature">tiltAndTemperature</option>' +
-	'<option value="tiltAndHoursOfDaylight">tiltAndHoursOfDaylight</option>' +
+	'<option value="whatTemperaturePatternsDoYouSee">1 What Temperature Patterns Do You See?</option>' +
+	'<option value="whatIstheShapeofEarthsOrbit">2 What is the Shape of Earth\'s Orbit</option>' +
+	'<option value="howDoesEarthsTiltAffectTemperature">3 How Does Earth\'s Tilt Affect Temperature?</option>' +
 	'</select>';
 		
 	//var promptTextArea = createElement(document, 'textarea', {id: 'promptTextArea', rows:'20', cols:'85', onkeyup:"eventManager.fire('seasonsUpdatePrompt')"});
