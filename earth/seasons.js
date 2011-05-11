@@ -836,11 +836,12 @@ seasons.Activity.prototype.toJSON = function() {
     } else {
         scenes.scene1 = this.scenes.scene1.toJSON();
         scenes.scene3 = this.scenes.scene3.toJSON();
-        return { 
+        var json_object = { 
             version: this.version,
             scenes: scenes,
             table: experimentDataToJSON()
         };
+        return json_object;
     }
 };
 
