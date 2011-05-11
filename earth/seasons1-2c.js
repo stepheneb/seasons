@@ -978,7 +978,7 @@ function sceneCompletelyLoaded() {
 SceneJS.withNode("theScene3").bind("loading-status", 
     function(event) {	
         if (zBufferDepth == 0) {
-            zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
+            zBufferDepth = SceneJS.withNode("theScene3").get("ZBufferDepth");
             var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
             SceneJS._loggingModule.info(mesg);            
         }
