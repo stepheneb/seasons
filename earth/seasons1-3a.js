@@ -1091,6 +1091,11 @@ requestAnimFrame(seasonsAnimate);
  * assume that this is in WISE4 mode, so let WISE4 know that seasons model has loaded.
  * @return
  */
+
+var zBufferDepth = 0;
+
+var completelyLoaded = false;
+
 function sceneCompletelyLoaded() {
 	if (parent && parent.eventManager) {
 		if (typeof parent.eventManager != "undefined") {
