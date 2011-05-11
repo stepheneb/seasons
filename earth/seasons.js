@@ -834,7 +834,7 @@ seasons.Activity.prototype.toJSON = function() {
             scenes: scenes,
         };
     } else {
-        scenes.scene = this.scenes.scene1.toJSON();
+        scenes.scene1 = this.scenes.scene1.toJSON();
         scenes.scene3 = this.scenes.scene3.toJSON();
         return { 
             version: this.version,
