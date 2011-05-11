@@ -253,6 +253,7 @@ var pInterval = setInterval("window.render()", 30);
 var zBufferDepth = 0;
 
 var completelyLoaded = false;
+
 /**
  * callback when the scene object has completely finished loading.
  * check to see if this is embedded inside an iframe (has parent). If yes,

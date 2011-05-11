@@ -1084,6 +1084,39 @@ var keepAnimating = true;
 
 requestAnimFrame(seasonsAnimate);
 
+
+/**
+ * callback when the scene object has completely finished loading.
+ * check to see if this is embedded inside an iframe (has parent). If yes,
+ * assume that this is in WISE4 mode, so let WISE4 know that seasons model has loaded.
+ * @return
+ */
+function sceneCompletelyLoaded() {
+	if (parent && parent.eventManager) {
+		if (typeof parent.eventManager != "undefined") {
+			parent.eventManager.fire("seasonsModelIFrameLoaded");
+		}
+	}
+}
+
+SceneJS.withNode("theScene3").bind("loading-status", 
+    function(event) {	
+        if (zBufferDepth == 0) {
+            zBufferDepth = SceneJS.withNode("theScene3").get("ZBufferDepth");
+            var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
+            SceneJS._loggingModule.info(mesg);            
+        }
+        var params = event.params;
+        
+        if (params.numNodesLoading > 0) {
+        } else {
+        	if (!completelyLoaded) {
+        		sceneCompletelyLoaded();
+        		completelyLoaded = true;
+        	}
+        }        
+    });
+
 //
 // city data experiment table and graph
 //
