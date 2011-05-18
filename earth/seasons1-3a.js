@@ -1412,6 +1412,10 @@ function addExperimentData() {
     _graph_checkbox_callback(graph_checkbox);
 
     city_data_table_body.appendChild(table_row);
+    
+    // erase previous temperature prediction
+    city_latitude_temperature_prediction.value=""
+    
     SortableTable.load();
     return false;
 }
