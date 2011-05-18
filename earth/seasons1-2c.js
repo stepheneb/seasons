@@ -1,4 +1,5 @@
 
+
 var dark_side = 0.3;
 
 /*----------------------------------------------------------------------
@@ -205,6 +206,8 @@ SceneJS.createNode({
                                             selection: [0],
 
                                             nodes: [
+                                            
+                                                {},
 
                                                 {
 
@@ -533,6 +536,8 @@ SceneJS.createNode({
                                             selection: [0],
 
                                             nodes: [
+                                            
+                                                {},
 
                                                 {
 

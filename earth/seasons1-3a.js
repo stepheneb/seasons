@@ -259,6 +259,8 @@ SceneJS.createNode({
                                                     selection: [0],
 
                                                     nodes: [
+                                                    
+                                                        {},
 
                                                         {
 
@@ -598,6 +600,8 @@ SceneJS.createNode({
 
                                                     nodes: [
 
+                                                        {},
+                                                        
                                                         {
 
                                                             type: "translate", // Example translation
