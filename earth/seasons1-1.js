@@ -44,6 +44,52 @@ SceneJS.createNode({
     ]
 });
 
+SceneJS.createNode({
+    id: "SunPointerSprite",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/sun-arrow.png" } ],
+            nodes: [
+            
+                {
+                    type: "node",
+                    
+                    flags: {
+                        transparent: true
+                    },
+                    
+                    nodes: [
+                    
+                        {
+                    
+                            type: "material",
+                            specular: 0.0,
+                            emit: 10,
+                            
+                            nodes: [
+                                
+                                {
+                                    type: "translate",
+                                    y: sun_radius_km * 22,
+                                    
+                                    nodes: [
+                                        {
+                                            type: "quad",
+                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20,
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
 
 SceneJS.createNode({
     
@@ -83,6 +129,12 @@ SceneJS.createNode({
                             type : "instance",
                             target :"sun"
                         },
+                        
+                        {
+                            type: "instance",
+                            target: "SunPointerSprite"
+                        },
+                        
 
                         // Integrate our earth circular orbit, which is defined in earth-orbit.js
                         {

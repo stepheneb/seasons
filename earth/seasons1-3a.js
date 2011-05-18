@@ -173,6 +173,59 @@ SceneJS.createNode({
                                             type : "instance",
                                             target :"sun"
                                         },
+                                        
+                                        {
+                                            type: "translate",
+                                            id: "sun-pointer1",
+                                            x: 0, y: 0, z: 0,
+                                            nodes: [
+                                                {
+                                                    type: "billboard",
+                                                    nodes: [
+                                                        {
+                                                            type: "texture",
+                                                            layers: [ { uri: "images/sun-arrow.png" } ],
+                                                            nodes: [
+
+                                                                {
+                                                                    type: "node",
+
+                                                                    flags: {
+                                                                        transparent: true
+                                                                    },
+
+                                                                    nodes: [
+
+                                                                        {
+
+                                                                            type: "material",
+                                                                            specular: 0.0,
+                                                                            emit: 10,
+
+                                                                            nodes: [
+
+                                                                                {
+                                                                                    type: "translate",
+                                                                                    y: sun_radius_km * 22,
+
+                                                                                    nodes: [
+                                                                                        {
+                                                                                            type: "quad",
+                                                                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20,
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        
 
                                         // Integrate our earth elliptical orbit, which is defined in earth-orbit.js
                                         {
