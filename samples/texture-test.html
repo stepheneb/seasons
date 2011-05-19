@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>SceneJS Texture Test</title>
+    <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../lib/scenejs-0.8.0/scenejs.js"></script>
+</head>
+<div id="container">
+  <div id="header-inner">
+    <h1 id="title">SceneJS Texture Test</h1>
+  </div>
+  <div id="content">
+    <div id="webglCanvasContainer">
+      <ul class="hlist">
+        <li>
+          <ul class="hlist">
+            <li>
+              <canvas id="theCanvas1" height="350px", width="450px"></canvas>
+              <p>The cube is 2 units and the eye is 5 units away</p>
+            </li>
+            <li>
+              <canvas id="theCanvas2" height="350px", width="450px"></canvas>
+              <p>The cube is 0.2 units and the eye is 0.5 units away</p>
+            </li>
+          </ul>
+          <ul class="hlist">
+            <li>
+              <canvas id="theCanvas3" height="350px", width="450px"></canvas>
+              <p>The cube is 0.02 units and the eye is 0.05 units away</p>
+            </li>
+            <li>
+              <canvas id="theCanvas4" height="350px", width="450px"></canvas>
+              <p>The cube is 0.002 units and the eye is 0.005 units away</p>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    <div id="info">
+      <p>The texture image.</p>
+      <img src="../earth/images/solarpanel1.jpg"/>
+    </div>
+    <div id="log">
+      <h3>SceneJS Log</h3>
+      <div id="theLoggingDiv"></div>
+    </div> 
+  </div>
+</div>
+<script type="text/javascript" src="texture-test.js"></script>
+</body>
+</html>
