@@ -1587,7 +1587,7 @@ if (use_fahrenheit) {
     city_latitude_temperature_label.textContent.replace(/(C|F)$/, 'C')    
 }
 
-var y_axis = { title: 'Temperature deg F', min: -20, max: 80 };
+var y_axis = { title: 'Temperature deg F', min: -20, max: 90 };
 var graph_degree_string = "deg F";
 
 if (!use_fahrenheit) {

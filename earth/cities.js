@@ -124,6 +124,23 @@ var cities = [
         average_temperatures: [19, 20, 22, 24, 26, 27, 28, 28, 28, 26, 23, 20],
         source: "http://www.climatetemp.info/usa/miami-florida.html"
     },
+    
+    {
+        name: "Singapore",
+        country: "Singapore",
+        active: true,
+        location: {
+            signed_longitude: -103.55,
+            signed_latitude: 1.14,
+            latitude: 1.14,
+            lat_dir: "N",
+            longitude: 103.55,
+            long_dir: "E",
+            elev: 18
+        },
+        average_temperatures: [26.5, 27, 28, 28, 28, 28, 28, 27, 27, 27, 27, 26.5],
+        source: "http://www.climatetemp.info/singapore/"
+    },
 
     {
         name: "Quito",
@@ -146,7 +163,7 @@ var cities = [
     {
         name: "Galapagos Island",
         country: "Chile",
-        active: true,
+        active: false,
         color: city_colors.bright_red,
         location: {
             signed_longitude: 91.1,
