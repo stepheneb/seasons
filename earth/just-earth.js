@@ -195,7 +195,48 @@ SceneJS.createNode({
                                                                 { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                                 { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
                                                             ],
-                                                            nodes: [ { type : "instance", target : "earth-sphere"  } ]
+                                                            nodes: [
+                                                                {
+                                                                    type: "material",
+                                                                    baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+                                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                                    specular:       0.0,
+                                                                    shine:          2.0,
+
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "translate",
+                                                                            x: earth_x_pos,
+                                                                            y: 0,
+                                                                            z: 0,
+
+                                                                            nodes: [
+
+                                                                                {
+
+                                                                                    type: "scale",
+                                                                                    x: earth_radius_km,
+                                                                                    y: earth_radius_km,
+                                                                                    z: earth_radius_km,
+
+                                                                                    nodes: [
+
+                                                                                        {
+
+                                                                                            type: "rotate",
+                                                                                            id: 'spin',
+                                                                                            angle: 0,
+                                                                                            y: 1.0,
+
+                                                                                            nodes: [ { type: "sphere" } ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
 
                                                         },
 
@@ -207,7 +248,48 @@ SceneJS.createNode({
                                                                 { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                                 { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
                                                             ],
-                                                            nodes: [ { type : "instance", target : "earth-sphere"  } ]
+                                                            nodes: [
+                                                                {
+                                                                    type: "material",
+                                                                    baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+                                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                                    specular:       0.0,
+                                                                    shine:          2.0,
+
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "translate",
+                                                                            x: earth_x_pos,
+                                                                            y: 0,
+                                                                            z: 0,
+
+                                                                            nodes: [
+
+                                                                                {
+
+                                                                                    type: "scale",
+                                                                                    x: earth_radius_km,
+                                                                                    y: earth_radius_km,
+                                                                                    z: earth_radius_km,
+
+                                                                                    nodes: [
+
+                                                                                        {
+
+                                                                                            type: "rotate",
+                                                                                            id: 'spin',
+                                                                                            angle: 0,
+                                                                                            y: 1.0,
+
+                                                                                            nodes: [ { type: "sphere" } ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
 
                                                         },
 
@@ -219,7 +301,48 @@ SceneJS.createNode({
                                                                 { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                                 { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
                                                             ],
-                                                            nodes: [ { type : "instance", target : "earth-sphere"  } ]
+                                                            nodes: [
+                                                                {
+                                                                    type: "material",
+                                                                    baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+                                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                                    specular:       0.0,
+                                                                    shine:          2.0,
+
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "translate",
+                                                                            x: earth_x_pos,
+                                                                            y: 0,
+                                                                            z: 0,
+
+                                                                            nodes: [
+
+                                                                                {
+
+                                                                                    type: "scale",
+                                                                                    x: earth_radius_km,
+                                                                                    y: earth_radius_km,
+                                                                                    z: earth_radius_km,
+
+                                                                                    nodes: [
+
+                                                                                        {
+
+                                                                                            type: "rotate",
+                                                                                            id: 'spin',
+                                                                                            angle: 0,
+                                                                                            y: 1.0,
+
+                                                                                            nodes: [ { type: "sphere" } ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
 
                                                         },
 
@@ -232,8 +355,48 @@ SceneJS.createNode({
                                                                 { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                                 { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
                                                             ],
-                                                            nodes: [ { type : "instance", target : "earth-sphere"  } ]
+                                                            nodes: [
+                                                                {
+                                                                    type: "material",
+                                                                    baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+                                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                                    specular:       0.0,
+                                                                    shine:          2.0,
 
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "translate",
+                                                                            x: earth_x_pos,
+                                                                            y: 0,
+                                                                            z: 0,
+
+                                                                            nodes: [
+
+                                                                                {
+
+                                                                                    type: "scale",
+                                                                                    x: earth_radius_km,
+                                                                                    y: earth_radius_km,
+                                                                                    z: earth_radius_km,
+
+                                                                                    nodes: [
+
+                                                                                        {
+
+                                                                                            type: "rotate",
+                                                                                            id: 'spin',
+                                                                                            angle: 0,
+                                                                                            y: 1.0,
+
+                                                                                            nodes: [ { type: "sphere" } ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
                                                         }                                
                                                     ]
                                                 },
@@ -288,46 +451,42 @@ SceneJS.createNode({
                                                             }
                                                         }
                                                     ],
-
+                                                    
                                                     nodes: [
-
-                                                        /* Specify the amounts of ambient, diffuse and specular
-                                                         * lights our object reflects
-                                                         */
+                                                    
                                                         {
-                                                            id : "earth-sphere",
+                                                            id: "earth-sphere",
                                                             type: "material",
                                                             baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
                                                             specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
                                                             specular:       0.0,
                                                             shine:          2.0,
-
+                                                    
                                                             nodes: [
-
                                                                 {
                                                                     type: "translate",
                                                                     x: earth_x_pos,
                                                                     y: 0,
                                                                     z: 0,
-
+                                                    
                                                                     nodes: [
-
+                                                    
                                                                         {
-
+                                                    
                                                                             type: "scale",
                                                                             x: earth_radius_km,
                                                                             y: earth_radius_km,
                                                                             z: earth_radius_km,
-
+                                                    
                                                                             nodes: [
-
+                                                    
                                                                                 {
-
+                                                    
                                                                                     type: "rotate",
                                                                                     id: 'spin',
                                                                                     angle: 0,
                                                                                     y: 1.0,
-
+                                                    
                                                                                     nodes: [ { type: "sphere" } ]
                                                                                 }
                                                                             ]
