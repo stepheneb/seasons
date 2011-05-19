@@ -21,25 +21,26 @@ var initial_earth_rotation = 0;
 //
 var distance = earth_radius_km * -3;
 
+//
+// Initial lookAt: eye
+//
 var initial_eye_quat;
 var initial_eye_mat4;
-var initial_eye_vec4;
-var initial_eye;
+var initial_eye_vec3 = vec3.create();
+var initial_eye = {};
 
-function update_initial_eye(d) {
-    if (d < (earth_radius_km.radius * 1.5)) d = earth_radius_km * 1.5;
-    distance = d;
-    initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, 0);
-    initial_eye_mat4 = SceneJS._math_newMat4FromQuaternion(initial_eye_quat);
-    initial_eye_vec4 = SceneJS._math_mulMat4v4(initial_eye_mat4, [0, 0,  distance, 1]);
+function update_initial_eye() {
+    initial_eye_quat = quat4.axisAngleDegreesCreate(1, 0, 0, 0);
+    initial_eye_mat4 = quat4.toMat4(initial_eye_quat);
+    mat4.multiplyVec3(initial_eye_mat4, [0, 0,  distance], initial_eye_vec3);
     initial_eye =      { 
-        x: initial_eye_vec4[0] + earth_x_pos,
-        y: initial_eye_vec4[1],
-        z: initial_eye_vec4[2]
+        x: initial_eye_vec3[0] + earth_x_pos,
+        y: initial_eye_vec3[1] + 0,
+        z: initial_eye_vec3[2] + 0
     };
-}
+};
 
-update_initial_eye(distance);
+update_initial_eye();
 
 SceneJS.createNode({
     
@@ -185,7 +186,6 @@ SceneJS.createNode({
                                                     type: "selector",
                                                     selection: [0],
                                                     nodes: [
-
 
                                                         // selection [0], March
                                                         {
@@ -601,27 +601,41 @@ earth_surface.onchange();
 
 
 function updateLookAt() {
-    var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
-    var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
+    // first handle yaw and pitch for our lookAt-arcball navigation around Earth
+    // background: http://rainwarrior.thenoos.net/dragon/arcball.html
+    var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, yaw);
+    var yaw_mat4 = quat4.toMat4(yaw_quat);
+
     if (pitch > max_pitch)  pitch =  max_pitch;
     if (pitch < -max_pitch) pitch = -max_pitch;
-    var pitch_quat =  SceneJS._math_angleAxisQuaternion(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
-    var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
-    var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
-    var neweye = SceneJS._math_mulMat4v4(result_mat4, initial_eye_vec4);
+
+    var pitch_quat =  quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
+    var result_quat = quat4.create();
+    quat4.multiply(pitch_quat, yaw_quat, result_quat);
+
+    var neweye = vec3.create();
+    quat4.multiplyVec3(result_quat, initial_eye_vec3, neweye);
     look_at.set("eye", { 
         x: neweye[0] + earth_x_pos, 
         y: neweye[1] + 0, 
         z: neweye[2] + 0 
     });
-    var rot_quat = SceneJS._math_angleAxisQuaternion(0, 1, 0, lookat_yaw); 
-    var rot_mat4 = SceneJS._math_newMat4FromQuaternion(rot_quat);
-    var new_look = SceneJS._math_mulMat4v4(rot_mat4, neweye);
-    new_look[0] = (neweye[0] - new_look[0]) + earth_x_pos;
-    new_look[1] = (neweye[1] - new_look[1]) + 0;
-    new_look[2] = (neweye[2] - new_look[2]) + 0;
+    
+    // next handle a possible yaw rotation to look left or right of Earth in the ecliptic plane
+    var rot_quat = quat4.axisAngleDegreesCreate(0, 1, 0, lookat_yaw); 
+
+    var new_look = vec3.create();
+    quat4.multiplyVec3(rot_quat, neweye, new_look);
+
+    // mat4.multiplyVec3(rot_mat4, neweye, new_look);
+
+    new_look[0] = (neweye[0] - new_look[0]) + earth.pos.x;
+    new_look[1] = (neweye[1] - new_look[1]) + earth.pos.y;
+    new_look[2] = (neweye[2] - new_look[2]) + earth.pos.z;
     look_at.set("look", { x: new_look[0], y: new_look[1], z: new_look[2] });
 };
+
+
 
 function mouseDown(event) {
     lastX = event.clientX;
