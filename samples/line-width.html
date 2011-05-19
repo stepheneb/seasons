@@ -11,8 +11,32 @@
     <h1 id="title">SceneJS Line Width Test</h1>
   </div>
   <div id="content">
+    <p>Rendering different line widths in geometry nodes. This does not work in all browsers.</p>
     <div id="webglCanvasContainer">
-      <canvas id="theCanvas" height="350px", width="500px"></canvas>
+      <ul class="hlist">
+        <li>
+          <ul class="hlist">
+            <li>
+              <canvas id="theCanvas1" height="350px", width="450px"></canvas>
+              <p><center><b>Line width: 1 unit</b></center></p>
+            </li>
+            <li>
+              <canvas id="theCanvas2" height="350px", width="450px"></canvas>
+              <p><center><b>Line width: 2 units.</b></center></p>
+            </li>
+          </ul>
+          <ul class="hlist">
+            <li>
+              <canvas id="theCanvas3" height="350px", width="450px"></canvas>
+              <p><center><b>Line width: 5 units.</b></center></p>
+            </li>
+            <li>
+              <canvas id="theCanvas4" height="350px", width="450px"></canvas>
+              <p><center><b>Line width: 10 units.</b></center></p>
+            </li>
+          </ul>
+        </li>
+      </ul>
     <div id="info">
       <p></p>
     </div>
