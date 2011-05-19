@@ -128,7 +128,7 @@ var cities = [
     {
         name: "Quito",
         country: "Ecuador",
-        active: true,
+        active: false,
         color: city_colors.bright_green,
         location: {
             signed_longitude: 78.35,
@@ -139,14 +139,14 @@ var cities = [
             long_dir: "W",
             elev: 2811
         },
-        average_temperatures: [15, 14.5, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
+        average_temperatures: [15, 14.5, 15, 15, 15, 15.5, 15, 15, 15, 15, 15, 15],
         source: "http://www.climatetemp.info/ecuador/"
     },
 
     {
         name: "Galapagos Island",
         country: "Chile",
-        active: false,
+        active: true,
         color: city_colors.bright_red,
         location: {
             signed_longitude: 91.1,
