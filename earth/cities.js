@@ -2,17 +2,17 @@
 
 var city_colors = {
   bright_red:       '#ff0000',
-  dark_red:         '#770022',
-  bright_blue:      '#0000ff',
-  dark_blue:        '#004488',
-  bright_green:     '#00ff00',
-  dark_green:       '#445500',
-  bright_purple:    '#ff11ff',
+  dark_red:         '#990000',
+  bright_blue:      '#4444ff',
+  dark_blue:        '#110077',
+  bright_green:     '#00dd00',
+  dark_green:       '#118800',
+  bright_purple:    '#cc00cc',
   dark_purple:      '#770099',
-  bright_orange:    '#ff7711',
-  dark_orange:      '#dd4400',
-  bright_turquoise: '#00bbbb',
-  dark_turquoise:   '#007777',
+  bright_orange:    '#ee6600',
+  dark_orange:      '#aa4400',
+  bright_turquoise: '#00ccbb',
+  dark_turquoise:   '#008877',
 };
 
 var cities = [
@@ -22,6 +22,7 @@ var cities = [
         country: "United States",
         active: true,
         color: city_colors.bright_red,
+        no_tilt_color: city_colors.dark_red,
         location: {
             signed_longitude: 147.43,
             signed_latitude: 64.51,
@@ -40,6 +41,7 @@ var cities = [
         country: "United States",
         active: false,
         color: city_colors.bright_red,
+        no_tilt_color: city_colors.dark_red,
         location: {
             signed_longitude: 149.9,
             signed_latitude: 61.21,
@@ -58,6 +60,7 @@ var cities = [
         country: "Canada",
         active: false,
         color: city_colors.bright_red,
+        no_tilt_color: city_colors.dark_red,
         location: {
             signed_longitude: 123.1,
             signed_latitude: 49.25,
@@ -76,6 +79,7 @@ var cities = [
         country: "United States",
         active: true,
         color: city_colors.bright_blue,
+        no_tilt_color: city_colors.dark_blue,
         location: {
             signed_longitude: 77.02,
             signed_latitude: 38.54,
@@ -94,6 +98,7 @@ var cities = [
         country: "United States",
         active: false,
         color: city_colors.bright_red,
+        no_tilt_color: city_colors.dark_red,
         location: {
             signed_longitude: 122.42,
             signed_latitude: 37.77,
@@ -112,6 +117,7 @@ var cities = [
         country: "United States",
         active: false,
         color: city_colors.bright_red,
+        no_tilt_color: city_colors.dark_red,
         location: {
             signed_longitude: 80.25,
             signed_latitude: 25.75,
@@ -130,6 +136,7 @@ var cities = [
         country: "Singapore",
         active: true,
         color: city_colors.bright_green,
+        no_tilt_color: city_colors.dark_green,
         location: {
             signed_longitude: -103.55,
             signed_latitude: 1.14,
@@ -148,6 +155,7 @@ var cities = [
         country: "Ecuador",
         active: false,
         color: city_colors.bright_green,
+        no_tilt_color: city_colors.dark_green,
         location: {
             signed_longitude: 78.35,
             signed_latitude: -0.15,
@@ -166,6 +174,7 @@ var cities = [
         country: "Chile",
         active: false,
         color: city_colors.bright_red,
+        no_tilt_color: city_colors.dark_red,
         location: {
             signed_longitude: 91.1,
             signed_latitude: -0.75,
@@ -184,6 +193,7 @@ var cities = [
         country: "Brazil",
         active: false,
         color: city_colors.bright_red,
+        no_tilt_color: city_colors.dark_red,
         location: {
             signed_longitude: 43.25,
             signed_latitude: -27.75,
@@ -202,6 +212,7 @@ var cities = [
         country: "Australia",
         active: true,
         color: city_colors.bright_purple,
+        no_tilt_color: city_colors.dark_purple,
         location: {
             signed_longitude: -149.08,
             signed_latitude: -35.15,
@@ -220,6 +231,7 @@ var cities = [
         country: "Australia",
         active: false,
         color: city_colors.bright_red,
+        no_tilt_color: city_colors.dark_red,
         location: {
             signed_longitude: -144.95,
             signed_latitude: -37.8,
@@ -238,6 +250,7 @@ var cities = [
         country: "Argentina", 
         active: true,
         color: city_colors.bright_orange,
+        no_tilt_color: city_colors.dark_orange,
         location: {
             signed_longitude: 69.13,
             signed_latitude: -51.38,
@@ -256,6 +269,7 @@ var cities = [
         country: "Antarctica",
         active: true,
         color: city_colors.bright_turquoise,
+        no_tilt_color: city_colors.dark_turquoise,
         location: {
             signed_longitude: -166.73,
             signed_latitude: -77.88,
