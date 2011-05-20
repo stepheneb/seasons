@@ -129,6 +129,7 @@ var cities = [
         name: "Singapore",
         country: "Singapore",
         active: true,
+        color: city_colors.bright_green,
         location: {
             signed_longitude: -103.55,
             signed_latitude: 1.14,
