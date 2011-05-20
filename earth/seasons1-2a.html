@@ -39,30 +39,6 @@
             <p>View: Earth from Space</p>
             <canvas id="theCanvas3">
             </canvas>
-            <div class="underCanvasUI">
-              <ul class="hlist">
-                <li>
-                  <form id="select-city-latitude">
-                    <label for="selected-city-latitude">Select a city:</label>
-                    <select id="selected-city-latitude" name="selected-city-latitude">
-                      <option disabled selected>city ...</option>
-                    </select>
-                  </form>
-                </li>
-                <li>
-                  Selected month: <span id="selected-month"></span>
-                </li>
-                <li>
-                  <form id="city-latitude-temperature">
-                    <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
-                    <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
-                    <input type="submit" value="Run" />
-                  </form>
-                </li>
-                <p><span class="tip">TIP #1:</span> For each row of data you collect, choose the season you think it is.</p>
-                <p><span class="tip">TIP #2:</span> You can sort the data in the table by clicking on the column name.</p>
-              </ul>
-            </div>
           </div>
         </li>
         <li>
@@ -70,6 +46,14 @@
             <p>View: Sun-Earth System</p>
             <canvas id="theCanvas1">
             </canvas>
+            <div class="underCanvasUI">
+            </div>
+          </div>
+        </li>
+      </ul>
+      <ul class="hlist">
+        <li>
+          <div class="editorQuarterFrame">
             <div class="underCanvasUI">
               <ul class="hlist">
                 <li>
@@ -104,18 +88,35 @@
                   </form>  
                 </li>
               </ul>
+              
+              <ul class="hlist">
+                <li>
+                  <form id="select-city-latitude">
+                    <label for="selected-city-latitude">Select a city:</label>
+                    <select id="selected-city-latitude" name="selected-city-latitude">
+                      <option disabled selected>city ...</option>
+                    </select>
+                  </form>
+                </li>
+                <li>
+                  Selected month: <span id="selected-month"></span>
+                </li>
+                <li>
+                  <form id="city-latitude-temperature">
+                    <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
+                    <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
+                    <input type="submit" value="Run" />
+                  </form>
+                </li>
+                <p><span class="tip">TIP #1:</span> For each row of data you collect, choose the season you think it is.</p>
+                <p><span class="tip">TIP #2:</span> You can sort the data in the table by clicking on the column name.</p>
+              </ul>
             </div>
-          </div>
-        </li>
-      </ul>
-      <ul class="hlist">
-        <li>
-          <div class="editorQuarterFrame">
             <div class="tableFrame">
               <table id='city-data-table' class='sortable'>
                 <thead>
                   <tr>
-                    <th class='sortfirstdesc number'></th>
+                    <th class='sortfirstdes number'></th>
                     <th class='text'>City</th>
                     <th class='text'>Month</th>
                     <th class='number'>Temp</th>
