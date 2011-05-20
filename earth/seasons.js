@@ -141,7 +141,7 @@ seasons.Scene = function(options) {
 
     this.earth_yaw =   0;
     this.earth_pitch = 0;
-    this.max_pitch =  85;
+    this.max_pitch =  80;
 
     this.normalized_earth_eye      =   normalized_initial_earth_eye;
 

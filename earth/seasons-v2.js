@@ -2287,6 +2287,8 @@ function setupEarthInSpace() {
 function updateEarthInSpaceLookAt() {
     // first handle yaw and pitch for our lookAt-arcball navigation around Earth
     // background: http://rainwarrior.thenoos.net/dragon/arcball.html
+    
+    
     var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, yaw);
     var yaw_mat4 = quat4.toMat4(yaw_quat);
 
@@ -2740,11 +2742,15 @@ function mouseMove(event) {
     if (dragging) {
         
         if (surface_view.checked) {
-            surface.yaw   += (event.clientX - lastX) * -0.2;
-            surface.lookat_pitch -= (event.clientY - lastY) * -0.2;
+            // surface.yaw   += (event.clientX - lastX) * -0.2;
+            // surface.lookat_pitch -= (event.clientY - lastY) * -0.2;
+            surface.yaw          = incrementSurfaceYaw((event.clientX - lastX) * -0.2);
+            surface.lookat_pitch = incrementSurfaceLookatPitch((event.clientY - lastY) * -0.2);
         } else {
-            yaw   += (event.clientX - lastX) * -0.2;
-            pitch += (event.clientY - lastY) * -0.2;
+            // yaw   += (event.clientX - lastX) * -0.2;
+            // pitch += (event.clientY - lastY) * -0.2;
+            yaw   = incrementYaw((event.clientX - lastX) * -0.2);
+            pitch = incrementPitch((event.clientY - lastY) * -0.2);
         };
         lastX = event.clientX;
         lastY = event.clientY;
