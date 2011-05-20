@@ -141,6 +141,7 @@ seasons.Scene = function(options) {
 
     this.earth_yaw =   0;
     this.earth_pitch = 0;
+    this.max_pitch =  85;
 
     this.normalized_earth_eye      =   normalized_initial_earth_eye;
 
@@ -419,6 +420,20 @@ seasons.Scene.prototype.mouseOut = function(event, element) {
     this.dragging = false;
 }
 
+seasons.Scene.prototype.incrementEarthPitch = function(num) {
+    this.earth_pitch += num;
+    if (this.earth_pitch > this.max_pitch)  this.earth_pitch =  this.max_pitch;
+    if (this.earth_pitch < -this.max_pitch) this.earth_pitch = -this.max_pitch;
+    return this.earth_pitch;
+};
+
+seasons.Scene.prototype.incrementSunPitch = function(num) {
+    this.sun_pitch += num;
+    if (this.sun_pitch > this.max_pitch)  this.sun_pitch =  this.max_pitch;
+    if (this.sun_pitch < -this.max_pitch) this.sun_pitch = -this.max_pitch;
+    return this.sun_pitch;
+};
+
 
 seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch, linked) {
     if (this.dragging) {
@@ -444,7 +459,7 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
                 if (new_yaw !== new_yaw) new_pitch = 0;
 
                 this.sun_yaw   += new_yaw;
-                this.sun_pitch += new_pitch;
+                this.incrementSunPitch(new_pitch);
 
                 switch(this.view_selection) {
                     case "top":
@@ -492,7 +507,7 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
                 normalized_eye = this.normalized_earth_eye;
                 
                 this.earth_yaw   += new_yaw;
-                this.earth_pitch += new_pitch;
+                this.incrementEarthPitch(new_pitch);
             
                 eye4 = [normalized_initial_earth_eye_side.x, normalized_initial_earth_eye_side.y, normalized_initial_earth_eye_side.z, 1];
 
