@@ -1706,6 +1706,33 @@ function generateCityColorKeys() {
     }
     // insert the new color key list into the document
     city_color_keys.appendChild(color_key_list);
+
+    // create a new color-key-list for the no-tilt city colors
+    color_key_list = document.createElement('ul');
+    // color_key_list.className = "vlist";
+    color_key_list.id = "color-key-list";
+
+    for (var i = 0; i < active_cities.length; i++) {
+        var city = active_cities[i];
+
+        // create a list item
+        var color_key_item = document.createElement('li');
+
+        // create and add a colored patch
+        var color_patch = document.createElement('div');
+        color_patch.className = "colorKeyPatch";
+        color_patch.style.backgroundColor = city.no_tilt_color;
+        color_key_item.appendChild(color_patch);
+        
+        // add the city name
+        var city_name = document.createElement('span');
+        city_name.textContent = city.name + ' (no-tilt)';
+        color_key_item.appendChild(city_name);
+        
+        // add the new list item to the list
+        color_key_list.appendChild(color_key_item);
+    }
+    city_color_keys.appendChild(color_key_list);
 };
 
 generateCityColorKeys();
