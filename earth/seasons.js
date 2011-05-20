@@ -827,40 +827,41 @@ seasons.Activity = function(options) {
 
 seasons.Activity.prototype.toJSON = function() {
     var scenes= {};
+    var json_object;
     if (this.version == "1.1") {
         scenes.scene = this.scenes.scene.toJSON();
-        return { 
+        json_object = { 
             version: this.version,
             scenes: scenes,
         };
     } else {
         scenes.scene1 = this.scenes.scene1.toJSON();
         scenes.scene3 = this.scenes.scene3.toJSON();
-        var json_object = { 
+        json_object = { 
             version: this.version,
             scenes: scenes,
             table: experimentDataToJSON()
         };
-        return json_object;
-    }
+    };
+    return json_object;
 };
 
-seasons.Activity.prototype.fromJSON = function(state) {
-    switch (state.version) {
+seasons.Activity.prototype.fromJSON = function(json_object) {
+    switch (json_object.version) {
         case 1.1:
-        this.scenes.scene.fromJSON(state.scenes.scene);
+        this.scenes.scene.fromJSON(json_object.scenes.scene);
         break;
 
         case 1.2:
-        this.scenes.scene1.fromJSON(state.scenes.scene1);
-        this.scenes.scene3.fromJSON(state.scenes.scene3);
-        experimentDataFromJSON(state.table);
+        this.scenes.scene1.fromJSON(json_object.scenes.scene1);
+        this.scenes.scene3.fromJSON(json_object.scenes.scene3);
+        experimentDataFromJSON(json_object.table);
         break;
 
         case 1.3:
-        this.scenes.scene1.fromJSON(state.scenes.scene1);
-        this.scenes.scene3.fromJSON(state.scenes.scene3);
-        experimentDataFromJSON(state.table);
+        this.scenes.scene1.fromJSON(json_object.scenes.scene1);
+        this.scenes.scene3.fromJSON(json_object.scenes.scene3);
+        experimentDataFromJSON(json_object.table);
         break;
     }
 };
