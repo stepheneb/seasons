@@ -58,8 +58,8 @@ seasons.Scene = function(options) {
     
     this.circleOrbit        = SceneJS.withNode("earthCircleOrbitSelector");
 
-    if (options.orbitGridSelector !== false) {
-        this.orbitGridSelector  = SceneJS.withNode(options.orbitGridSelector || "orbit-grid-selector");
+    if (options.gridSelector !== false) {
+        this.gridSelector       = SceneJS.withNode(options.gridSelector || "orbit-grid-selector");
     };
         
     if (options.earth_tilt !== false) {
@@ -834,20 +834,9 @@ seasons.Scene.prototype.orbitalGridChange = function(checkbox) {
 
 seasons.Scene.prototype._orbitalGridChange = function(orbital_grid) {
   if (orbital_grid) {
-      switch(this.look_at_selection) {
-          case "orbit":
-              this.orbitGridSelector.set("selection", [2]);
-              break;
-
-          case 'earth':
-              this.orbitGridSelector.set("selection", [1]);
-              break;
-
-          case "surface" :
-          break;
-      }
+      this.gridSelector.set("selection", [1]);
   } else {
-      this.orbitGridSelector.set("selection", [0]);
+      this.gridSelector.set("selection", [0]);
   };
   if (this.linked_scene) {
       this.linked_scene._orbitalGridChange(orbital_grid);

@@ -868,6 +868,7 @@ SceneJS.createNode({
                                                         }                                
                                                     ]
                                                 },
+
                                                 {
                                                     type: "translate",
                                                     id: "earth-position3",
@@ -876,6 +877,43 @@ SceneJS.createNode({
                                                     z: 0,
 
                                                     nodes: [
+                                                        
+                                                        //  Earth grid ...
+                                                        {
+                                                            type: "material",
+                                                            baseColor:      { r: 0.4, g: 0.6, b: 0.4 },
+                                                            specularColor:  { r: 0.4, g: 0.6, b: 0.4 },
+                                                            specular:       1.0,
+                                                            shine:          2.0,
+                                                            emit:           1.0,
+
+                                                            nodes: [
+
+                                                                {
+
+                                                                    type: "selector",
+                                                                    id: "earth-grid-selector3",
+                                                                    selection: [0],
+                                                                    nodes: [ 
+
+                                                                        // 0: off
+
+                                                                        {  },
+
+                                                                        // 1: on: orbit grid for Earth view
+
+                                                                        {
+                                                                            type: "geometry",
+                                                                            primitive: "lines",
+
+                                                                            positions: orbit_grid_earth_positions,
+                                                                            indices : orbit_grid_earth_indices
+
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
 
                                                         {
                                                             type: "quaternion",
@@ -1069,7 +1107,7 @@ var scene3 = new seasons.Scene({
     earth_rotation:              "earth-rotation3",
     latitude_line:               "latitude-line-destination3",
     look_at_selection:           "earth",
-    orbitGridSelector:           "earth-orbit-grid-selector3",
+    gridSelector:                "earth-grid-selector3",
     earth_sun_line_rotation:     "earth-sun-line-rotation3",
     earth_sun_line_translation:  "earth-sun-line-translation3",
     earth_sun_line_scale:        "earth-sun-line-scale3",

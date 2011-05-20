@@ -20,7 +20,7 @@ var orbit_grid_orbit_indices = [];
 var orbit_grid_orbit_lines = orbit_grid_orbit_positions.length / 3;
 for (var i = 0; i < orbit_grid_orbit_lines; i++) { orbit_grid_orbit_indices.push(i) };
 
-var orbit_grid_earth_positions = grid(earth_orbital_radius_km, 10000);
+var orbit_grid_earth_positions = grid(earth_radius_km * 2.5, 30);
 var orbit_grid_earth_indices = [];
 var orbit_grid_earth_lines = orbit_grid_earth_positions.length / 3;
 for (var i = 0; i < orbit_grid_earth_lines; i++) { orbit_grid_earth_indices.push(i) };
@@ -67,20 +67,8 @@ var orbitGrid = SceneJS.createNode({
                                         // 0: off
                          
                                         {  },
-                                    
-                                        // 1: on: orbit grid for Earth view
-                        
-                                        {
-                                            type: "geometry",
-                                            id: "orbit-grid-earth-geometry",
-                                            primitive: "lines",
 
-                                            positions: orbit_grid_earth_positions,
-                                            indices : orbit_grid_earth_indices
-
-                                        },
-                                        
-                                        // 2: on: orbit grid for Orbit view
+                                        // 1: on: orbit grid for Orbit view
                         
                                         {
                                             type: "geometry",
