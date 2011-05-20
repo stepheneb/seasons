@@ -1266,7 +1266,7 @@ for (var i = 0; i < active_cities.length; i++) {
     city_data_to_plot.push({});
     city_data = city_data_to_plot[i * 2 + 1];
     city_data.label = city.name + ' no tilt';
-    city_data.color = city.color;
+    city_data.color = city.no_tilt_color;
     city_data.lines = { show: true };
     city_data.points = { show: true };
     city_data.data = [];
