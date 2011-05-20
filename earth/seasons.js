@@ -537,6 +537,28 @@ seasons.Scene.prototype.earthPointer = function() {
     }
 };
 
+//
+// UI Overlaying WebGL canvas
+//
+
+seasons.Scene.prototype.elementGetX = function(el) {
+    var xpos = 0;
+    while( el != null ) {
+        xpos += el.offsetLeft;
+        el = el.offsetParent;
+    }
+    return xpos;
+};
+
+seasons.Scene.prototype.elementGetY = function(el) {
+    var ypos = 0;
+    while( el != null ) {
+        ypos += el.offsetTop;
+        el = el.offsetParent;
+    }
+    return ypos;
+};
+
 seasons.Scene.prototype.earthLabel = function() {
     var getY = function getY(el) {
         var ypos = 0;
@@ -556,17 +578,10 @@ seasons.Scene.prototype.earthLabel = function() {
     };
 
     if (this.earth_label) {
-        this.earth_info_label.style.top = this.canvas_properties().top + window.pageYOffset + 5 + "px";
-        // this.earth_info_label.style.left = this.canvas_properties().left + getX(this.canvas) + window.pageXOffset + 5 + "px";
-        // this.earth_info_label.style.left = getX(this.canvas) + 5 + "px";
-        // this.earth_info_label.style.left = "5px";
-        // this.earth_info_label.style.top = getY(this.canvas) + 5 + "px";
-        this.earth_info_label.style.left = getX(this.canvas) - getX(document.getElementById("content")) + 15 + "px";
+        
         var edist = earth_ellipse_distance_from_sun_by_month(this.month);
         var solar_flux = earth_ephemerides_solar_constant_by_month(this.month);
         var labelStr = "";
-        labelStr += sprintf("Earth Distance: %6.0f km<br>", edist * scale_factor);
-        labelStr += sprintf("Solar Radiation:  %4.1f W/m2<br>", solar_flux);
         if (this.debugging) {
             var earth_pos = this.get_earth_position();
             var eye_pos = this.look.get("eye");
@@ -585,6 +600,10 @@ seasons.Scene.prototype.earthLabel = function() {
             };
         };
         this.earth_info_label.innerHTML = labelStr;
+
+        this.earth_info_label.style.top = this.canvas_properties().top + window.pageYOffset  + this.canvas_properties().height - this.earth_info_label.offsetHeight - 10 + "px";
+        this.earth_info_label.style.left = this.canvas_properties().right - this.elementGetX(document.getElementById("content")) - this.earth_info_label.offsetWidth + "px";
+
     };
 };
 
