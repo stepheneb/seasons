@@ -1295,20 +1295,21 @@ function experimentDataToJSON() {
         var row = rows[r];
         var cells = row.childElements();
         exp_table.rows.push({
-            id:      row.id,
-            index:   cells[0].textContent,
-            city:    cells[1].textContent,
-            month:   cells[2].textContent,
-            temp:    cells[3].textContent,
-            pred:    cells[4].textContent,
-            seasons: cells[5].childElements()[0].value,
-            graph:   cells[6].childElements()[0].value,
+            id:              row.id,
+            index:           cells[0].textContent,
+            city:            cells[1].textContent,
+            month:           cells[2].textContent,
+            temp:            cells[3].textContent,
+            pred:            cells[4].textContent,
+            seasons:         cells[5].childElements()[0].value,
+            graph:           cells[6].childElements()[0].value,
             state:   {
                 scene1: JSON.stringify(scene1.toJSON()),
                 scene3: JSON.stringify(scene3.toJSON())
             }
         });
     }
+    exp_table.table_row_index = table_row_index;
     return exp_table;
 }
 
@@ -1401,6 +1402,7 @@ function experimentDataFromJSON(exp_table) {
         city_data_table_body.appendChild(table_row);
     };
     plotCityData();
+    table_row_index = exp_table.table_row_index;
 }
 
 //
