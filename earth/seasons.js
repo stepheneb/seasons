@@ -25,11 +25,15 @@ function getRadioSelection (form_element) {
 }
 
 function setRadioSelection (form_element, value) {
+    var el;
     for(var i = 0; i < form_element.elements.length; i++) {
-        if (form_element.elements[i].value = value) {
-            form_element.elements[i].checked = true;
-        } else {
-            form_element.elements[i].checked = false;
+        el = form_element.elements[i];
+        if (el.nodeName == "INPUT") {
+            if (form_element.elements[i].value === value) {
+                form_element.elements[i].checked = true;
+            } else {
+                form_element.elements[i].checked = false;
+            }
         }
     }
     return false;
@@ -289,9 +293,9 @@ seasons.Scene = function(options) {
 seasons.Scene.prototype.toJSON = function() {
     var state = {
         month: this.month,
-        circle_orbit: this.circle_orbit ? this.circle_orbit.checked : this.circle_orbit,
+        circle_orbit: this.circle_orbit ? this.circle_orbit.checked : false,
         orbital_grid: this.orbital_grid ? this.orbital_grid.checked : this.orbital_grid,
-        tilt: this.choose_tilt ? getRadioSelection(this.choose_tilt) : this.choose_tilt, 
+        tilt: this.choose_tilt ? getRadioSelection(this.choose_tilt) : true, 
         view_selection: this.view_selection,
         look_at_selection: this.look_at_selection,
         look_at: {
@@ -312,6 +316,7 @@ seasons.Scene.prototype.fromJSON = function(state) {
     this._circleOrbitPathChange(state.circle_orbit);
     this._orbitalGridChange(state.orbital_grid);
     this._perspectiveChange(state.view_selection);
+    this._updateTilt(state.tilt);
     this.look_at_selection = state.look_at_selection;
     this.look.set("eye", JSON.parse(state.look_at.eye));
     this.look.set("up", JSON.parse(state.look_at.up));
@@ -331,6 +336,9 @@ seasons.Scene.prototype.updateTilt = function(form_element) {
 };
 
 seasons.Scene.prototype._updateTilt = function(tilt) {
+    if (tilt == true) tilt = 'yes';
+    if (tilt == false) tilt = 'no';
+    if (this.choose_tilt) setRadioSelection (this.choose_tilt, tilt);
     this.tilt = tilt;
     var tilt_str;
     switch (tilt) {
@@ -642,6 +650,7 @@ seasons.Scene.prototype.perspectiveChange = function(form_element) {
 };
 
 seasons.Scene.prototype._perspectiveChange = function(view_selection) {
+    if (this.choose_view) setRadioSelection (this.choose_view, view_selection);
     this.view_selection = view_selection;
     switch(this.view_selection) {
         case "top":
@@ -783,6 +792,7 @@ seasons.Scene.prototype.timeOfYearChange = function(form_element) {
 };
 
 seasons.Scene.prototype._timeOfYearChange = function(month) {
+    this.choose_month.value = month;
     var mi_1 = this.month_data[this.month].index;
     this.month = month;
     var mi_2 = this.month_data[month].index;
@@ -812,17 +822,19 @@ seasons.Scene.prototype.circleOrbitPathChange = function(checkbox) {
 };
 
 seasons.Scene.prototype._circleOrbitPathChange = function(circle_orbit) {
-  if (circle_orbit) {
-      switch(this.look_at_selection) {
-         case "orbit": this.circleOrbit.set("selection", [2]);
-          break;
-         case 'earth': this.circleOrbit.set("selection", [1]);
-          SceneJS.withNode("earthCircleOrbitSelector").set("selection", [1]);
-          break;
-      }
-  } else {
-      this.circleOrbit.set("selection", [0]);
-  }
+    if (this.circle_orbit) this.circle_orbit.checked = circle_orbit;
+    if (circle_orbit) {
+
+        switch(this.look_at_selection) {
+            case "orbit": this.circleOrbit.set("selection", [2]);
+            break;
+            case 'earth': this.circleOrbit.set("selection", [1]);
+            SceneJS.withNode("earthCircleOrbitSelector").set("selection", [1]);
+            break;
+        }
+    } else {
+        this.circleOrbit.set("selection", [0]);
+    }
 };
 
 
@@ -833,14 +845,15 @@ seasons.Scene.prototype.orbitalGridChange = function(checkbox) {
 };
 
 seasons.Scene.prototype._orbitalGridChange = function(orbital_grid) {
-  if (orbital_grid) {
-      this.gridSelector.set("selection", [1]);
-  } else {
-      this.gridSelector.set("selection", [0]);
-  };
-  if (this.linked_scene) {
-      this.linked_scene._orbitalGridChange(orbital_grid);
-  };
+    this.orbital_grid.checked = orbital_grid;
+    if (orbital_grid) {
+        this.gridSelector.set("selection", [1]);
+    } else {
+        this.gridSelector.set("selection", [0]);
+    };
+    if (this.linked_scene) {
+        this.linked_scene._orbitalGridChange(orbital_grid);
+    };
 };
 
 var seasonsActivity = {};
