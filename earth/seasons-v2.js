@@ -1447,7 +1447,7 @@ SceneJS.createNode({
                                                                                                             innerRadius: earth.radius,
                                                                                                             height: surface_line_width,
                                                                                                             rings: 128,
-                                                                                                            sweep: 0.5,
+                                                                                                            sweep: 0.5
                                                                                                         }
                                                                                                     ]
                                                                                                 }
