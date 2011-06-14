@@ -6,13 +6,14 @@ var earth_rose_grid = document.getElementById("earth-rose-grid") || { checked: f
 var sun_grid = document.getElementById("sun-grid") || { checked: false, onchange: null };
 var sunrise_set = document.getElementById("sun-rise-set") || { checked: false, onchange: null };
 var sun_earth_line = document.getElementById("sun-earth-line") || { checked: false, onchange: null };
-var back_light = document.getElementById("back-light") || { checked: false, onchange: null  };
-var use_horizontal_flux   = document.getElementById("use-horizontal-flux") || { checked: false, onchange: null };
+var backlight = document.getElementById("backlight") || { checked: false, onchange: null  };
+var use_horizontal_flux   = document.getElementById("use-horizontal-flux") || { checked: true, onchange: null };
 var sun_earth_line = document.getElementById("sun-earth-line");
 var sun_noon_midnight = document.getElementById("sun-noon-midnight") || { checked: false, onchange: null };
 var lat_hour_markers = document.getElementById("lat-hour-markers") || { checked: false, onchange: null };
 var sun_rays = document.getElementById("sun-rays") || { checked: false, onchange: null };
 var surface_view = document.getElementById("surface-view") || { checked: false, onchange: null };
+var debug_view   = document.getElementById("debug-view") || { checked: false, onchange: null };
 
 
 var solar_altitude_graph = document.getElementById("solar-altitude-graph") || 
@@ -52,53 +53,34 @@ var earth_orbital_radius = au2km / scale_factor;
 
 var milky_way_apparent_radius = earth_orbital_radius * 10;
 
-var sun = {
-    pos: { x: 0, y: 0, z: 0 },
-    radius: sun_diameter / 2
-};
-
 var jun_day_number = day_number_by_month['jun'];
 var sep_day_number = day_number_by_month['sep'];
 var dec_day_number = day_number_by_month['dec'];
 var mar_day_number = day_number_by_month['mar'];
 
-var earth_pos_jun_21_vec3 = earth_ephemerides_location_by_day_number(jun_day_number);
-var earth_pos_sep_21_vec3 = earth_ephemerides_location_by_day_number(sep_day_number);
-var earth_pos_dec_21_vec3 = earth_ephemerides_location_by_day_number(dec_day_number);
-var earth_pos_mar_21_vec3 = earth_ephemerides_location_by_day_number(mar_day_number);
+var earth_pos_jun_vec3 = earth_ephemerides_location_by_day_number(jun_day_number);
+var earth_pos_sep_vec3 = earth_ephemerides_location_by_day_number(sep_day_number);
+var earth_pos_dec_vec3 = earth_ephemerides_location_by_day_number(dec_day_number);
+var earth_pos_mar_vec3 = earth_ephemerides_location_by_day_number(mar_day_number);
 
-var earth_pos_jun_21_normalized_vec3 = []; vec3.normalize(earth_pos_jun_21_vec3, earth_pos_jun_21_normalized_vec3);
-var earth_pos_sep_21_normalized_vec3 = []; vec3.normalize(earth_pos_sep_21_vec3, earth_pos_sep_21_normalized_vec3);
-var earth_pos_dec_21_normalized_vec3 = []; vec3.normalize(earth_pos_dec_21_vec3, earth_pos_dec_21_normalized_vec3);
-var earth_pos_mar_21_normalized_vec3 = []; vec3.normalize(earth_pos_mar_21_vec3, earth_pos_mar_21_normalized_vec3);
+var earth_pos_jun_normalized_vec3 = []; vec3.normalize(earth_pos_jun_vec3, earth_pos_jun_normalized_vec3);
+var earth_pos_sep_normalized_vec3 = []; vec3.normalize(earth_pos_sep_vec3, earth_pos_sep_normalized_vec3);
+var earth_pos_dec_normalized_vec3 = []; vec3.normalize(earth_pos_dec_vec3, earth_pos_dec_normalized_vec3);
+var earth_pos_mar_normalized_vec3 = []; vec3.normalize(earth_pos_mar_vec3, earth_pos_mar_normalized_vec3);
 
 var initial_day_number = jun_day_number;
-var initial_earth_pos_vec3 = earth_pos_jun_21_vec3;
+var initial_earth_pos_vec3 = earth_pos_jun_vec3;
 
-var up = []; vec3.cross(earth_pos_jun_21_normalized_vec3, earth_pos_mar_21_normalized_vec3, up);
+// var up = []; vec3.cross(earth_pos_jun_normalized_vec3, earth_pos_mar_normalized_vec3, up);
+var up = [0, 1, 0]
 
+var earth_tilt_axis = [1, 0, 0];
 // var earth_tilt_axis = vec3.normalize(earth_ephemerides_location_by_month('sep'));
-var earth_tilt_axis = []; vec3.cross(earth_pos_jun_21_normalized_vec3, up, earth_tilt_axis);
 
-var jun_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_jun_21_normalized_vec3[1], -1], earth_pos_jun_21_normalized_vec3)) * rad2deg;
-var jun_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, jun_orbit_correction_degrees);
-var jun_orbit_correction_mat4 = [];
-quat4.toMat4(jun_orbit_correction_quat, jun_orbit_correction_mat4);
-
-var sep_orbit_correction_degrees = Math.acos(vec3.dot([1, earth_pos_sep_21_normalized_vec3[1], 0], earth_pos_sep_21_normalized_vec3)) * rad2deg;
-var sep_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, sep_orbit_correction_degrees);
-var sep_orbit_correction_mat4 = [];
-quat4.toMat4(sep_orbit_correction_quat, sep_orbit_correction_mat4);
-
-var dec_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_dec_21_normalized_vec3[1], 1], earth_pos_dec_21_normalized_vec3)) * rad2deg;
-var dec_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, dec_orbit_correction_degrees);
-var dec_orbit_correction_mat4 = [];
-quat4.toMat4(dec_orbit_correction_quat, dec_orbit_correction_mat4);
-
-var mar_orbit_correction_degrees = Math.acos(vec3.dot([-1, earth_pos_mar_21_normalized_vec3[1], 0], earth_pos_mar_21_normalized_vec3)) * rad2deg;
-var mar_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, mar_orbit_correction_degrees);
-var mar_orbit_correction_mat4 = [];
-quat4.toMat4(mar_orbit_correction_quat, mar_orbit_correction_mat4);
+var sun = {
+    pos: { x: 0, y: 0, z: 0 },
+    radius: sun_diameter / 2
+};
 
 var initial_earth_rotation = 0;
 
@@ -111,8 +93,10 @@ var earth = {
     distance: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
     radius:  earth_diameter / 2,
     tilt: orbitalTilt,
+    // tilt_axis: { x: 1, y: 0, z: 0 },
     tilt_axis: { x: earth_tilt_axis[0], y: earth_tilt_axis[1], z: earth_tilt_axis[2] },
     day_number: initial_day_number,
+    month: 'jun',
     rotation: initial_earth_rotation,
     km: km / (earth_diameter / 2),
     meter: meter / (earth_diameter / 2)
@@ -142,30 +126,113 @@ var surface = {
     longitude: 90,
     yaw: 0,
     pitch: 0,
-    distance: 8,
+    distance: 200 * km * surface_earth_scale_factor,
+    min_distance: 10 * km * surface_earth_scale_factor,
     lookat_yaw: 0,
     lookat_pitch: 0,
-    min_height: 0.001,
-    height: 0.001,
+    min_height: 10 *  meter * surface_earth_scale_factor,
+    height: 10 *  meter * surface_earth_scale_factor,
     max_pitch: 85,
     km: km * surface_earth_scale_factor,
     meter: meter * surface_earth_scale_factor,
     flagpole: {
-        radius: 1 *  meter * surface_earth_scale_factor,
-        height: 25 *  meter * surface_earth_scale_factor,
-        pos: { x: 0, y: 0, z: 0 }
+        radius: 5 *  meter * surface_earth_scale_factor,
+        height: 100 *  meter * surface_earth_scale_factor,
+        pos: { x: 0, y: 0, z: 0 },
+        material: {
+            day: {
+                baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
+                specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
+                specular:       0.5,
+                shine:          0.001,
+                emit:           0
+            },
+            night: {
+                baseColor:      { r: 0.1, g: 0.1, b: 0.1 },
+                specularColor:  { r: 0.1, g: 0.1, b: 0.1 },
+                specular:       0.001,
+                shine:          0.001,
+                emit:           0.0
+            }
+        }
+    },
+    disk: {
+        width: 500 * earth.km,
+        height: earth.km,
+        material: {
+            day: {
+                baseColor:      { r: 0.01, g: 0.1, b: 0.0 },
+                specularColor:  { r: 0.01, g: 0.1, b: 0.0 },
+                specular:       0.0001,
+                shine:          0.0001,
+                emit:           0
+            },
+            night: {
+                baseColor:      { r: 0.01, g: 0.5, b: 0.0 },
+                specularColor:  { r: 0.01, g: 0.5, b: 0.0 },
+                specular:       0.5,
+                shine:          0.5,
+                emit:           0.0
+                // baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
+                // specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
+                // specular:       0.05,
+                // shine:          0.05,
+                // emit:           0.5
+            }
+        }
     }
 };
 
-var dark_side_light = 0.25;
+
+var bubble_gnomon_radius = 40000 * surface.flagpole.radius;
+var bubble_gnomon_length = bubble_gnomon_radius * 2.5;
+var bubble_gnomon_width  = bubble_gnomon_radius / 10;
+var gnomon_label_size = bubble_gnomon_width * surface_earth_scale_factor * 0.001;
+
+
+var earth_tilt_quat = quat4.axisVecAngleDegreesCreate(earth_tilt_axis,  earth.tilt);
+
+// var earth_tilt_quat = quat4.axisAngleDegreesCreate(0, 0, 1,  earth.tilt);
+// var earth_tilt_quat_sjs = SceneJS._math_angleAxisQuaternion(0, 0, 1,  earth.tilt);
+
+// var earth_tilt_axis = []; vec3.cross(earth_pos_jun_normalized_vec3, up, earth_tilt_axis);
+
+var jun_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_jun_normalized_vec3)) * rad2deg;
+var jun_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, jun_orbit_correction_degrees);
+var jun_orbit_correction_mat4 = [];
+quat4.toMat4(jun_orbit_correction_quat, jun_orbit_correction_mat4);
+
+var sep_orbit_correction_degrees = Math.acos(vec3.dot([1, earth_pos_sep_normalized_vec3[1], 0], earth_pos_sep_normalized_vec3)) * rad2deg;
+var sep_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, sep_orbit_correction_degrees);
+var sep_orbit_correction_mat4 = [];
+quat4.toMat4(sep_orbit_correction_quat, sep_orbit_correction_mat4);
+
+var dec_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_dec_normalized_vec3[1], 1], earth_pos_dec_normalized_vec3)) * rad2deg;
+var dec_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, -dec_orbit_correction_degrees);
+var dec_orbit_correction_mat4 = [];
+quat4.toMat4(dec_orbit_correction_quat, dec_orbit_correction_mat4);
+
+var mar_orbit_correction_degrees = Math.acos(vec3.dot([-1, earth_pos_mar_normalized_vec3[1], 0], earth_pos_mar_normalized_vec3)) * rad2deg;
+var mar_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, -mar_orbit_correction_degrees);
+var mar_orbit_correction_mat4 = [];
+quat4.toMat4(mar_orbit_correction_quat, mar_orbit_correction_mat4);
+
+var orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_jun_normalized_vec3)) * rad2deg;
+var orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
+var orbit_correction_mat4 = [];
+quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
+
+var dark_side_light = 0.1;
 var max_pitch = 85;
 
 var distance = earth.radius * 3;
+// var distance = 9.6;
 
-var yaw      =  280;
-var pitch    = -5;
+var yaw      =  270;
+var pitch    = -1;
 
 var lookat_yaw = 0;
+
 
 //
 // Square Grid
@@ -284,6 +351,162 @@ function update_initial_eye(d) {
 update_initial_eye(distance);
 
 SceneJS.createNode({
+    id: "x-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/x3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: gnomon_label_size, ySize: gnomon_label_size }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "y-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/y3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: gnomon_label_size, ySize: gnomon_label_size }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "z-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/z3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: gnomon_label_size, ySize: gnomon_label_size }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "east-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/east3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                // { type: "quad", xSize: 300, ySize: 100.0 }
+                                // { type: "quad", xSize: 3.0, ySize: 1.0 }
+                                { type: "quad", xSize: surface.flagpole.height * 3, ySize: surface.flagpole.height }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "north-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/north3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: 0.0, ySize: 0.1 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "west-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/west3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: 0.3, ySize: 0.1 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "south-label",
+    type: "billboard",
+    nodes: [
+        {
+            type: "texture",
+            layers: [ { uri: "images/south3.jpg", blendMode: "add" } ],
+            nodes: [
+                { type: "node", flags: {  transparent: true },
+                    nodes: [ 
+                        { type: "material", specular: 0.0, emit: 10,
+                            nodes: [
+                                { type: "quad", xSize: 0.3, ySize: 0.1 }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
     type: "scene",
     id: "theScene",
     canvasId: "theCanvas",
@@ -375,6 +598,7 @@ SceneJS.createNode({
                             ]
                         },
 
+
                         // Lights, one bright directional source for the Sun, two others much
                         // dimmer to give some illumination to the dark side of the Earth
                         {
@@ -391,23 +615,170 @@ SceneJS.createNode({
                         },
 
                         {
-                            type: "light",
-                            id:   "back-light1",
-                            mode:                   "dir",
-                            color:                  { r: dark_side_light, g: dark_side_light, b: dark_side_light },
-                            diffuse:                true,
-                            specular:               true,
-                            dir:                    { x: 1.0, y: 0.0, z: -0.75 }
+                            type: "quaternion",
+                            id: "backlight-quaternion",
+                            x: 0, y: 1, z: 0,
+                            angle: 0,
+                            
+                            nodes: [
+                            
+                                {
+                                    type: "translate",
+                                    x: earth_orbital_radius * 1.5, 
+                                    y: earth_orbital_radius * 1.5, 
+                                    z: earth_orbital_radius * 1.5,
+                                    
+                                    nodes: [
+
+                                        {
+                                            type: "light",
+                                            id:   "backlight-node1",
+                                            mode:                   "point",
+                                            pos:                    { x: -1 * earth_orbital_radius, y: 0, z: 0 },
+                                            color:                  { r: 1.0, g: 1.0, b: 1.0 },
+                                            diffuse:                true,
+                                            specular:               true,
+                                            constantAttenuation:    1.0,
+                                            quadraticAttenuation:   0.0,
+                                            linearAttenuation:      0.0
+                                        },
+
+                                        {
+                                            type: "light",
+                                            id:   "backlight-node2",
+                                            mode:                   "point",
+                                            pos:                    { x: 1 * earth_orbital_radius, y: 0, z: 0  },
+                                            color:                  { r: 1.0, g: 1.0, b: 1.0 },
+                                            diffuse:                true,
+                                            specular:               true,
+                                            constantAttenuation:    1.0,
+                                            quadraticAttenuation:   0.0,
+                                            linearAttenuation:      0.0
+                                        }
+                                    ]
+                                }
+                            ]
                         },
-        
+
+                        // surface lookat bubble
+                        
+                        // bubble
                         {
-                            type: "light",
-                            id:   "back-light2",
-                            mode:                   "dir",
-                            color:                  { r: dark_side_light, g: dark_side_light, b: dark_side_light },
-                            diffuse:                true,
-                            specular:               true,
-                            dir:                    { x: 1.0, y: 0.0, z: 0.75 }
+                            type: "translate",
+                            id: "surface-lookat-bubble-pos",
+                            x: sun.pos.x,
+                            y: sun.pos.y,
+                            z: sun.pos.z,
+
+                            nodes: [
+                                {
+                                    type: "scale",
+                                    id: "surface-lookat-bubble-scale",
+                                    // x: 0.001,
+                                    // y: 0.001,
+                                    // z: 0.001,
+                                    // x: surface.meter * 500,
+                                    // y: surface.meter * 500,
+                                    // z: surface.meter * 500,
+                                    
+                                    nodes: [
+
+                                        {
+                                            type: "selector",
+                                            id: "surface-lookat-bubble-selector",
+                                            selection: [0],
+                                            nodes: [ 
+
+                                                // 0: off
+
+                                                {  },
+
+                                                // 1: on:
+
+                                                {
+                                                    type: "node",
+                                                    flags: { transparent: true },
+                                                    
+                                                    nodes: [  
+                                                    
+                                                        {
+                                                            type: "material",
+                                                            baseColor:      { r: 1.0, g: 0.05, b: 0.05 },
+                                                            specularColor:  { r: 1.0, g: 0.05, b: 0.05 },
+                                                            specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
+                                                            nodes: [ { type: "sphere", slices: 48, rings: 48, radius: bubble_gnomon_radius } ]
+                                                        },
+                                                        {
+                                                            type: "material",
+                                                            baseColor:      { r: 1.0, g: 0.05, b: 0.05 },
+                                                            specularColor:  { r: 1.0, g: 0.05, b: 0.05 },
+                                                            specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
+                                                            nodes: [ 
+                                                                {
+                                                                    type: "translate", x: bubble_gnomon_length, y: 0.0, z: 0.0,
+                                                                    nodes: [ { type: "cube", xSize: bubble_gnomon_length, ySize: bubble_gnomon_width, zSize: bubble_gnomon_width } ]
+                                                                }
+                                                            ]
+                                                        },
+
+                                                        {
+                                                            type: "material",
+                                                            baseColor:      { r: 0.05, g: 1.0, b: 0.05 },
+                                                            specularColor:  { r: 0.05, g: 1.0, b: 0.05 },
+                                                            specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
+                                                            nodes: [ 
+                                                                {
+                                                                    type: "translate", x: 0.0, y: bubble_gnomon_length, z: 0.0,
+                                                                    nodes: [ { type: "cube", xSize: bubble_gnomon_width, ySize: bubble_gnomon_length, zSize: bubble_gnomon_width } ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            type: "material",
+                                                            baseColor:      { r: 0.05, g: 0.05, b: 1.0 },
+                                                            specularColor:  { r: 0.05, g: 0.05, b: 1.0 },
+                                                            specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
+                                                            nodes: [ 
+                                                                {
+                                                                    type: "translate", x: 0.0, y: 0.0, z: bubble_gnomon_length,
+                                                                    nodes: [ { type: "cube", xSize: bubble_gnomon_width, ySize: bubble_gnomon_width, zSize: bubble_gnomon_length } ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        
+                                                        {
+                                                            // type: "node",
+                                                            type: "material",
+                                                            // baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                            // specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                            // specular: 1.0, shine: 1.0, 
+                                                            // emit: 0.5, alpha: 0.1,
+                                                            
+                                                            nodes: [
+                                                                {
+                                                                    type: "translate",
+                                                                    x: bubble_gnomon_length * 2.2,  y: 0, z: 0,
+                                                                    nodes: [ { type: "instance", target: "x-label" } ]
+                                                                },
+                                                                {
+                                                                    type: "translate",
+                                                                    x: 0,  y: bubble_gnomon_length * 2.2, z: 0,
+                                                                    nodes: [ { type: "instance", target: "y-label" } ]
+                                                                },
+                                                                {
+                                                                    type: "translate",
+                                                                    x: 0,  y: 0, z: bubble_gnomon_length * 2.2,
+                                                                    nodes: [ { type: "instance", target: "z-label" } ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ] 
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         },
 
                         // Sun and related objects
@@ -439,7 +810,7 @@ SceneJS.createNode({
 
                                             nodes: [  { type: "sphere", slices: 60, rings: 60 } ]
                                         },
-                                        
+
                                         // Sun Square Grid
                                         {
                                             type: "material",
@@ -512,7 +883,7 @@ SceneJS.createNode({
 
                                             positions: [
                                                 sun.pos.x, sun.pos.y, sun.pos.z,
-                                                earth_pos_jun_21_vec3[0], earth_pos_jun_21_vec3[1], earth_pos_jun_21_vec3[2]
+                                                earth_pos_jun_vec3[0], earth_pos_jun_vec3[1], earth_pos_jun_vec3[2]
                                             ],
 
                                             indices : [ 0, 1 ]
@@ -526,7 +897,7 @@ SceneJS.createNode({
 
                                             positions: [
                                                 sun.pos.x, sun.pos.y, sun.pos.z,
-                                                earth_pos_sep_21_vec3[0], earth_pos_sep_21_vec3[1], earth_pos_sep_21_vec3[2]
+                                                earth_pos_sep_vec3[0], earth_pos_sep_vec3[1], earth_pos_sep_vec3[2]
                                             ],
 
                                             indices : [ 0, 1 ]
@@ -540,7 +911,7 @@ SceneJS.createNode({
 
                                             positions: [
                                                 sun.pos.x, sun.pos.y, sun.pos.z,
-                                                earth_pos_dec_21_vec3[0], earth_pos_dec_21_vec3[1], earth_pos_dec_21_vec3[2]
+                                                earth_pos_dec_vec3[0], earth_pos_dec_vec3[1], earth_pos_dec_vec3[2]
                                             ],
 
                                             indices : [ 0, 1 ]
@@ -554,7 +925,7 @@ SceneJS.createNode({
 
                                             positions: [
                                                 sun.pos.x, sun.pos.y, sun.pos.z,
-                                                earth_pos_mar_21_vec3[0], earth_pos_mar_21_vec3[1], earth_pos_mar_21_vec3[2]
+                                                earth_pos_mar_vec3[0], earth_pos_mar_vec3[1], earth_pos_mar_vec3[2]
                                             ],
 
                                             indices : [ 0, 1 ]
@@ -640,7 +1011,7 @@ SceneJS.createNode({
                                 }
                             ]
                         },
-
+                        
                         // Earth and other objects that are referenced from Earth's location.
                         {
                             type: "translate",
@@ -929,9 +1300,10 @@ SceneJS.createNode({
                                                 {
                                                     type: "quaternion",
                                                     id:   "earth-tilt-quaternion",
-                                                    x: earth_tilt_axis[0], 
-                                                    y: earth_tilt_axis[1], 
-                                                    z: earth_tilt_axis[2],
+                                                    x: 1, y: 0, z: 0,
+                                                    // x: earth_tilt_axis[0], 
+                                                    // y: earth_tilt_axis[1], 
+                                                    // z: earth_tilt_axis[2],
                                                     angle: earth.tilt, 
 
                                                     nodes: [
@@ -1017,8 +1389,10 @@ SceneJS.createNode({
                                                         { 
                                                             type: "rotate", 
                                                             id: "day-of-year-angle-node", 
-                                                            angle: 90, 
+                                                            angle: 90,
+                                                            x: 0.0,
                                                             y: 1.0,
+                                                            z: 0.0,
                                                             
                                                             nodes: [
                             
@@ -1111,8 +1485,8 @@ SceneJS.createNode({
                                                                                         {
                                                                                             type:          "material",
                                                                                             id:            "atmosphere-material",
-                                                                                            baseColor:      { r: 0.0, g: 0.5, b: 1.0 },
-                                                                                            specularColor:  { r: 0.0, g: 0.5, b: 1.0 },
+                                                                                            baseColor:      { r: 0.0, g: 0.2, b: 1.0 },
+                                                                                            specularColor:  { r: 0.0, g: 0.2, b: 1.0 },
                                                                                             specular:       1.0,
                                                                                             shine:          1.0,
                                                                                             alpha:          0.5,
@@ -1122,15 +1496,15 @@ SceneJS.createNode({
 
                                                                                                 {
                                                                                                     type: "scale", 
-                                                                                                    x: earth.radius * 1.1, 
-                                                                                                    y: earth.radius * 1.1, 
-                                                                                                    z: earth.radius * 1.1,
+                                                                                                    x: earth.radius * 1.05, 
+                                                                                                    y: earth.radius * 1.05, 
+                                                                                                    z: earth.radius * 1.05,
 
                                                                                                     nodes: [
 
                                                                                                         { 
                                                                                                             type: "sphere",
-                                                                                                            slices: 256, rings: 128 
+                                                                                                            slices: 128, rings: 128 
                                                                                                         }
                                                                                                     ]
                                                                                                 }
@@ -1220,12 +1594,9 @@ SceneJS.createNode({
                                                                                         // Earth Surface Indicator
                                                                                         {
                                                                                             type: "node",
-                                                                                            flags: {
-                                                                                                transparent: false
-                                                                                            },
+                                                                                            flags: { transparent: false },
 
                                                                                             nodes: [
-
                                                                                                 {
                                                                                                     type: "quaternion",
                                                                                                     x: 0.0, y: 0.0, z: 1.0, angle: 90.0,
@@ -1238,7 +1609,6 @@ SceneJS.createNode({
                                                                                                             x: -1.0, y: 0.0, z: 0.0, angle: surface.longitude,
 
                                                                                                             nodes: [
-
                                                                                                                 {
 
                                                                                                                     type: "quaternion",
@@ -1246,94 +1616,228 @@ SceneJS.createNode({
                                                                                                                     x: 0.0, y: 0.0, z: -1.0, angle: surface.latitude,
 
                                                                                                                     nodes: [
-
                                                                                                                         {
 
                                                                                                                             type: "translate",
                                                                                                                             x: 0,
-                                                                                                                            y: 1 + surface.min_height / 2,
+                                                                                                                            y: 1 + surface.min_height - surface.disk.height / 2,
                                                                                                                             z: 0,
-
+                                                                                                                            
                                                                                                                             nodes: [
-                                                                                                                                                                                                                                                            
                                                                                                                                 {
-                                                                                                                                    type: "node",
-                                                                                                                                    // wireframe: false,
-                                                                                                                                    // lineWidth: 1,
-                                                                                                                                     
-                                                                                                                                    nodes: [
-                                                                                                                                    
-                                                                                                                                       { 
-                                                                                                                                           type: "material",
-                                                                                                                                           baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
-                                                                                                                                           specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
-                                                                                                                                    
-                                                                                                                                           specular:       0.5,
-                                                                                                                                           shine:          0.001,
-                                                                                                                                    
-                                                                                                                                           nodes: [
-                                                                                                                                    
-                                                                                                                                               {
-                                                                                                                                                   type: "disk",
-                                                                                                                                                   radius: 200 * earth.km,
-                                                                                                                                                   height: surface.min_height / 2,
-                                                                                                                                                   rings: 48
-                                                                                                                                    
-                                                                                                                                               },
-                                                                                                                                           ]
-                                                                                                                                       },
-                                                                                                                                    ]
-                                                                                                                                },
-                                                                                                                                
-                                                                                                                                { 
-                                                                                                                                    type: "material",
-                                                                                                                                    baseColor:      { r: 0.5, g: 0.1, b: 0.1 },
-                                                                                                                                    specularColor:  { r: 0.5, g: 0.1, b: 0.1 },
+                                                                                                                                    type: "selector",
+                                                                                                                                    id: "surface-disc-selector",
+                                                                                                                                    selection: [0],
 
-                                                                                                                                    specular:       0.5,
-                                                                                                                                    shine:          0.1,
-                                                                                                                                    emit:           0.5,
+                                                                                                                                    nodes: [ 
 
-                                                                                                                                    nodes: [
+                                                                                                                                        // 0: Earth in Space View
+                                                                                                                                        {
+                                                                                                                                            type: "material",
+                                                                                                                                            id:   "surface-disk-material",
+                                                                                                                                            baseColor:      { r: 0.1, g: 0.6, b: 0.0 },
+                                                                                                                                            specularColor:  { r: 0.1, g: 0.6, b: 0.0 },
+
+                                                                                                                                            specular:       0.05,
+                                                                                                                                            shine:          0.01,
+                                                                                                                                            emit:           0.5,
+
+                                                                                                                                            nodes: [
+                                                                                                                                                {
+                                                                                                                                                    type: "disk",
+                                                                                                                                                    radius: earth.radius / 400,
+                                                                                                                                                    height: surface.disk.height,
+                                                                                                                                                    rings: 24
+                                                                                                                                                }
+                                                                                                                                            ]
+                                                                                                                                        },
+
+                                                                                                                                        // 1: Surface View
                                                                                                                                     
                                                                                                                                         {
-                                                                                                                                            type: "translate",
-                                                                                                                                            x: 10,
-                                                                                                                                            y: 0.1,
-                                                                                                                                            z: 10,
-                                                                                                                                    
-                                                                                                                                            nodes: [
                                                                                                                                             
-                                                                                                                                                {
-                                                                                                                                                    type: "billboard",
+                                                                                                                                            nodes: [
+                                                                                                                                                { 
+                                                                                                                                                    type: "material",
+                                                                                                                                                    id:   "surface-disk-material",
+                                                                                                                                                    baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
+                                                                                                                                                    specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
+
+                                                                                                                                                    specular:       0.05,
+                                                                                                                                                    shine:          0.0001,
+
                                                                                                                                                     nodes: [
                                                                                                                                                         {
-                                                                                                                                                            type: "texture",
-                                                                                                                                                            layers: [ { uri: "images/east2.png" } ],
-                                                                                                                                                            nodes: [
-                                                                                                                                                            
-                                                                                                                                                                {
-                                                                                                                                                                    type: "node",
+                                                                                                                                                            type: "disk",
+                                                                                                                                                            radius: surface.disk.width,
+                                                                                                                                                            height: surface.disk.height,
+                                                                                                                                                            rings: 48
+                                                                                                                                                        }
+                                                                                                                                                    ]
+                                                                                                                                                },
+                                                                                                                                                
+                                                                                                                                                {
+                                                                                                                                                    type: "translate",
+                                                                                                                                                    x: 0,
+                                                                                                                                                    y: surface.disk.height / 2,
+                                                                                                                                                    z: 0,
+                                                                                                                                                    
+                                                                                                                                                    nodes: [
+                                                                                                                                                        {
+                                                                                                                                                            type: "translate",
+                                                                                                                                                            x: 0,  y: surface.flagpole.height, z: 0,
+                                                                                                                                                            nodes: [ { type: "instance", target: "east-label" } ]
+                                                                                                                                                        },
 
-                                                                                                                                                                    flags: {
-                                                                                                                                                                        transparent: true
-                                                                                                                                                                    },
+                                                                                                                                                        // {
+                                                                                                                                                        //     type: "translate",
+                                                                                                                                                        //     x: 0,  y: 0, z: surface.disk.width,
+                                                                                                                                                        //     nodes: [ { type: "instance", target: "north-label" } ]
+                                                                                                                                                        // },
+                                                                                                                                                        // 
+                                                                                                                                                        // {
+                                                                                                                                                        //     type: "translate",
+                                                                                                                                                        //     x: -surface.disk.width,  y: 0, z: 0,
+                                                                                                                                                        //     nodes: [ { type: "instance", target: "west-label" } ]
+                                                                                                                                                        // },
+                                                                                                                                                        // 
+                                                                                                                                                        // {
+                                                                                                                                                        //     type: "translate",
+                                                                                                                                                        //     x: 0,  y: 0, z: surface.disk.width,
+                                                                                                                                                        //     nodes: [ { type: "instance", target: "south-label" } ]
+                                                                                                                                                        // },
+
+                                                                                                                                                        {
+                                                                                                                                                            type: "node",
+                                                                                                                                                            flags: { transparent: true },
+
+                                                                                                                                                            nodes: [
+                                                                                                                                                                { 
+                                                                                                                                                                    type: "material",
+                                                                                                                                                                    baseColor:      { r: 0.5, g: 0.05, b: 0.05 },
+                                                                                                                                                                    specularColor:  { r: 0.5, g: 0.05, b: 0.05 },
+
+                                                                                                                                                                    specular:       0.5,
+                                                                                                                                                                    shine:          0.1,
+                                                                                                                                                                    emit:           0.5,
+                                                                                                                                                                    alpha:          0.5,
 
                                                                                                                                                                     nodes: [
 
                                                                                                                                                                         {
-
-                                                                                                                                                                            type: "material",
-                                                                                                                                                                            specular: 0.0,
-                                                                                                                                                                            emit: 10,
+                                                                                                                                                                            type: "translate",
+                                                                                                                                                                            x: 0,
+                                                                                                                                                                            y: surface.flagpole.height / 200,
+                                                                                                                                                                            z: 0,
 
                                                                                                                                                                             nodes: [
 
-                                                                                                                                                                
                                                                                                                                                                                 {
-                                                                                                                                                                                    type: "quad",
-                                                                                                                                                                                    xSize: 200 * earth.km,
-                                                                                                                                                                                    ySize: 200 * earth.km
+                                                                                                                                                                                    type: "rotate",
+                                                                                                                                                                                    angle: 90,
+                                                                                                                                                                                    x: 1.0,
+
+                                                                                                                                                                                    nodes: [
+
+                                                                                                                                                                                        {
+                                                                                                                                                                                            type: "quad",
+                                                                                                                                                                                            xSize: surface.disk.width,
+                                                                                                                                                                                            ySize: 0.5 * earth.km
+                                                                                                                                                                                        }
+                                                                                                                                                                                    ]
+                                                                                                                                                                                },
+
+                                                                                                                                                                                {
+                                                                                                                                                                                    type: "rotate",
+                                                                                                                                                                                    angle: 90,
+                                                                                                                                                                                    y: 1.0,
+
+                                                                                                                                                                                    nodes: [
+                                                                                                                                                                                        {
+                                                                                                                                                                                            type: "rotate",
+                                                                                                                                                                                            angle: 90,
+                                                                                                                                                                                            x: 1.0,
+
+                                                                                                                                                                                            nodes: [
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    type: "quad",
+                                                                                                                                                                                                    xSize: surface.disk.width,
+                                                                                                                                                                                                    ySize: 0.5 * earth.km
+                                                                                                                                                                                                }
+                                                                                                                                                                                            ]
+                                                                                                                                                                                        }
+                                                                                                                                                                                    ]
+                                                                                                                                                                                }
+                                                                                                                                                                            ]
+                                                                                                                                                                        }
+                                                                                                                                                                    ]
+                                                                                                                                                                }
+                                                                                                                                                            ]
+                                                                                                                                                        },
+
+                                                                                                                                                        { 
+                                                                                                                                                            type: "material",
+                                                                                                                                                            id:   "flagpole-material",
+                                                                                                                                                            baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
+                                                                                                                                                            specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
+                                                                                                                                                            specular:       0.5,
+                                                                                                                                                            shine:          0.001,
+
+                                                                                                                                                            nodes: [
+
+                                                                                                                                                                {
+
+                                                                                                                                                                    type: "translate",
+                                                                                                                                                                    x: surface.meter * 0,
+                                                                                                                                                                    y: surface.flagpole.height / 2,
+                                                                                                                                                                    z: surface.meter * 0,
+
+                                                                                                                                                                    nodes: [
+                                                                                                                                                                        {
+                                                                                                                                                                            type: "disk",
+                                                                                                                                                                            radius: surface.flagpole.radius,
+                                                                                                                                                                            height: surface.flagpole.height
+                                                                                                                                                                        }
+                                                                                                                                                                    ]
+                                                                                                                                                                }
+                                                                                                                                                            ]
+                                                                                                                                                        },
+                                                                                                                                                        
+                                                                                                                                                        // Solar Panel
+                                                                                                                                                        {
+                                                                                                                                                            type: "translate",
+                                                                                                                                                            x: surface.flagpole.height * 1.5,
+                                                                                                                                                            y: 0,
+                                                                                                                                                            z: 0,
+
+                                                                                                                                                            nodes: [
+                                                                                                                                                            
+                                                                                                                                                                { 
+                                                                                                                                                                    type: "material",
+                                                                                                                                                                    baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                                                                                    specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                                                                                    specular:       0.1 ,
+                                                                                                                                                                    shine:          1.0,
+
+                                                                                                                                                                    nodes: [
+
+                                                                                                                                                                        {
+                                                                                                                                                                            type: "texture",
+                                                                                                                                                                            layers: [ 
+                                                                                                                                                                                { 
+                                                                                                                                                                                    uri: "images/solarpanel1.jpg",
+                                                                                                                                                                                    applyTo: "baseColor",
+                                                                                                                                                                                    blendMode: "multiply" ,
+                                                                                                                                                                                    wrapS: "repeat",
+                                                                                                                                                                                    wrapT: "repeat",
+                                                                                                                                                                                } 
+                                                                                                                                                                            ],
+                                                                                                                                                                            nodes: [
+                                                                                                                                                                                {
+                                                                                                                                                                                    type: "box",
+                                                                                                                                                                                    xSize: surface.flagpole.height / 2,
+                                                                                                                                                                                    ySize: surface.flagpole.radius / 4,
+                                                                                                                                                                                    zSize: surface.flagpole.height / 2
                                                                                                                                                                                 }
                                                                                                                                                                             ]
                                                                                                                                                                         }
@@ -1344,93 +1848,11 @@ SceneJS.createNode({
                                                                                                                                                     ]
                                                                                                                                                 }
                                                                                                                                             ]
-                                                                                                                                        },
-                                                                                                                                        
-                                                                                                                                        
-                                                                                                                                        {
-                                                                                                                                            type: "translate",
-                                                                                                                                            x: 0,
-                                                                                                                                            y: 0.0003,
-                                                                                                                                            z: 0,
-                                                                                                                                        
-                                                                                                                                            nodes: [
-
-                                                                                                                                                {
-                                                                                                                                                    type: "rotate",
-                                                                                                                                                    angle: 90,
-                                                                                                                                                    x: 1.0,
-                                                                                                                                                
-                                                                                                                                                    nodes: [
-
-                                                                                                                                                        {
-                                                                                                                                                            type: "quad",
-                                                                                                                                                            xSize: 200 * earth.km,
-                                                                                                                                                            ySize: 0.5 * earth.km
-                                                                                                                                                        }
-                                                                                                                                                    ]
-                                                                                                                                                },
-                                                                                                                                        
-                                                                                                                                                {
-                                                                                                                                                    type: "rotate",
-                                                                                                                                                    angle: 90,
-                                                                                                                                                    y: 1.0,
-                                                                                                                                                    
-                                                                                                                                                    nodes: [
-                                                                                                                                                        {
-                                                                                                                                                            type: "rotate",
-                                                                                                                                                            angle: 90,
-                                                                                                                                                            x: 1.0,
-
-                                                                                                                                                            nodes: [
-                                                                                                                                                                {
-                                                                                                                                                                    type: "quad",
-                                                                                                                                                                    xSize: 200 * earth.km,
-                                                                                                                                                                    ySize: 0.5 * earth.km
-                                                                                                                                                                }
-                                                                                                                                                            ]
-                                                                                                                                                        }
-                                                                                                                                                    ]
-                                                                                                                                                }
-                                                                                                                                            ]
-                                                                                                                                        }
-                                                                                                                                    ]
-                                                                                                                                },
-                                                                                                                                
-
-                                                                                                                                { 
-                                                                                                                                    type: "material",
-                                                                                                                                    baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
-                                                                                                                                    specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
-
-                                                                                                                                    specular:       0.5,
-                                                                                                                                    shine:          0.001,
-
-                                                                                                                                    nodes: [
-
-                                                                                                                                        {
-
-                                                                                                                                            type: "translate",
-                                                                                                                                            // x: 0 + surface.min_height * 1,
-                                                                                                                                            // y: 1 + surface.min_height + 2.5 * earth.km,
-                                                                                                                                            // z: 0 + surface.min_height * 5,
-
-                                                                                                                                            x: surface.meter * 0,
-                                                                                                                                            y: surface.flagpole.height / 2,
-                                                                                                                                            z: surface.meter * 0,
-
-                                                                                                                                            nodes: [
-                                                                                                                                                {
-                                                                                                                                                    type: "disk",
-                                                                                                                                                    radius: surface.flagpole.radius,
-                                                                                                                                                    height: surface.flagpole.height
-                                                                                                                                                }
-                                                                                                                                            ]
                                                                                                                                         }
                                                                                                                                     ]
                                                                                                                                 }
                                                                                                                             ]
                                                                                                                         }
-                                                                                                                
                                                                                                                     ]
                                                                                                                 }
                                                                                                             ]
@@ -1500,21 +1922,22 @@ var keepAnimating = true;
 //
 // Back Lighting Handler
 //
-var back_light1 =  SceneJS.withNode("back-light1");
-var back_light2 =  SceneJS.withNode("back-light2");
+var backlight_node1 =  SceneJS.withNode("backlight-node1");
+var backlight_node2 =  SceneJS.withNode("backlight-node2");
+var backlight_quaternion =  SceneJS.withNode("backlight-quaternion");
 
 function backLightHandler() {
     var colors;
-    if (back_light.checked) {
-        colors = { r: 2.0, g: 2.0, b: 2.0 };
+    if (backlight.checked) {
+        colors = { r: 1.0, g: 1.0, b: 1.0 };
     } else {
         colors = { r: dark_side_light, g: dark_side_light, b: dark_side_light };
     };
-    back_light1.set("color", colors);
-    back_light2.set("color", colors);
+    backlight_node1.set("color", colors);
+    backlight_node2.set("color", colors);
 };
 
-back_light.onchange = backLightHandler;
+backlight.onchange = backLightHandler;
 backLightHandler();
 
 //
@@ -1705,37 +2128,21 @@ sunRaysHandler();
 var earth_sub_graph = SceneJS.withNode("earth-sub-graph");
 var earth_sub_graph_scale = SceneJS.withNode("earth-sub-graph-scale");
 
-// modulo((365 - day_number_by_month.jun)/365 * 360 - 101.34246575342468, 360)
-// 90
-// 
-// modulo((365 - day_number_by_month.sep)/365 * 360 - 98.63013698630135, 360)
-// 1.4210854715202004e-14
-// 
-// modulo((365 - day_number_by_month.dec)/365 * 360 - 99.863013698630137, 360)
-// 270
-// 
-// modulo((365 - day_number_by_month.mar)/365 * 360 - 103.0684931506849, 360)
-// 180
-function day_of_year_angle_by_mon(mon) {
-    var day_angle;
-    switch (mon) {
-        case 'jun':
-            day_angle = modulo((365 - day_number_by_month.jun)/365 * 360 - (101.34246575342468 - jun_orbit_correction_degrees), 360);
-            break;
-        case 'sep':
-            day_angle = modulo((365 - day_number_by_month.sep)/365 * 360 - (98.63013698630135 - sep_orbit_correction_degrees), 360);
-            break;
-        case 'dec':
-            day_angle = modulo((365 - day_number_by_month.dec)/365 * 360 - (99.86301369863014 - dec_orbit_correction_degrees), 360);
-            break;
-        case 'mar':
-            day_angle = modulo((365 - day_number_by_month.mar)/365 * 360 - (103.0684931506849 - mar_orbit_correction_degrees), 360);
-            break;
-    };
-    return day_angle;
+var day_of_year_angle_by_mon = {
+    jun: 90,
+    sep: 0,
+    dec: 270,
+    mar: 180
 };
 
-var day_of_year_angle = day_of_year_angle_by_mon('jun')
+var yaw_angle_by_mon = {
+    jun: 270,
+    sep: 180,
+    dec: 90,
+    mar: 0
+};
+
+var day_of_year_angle = day_of_year_angle_by_mon['jun'];
 var day_of_year_angle_node = SceneJS.withNode("day-of-year-angle-node");
 
 var earth_pos_normalized_vec3 = [];
@@ -1743,29 +2150,69 @@ var earth_pos_normalized_vec3 = [];
 var orbit_matrix_node = SceneJS.withNode("orbit-matrix-node");
 
 function setEarthPositionByMon(mon) {
+    var yaw_difference = yaw - yaw_angle_by_mon[earth.month];
+    earth.month = mon;
     var day_number = day_number_by_month[mon];
-    var previous_yaw_angle = earth.day_number/365 * 360;
-    var pos = earth_ephemerides_location_by_day_number(day_number);
-    earth.pos = { x: pos[0], y: pos[1], z: pos[2] };
     earth.day_number = day_number;
-    var new_yaw_angle = earth.day_number/365 * 360;
+    
+    switch (mon) {
+        case 'jun':
+            pos = earth_pos_jun_vec3;
+            vec3.set(earth_pos_jun_normalized_vec3, earth_pos_normalized_vec3);
+            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
+            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
+            orbit_correction_mat4 = [];
+            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
+            orbit_matrix_node.set("elements", jun_orbit_correction_mat4);
+            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
+            day_of_year_angle = 90;
+            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
+            break;
+        case 'sep':
+            pos = earth_pos_sep_vec3;
+            vec3.set(earth_pos_sep_normalized_vec3, earth_pos_normalized_vec3);
+            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
+            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
+            orbit_correction_mat4 = [];
+            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
+            orbit_matrix_node.set("elements", sep_orbit_correction_mat4);
+            sunrise_set_rotation.set({ angle: 90, x: 1, y: 0, z: 0 });
+            day_of_year_angle = 0;
+            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
+            break;
+        case 'dec':
+            pos = earth_pos_dec_vec3;
+            vec3.set(earth_pos_dec_normalized_vec3, earth_pos_normalized_vec3);
+            orbit_correction_degrees = 360 - (Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg);
+            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
+            orbit_correction_mat4 = [];
+            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
+            orbit_matrix_node.set("elements", dec_orbit_correction_mat4);
+            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
+            day_of_year_angle = 270;
+            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
+            break;
+        case 'mar':
+            pos = earth_pos_mar_vec3;
+            vec3.set(earth_pos_mar_normalized_vec3, earth_pos_normalized_vec3);
+            orbit_correction_degrees = (Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg);
+            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
+            orbit_correction_mat4 = [];
+            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
+            orbit_matrix_node.set("elements", mar_orbit_correction_mat4);
+            sunrise_set_rotation.set({ angle: 90, x: 1, y: 0, z: 0 });
+            day_of_year_angle = 180;
+            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
+            break;
+    };
+    earth.pos = { x: pos[0], y: pos[1], z: pos[2] };
     earth_sub_graph.set(earth.pos);
 
-    earth_pos_normalized_vec3 = vec3.normalize([earth.pos.x, earth.pos.y, earth.pos.z]);
-    
-    earth_orbit_axis_correction_vec3 = vec3.cross([1,0,0], earth_pos_normalized_vec3);
-    earth_orbit_angle_correction = Math.acos(vec3.dot([1,0,0], earth_pos_normalized_vec3)) * rad2deg;
-    earth_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(earth_orbit_axis_correction_vec3, earth_orbit_angle_correction);
+    backlight_quaternion.set("rotation", { x:0, y:1, z: 0, angle: yaw_angle_by_mon[mon] - 135 });
 
-    sunrise_set_rotation.set({ x: earth_pos_normalized_vec3[0], y: earth_pos_normalized_vec3[1], z: earth_pos_normalized_vec3[2] });
-
-    day_of_year_angle = day_of_year_angle_by_mon(mon);
-    day_of_year_angle_node.set("angle", day_of_year_angle);
-
-    // yaw -= earth.day_number/365 * 360;
-    incrementYaw(-(new_yaw_angle - previous_yaw_angle));
+    yaw = yaw_angle_by_mon[mon];
+    incrementYaw(yaw_difference);
     sunEarthLineHandler();
-    
 };
 
 var sun_light                 = SceneJS.withNode("sun-light");
@@ -1776,7 +2223,10 @@ var earth_atmosphere_selector = SceneJS.withNode("earth-atmosphere-selector");
 var atmosphere_material       = SceneJS.withNode("atmosphere-material");
 var atmosphere_transparent    = SceneJS.withNode("atmosphere-transparent");
 
+var surface_disk_material = SceneJS.withNode("surface-disk-material");
+var flagpole_material = SceneJS.withNode("flagpole-material");
 
+var surface_disc_selector = SceneJS.withNode("surface-disc-selector");
 
 // sun-material ...
 // baseColor:      { r: 1.0, g: 0.95, b: 0.8 },
@@ -1798,7 +2248,6 @@ function setupEarthInSpace() {
 
     milky_way_material.set("emit", 0.8);
 
-
     earth_atmosphere_selector.set("selection", [0]);
     earth.radius = earth_diameter / 2;
     // earth.km = km / earth.radius;
@@ -1813,6 +2262,7 @@ function setupEarthInSpace() {
     camera.set("optics", optics);
     latitude_line_selector.set("selection",  [1]);
     longitude_line_selector.set("selection", [1]);
+    surface_disc_selector.set("selection", [0]);
 
     if (was_earth_grid_checked) {
         earth_grid.checked = true;
@@ -1826,6 +2276,12 @@ function setupEarthInSpace() {
         was_sunrise_set_checked = false;
     };
 
+    if (was_sun_earth_line_checked) {
+        sun_earth_line.checked = true;
+        sunEarthLineHandler();
+        was_sun_earth_line_checked = false;
+    };
+
     look_at.set("up", { x: up[0], y: up[1], z: up[2] });
 };
 
@@ -1835,6 +2291,8 @@ function setupEarthInSpace() {
 function updateEarthInSpaceLookAt() {
     // first handle yaw and pitch for our lookAt-arcball navigation around Earth
     // background: http://rainwarrior.thenoos.net/dragon/arcball.html
+    
+    
     var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, yaw);
     var yaw_mat4 = quat4.toMat4(yaw_quat);
 
@@ -1883,12 +2341,85 @@ var new_surface_eye_global = [];
 var surface_look_global = [];
 var new_surface_look_global = [];
 
+function lat_long_to_cartesian(lat, lon, r) {
+    r = r || 1;
+    return [-r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
+             r * Math.sin(lat * deg2rad),
+            -r * Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad), 1]
+}
 
-var earth_orbit_axis_correction_vec3 = vec3.create();
-var earth_orbit_angle_correction;
-var earth_orbit_correction_quat = quat4.create();
+function lat_long_to_cartesian_corrected_for_tilt(lat, lon, r) {
+    r = r || 1;
+    var lat_lon = lat_long_to_cartesian(lat, lon - earth.rotation, r);
+    // var v3 = vec3.create();
 
-var earth_tilt_quat = quat4.axisAngleDegreesCreate(0, 0, 1,  earth.tilt);
+    var q2 = [];
+    var v2 = [];
+
+    switch (earth.month) {
+        case 'jun': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
+        case 'sep': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], earth.tilt); break;
+        case 'dec': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], -earth.tilt); break;
+        case 'mar': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], -earth.tilt); break;
+    };
+
+    // var q2 = quat4.axisVecAngleDegreesCreate(earth_tilt_axis, earth.tilt);
+
+    // var q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt);
+
+    quat4.multiplyVec3(q2, lat_lon, v2)
+
+    // mat4.multiplyVec3(orbit_correction_mat4, v2);
+
+    return v2;
+
+    // quat4.multiplyVec3(earth_tilt_quat, lat_lon, v2);
+    // var v3  = [];
+    // var m4 = SceneJS._math_newMat4FromQuaternion(earth_tilt_quat_sjs);
+    // var v4 = SceneJS._math_mulMat4v4(m4, [lat_lon[0], lat_lon[1], lat_lon[2], 1])
+    // return v3;
+};
+
+function lat_long_to_global_cartesian(lat, lon, r) {
+    r = r || 1;
+    var q2 = [];
+    var v2 = [];
+
+    var lat_lon = lat_long_to_cartesian(lat, lon - earth.rotation, r);
+
+    // var q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt);
+    // vec3.scale(lat_lon, earth.radius);
+    // mat4.multiplyVec3(orbit_correction_mat4, lat_lon);
+    // quat4.multiplyVec3(q2, lat_lon)
+    // vec3.add(lat_lon, [earth.pos.x, earth.pos.y, earth.pos.z] )
+    // return lat_lon;
+
+    switch (earth.month) {
+        case 'jun': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
+        case 'sep': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], earth.tilt); break;
+        case 'dec': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], -earth.tilt); break;
+        case 'mar': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], -earth.tilt); break;
+    };
+
+    // var q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt);
+    quat4.multiplyVec3(q2, lat_lon)
+    vec3.scale(lat_lon, earth.radius);
+    mat4.multiplyVec3(orbit_correction_mat4, lat_lon);
+    vec3.add(lat_lon, [earth.pos.x, earth.pos.y, earth.pos.z] )
+    return lat_lon;
+    
+
+    // var q2 = quat4.axisVecAngleDegreesCreate(earth_tilt_axis, earth.tilt);
+
+    // var q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt);
+    // quat4.multiplyVec3(q2, lat_lon, v2)
+    // var global_lat_lon = vec3.create();
+    // vec3.scale(v2, earth.radius, global_lat_lon);
+    // mat4.multiplyVec3(orbit_correction_mat4, global_lat_lon);
+    // vec3.add(global_lat_lon, [earth.pos.x, earth.pos.y, earth.pos.z] )
+    // return global_lat_lon;
+
+};
 
 function calculate_surface_cross(lat, lon) {
     if (lat == undefined) {
@@ -1904,59 +2435,23 @@ function calculate_surface_cross(lat, lon) {
         lon = -lon;        
     };
     surface_up_minus_90_vec3 = lat_long_to_cartesian_corrected_for_tilt(lat, lon);
-    quat4.multiplyVec3(earth_orbit_correction_quat, surface_up_minus_90_vec3);
+    quat4.multiplyVec3(orbit_correction_quat, surface_up_minus_90_vec3);
     vec3.cross(surface_up_vec3, surface_up_minus_90_vec3, surface_cross_vec3);
     return surface_cross_vec3;
 };
-
-function lat_long_to_cartesian(lat, lon, r) {
-    r = r || 1;
-    return [-r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
-             r * Math.sin(lat * deg2rad),
-            -r * Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad), 1]
-}
-
-function lat_long_to_cartesian_corrected_for_tilt(lat, lon, r) {
-    r = r || 1;
-    var lat_lon = lat_long_to_cartesian(lat, lon - earth.rotation, r);
-    var v3 = vec3.create();
-    quat4.multiplyVec3(earth_tilt_quat, lat_lon, v3);
-    return v3;
-};
-
-function lat_long_to_global_cartesian(lat, lon, r) {
-    r = r || 1;
-    var lat_lon = lat_long_to_cartesian_corrected_for_tilt(lat, lon, r);
-    // var v3 = vec3.create();
-
-    var global_lat_lon = vec3.create();
-    vec3.scale(lat_lon, earth.radius, global_lat_lon);
-    
-    quat4.multiplyVec3(earth_orbit_correction_quat, global_lat_lon);
-
-    vec3.add(global_lat_lon, [earth.pos.x, earth.pos.y, earth.pos.z] )
-
-    return global_lat_lon;
-};
-
-function look_at_direction(unit_vec) {
-    var far = [unit_vec[0] * milky_way_apparent_radius, 
-        unit_vec[1] * milky_way_apparent_radius, 
-        unit_vec[2] * milky_way_apparent_radius];
-    look_at.set("look", { x: far[0], y: far[1], z: far[2] });
-}
 
 function calculateSurfaceEyeUpLook() {
     
     // calculate unit vector from center of Earth to surface location
     surface_dir_vec3 = lat_long_to_cartesian_corrected_for_tilt(surface.latitude, surface.longitude);
     
-    quat4.multiplyVec3(earth_orbit_correction_quat, surface_dir_vec3);
+    // quat4.multiplyVec3(earth_orbit_correction_quat, surface_dir_vec3);
+    quat4.multiplyVec3(orbit_correction_quat, surface_dir_vec3);
     
     // generate an up axis direction vector for the lookAt (integrates tilt)
     surface_up_vec3 = vec3.create(surface_dir_vec3);
 
-    flagpole_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1.002);
+    flagpole_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1.0 + (surface.min_height + surface.flagpole.height / 2));
     // flagpole_global[1] += 0.05;
     // flagpole_global[2] -= 9;
     x = (earth.radius + surface.min_height + surface.flagpole.height / 2) / earth.radius;
@@ -1964,7 +2459,7 @@ function calculateSurfaceEyeUpLook() {
     // generate an appropriate offset from the flagpole using the cross-product of the
     // current surface_up with the surface_up vector rotated 90 degrees northward
     calculate_surface_cross();
-    vec3.scale(surface_cross_vec3, surface.distance, surface_eye_vec3);    
+    vec3.scale(surface_cross_vec3, surface.distance * 10000 * surface.meter, surface_eye_vec3);    
     vec3.add(flagpole_global, surface_eye_vec3, surface_eye_global);
 
     surface_look_global = vec3.create(flagpole_global);
@@ -1977,17 +2472,90 @@ function calculateSurfaceEyeUpLook() {
     return lookat;
 };
 
-var was_earth_grid_checked = false;
-var was_sunrise_set_checked = false;
+function calculateSurfacePitchAxis(up, yaw) {
+    var pitch_axis = [];
+    var yaw_normalized = vec3.normalize(yaw);
+    vec3.cross(up, yaw, pitch_axis);
+    return pitch_axis;
+};
+
+//
+// inputs: 
+//    surface.yaw, surface.pitch
+//    surface.lookat_yaw, surface.lookat_pitch
+
+function updateSurfaceViewLookAt() {
+    var result_quat = quat4.create();
+    
+    // update the scenegraph lookAt
+    var lookat = calculateSurfaceEyeUpLook();
+    // look_at.set("eye", lookat.eye);
+    look_at.set("up", lookat.up);
+    
+    vec3.scale(surface_cross_vec3, surface.distance * 10000 * surface.meter, surface_eye_vec3);    
+
+    // calculate a yaw quaternion for rotation left-right around the lookAt point
+    var yaw_quat = quat4.axisVecAngleDegreesCreate(surface_up_vec3, surface.yaw);
+    
+    // calculate a yaw vector for calculating a pitch axis
+    var yaw_vec3 = []; quat4.multiplyVec3(yaw_quat, surface_eye_vec3, yaw_vec3);
+    
+    // calculate a pitch axis and quat for rotation up-down around the lookAt point
+    var pitch_axis = calculateSurfacePitchAxis(surface_up_vec3, yaw_vec3);
+    var pitch_quat =  quat4.axisVecAngleDegreesCreate(pitch_axis, -surface.pitch);
+
+    // combine the yaw and pitch quats and apply to the initial surface_eye
+    quat4.multiply(pitch_quat, yaw_quat, result_quat);
+    quat4.multiplyVec3(result_quat, surface_eye_vec3, new_surface_eye_vec3);
+
+    // update the global surface eye
+    vec3.add(surface_look_global, new_surface_eye_vec3, new_surface_eye_global);
+    look_at.set("eye", { x: new_surface_eye_global[0],  y: new_surface_eye_global[1],  z: new_surface_eye_global[2] });
+
+    // calculate pitch and yaw rotation of where you are looking at in the surface POV
+    var lookat_pitch_quat = quat4.axisVecAngleDegreesCreate(pitch_axis, -surface.lookat_pitch); 
+    quat4.multiplyVec3(lookat_pitch_quat, new_surface_eye_vec3, new_surface_look_vec3);
+    var lookat_yaw_quat = quat4.axisVecAngleDegreesCreate(surface_up_vec3, surface.lookat_yaw); 
+    quat4.multiplyVec3(lookat_yaw_quat, new_surface_eye_vec3, new_surface_look_vec3);
+
+    // combine the lookat pitch and yaw quats and apply to the initial surface lookAt
+    quat4.multiply(lookat_pitch_quat, lookat_yaw_quat, result_quat);
+
+    quat4.multiplyVec3(result_quat, new_surface_eye_vec3, new_surface_look_vec3);
+    vec3.subtract(new_surface_eye_vec3, new_surface_look_vec3, new_surface_look_vec3);
+    vec3.add(surface_look_global, new_surface_look_vec3, new_surface_look_global);
+    lookat.look = { x: new_surface_look_global[0],  y: new_surface_look_global[1],  z: new_surface_look_global[2] };
+
+    look_at.set("look",  lookat.look);
+    if (debug_view.checked) {
+        surface_lookat_bubble_pos.set(lookat.look);
+    };
+    debugLabel();
+};
+
+var was_earth_grid_checked = earth_grid.checked;
+var was_sunrise_set_checked = sunrise_set.checked;
+var was_sun_earth_line_checked = sun_earth_line.checked;
+
+var surface_lookat_bubble_selector = SceneJS.withNode("surface-lookat-bubble-selector");
+var surface_lookat_bubble_pos = SceneJS.withNode("surface-lookat-bubble-pos");
+var surface_lookat_bubble_scale = SceneJS.withNode("surface-lookat-bubble-scale");
 
 function setupSurfaceView() {
     
     was_earth_grid_checked = earth_grid.checked;
     earth_grid.checked = false;
     earthGridHandler();
+
     was_sunrise_set_checked = sunrise_set.checked;
     sunrise_set.checked = false;
     sunRiseSetHandler();
+
+    was_sun_earth_line_checked = sun_earth_line.checked;
+    sun_earth_line.checked = false;
+    sunEarthLineHandler();
+
+    milky_way_material.set("emit", 0.8);
 
     sun_material.set("specular", 1.0);
     sun_material.set("shine", 1.0);
@@ -1997,8 +2565,10 @@ function setupSurfaceView() {
     atmosphere_material.set("shine", 1.0);
     atmosphere_material.set("emit", 0.9);
 
+    surface_disc_selector.set("selection", [1]);
+    
     earth_atmosphere_selector.set("selection", [1]);
-    earth.radius = earth_diameter * 100 / 2;
+    earth.radius = earth_diameter * surface_earth_scale_factor / 2;
     // earth.km = km / earth.radius;
     // earth.meter = meter / earth.radius;
     earth_sub_graph_scale.set({ 
@@ -2006,9 +2576,13 @@ function setupSurfaceView() {
         y: surface_earth_scale_factor, 
         z: surface_earth_scale_factor
     });
+    
+    var surface_300m = surface.meter * 300;
+    surface_lookat_bubble_scale.set({ x: surface_300m, y: surface_300m, z: surface_300m });
     // earth_sub_graph._targetNode._setDirty();
     var optics = camera.get("optics");
     optics.fovy = 50;
+    optics.near = 0.10;
     camera.set("optics", optics);
     latitude_line_selector.set("selection",  [0]);
     longitude_line_selector.set("selection", [0]);
@@ -2021,48 +2595,6 @@ function setupSurfaceView() {
 
 };
 
-
-//
-// inputs: 
-//    surface.yaw, surface.pitch
-//    surface.lookat_yaw, surface.lookat_pitch
-
-
-function updateSurfaceViewLookAt() {
-    var result_quat = quat4.create();
-    
-    // update the scenegraph lookAt
-    var lookat = calculateSurfaceEyeUpLook();
-    // look_at.set("eye", lookat.eye);
-    look_at.set("up", lookat.up);
-    look_at.set("look",  lookat.look)
-
-    vec3.scale(surface_cross_vec3, surface.distance, surface_eye_vec3);    
-
-    var yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.yaw);
-    var pitch_quat = quat4.axisAngleDegreesCreate(surface_up_minus_90_vec3[0], surface_up_minus_90_vec3[1], surface_up_minus_90_vec3[2], surface.pitch);
-    quat4.multiply(pitch_quat, yaw_quat, result_quat);
-    
-    quat4.multiplyVec3(result_quat, surface_eye_vec3, new_surface_eye_vec3);
-    vec3.add(surface_look_global, new_surface_eye_vec3, new_surface_eye_global);
-    look_at.set("eye", { x: new_surface_eye_global[0],  y: new_surface_eye_global[1],  z: new_surface_eye_global[2] });
-
-    // var lookat_yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.yaw);
-    // var lookat_pitch_quat = quat4.axisAngleDegreesCreate(surface_up_minus_90_vec3[0], surface_up_minus_90_vec3[1], surface_up_minus_90_vec3[2], surface.pitch);
-    // var surface_look_global = [];
-    // var new_surface_look_global = [];
-
-    // next handle a possible yaw rotation to to look left or right of the flagpole in the surface POV
-    if (surface.lookat_yaw) {
-        var rot_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.lookat_yaw); 
-    
-        quat4.multiplyVec3(rot_quat, new_surface_eye_vec3, new_surface_look_vec3);
-        vec3.subtract(new_surface_eye_vec3, new_surface_look_vec3, new_surface_look_vec3);
-        vec3.add(surface_look_global, new_surface_look_vec3, new_surface_look_global);
-        look_at.set("look", { x: new_surface_look_global[0],  y: new_surface_look_global[1],  z: new_surface_look_global[2] });
-    };
-    debugLabel();
-};
 
 function updateLookAt() {
     if (surface_view.checked) {
@@ -2090,7 +2622,6 @@ function setupViewHandler() {
 setEarthPositionByMon('jun');
 surface_view.onchange = setupViewHandler;
 setupViewHandler();
-
 
 //
 // General Mouse handling
@@ -3216,6 +3747,84 @@ function SolarRadiationLongitudeGraphHandler() {
 solar_radiation_longitude_graph.onchange = SolarRadiationLongitudeGraphHandler;
 SolarRadiationLongitudeGraphHandler();
 
+//
+//
+//
+
+function getRadioSelection(form_element) {
+    for(var i = 0; i < form_element.elements.length; i++) {
+        if (form_element.elements[i].checked) {
+            return form_element.elements[i].value;
+        }
+    }
+    return false;
+};
+
+var selected_city = document.getElementById("selected-city");
+var city_option;
+var active_cities = [];
+var city, city_location;
+
+for (var c = 0; c < cities.length; c++) {
+    // if (cities[c].active) active_cities.push(cities[c]);
+    active_cities.push(cities[c]);
+};
+
+for (var i = 0; i < active_cities.length; i++) {
+    city_option = document.createElement('option');
+    city = active_cities[i];
+    city_location = city.location;
+    city_option.value = i;
+    city_option.textContent = city.name + ', ' + city.country;
+    selected_city.appendChild(city_option);
+};
+
+function selectedCityHandler() {
+    var city_index = Number(selected_city.value);
+    var city = active_cities[city_index];
+    var city_location = city.location;
+    setLatitude(city_location.signed_latitude);
+    setLongitude(city_location.signed_longitude);
+};
+
+selected_city.onchange = selectedCityHandler;
+
+var choose_month = document.getElementById("choose-month");
+
+function chooseMonthHandler(event) {
+    var mon = getRadioSelection(choose_month);
+    setEarthPositionByMon(mon)
+};
+
+choose_month.onchange = chooseMonthHandler;
+chooseMonthHandler();
+
+var choose_tilt = document.getElementById("choose-tilt");
+var earth_tilt_quaternion = SceneJS.withNode("earth-tilt-quaternion");
+
+function chooseTiltHandler() {
+    var tilt = getRadioSelection(choose_tilt);
+    switch (tilt) {
+        case "yes":
+            earth.tilt = orbitalTilt;
+            break;
+
+        case "no":
+            earth.tilt = 0;
+            break;
+    };
+    earth_tilt_quat = quat4.axisAngleDegreesCreate(0, 0, 1,  earth.tilt);
+    earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
+    earth_tilt_quaternion.set("rotation", { 
+        x: earth_tilt_axis[0], 
+        y: earth_tilt_axis[1], 
+        z: earth_tilt_axis[2],
+        angle : earth.tilt });
+    infoLabel();
+};
+
+choose_tilt.onchange = chooseTiltHandler;
+chooseTiltHandler();
 
 //
 // Animation

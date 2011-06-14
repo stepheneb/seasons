@@ -101,7 +101,7 @@
           <fieldset>
             <legend>Controls</legend>
             <label><input id="earth-rotation" type="checkbox"/> Rotation</label><br />
-            <label><input id="back-light" type="checkbox" /> Back Lighting</label><br />
+            <label><input id="surface-view" type="checkbox"/> Surface View</label><br />
           </fieldset>
           <br />
           <fieldset>
@@ -113,7 +113,7 @@
           <br />
           <fieldset>
             <legend>Ecliptic Grids</legend>
-            <label><input id="earth-grid" type="checkbox"/> Earth Square</label><br />
+            <label><input id="earth-grid" type="checkbox" checked/> Earth Square</label><br />
             <label><input id="earth-rose-grid" type="checkbox"/> Earth Rose</label><br />
             <label><input id="sun-grid" type="checkbox"/> Sun Square</label><br />
           </fieldset>
@@ -121,24 +121,42 @@
           <fieldset>
             <legend>Markers</legend>
             <label><input id="sun-earth-line" type="checkbox" checked/> Center Ray</label><br />
-            <!-- <label><input id="sun-surface-line" type="checkbox"/> Point Ray</label><br /> -->
-            <label><input id="sun-rays" type="checkbox"/> Many Rays</label><br />
-            <label><input id="sun-rise-set" type="checkbox" /> Rise/Set</label><br />
-            <label><input id="sun-noon-midnight" type="checkbox"/> Noon/Midnight</label><br />
+            <label><input id="sun-rise-set" type="checkbox" checked/> Rise/Set</label><br />
             <label><input id="lat-hour-markers" type="checkbox"/> Latitude Hours</label><br />
           </fieldset>
           <br />
+          <form id="select-city">
+            <fieldset>
+              <legend>Select city</legend>
+              <select id="selected-city" name="selected-city">City
+                <option disabled selected>city ...</option>
+              </select>
+            </fieldset>
+          </form>
+          <form id="choose-month">
+            <fieldset>
+              <legend>Month</legend>
+              <label><input type="radio" name="month" value="jun" checked> Jun</input></label>
+              <label><input type="radio" name="month" value="sep"> Sep</input></label><br />
+              <label><input type="radio" name="month" value="dec"> Dec</input></label>
+              <label><input type="radio" name="month" value="mar"> Mar</input></label>
+            </fieldset>
+          </form>
+          <form id="choose-tilt">
+            <fieldset>
+              <legend>Tilt of Earth</legend>
+              <label><input type="radio" name="tilt" value="yes" checked> Yes</input></label>
+              <label><input type="radio" name="tilt" value="no"> No</input></label>
+            </fieldset>          
+          </form>
+          <br />
           <fieldset>
             <legend>Settings</legend>
+            <label><input id="back-light" type="checkbox" /> Back Lighting</label><br />
             <label><input id="time-24h" type="checkbox"/> 24-hour Time</label><br />
             <label><input id="use-airmass" type="checkbox" checked/> Spectral Model</label><br />
             <label><input id="use-diffuse-correction" type="checkbox" checked/> Diffuse Correction</label><br />
             <label><input id="use-horizontal-flux" type="checkbox" checked/> Horizontal Flux</label><br />
-          </fieldset>
-          <br />
-          <fieldset>
-            <legend>Experimental</legend>
-            <label><input id="surface-view" type="checkbox" checked/> Surface View</label><br />
           </fieldset>
         </form>
       </div>
@@ -158,6 +176,7 @@
   </div>
 </div>
 <script type="text/javascript" src="jpl-earth-ephemerides.js"></script>
-<script type="text/javascript" src="latitude-line-test-7141e.js"></script>
+<script type="text/javascript" src="cities.js"></script>
+<script type="text/javascript" src="latitude-line-test.js"></script>
 </body>
 </html>
