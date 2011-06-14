@@ -107,6 +107,15 @@ h4 {
     padding: 0px 10px;
 }
 
+#info {
+    background: #ffffff url() no-repeat scroll right center;
+    text-align: left;
+    margin: 0 auto;
+    min-height: 40px;
+    width: auto;
+    padding: 15px 0px 10px 15px;
+}
+
 #header {
       text-align: left;;
 }
