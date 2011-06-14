@@ -3013,9 +3013,11 @@ function debugLabel() {
         if (debug_view.checked) {
             debug_label.style.opacity = 0.6;
             debug_content.style.display = null;
+            surface_lookat_bubble_selector.set("selection", [1]);
         } else {
             debug_content.style.display = "none";
             debug_label.style.opacity = null;
+            surface_lookat_bubble_selector.set("selection", [0]);
         };
 
         var eye = look_at.get("eye");
@@ -3046,7 +3048,7 @@ function debugLabel() {
         labelStr += sprintf("Yaw:  %3.0f, Pitch: %4.1f<br>", yaw, pitch);
         labelStr += sprintf("LookAt Yaw:  %4.1f<br>", lookat_yaw);
         labelStr += sprintf("Rot:  %4.1f, Day angle: %3.3f<br>", earth.rotation, day_of_year_angle);
-        labelStr += sprintf("Angle: %4.1f, Radius: %4.1f<br>", angle.get().angle, earth.radius);
+        labelStr += sprintf("Angle: %4.1f, Radius: %4.1f, Dist: %4.1f<br>", angle.get().angle, earth.radius, distance);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Surface</b><br />";
