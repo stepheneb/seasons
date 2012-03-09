@@ -129,7 +129,7 @@ for (var d = 0; d < day_numbers.length; d++) {
   day_of_year_angle = day_of_year_angles[d];
   for (var i = 0; i < active_cities.length; i++) {
     var alt, rad, hrad, row = [];
-    row.push(cities[i].name, cities[i].location.signed_latitude, cities[i].location.signed_longitude)
+    row.push(active_cities[i].name, active_cities[i].location.signed_latitude, active_cities[i].location.signed_longitude)
     earth.rotation = row[2];
     alt = solar_altitude(row[1], row[2]);
     use_horizontal_flux = true;
