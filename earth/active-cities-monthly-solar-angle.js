@@ -16,13 +16,37 @@ var orbitalTilt = 23.45;
 var AU = 149597870.691;
 
 var jun_day_number = day_number_by_month['jun'];
+var jul_day_number = day_number_by_month['jul'];
+var aug_day_number = day_number_by_month['aug'];
 var sep_day_number = day_number_by_month['sep'];
+var oct_day_number = day_number_by_month['oct'];
+var nov_day_number = day_number_by_month['nov'];
 var dec_day_number = day_number_by_month['dec'];
+var jan_day_number = day_number_by_month['jan'];
+var feb_day_number = day_number_by_month['feb'];
 var mar_day_number = day_number_by_month['mar'];
+var apr_day_number = day_number_by_month['apr'];
+var may_day_number = day_number_by_month['may'];
 
-var day_numbers = [jun_day_number, sep_day_number, dec_day_number, mar_day_number];
+var day_numbers = [
+  jun_day_number,
+  jul_day_number,
+  aug_day_number,
+  sep_day_number,
+  oct_day_number,
+  nov_day_number,
+  dec_day_number,
+  jan_day_number,
+  feb_day_number,
+  mar_day_number,
+  apr_day_number,
+  may_day_number,
+];
 
-var day_of_year_angles = [90, 0, 270, 180 ];
+var day_of_year_angles = []
+for(var i=360; i >= 0; i -= 30) {
+  day_of_year_angles.push((i + 90) % 360);
+}
 
 var initial_day_number = jun_day_number;
 
@@ -124,26 +148,33 @@ use_horizontal_flux = true;
 use_airmass = true;
 use_diffuse_correction = true;
 
+var i_formatter = d3.format(" 2d");
+var f_formatter = d3.format(" 3.2f");
+var column_titles = [];
+var formatters = [];
+
+column_titles.push('city', 'latitude');
+formatters.push(String, f_formatter);
 for (var d = 0; d < day_numbers.length; d++) {
-  earth.day_number = day_numbers[d];
-  day_of_year_angle = day_of_year_angles[d];
-  for (var i = 0; i < active_cities.length; i++) {
-    var alt, rad, hrad, row = [];
-    row.push(active_cities[i].name, active_cities[i].location.signed_latitude, active_cities[i].location.signed_longitude)
-    earth.rotation = row[2];
-    alt = solar_altitude(row[1], row[2]);
-    use_horizontal_flux = true;
-    rad = solarRadiation(alt);
-    use_horizontal_flux = false;
-    hrad = solarRadiation(alt);
-    row.push(alt, rad, hrad, earth.day_number);
-    city_data.push(row);
-  }
+  daynumber = day_numbers[d];
+  column_titles.push(date_by_day_number[daynumber]);
+  formatters.push(f_formatter);
 }
 
-column_titles = ['city', 'latitude', 'longitude', 'Solar Alititude', "Horizontal Radiation", "Direct Radiation", "Day Number"],
-i_formatter = d3.format(" 2d"),
-f_formatter = d3.format(" 3.2f"),
-formatters = [String, f_formatter, f_formatter, f_formatter, f_formatter, f_formatter, i_formatter];
+for (var i = 0; i < active_cities.length; i++) {
+  var row = [],
+      name = active_cities[i].name
+      latitude = active_cities[i].location.signed_latitude, 
+      longitude = active_cities[i].location.signed_longitude;
+
+  earth.rotation = longitude;
+  row.push(name, latitude);
+  for (var d = 0; d < day_numbers.length; d++) {
+    earth.day_number = day_numbers[d];
+    day_of_year_angle = day_of_year_angles[d];
+    row.push(solar_altitude(latitude, longitude));
+  }
+  city_data.push(row)
+}
 
 render_datatable(city_data, column_titles, formatters);

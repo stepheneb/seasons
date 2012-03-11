@@ -15,15 +15,11 @@ hide_datatable = function() {
   }
 }
 
-render_datatable = function(reset) {
+render_datatable = function(input_data, column_titles, formatters, reset) {
   datatable_table.style.display = "";
   var i,
       titlerows = datatable_table.getElementsByClassName("title"),
-      datarows = datatable_table.getElementsByClassName("data"),
-      column_titles = ['city', 'latitude', 'longitude', 'Solar Alititude', "Horizontal Radiation", "Direct Radiation", "Day Number"],
-      i_formatter = d3.format(" 2d"),
-      f_formatter = d3.format(" 3.2f"),
-      formatters = [String, f_formatter, f_formatter, f_formatter, f_formatter, f_formatter, i_formatter];
+      datarows = datatable_table.getElementsByClassName("data");
 
   reset = reset || false;
 
@@ -61,12 +57,12 @@ render_datatable = function(reset) {
     if (cells.length > 0) {
       cells[0].textContent = index;
       while (++i < cells.length) {
-        cells[i].textContent = formatters[i](city_data[index][i]);
+        cells[i].textContent = formatters[i](input_data[index][i]);
       }
     }
     i--;
     while (++i < column_titles.length) {
-      add_data(row, formatters[i](city_data[index][i]));
+      add_data(row, formatters[i](input_data[index][i]));
     }
   }
 
@@ -108,10 +104,10 @@ render_datatable = function(reset) {
   if (titlerows.length == 0) {
     var title_row = add_row("title");
     add_column_headings(title_row, column_titles)
-    datarows = add_data_rows(city_data.length);
+    datarows = add_data_rows(input_data.length);
   }
-  if (reset) { datarows = add_data_rows(city_data.length); }
-  i = -1; while (++i < city_data.length) {
+  if (reset) { datarows = add_data_rows(input_data.length); }
+  i = -1; while (++i < input_data.length) {
     add_data_row(datarows[i], i);
   }
 }

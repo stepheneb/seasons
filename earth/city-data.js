@@ -135,4 +135,9 @@ for (var d = 0; d < day_numbers.length; d++) {
   }
 }
 
-render_datatable();
+column_titles = ['city', 'latitude', 'longitude', 'Solar Alititude', "Horizontal Radiation", "Direct Radiation", "Day Number"],
+i_formatter = d3.format(" 2d"),
+f_formatter = d3.format(" 3.2f"),
+formatters = [String, f_formatter, f_formatter, f_formatter, f_formatter, f_formatter, i_formatter];
+
+render_datatable(city_data, column_titles, formatters);
