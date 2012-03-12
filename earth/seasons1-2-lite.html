@@ -57,22 +57,9 @@
             <div class="underCanvasUI">
               <ul class="hlist">
                 <li>
-                  <form>
-                    <fieldset>
-                      <legend>Choose month</legend>
-                      <select id="choose-month" name="chosen-month">
-                        <option value="jun" selected>June</option>
-                        <option value="sep">September</option>
-                        <option value="dec">December</option>
-                        <option value="mar">March</option>
-                      </select>
-                    </fieldset>
-                  </form>
-                </li>
-                <li>
                   <form id="choose-view">
                     <fieldset>
-                      <legend>Choose view: </legend>
+                      <legend>Select view: </legend>
                       <label><input type="radio" name="view" value="top"> Top</input></label>
                       <label><input type="radio" name="view" value="side" checked> Side</input></label>
                     </fieldset>
@@ -88,28 +75,34 @@
                   </form>
                 </li>
               </ul>
-
-              <ul class="hlist">
-                <li>
+              <div id="results">
+                <p>
+                  <form>
+                    <label for="choose-month">Choose month:</label>
+                    <select id="choose-month" name="chosen-month">
+                      <option value="jun" selected>June</option>
+                      <option value="sep">September</option>
+                      <option value="dec">December</option>
+                      <option value="mar">March</option>
+                    </select>
+                  </form>
+                </p>
+                <p>
                   <form id="select-city-latitude">
-                    <label for="selected-city-latitude">Select a city:</label>
+                    <label for="selected-city-latitude">Choose city:</label>
                     <select id="selected-city-latitude" name="selected-city-latitude">
                       <option disabled selected>city ...</option>
                     </select>
                   </form>
-                </li>
-                <li>
-                  Selected month: <span id="selected-month"></span>
-                </li>
-                <li>
+                </p>
+                <p>
                   <form id="city-latitude-temperature">
-                    <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
-                    <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
-                    <input type="submit" value="Run" />
+                    <input type="submit" value="Show Average Temperature" />
                     <span id="temperature-results"></span>
+                    <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">&deg;F</label>
                   </form>
-                </li>
-              </ul>
+                </p>
+              </div>
             </div>
           </div>
         </li>

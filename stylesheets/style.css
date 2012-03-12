@@ -610,6 +610,11 @@ fieldset label  {
     padding-bottom: 0px;
 }
 
+#results p {
+  padding: 0.1em 0em;
+  line-height: 1.2em;
+}
+
 #content ul.hlist li {
     line-height: 1.4em;
     color: #444444 !important;    

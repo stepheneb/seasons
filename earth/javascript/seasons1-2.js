@@ -897,7 +897,6 @@ var scene1 = new seasons.Scene({
 
     choose_view:                 "choose-view",
     choose_month:                "choose-month",
-    selected_month:              "selected-month",
     earth_pointer:               "earth-pointer1",
     earth_label:                 true,
     earth_info_label:            "earth-info-label1",
@@ -1087,6 +1086,10 @@ function updateLatitudeLineAndCity() {
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
     var city_location = city.location;
+    if (LITE_VERSION) {
+      var results = document.getElementById("temperature-results");
+      results.textContent = '';
+    }
     scene3.latitude_line.setLatitude(city_location.signed_latitude);
     scene3.earth_surface_location.setLocation(city_location.signed_latitude, city_location.signed_longitude)
 };
@@ -1257,7 +1260,7 @@ function _graph_checkbox_callback(element) {
 
 function justUpdateResults() {
   if (selected_city_latitude.value == 'city ...' ||
-    city_latitude_temperature_prediction.value == '') {
+    (city_latitude_temperature_prediction && city_latitude_temperature_prediction.value == '')) {
     return false;
   }
   var city_index = Number(selected_city_latitude.value);

@@ -1087,11 +1087,9 @@ var scene1 = new seasons.Scene({
     earth_sun_line_scale:        "earth-sun-line-scale1",
 
     earth_tilt:                  "earthRotationalAxisQuaternion1",
-    selected_tilt:               "selected-tilt",
 
     choose_view:                 "choose-view",
     choose_month:                "choose-month",
-    selected_month:              "selected-month",
     earth_pointer:               "earth-pointer1",
     earth_label:                 true,
     earth_info_label:            "earth-info-label1",
@@ -1112,11 +1110,9 @@ var scene3 = new seasons.Scene({
     earth_sun_line_translation:  "earth-sun-line-translation3",
     earth_sun_line_scale:        "earth-sun-line-scale3",
     earth_tilt:                  "earthRotationalAxisQuaternion3",
-    selected_tilt:               "selected-tilt",
 
     choose_view:                 "choose-view",
     choose_month:                "choose-month",
-    selected_month:              "selected-month",
     choose_tilt:                 "choose-tilt",
     linked_scene:                scene1,
     earth_surface_location:      true,
@@ -1274,6 +1270,10 @@ function updateLatitudeLineAndCity() {
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
     var city_location = city.location;
+    if (LITE_VERSION) {
+      var results = document.getElementById("temperature-results");
+      results.textContent = '';
+    }
     scene3.latitude_line.setLatitude(city_location.signed_latitude);
     scene3.earth_surface_location.setLocation(city_location.signed_latitude, city_location.signed_longitude)
 };
@@ -1490,17 +1490,17 @@ function _graph_checkbox_callback(element) {
 
 function justUpdateResults() {
   if (selected_city_latitude.value == 'city ...' ||
-    city_latitude_temperature_prediction.value == '') {
+    (city_latitude_temperature_prediction && city_latitude_temperature_prediction.value == '')) {
     return false;
   }
   var city_index = Number(selected_city_latitude.value);
   var city = active_cities[city_index];
   var city_location = city.location;
-
   var the_month = scene1.month;
+  var the_tilt = scene3.tilt;
   var month = month_data[the_month];
   var results = document.getElementById("temperature-results")
-  var ave_temp = city.average_temperatures[month.index];
+  var ave_temp = calc_ave_temp(city.average_temperatures, month.index, the_tilt);
   if (use_fahrenheit) ave_temp = ave_temp * 9 / 5 + 32;
   results.textContent = sprintf("%3.1f", ave_temp);
   return false;

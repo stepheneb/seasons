@@ -114,12 +114,10 @@ seasons.Scene = function(options) {
     if (this.choose_tilt) {
         this.choose_tilt = document.getElementById(options.choose_tilt || "choose-tilt");
     };
-    
-    this.selected_tilt = document.getElementById(options.selected_tilt || "selected-tilt");
 
     this.earth_position      = SceneJS.withNode(options.earth_position || "earth-position");
     this.earth_rotation      = SceneJS.withNode(options.earth_rotation || "earth-rotation");
-    
+
     if (options.earth_sun_line === false) {
         this.earth_sun_line = false;
     } else {
@@ -131,7 +129,6 @@ seasons.Scene = function(options) {
         this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
         this.earth_sun_line_scale =       SceneJS.withNode(options.earth_sun_line_scale || "earth-sun-line-scale");
     };
-    
 
     this.ellipseOrbitSelector = SceneJS.withNode(options.ellipseOrbitSelector || "earthEllipseOrbitSelector");
     this.earthTextureSelector = SceneJS.withNode(options.earthTextureSelector || "earthTextureSelector");
@@ -190,9 +187,6 @@ seasons.Scene = function(options) {
     
     // Selecting the time of year: jun, sep, dec, mar
     this.choose_month = document.getElementById(options.choose_month || "choose-month");
-
-    // optional dom element to update textContent with long name of month
-    this.selected_month = document.getElementById(options.selected_month || "selected-month");
 
     this.month = this.choose_month.value
     this.choose_month.onchange = (function() {
@@ -341,6 +335,10 @@ seasons.Scene.prototype._updateTilt = function(tilt) {
     if (this.choose_tilt) setRadioSelection (this.choose_tilt, tilt);
     this.tilt = tilt;
     var tilt_str;
+    if (LITE_VERSION) {
+      var results = document.getElementById("temperature-results");
+      results.textContent = '';
+    }
     switch (tilt) {
         case "yes":
             this.earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 23.5 });
@@ -352,9 +350,6 @@ seasons.Scene.prototype._updateTilt = function(tilt) {
             tilt_str = "No Tilt";
             break;
     };
-    if (this.selected_tilt) {
-        this.selected_tilt.textContent = tilt_str;
-    }
 };
 
 seasons.Scene.prototype.get_earth_position = function() {
@@ -806,9 +801,10 @@ seasons.Scene.prototype._timeOfYearChange = function(month) {
     this.setEarthSunLine();
     this.earthLabel();
     this.earthPointer();
-    if (this.selected_month) {
-        this.selected_month.textContent = this.month_data[this.month].long_name;
-    };
+    if (LITE_VERSION) {
+      var results = document.getElementById("temperature-results");
+      results.textContent = '';
+    }
     if (this.linked_scene) {
         this.linked_scene._timeOfYearChange(month);
     };

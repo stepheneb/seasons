@@ -57,31 +57,9 @@
             <div class="underCanvasUI">
               <ul class="hlist">
                 <li>
-                  <form>
-                    <fieldset>
-                      <legend>Choose month</legend>
-                      <select id="choose-month" name="chosen-month">
-                        <option value="jun" selected>June</option>
-                        <option value="sep">September</option>
-                        <option value="dec">December</option>
-                        <option value="mar">March</option>
-                      </select>
-                    </fieldset>
-                  </form>
-                </li>
-                <li>
-                  <form id="choose-tilt">
-                    <fieldset>
-                      <legend>Tilt of Earth</legend>
-                      <label><input type="radio" name="tilt" value="yes" checked> Yes</input></label>
-                      <label><input type="radio" name="tilt" value="no"> No</input></label>
-                    </fieldset>
-                  </form>
-                </li>
-                <li>
                   <form id="choose-view">
                     <fieldset>
-                      <legend>Choose view: </legend>
+                      <legend>Select me: </legend>
                       <label><input type="radio" name="view" value="top"> Top</input></label>
                       <label><input type="radio" name="view" value="side" checked> Side</input></label>
                     </fieldset>
@@ -94,34 +72,44 @@
                       <label><input id="orbital-grid" type="checkbox"/> Grid: </label>
                       <label><input id="earth-rotation" type="checkbox" checked/> Rotation</label>
                     </fieldset>
-                  </form>  
+                  </form>
                 </li>
               </ul>
-              <ul class="hlist">
-                <li>
+              <div id="results">
+                <p>
+                  <form>
+                    <label for="choose-month">Choose month:</label>
+                    <select id="choose-month" name="chosen-month">
+                      <option value="jun" selected>June</option>
+                      <option value="sep">September</option>
+                      <option value="dec">December</option>
+                      <option value="mar">March</option>
+                    </select>
+                  </form>
+                </p>
+                <p>
                   <form id="select-city-latitude">
-                    <label for="selected-city-latitude">Select a city:</label>
+                    <label for="selected-city-latitude">Choose city:</label>
                     <select id="selected-city-latitude" name="selected-city-latitude">
                       <option disabled selected>city ...</option>
                     </select>
                   </form>
-                </li>
-                <li>
-                  Selected month: <span id="selected-month"></span>
-                </li>
-                <li><span>&nbsp&nbsp&nbsp</span></li>
-                <li>
-                   Orientation of Earth: <span id="selected-tilt"></span>
-                </li>
-                <li>
-                  <form id="city-latitude-temperature">
-                    <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
-                    <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
-                    <input type="submit" value="Run" />
-                    <span id="temperature-results"></span>
+                </p>
+                <p>
+                  <form id="choose-tilt">
+                    <label for="choose-tilt">Choose tilt of Earth</label>
+                    <label><input type="radio" name="tilt" value="yes" checked> Yes</input></label>
+                    <label><input type="radio" name="tilt" value="no"> No</input></label>
                   </form>
-                </li>
-              </ul>
+                </p>
+                <p>
+                  <form id="city-latitude-temperature">
+                    <input type="submit" value="Show Average Temperature" />
+                    <span id="temperature-results"></span>
+                    <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">&deg;F</label>
+                  </form>
+                </p>
+              </div>
             </div>
           </div>
         </li>
@@ -140,7 +128,7 @@
           </ul>
         </li>
       </ul>
-    </div>   
+    </div>
   </div>
 </div>
 <div id="earth-info-label1" class="earth-info-label transparent-ui"></div>
