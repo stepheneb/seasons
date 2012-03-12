@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Test Runner</title>
+  <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
+  <link href="../lib/jasmine-1.1.0/jasmine.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="container">
+  <div id="header-inner">
+    <h1 id="title">Seasons 1.1: Exploring Sun-Earth distance and shape of orbit</h1>
+    <div id="simulation-controls"> </div>
+  </div>
+  <div id="content">
+    <div id="webglCanvasContainer">
+      <div class="glCanvasFullFrame">
+        <h3>View: Sun-Earth System</h3>
+        <canvas id="theCanvas">
+        <p>This example requires a browser that supports the
+          <a href="http://learningwebgl.com/cookbook/index.php/WebGL:_Frequently_Asked_Questions">WebGL</a>&lt;canvas&gt; feature.
+        </p>
+      </canvas>
+      <ul class="hlist">
+        <li>
+          <form id="choose-view">
+            <fieldset>
+              <legend>Choose view: </legend>
+              <label><input type="radio" name="view" value="top" checked> Top</input></label>
+              <label><input type="radio" name="view" value="side"> Side</input></label>
+            </fieldset>
+          </form>
+        </li>
+        <li>
+          <form id="show-me">
+            <fieldset>
+              <legend>Show me: </legend>
+              <label><input id="circle-orbit" type="checkbox" value="selected" /> Circular orbit</label>
+              <label><input id="orbital-grid" type="checkbox"/> Orbital grid: </label>
+            </fieldset>
+          </form>  
+        </li>
+        <li>
+          <form>
+            <fieldset>
+              <legend>Choose month</legend>
+              <select id="choose-month" name="chosen-month">
+                <option value="jun" selected>June</option>
+                <option value="sep">September</option>
+                <option value="dec">December</option>
+                <option value="mar">March</option>
+              </select>
+            </fieldset>
+          </form>
+        </li>
+      </ul>
+      <ul class="hlist">
+      </ul>
+    </div>
+    <div id="info">
+      <h2>Getting a WebGL-enabled browser</h2>
+      <div id="getting-webgl">
+        <p>
+          You need a <a href='http://learningwebgl.com/blog/?p=11'>WebGL-enabled</a> browser to explore this visualization.
+          Beta releases of <a href="http://www.google.com/landing/chrome/beta/">Chrome</a> for Mac OS X and Windows 
+          and the <a href="http://nightly.webkit.org/">WebKit nightly</a> beta release for Mac OS X appear to work best.
+        </p>
+      </div>
+      <h2><a href="credits.html">Credits</a></h2>
+      <div id="log">
+        <h3>SceneJS Log</h3>
+        <div id="theLoggingDiv"></div>
+      </div>    
+    </div>
+  </div>
+</div>
+<div id="earth-info-label"></div>
+<script type="text/javascript">
+  function startJasmine() {
+    jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+    jasmine.getEnv().execute();
+  };
+
+  function myRequire(src, callback){
+    if (src.constructor == Array) {
+      var libraries = src;
+    } else {
+      var libraries = [src];
+    }
+    var script = document.createElement("script") 
+    script.type = "text/javascript";
+    // IE
+    script.onreadystatechange = function () {
+      if (script.readyState === 'loaded' || script.readyState == 'complete') {
+        script.onreadystatechange = null;
+        libraries.shift();
+        if (libraries.length > 0) {
+          myRequire(libraries)
+        }
+        if (callback) {
+          callback();            
+        }
+      }
+    }
+    // Not IE
+    script.onload = function () {
+      libraries.shift();
+      if (libraries.length > 0) {
+        myRequire(libraries)
+      }
+      if (callback) {
+        callback();            
+      }
+    }
+    script.src = libraries[0];
+    document.getElementsByTagName("head")[0].appendChild(script);
+  };
+
+  window.onload=function() {
+    myRequire([
+      "../lib/jasmine-1.1.0/jasmine.js",
+      "../lib/jasmine-1.1.0/jasmine-html.js",
+      "../lib/sprintf.js",
+      "../lib/scenejs-0.8.0/scenejs.js",
+      "solar-system-data.js",
+      "sky-sphere.js",
+      "earth-axis.js",
+      "earth-sphere.js",
+      "sun.js",
+      "earth.js",
+      "earth-orbit.js",
+      "earth-sun-line.js",
+      "jpl-earth-ephemerides.js",
+      "orbit-grid.js",
+      "seasons.js",
+      "seasons1-1.js",
+      "../spec/SpecHelper.js",
+      "../spec/SeasonsScene.js"
+    ], startJasmine);
+  }
+</script>
+</body>
+</html>

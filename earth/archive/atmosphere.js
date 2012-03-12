@@ -1,4 +1,501 @@
 
+var sun = {
+    pos: { x: -100, y: 100, z: 0 }
+};
+
+var sun_diameter = 2;
+
+var dark_side_light = 0.25;
+
+SceneJS.createNode({
+    
+    type: "scene",
+    id: "theScene",
+    canvasId: "theCanvas",
+    loggingElementId: "theLoggingDiv",
+    
+    nodes: [
+
+        {
+            type: "lookAt", 
+            id: "lookAt",
+            eye:  { x: 0.0, y: 0.0, z:  0.0 },
+            look: { x: 0.0  y: 0.0, z: 10.0 },
+            up:   { x: 0.0, y: 1.0, z:  0.0 },
+
+            nodes: [
+            
+                {
+                    type: "camera",
+                    id: "theCamera",
+                    optics: {
+                        type: "perspective",
+                        fovy : 50.0,
+                        aspect : 1.43,
+                        near : 0.10,
+                        far : 1000,
+                    },
+
+                    nodes: [
+                        
+                        // Lights, one bright directional source for the Sun, two others much
+                        // dimmer to give some illumination to the dark side of the Earth
+                        {
+                            type:                   "light",
+                            id:                     "sun-light",
+                            mode:                   "point",
+                            pos:                    sun.pos,
+                            color:                  { r: 3.0, g: 3.0, b: 3.0 },
+                            diffuse:                true,
+                            specular:               true,
+                            constantAttenuation:    1.0,
+                            quadraticAttenuation:   0.0,
+                            linearAttenuation:      0.0
+                        },
+
+                        {
+                            type: "light",
+                            id:   "back-light1",
+                            mode:                   "dir",
+                            color:                  { r: dark_side_light, g: dark_side_light, b: dark_side_light },
+                            diffuse:                true,
+                            specular:               true,
+                            dir:                    { x: 1.0, y: 0.0, z: -0.75 }
+                        },
+        
+                        {
+                            type: "light",
+                            id:   "back-light2",
+                            mode:                   "dir",
+                            color:                  { r: dark_side_light, g: dark_side_light, b: dark_side_light },
+                            diffuse:                true,
+                            specular:               true,
+                            dir:                    { x: 1.0, y: 0.0, z: 0.75 }
+                        },
+
+                        // Sun and related objects
+                        {
+
+                            type:           "material",
+                            id:             "sun-material",
+                            baseColor:      { r: 1.0, g: 0.95, b: 0.8 },
+                            specularColor:  { r: 1.0, g: 0.95, b: 0.8 },
+                            specular:       2.0,
+                            shine:          2.0,
+                            emit:           1.0,
+
+                            nodes: [
+
+                                // Sun
+                                {
+                                    type: "translate",
+                                    x: sun.pos.x,
+                                    y: sun.pos.y,
+                                    z: sun.pos.z,
+
+                                    nodes: [
+                                        {
+                                            type: "scale",
+                                            x: sun_diameter,
+                                            y: sun_diameter,
+                                            z: sun_diameter,
+
+                                            nodes: [  { type: "sphere", slices: 60, rings: 60 } ]
+                                        },
+                                    ]
+                                }
+                            ]
+                        },
+                        
+                        // surface
+                        
+                        
+                        {
+                            type: "light",
+                            mode:                   "dir",
+                            color:                  { r: 3.0, g: 3.0, b: 3.0 },
+                            diffuse:                true,
+                            specular:               true,
+                            dir:                    { x: 1.0, y: 0.0, z: 0.0 }
+                        },
+                        {
+                            type: "light",
+                            mode:                   "dir",
+                            color:                  { r: 0.1, g: 0.1, b: 0.1 },
+                            diffuse:                true,
+                            specular:               true,
+                            dir:                    { x: 0.0, y: 1.0, z: -1.0 }
+                        },
+                        {
+                            type: "light",
+                            mode:                   "dir",
+                            color:                  { r: 0.1, g: 0.1, b: 0.1 },
+                            diffuse:                true,
+                            specular:               true,
+                            dir:                    { x: -1.0, y: 0.0, z: -1.0 }
+                        },
+
+                        {
+                            type: "quaternion",
+                            id: "earthRotationalAxisQuaternion",
+                            x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
+
+                            rotations: [ { x : 0, y : 0, z : 1, angle : -23.44 } ],
+
+                            nodes: [
+                            
+                                {
+
+                                    type: "selector",
+                                    id: "earthTextureSelector",
+                                    selection: [1],
+                                    nodes: [
+
+                                        {
+                                            id: "earthTemperatureTextureSelector",
+                                            type: "selector",
+                                            selection: [0],
+                                            nodes: [
+
+
+                                                // selection [0], March
+                                                {
+                                                    type: "texture",
+                                                    layers: [
+                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                        { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
+                                                    ],
+                                                    nodes: [ { type : "instance", target : "earth-sphere"  } ]
+
+                                                },
+
+                                                // selection [1], June
+                                                {
+                                                    type: "texture",
+                                                    layers: [
+                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                        { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
+                                                    ],
+                                                    nodes: [ { type : "instance", target : "earth-sphere"  } ]
+
+                                                },
+
+                                                // selection [2], September
+                                                {
+                                                    type: "texture",
+                                                    layers: [
+                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                        { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
+                                                    ],
+                                                    nodes: [ { type : "instance", target : "earth-sphere"  } ]
+
+                                                },
+
+
+                                                // selection [3], December
+                                                {
+                                                    type: "texture",
+                                                    layers: [
+                                                        { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
+                                                        { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
+                                                        { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
+                                                    ],
+                                                    nodes: [ { type : "instance", target : "earth-sphere"  } ]
+
+                                                }                                
+                                            ]
+                                        },
+
+                                        {
+
+                                            id: "earth-terrain-texture",
+                                            type: "texture",
+                                            layers: [
+
+                                                { 
+                                                   uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+                                                   blendMode: "add",
+
+                                                },
+                                                { 
+                                                    uri:"images/earth3.jpg",
+
+                                                    minFilter: "linear",
+                                                    magFilter: "linear",
+                                                    wrapS: "repeat",
+                                                    wrapT: "repeat",
+                                                    isDepth: false,
+                                                    depthMode:"luminance",
+                                                    depthCompareMode: "compareRToTexture",
+                                                    depthCompareFunc: "lequal",
+                                                    flipY: false,
+                                                    width: 1,
+                                                    height: 1,
+                                                    internalFormat:"lequal",
+                                                    sourceFormat:"alpha",
+                                                    sourceType: "unsignedByte",
+                                                    applyTo:"baseColor",
+                                                    blendMode: "multiply",
+
+                                                    /* Texture rotation angle in degrees
+                                                     */
+                                                    rotate: 180.0,
+
+                                                    /* Texture translation offset
+                                                     */
+                                                    translate : {
+                                                        x: 0,
+                                                        y: 0
+                                                    },
+
+                                                    /* Texture scale factors
+                                                     */
+                                                    scale : {
+                                                        x: -1.0,
+                                                        y: 1.0
+                                                    }
+                                                }
+                                            ],
+
+                                            nodes: [
+
+                                                /* Specify the amounts of ambient, diffuse and specular
+                                                 * lights our object reflects
+                                                 */
+                                                {
+                                                    id : "earth-sphere",
+                                                    type: "material",
+                                                    baseColor:      { r: 0.6, g: 0.6, b: 0.6 },
+                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                    specular:       0.0,
+                                                    shine:          2.0,
+
+                                                    nodes: [
+
+                                                        {
+                                                            type: "translate",
+                                                            x: earth_x_pos,
+                                                            y: 0,
+                                                            z: 0,
+
+                                                            nodes: [
+
+                                                                {
+
+                                                                    type: "scale",
+                                                                    x: earth_radius_km,
+                                                                    y: earth_radius_km,
+                                                                    z: earth_radius_km,
+
+                                                                    nodes: [
+
+                                                                        {
+
+                                                                            type: "rotate",
+                                                                            id: 'spin',
+                                                                            angle: 0,
+                                                                            y: 1.0,
+
+                                                                            nodes: [ { type: "sphere" } ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: "interpolator",
+                            target: "spin",
+                            targetProperty: "angle",
+                            // over 1600 seconds rotate 360 degrees 20 times
+                            keys: [0.0, 1600],
+                            values: [0.0, 360.0*50]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+/*----------------------------------------------------------------------
+ * Scene rendering loop and mouse handler stuff follows
+ *---------------------------------------------------------------------*/
+var yaw = 0;
+var pitch = 0;
+var lastX;
+var lastY;
+var dragging = false;
+
+var activeView = 0;
+
+var canvas = document.getElementById("theCanvas");
+var earth_surface = document.getElementById("earth_surface");
+
+// Time of year changes inclination of Earths orbit with respect to the orbital plane
+
+var time_of_year = document.getElementById("time_of_year");
+var color_map = document.getElementById("temperature-color-map");
+color_map.style.display='none';
+
+var seasonal_rotations = {};
+seasonal_rotations.jun = { x :  0,  y : 0,  z : -1,  angle : 23.44 };
+seasonal_rotations.sep = { x :  1,  y : 0,  z :  0,  angle : 23.44 };
+seasonal_rotations.dec = { x :  0,  y : 0,  z :  1,  angle : 23.44 };
+seasonal_rotations.mar = { x : -1,  y : 0,  z :  0,  angle : 23.44 };
+
+function setTemperatureTexture(month) {
+    switch (month) {
+        case 'mar' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [0]); break;
+        case 'jun' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [1]); break;
+        case 'sep' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [2]); break;
+        case 'dec' : SceneJS.withNode("earthTemperatureTextureSelector").set("selection", [3]); break;
+    };    
+}
+
+function timeOfYearChange() {
+  var month = this.value;
+  SceneJS.Message.sendMessage({ 
+    command: "update", 
+    target: "earthRotationalAxisQuaternion", 
+    set: { rotation: seasonal_rotations[month] }
+  });
+  setTemperatureTexture(month);
+  if (earth_surface.value === 'terrain') {
+      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
+  } else {
+      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+  }
+}
+
+time_of_year.onchange = timeOfYearChange;
+time_of_year.onchange();
+
+// Texture mapping onto the Earth's surface
+
+function earthSurfaceChange() {
+  var new_surface = this.value;
+  if (new_surface === 'terrain') {
+      SceneJS.withNode("earthTextureSelector").set("selection", [1]);
+      color_map.style.display='none';
+  } else {
+      SceneJS.withNode("earthTextureSelector").set("selection", [0]);
+      setTemperatureTexture(time_of_year.value);
+      color_map.style.display='inline';  
+  }
+}
+
+earth_surface.onchange = earthSurfaceChange;
+earth_surface.onchange();
+
+function mouseDown(event) {
+    lastX = event.clientX;
+    lastY = event.clientY;
+    dragging = true;
+}
+
+function mouseUp() {
+    dragging = false;
+}
+
+function mouseOut() {
+    dragging = false;
+}
+
+function rotateEye(angle, radius)
+{
+  var eyeCfg = {
+    x: (Math.sin(angle)) * radius,
+    y: Math.cos(angle) * -radius,
+    z: 7.0
+  };
+  SceneJS.withNode("SceneLookAt").set("eye", eyeCfg);
+}
+
+/* On a mouse drag, we'll re-render the scene, passing in
+ * incremented angles in each time.
+ */
+function mouseMove(event) {
+    if (dragging) {
+        var look, eye, eye4, eye4dup, neweye, up_down, up_downQ, left_right, left_rightQ, f, up_down_axis, angle;
+        yaw = (event.clientX - lastX);
+        pitch = (event.clientY - lastY);
+
+        lastX = event.clientX;
+        lastY = event.clientY;
+
+        look = SceneJS.withNode("lookAt");
+        eye = look.get("eye");
+        eye4 = [eye.x, eye.y, eye.z, 1];
+
+        left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : yaw * -0.2 });
+        left_right = left_rightQ.getMatrix();
+
+        neweye = SceneJS._math_mulMat4v4(left_right, eye4);
+        // console.log("drag   yaw: " + yaw + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2]);
+
+        eye4 = SceneJS._math_dupMat4(neweye);
+        f = 1.0 / SceneJS._math_lenVec4(eye4);
+        eye4dup = SceneJS._math_dupMat4(eye4);
+        up_down_axis = SceneJS._math_mulVec4Scalar(eye4dup, f);
+        up_downQ = new SceneJS.Quaternion({ x : up_down_axis[2], y : 0, z : up_down_axis[0], angle : pitch * -0.2 });
+        angle = up_downQ.getRotation().angle;
+        up_down = up_downQ.getMatrix();
+
+        neweye = SceneJS._math_mulMat4v4(up_down, eye4);
+        // console.log("drag pitch: " + pitch + ", eye: x: " + neweye[0] + " y: " + neweye[1] + " z: " + neweye[2] + ", angle: " + angle);
+
+        look.set("eye", { x: neweye[0], y: neweye[1], z: neweye[2] });
+        SceneJS.withNode("theScene").start();
+        eye = look.get("eye");
+        // console.log("");
+
+    }
+}
+
+canvas.addEventListener('mousedown', mouseDown, true);
+canvas.addEventListener('mousemove', mouseMove, true);
+canvas.addEventListener('mouseup', mouseUp, true);
+canvas.addEventListener('mouseout', mouseOut, true);
+
+window.render = function() {
+
+    SceneJS.withNode("theScene").start();
+
+};
+
+SceneJS.bind("error", function() {
+    window.clearInterval(pInterval);
+});
+
+SceneJS.bind("reset", function() {
+    window.clearInterval(pInterval);
+});
+
+var pInterval = setInterval("window.render()", 20);
+
+var zBufferDepth = 0;
+
+SceneJS.withNode("theScene").bind("loading-status", 
+    function(event) {
+        if (zBufferDepth == 0) {
+            zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
+            var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
+            SceneJS._loggingModule.info(mesg);            
+        }
+    });
+
+
 // some constants
 var deg2rad = Math.PI/180;
 var min2rad = Math.PI/(180*60);
@@ -30,7 +527,7 @@ var sun = {
 
 var initial_day_number = day_number_by_month['jun'];
 
-var initial_earth_rotation = 0;
+var initial_earth_rotation = 40;
 
 var earth = {
     pos: {
@@ -50,28 +547,17 @@ var earth = {
 // San Francisco: 38, 122
 
 var surface_line_width = earth.radius / 200;
-var surface_earth_scale_factor = 100;
 
 var surface = {
-    // latitude: 38,
-    // longitude: 122,
-    latitude: 0,
-    longitude: 90,
+    latitude: 38,
+    longitude: 122,
     yaw: 0,
     pitch: 0,
-    distance: 3,
     lookat_yaw: 0,
     lookat_pitch: 0,
     min_height: 0.001,
     height: 0.001,
-    max_pitch: 85,
-    km: km * surface_earth_scale_factor,
-    meter: meter * surface_earth_scale_factor,
-    flagpole: {
-        radius: 1 *  meter * surface_earth_scale_factor,
-        height: 25 *  meter * surface_earth_scale_factor,
-        pos: { x: 0, y: 0, z: 0 }
-    }
+    max_pitch: 85
 };
 
 var dark_side_light = 0.25;
@@ -189,21 +675,21 @@ for (var i = 0; i < sun_ray_points; i++) {
 
 var initial_eye_quat;
 var initial_eye_mat4;
-var initial_eye_vec3 = vec3.create();
-var initial_eye = {};
+var initial_eye_vec4;
+var initial_eye;
 
 function update_initial_eye(d) {
     if (d < (earth.radius * 1.5)) d = earth.radius * 1.5;
     distance = d;
-    initial_eye_quat = quat4.axisAngleDegreesCreate(1, 0, 0, 0);
-    initial_eye_mat4 = quat4.toMat4(initial_eye_quat);
-    mat4.multiplyVec3(initial_eye_mat4, [0, 0,  distance], initial_eye_vec3);
+    initial_eye_quat = SceneJS._math_angleAxisQuaternion(1, 0, 0, 0);
+    initial_eye_mat4 = SceneJS._math_newMat4FromQuaternion(initial_eye_quat);
+    initial_eye_vec4 = SceneJS._math_mulMat4v4(initial_eye_mat4, [0, 0,  distance, 1]);
     initial_eye =      { 
-        x: initial_eye_vec3[0] + earth.pos.x,
-        y: initial_eye_vec3[1] + earth.pos.y,
-        z: initial_eye_vec3[2] + earth.pos.z
+        x: initial_eye_vec4[0] + earth.pos.x,
+        y: initial_eye_vec4[1] + earth.pos.y,
+        z: initial_eye_vec4[2] + earth.pos.z
     };
-};
+}
 
 update_initial_eye(distance);
 
@@ -267,13 +753,12 @@ SceneJS.createNode({
     
                                                 // Material for texture to apply to
                                                 {
-                                                    type:           "material",
-                                                    id:             "milky-way-material",
+                                                    type: "material",
                                                     baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
                                                     specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
                                                     specular:       0.0,
                                                     shine:          0.0,
-                                                    emit:           0.5,
+                                                    emit:           1.0,
     
                                                     nodes: [
     
@@ -974,8 +1459,8 @@ SceneJS.createNode({
                                                                                 {
                                                                                     type:          "material",
                                                                                     id:            "atmosphere-material",
-                                                                                    baseColor:      { r: 0.0, g: 0.5, b: 1.0 },
-                                                                                    specularColor:  { r: 0.0, g: 0.5, b: 1.0 },
+                                                                                    baseColor:      { r: 0.05, g: 0.08, b: 1.0 },
+                                                                                    specularColor:  { r: 0.05, g: 0.08, b: 1.0 },
                                                                                     specular:       1.0,
                                                                                     shine:          1.0,
                                                                                     alpha:          0.5,
@@ -1101,7 +1586,6 @@ SceneJS.createNode({
                                                                                                     x: -1.0, y: 0.0, z: 0.0, angle: surface.longitude,
 
                                                                                                     nodes: [
-
                                                                                                         {
 
                                                                                                             type: "quaternion",
@@ -1110,74 +1594,74 @@ SceneJS.createNode({
 
                                                                                                             nodes: [
 
-                                                                                                                {
+                                                                                                                { 
+                                                                                                                    type: "material",
+                                                                                                                    baseColor:      { r: 0.6, g: 0.5, b: 0.5 },
+                                                                                                                    specularColor:  { r: 0.1, g: 0.1, b: 0.1 },
 
-                                                                                                                    type: "translate",
-                                                                                                                    x: 0,
-                                                                                                                    y: 1 + surface.min_height / 2,
-                                                                                                                    z: 0,
+                                                                                                                    specular:       0.5,
+                                                                                                                    shine:          0.001,
+
+                                                                                                                    // baseColor:      { r: 0.02, g: 0.04, b: 0.02 },
+                                                                                                                    // specularColor:  { r: 0.02, g: 0.04, b: 0.02 },
+                                                                                                                    // 
+                                                                                                                    // specular:       1.0,
+                                                                                                                    // shine:          0.1,
 
                                                                                                                     nodes: [
+                                                                                                                        {
 
-                                                                                                                        { 
-                                                                                                                            type: "material",
-                                                                                                                            baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
-                                                                                                                            specularColor:  { r: 0.01, g: 0.2, b: 0.0 },
-
-                                                                                                                            specular:       0.5,
-                                                                                                                            shine:          0.001,
+                                                                                                                            type: "translate",
+                                                                                                                            x: 0,
+                                                                                                                            y: 1 + surface.min_height / 2,
+                                                                                                                            z: 0,
 
                                                                                                                             nodes: [
-
                                                                                                                                 {
-                                                                                                                                    type: "disk",
-                                                                                                                                    radius: 200 * earth.km,
-                                                                                                                                    height: surface.min_height / 2,
-                                                                                                                                    rings: 48
+                                                                                                                                    // type: "disk",
+                                                                                                                                    // radius: 100 * earth.km,
+                                                                                                                                    // height: surface.min_height / 2,
+                                                                                                                                    // rings: 48
 
-                                                                                                                                    // type: "cube",
-                                                                                                                                    // xSize: 100 * earth.km,
-                                                                                                                                    // ySize: surface.min_height / 2,
-                                                                                                                                    // zSize: 100 * earth.km
+                                                                                                                                    type: "cube",
+                                                                                                                                    xSize: 100 * earth.km,
+                                                                                                                                    ySize: surface.min_height / 2,
+                                                                                                                                    zSize: 100 * earth.km
 
                                                                                                                                 }
                                                                                                                             ]
-                                                                                                                        },
+                                                                                                                        }
+                                                                                                                    ]
+                                                                                                                },
+                                                                                        
+                                                                                                                { 
+                                                                                                                    type: "material",
+                                                                                                                    baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
+                                                                                                                    specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
 
-                                                                                                                        { 
-                                                                                                                            type: "material",
-                                                                                                                            baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
-                                                                                                                            specularColor:  { r: 0.5, g: 0.5, b: 0.5 },
+                                                                                                                    specular:       0.5,
+                                                                                                                    shine:          0.001,
 
-                                                                                                                            specular:       0.5,
-                                                                                                                            shine:          0.001,
+                                                                                                                    nodes: [
+
+                                                                                                                        {
+
+                                                                                                                            type: "translate",
+                                                                                                                            x: 0 + surface.min_height * 1,
+                                                                                                                            y: 1 + surface.min_height + 2.5 * earth.km,
+                                                                                                                            z: 0 + surface.min_height * 5,
 
                                                                                                                             nodes: [
-
                                                                                                                                 {
-
-                                                                                                                                    type: "translate",
-                                                                                                                                    // x: 0 + surface.min_height * 1,
-                                                                                                                                    // y: 1 + surface.min_height + 2.5 * earth.km,
-                                                                                                                                    // z: 0 + surface.min_height * 5,
-
-                                                                                                                                    x: surface.meter * 0,
-                                                                                                                                    y: surface.flagpole.height / 2,
-                                                                                                                                    z: surface.meter * 0,
-
-                                                                                                                                    nodes: [
-                                                                                                                                        {
-                                                                                                                                            type: "disk",
-                                                                                                                                            radius: surface.flagpole.radius,
-                                                                                                                                            height: surface.flagpole.height
-                                                                                                                                        }
-                                                                                                                                    ]
+                                                                                                                                    type: "cube",
+                                                                                                                                    xSize: 2 * earth.km,
+                                                                                                                                    ySize: 5 * earth.km,
+                                                                                                                                    zSize: 2 * earth.km
                                                                                                                                 }
                                                                                                                             ]
                                                                                                                         }
                                                                                                                     ]
                                                                                                                 }
-                                                                                                                
                                                                                                             ]
                                                                                                         }
                                                                                                     ]
@@ -1207,12 +1691,9 @@ SceneJS.createNode({
     ]
 });
 
-var scenejs_compilation = true;
-
-
 SceneJS.setDebugConfigs({
     compilation : {
-        enabled : scenejs_compilation
+        enabled : false
     }
 });
 
@@ -1436,11 +1917,100 @@ sunRaysHandler();
 //
 
 var earth_sub_graph = SceneJS.withNode("earth-sub-graph");
-var earth_sub_graph_scale = SceneJS.withNode("earth-sub-graph-scale");
+
+//
+// Surface View Setup
+//
+function lat_long_to_cartesian(lat, lon, r) {
+    r = r || 1;
+    return [r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
+            r * Math.sin(lat * deg2rad),
+            r * Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad), 1]
+}
+
+function lat_long_to_global_cartesian(lat, lon, r) {
+    r = r || 1;
+    var lat_lon = lat_long_to_cartesian(lat, lon - earth.rotation, r);
+    var quat = SceneJS._math_angleAxisQuaternion(0, 0, 1, earth.tilt);
+    var mat4 = SceneJS._math_newMat4FromQuaternion(quat);
+    var vec4 = SceneJS._math_mulMat4v4(mat4, [lat_lon[0], lat_lon[1],  lat_lon[2], 1]);
+    var global_lat_lon = [
+        vec4[0] * -earth.radius + earth.pos.x,
+        vec4[1] * -earth.radius + earth.pos.y,
+        vec4[2] * earth.radius + earth.pos.z];
+    return global_lat_lon;
+}
+
+function look_at_direction(unit_vec) {
+    var far = [unit_vec[0] * milky_way_apparent_radius, 
+        unit_vec[1] * milky_way_apparent_radius, 
+        unit_vec[2] * milky_way_apparent_radius];
+    look_at.set("look", { x: far[0], y: far[1], z: far[2] });
+}
+
+// var surface_dir = lat_long_to_cartesian(surface.latitude, surface.longitude - earth.rotation);
+
+// var surface_eye_quat = SceneJS._math_angleAxisQuaternion(0, 0, 0, 1);
+// var surface_eye      = lat_long_to_cartesian(surface.latitude, surface.longitude, 1 + earth.km * 10);
+// var surface_eye_mat4 = SceneJS._math_newMat4FromQuaternion(surface_eye_quat);
+// var surface_eye_vec4 = SceneJS._math_mulMat4v4(surface_eye_mat4, [0, 0,  0, 1]);
+// var global_surface_eye = {
+//     x: surface_eye_vec4[0] * -earth.radius + earth.pos.x,
+//     y: surface_eye_vec4[1] * -earth.radius + earth.pos.y,
+//     z: surface_eye_vec4[2] *  earth.radius + earth.pos.z
+// };
+// var global_surface_look = [sun.pos.x, sun.pos.y, sun.pos.z, 1];
+
+var surface_eye_v3 = [];
+var surface_dir_v3 = [];
+var surface_up_v3 = [];
+
+earth_sub_graph_scale = SceneJS.withNode("earth-sub-graph-scale");
+
+var earth_tilt_quat = SceneJS._math_angleAxisQuaternion(0.0, 0.0, 1.0,  earth.tilt)
+var earth_tilt_mat4 = SceneJS._math_newMat4FromQuaternion(earth_tilt_quat);
+
+function calculateSurfaceEyeUpLook() {
+    // calculate unit vector from center of Earth to surface location
+    surface_dir_v3 = lat_long_to_cartesian(surface.latitude, surface.longitude - earth.rotation);
+    
+    surface_dir_v3 = [surface_dir_v3[0] * -1, surface_dir_v3[1] * 1, surface_dir_v3[2] * -1];
+    // vec3.negate(surface_dir_v3);
+    
+    // correct for the Earth's tilt, longitude, and latitude
+    // var longitude_quat = SceneJS._math_angleAxisQuaternion(1.0, 0.0, 0.0,  earth.tilt)
+    // var latitude_quat = SceneJS._math_angleAxisQuaternion(0.0, 0.0, 1.0,  earth.tilt)
+    // var result_quat = SceneJS._math_mulQuaternions(latitude_quat, longitude_quat);
+    // var result_quat = SceneJS._math_mulQuaternions(result_quat, earth_tilt_quat);
+    // var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
+
+    var result_mat4 = SceneJS._math_newMat4FromQuaternion(earth_tilt_quat);
+    
+    mat4.multiplyVec3(result_mat4, surface_dir_v3);
+
+    // generate an up axis direction vector for the lookAt
+    surface_up_v3  = [surface_dir_v3[0], surface_dir_v3[1], surface_dir_v3[2]];
+
+    // generate a surface eye position by scaling the surface vector 
+    // by the current size of the Earth and adding the Earth position
+    vec3.scale(surface_dir_v3, earth.radius * (1 + surface.height), surface_eye_v3);
+    vec3.add(surface_eye_v3, [earth.pos.x, earth.pos.y, earth.pos.z ]);
+    
+    // move the eye back just a bit (x, y) so we can see the cube object in the center 
+    // of the surface disk and up just a bit (z)
+    // vec3.subtract(surface_eye_v3, [surface.min_height * -5000, surface.min_height * -1000, surface.min_height * 300 ]);
+
+    var lookat = {
+        eye: { x: surface_eye_v3[0], y: surface_eye_v3[1], z: surface_eye_v3[2] },
+        up: { x: -surface_dir_v3[0],  y: surface_dir_v3[1],  z: surface_dir_v3[2] },
+        look: sun.pos
+    }
+    return lookat;
+};
+
 
 var sun_light                 = SceneJS.withNode("sun-light");
 var sun_material              = SceneJS.withNode("sun-material");
-var milky_way_material        = SceneJS.withNode("milky-way-material");
 
 var earth_atmosphere_selector = SceneJS.withNode("earth-atmosphere-selector");
 var atmosphere_material       = SceneJS.withNode("atmosphere-material");
@@ -1453,197 +2023,15 @@ var atmosphere_transparent    = SceneJS.withNode("atmosphere-transparent");
 // shine:          2.0,
 // emit:           1.0,
 
-//
-// Earth In Space View Setup
-//
-function setupEarthInSpace() {
-    sun_light.set("color", { r: 3.0, g: 3.0, b: 3.0 });
-    sun_material.set("baseColor", { r: 1.0, g: 0.95, b: 0.8 });
-    sun_material.set("specularColor", { r: 1.0, g: 0.95, b: 0.8 });
-    sun_material.set("specular", 2.0);
-    sun_material.set("shine", 2.0);
-    sun_material.set("emit", 2.0);
-
-    milky_way_material.set("emit", 0.8);
-
-
-    earth_atmosphere_selector.set("selection", [0]);
-    earth.radius = earth_diameter / 2;
-    // earth.km = km / earth.radius;
-    // earth.meter = meter /earth.radius;
-    earth_sub_graph_scale.set({ x: 1, y: 1, z: 1})
-    // earth_sub_graph._targetNode._setDirty();
-    var optics = camera.get("optics");
-    optics.fovy = 50;
-    optics.near = 0.10;
-    camera.set("optics", optics);
-    latitude_line_selector.set("selection",  [1]);
-    longitude_line_selector.set("selection", [1]);
-
-    look_at.set("up", { x: 0.0, y: 1.0, z: 0.0 });
-};
-
-//
-// Earth in Space Handling
-//
-function updateEarthInSpaceLookAt() {
-    // first handle yaw and pitch for our lookAt-arcball navigation around Earth
-    // background: http://rainwarrior.thenoos.net/dragon/arcball.html
-    var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, yaw);
-    var yaw_mat4 = quat4.toMat4(yaw_quat);
-
-    if (pitch > max_pitch)  pitch =  max_pitch;
-    if (pitch < -max_pitch) pitch = -max_pitch;
-
-    var pitch_quat =  quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
-    var result_quat = quat4.create();
-    quat4.multiply(pitch_quat, yaw_quat, result_quat);
-
-    var neweye = vec3.create();
-    quat4.multiplyVec3(result_quat, initial_eye_vec3, neweye);
-    look_at.set("eye", { 
-        x: neweye[0] + earth.pos.x, 
-        y: neweye[1] + earth.pos.y, 
-        z: neweye[2] + earth.pos.z 
-    });
-    
-    // next handle a possible yaw rotation to look left or right of Earth in the ecliptic plane
-    var rot_quat = quat4.axisAngleDegreesCreate(0, 1, 0, lookat_yaw); 
-
-    var new_look = vec3.create();
-    quat4.multiplyVec3(rot_quat, neweye, new_look);
-
-    // mat4.multiplyVec3(rot_mat4, neweye, new_look);
-
-    new_look[0] = (neweye[0] - new_look[0]) + earth.pos.x;
-    new_look[1] = (neweye[1] - new_look[1]) + earth.pos.y;
-    new_look[2] = (neweye[2] - new_look[2]) + earth.pos.z;
-    look_at.set("look", { x: new_look[0], y: new_look[1], z: new_look[2] });
-    debugLabel();
-};
-
-//
-// Surface View Setup
-//
-
-var surface_eye_vec3 = [];
-var new_surface_eye_vec3 = [];
-var surface_dir_vec3 = [];
-var surface_up_vec3 = [];
-var surface_look_vec3 = [];
-var new_surface_look_vec3 = [];
-var surface_up_minus_90_vec3 = [];
-var surface_cross_vec3 = [];
-var flagpole_global = [];
-var surface_eye_global = [];
-var new_surface_eye_global = [];
-var surface_look_global = [];
-var new_surface_look_global = [];
-
-var earth_tilt_quat = quat4.axisAngleDegreesCreate(0.0, 0.0, 1.0,  earth.tilt)
-var earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
-
-function calculate_surface_cross(lat, lon) {
-    if (lat == undefined) {
-        var lat = surface.latitude;
-        var lon = surface.longitude;
-    };
-    lat += 90;
-    if (lat > 90 ) {
-        lat -= surface.latitude * 2;
-        lon = -lon;
-    } else if (lat < -90) {
-        lat -= surface.latitude * 2;
-        lon = -lon;        
-    };
-    surface_up_minus_90_vec3 = lat_long_to_cartesian_corrected_for_tilt(lat, lon);
-    vec3.cross(surface_up_vec3, surface_up_minus_90_vec3, surface_cross_vec3);
-    return surface_cross_vec3;
-};
-
-function lat_long_to_cartesian(lat, lon, r) {
-    r = r || 1;
-    return [-r * Math.cos(lat * deg2rad) * Math.cos(lon * deg2rad),
-             r * Math.sin(lat * deg2rad),
-            -r * Math.cos(lat * deg2rad) * Math.sin(lon * deg2rad), 1]
-}
-
-function lat_long_to_cartesian_corrected_for_tilt(lat, lon, r) {
-    r = r || 1;
-    var lat_lon = lat_long_to_cartesian(lat, lon - earth.rotation, r);
-    var v3 = vec3.create();
-    quat4.multiplyVec3(earth_tilt_quat, lat_lon, v3);
-    return v3;
-};
-
-function lat_long_to_global_cartesian(lat, lon, r) {
-    r = r || 1;
-    var lat_lon = lat_long_to_cartesian_corrected_for_tilt(lat, lon, r);
-    // var v3 = vec3.create();
-
-    var global_lat_lon = vec3.create();
-    vec3.scale(lat_lon, earth.radius, global_lat_lon);
-    vec3.add(global_lat_lon, [earth.pos.x, earth.pos.y, earth.pos.z] )
-
-    return global_lat_lon;
-};
-
-function look_at_direction(unit_vec) {
-    var far = [unit_vec[0] * milky_way_apparent_radius, 
-        unit_vec[1] * milky_way_apparent_radius, 
-        unit_vec[2] * milky_way_apparent_radius];
-    look_at.set("look", { x: far[0], y: far[1], z: far[2] });
-}
-
-function calculateSurfaceEyeUpLook(eye_pos_v3) {
-    if (eye_pos_v3 == undefined) {
-        var eye_pos_v3 = [0, 0, 0];
-    };
-    
-    // calculate unit vector from center of Earth to surface location
-    surface_dir_vec3 = lat_long_to_cartesian_corrected_for_tilt(surface.latitude, surface.longitude);
-    
-    // generate an up axis direction vector for the lookAt (integrates tilt)
-    surface_up_vec3 = vec3.create(surface_dir_vec3);
-
-    flagpole_global = lat_long_to_global_cartesian(surface.latitude, surface.longitude, 1.002);
-    x = (earth.radius + surface.min_height + surface.flagpole.height / 2) / earth.radius;
-
-    // generate an appropriate offset from the flagpole using the cross-product of the
-    // current surface_up with the surface_up vector rotated 90 degrees northward
-    calculate_surface_cross();
-    vec3.scale(surface_cross_vec3, surface.distance, surface_eye_vec3);    
-    vec3.add(flagpole_global, surface_eye_vec3, surface_eye_global);
-
-    surface_look_global = vec3.create(flagpole_global);
-    
-    var lookat = {
-        eye: { x: surface_eye_global[0],  y: surface_eye_global[1],  z: surface_eye_global[2] },
-        up: { x: surface_up_vec3[0],  y: surface_up_vec3[1],  z: surface_up_vec3[2] },
-        look: { x: surface_look_global[0],  y: surface_look_global[1],  z: surface_look_global[2] },
-    }
-    return lookat;
-};
-
-
 function setupSurfaceView() {
     sun_material.set("specular", 1.0);
     sun_material.set("shine", 1.0);
-    sun_material.set("emit", 10.0);
-
-    atmosphere_material.set("specular", 1.0);
-    atmosphere_material.set("shine", 1.0);
-    atmosphere_material.set("emit", 0.9);
-
+    sun_material.set("emit", 0.0);
+    atmosphere_material.set("specular", 0.1);
+    atmosphere_material.set("shine", 0.1);
     earth_atmosphere_selector.set("selection", [1]);
     earth.radius = earth_diameter * 100 / 2;
-    // earth.km = km / earth.radius;
-    // earth.meter = meter / earth.radius;
-    earth_sub_graph_scale.set({ 
-        x: surface_earth_scale_factor, 
-        y: surface_earth_scale_factor, 
-        z: surface_earth_scale_factor
-    });
+    earth_sub_graph_scale.set({ x: 100, y: 100, z: 100})
     // earth_sub_graph._targetNode._setDirty();
     var optics = camera.get("optics");
     optics.fovy = 50;
@@ -1659,6 +2047,76 @@ function setupSurfaceView() {
 
 };
 
+//
+// Earth In Space View Setup
+//
+function setupEarthInSpace() {
+    sun_light.set("color", { r: 3.0, g: 3.0, b: 3.0 });
+    sun_material.set("baseColor", { r: 1.0, g: 0.95, b: 0.8 });
+    sun_material.set("specularColor", { r: 1.0, g: 0.95, b: 0.8 });
+    sun_material.set("specular", 2.0);
+    sun_material.set("shine", 2.0);
+    sun_material.set("emit", 2.0);
+    earth_atmosphere_selector.set("selection", [0]);
+    earth.radius = earth_diameter / 2;
+    earth_sub_graph_scale.set({ x: 1, y: 1, z: 1})
+    // earth_sub_graph._targetNode._setDirty();
+    var optics = camera.get("optics");
+    optics.fovy = 50;
+    optics.near = 0.10;
+    camera.set("optics", optics);
+    look_at.set("up", { x: 0.0, y: 1.0, z: 0.0 });
+    updateLookAt();
+    latitude_line_selector.set("selection",  [1]);
+    longitude_line_selector.set("selection", [1]);
+};
+
+//
+// Earth In Space/Surface View Handler
+//
+var surface_view = document.getElementById("surface-view");
+
+function setupViewHandler() {
+    if (surface_view.checked) {
+        setupSurfaceView();
+        updateSurfaceViewLookAt();
+        document.onkeydown = handleArrowKeysSurfaceView;
+    } else {
+        setupEarthInSpace();
+        document.onkeydown = handleArrowKeysEarthInSpace;
+    };
+};
+
+surface_view.onchange = setupViewHandler;
+setupViewHandler();
+
+//
+// Earth in Space Handling
+//
+function updateEarthInSpaceLookAt() {
+    var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, yaw);
+    var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
+    if (pitch > max_pitch)  pitch =  max_pitch;
+    if (pitch < -max_pitch) pitch = -max_pitch;
+    var pitch_quat =  SceneJS._math_angleAxisQuaternion(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
+    var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
+    var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
+    var neweye = SceneJS._math_mulMat4v4(result_mat4, initial_eye_vec4);
+    look_at.set("eye", { 
+        x: neweye[0] + earth.pos.x, 
+        y: neweye[1] + earth.pos.y, 
+        z: neweye[2] + earth.pos.z 
+    });
+    var rot_quat = SceneJS._math_angleAxisQuaternion(0, 1, 0, lookat_yaw); 
+    var rot_mat4 = SceneJS._math_newMat4FromQuaternion(rot_quat);
+    var new_look = SceneJS._math_mulMat4v4(rot_mat4, neweye);
+    new_look[0] = (neweye[0] - new_look[0]) + earth.pos.x;
+    new_look[1] = (neweye[1] - new_look[1]) + earth.pos.y;
+    new_look[2] = (neweye[2] - new_look[2]) + earth.pos.z;
+    look_at.set("look", { x: new_look[0], y: new_look[1], z: new_look[2] });
+    debugLabel();
+};
+
 
 //
 // inputs: 
@@ -1667,38 +2125,61 @@ function setupSurfaceView() {
 
 
 function updateSurfaceViewLookAt() {
-    var result_quat = quat4.create();
     
     // update the scenegraph lookAt
     var lookat = calculateSurfaceEyeUpLook();
-    // look_at.set("eye", lookat.eye);
+    look_at.set("eye", lookat.eye);
     look_at.set("up", lookat.up);
-    look_at.set("look",  lookat.look)
-
-    vec3.scale(surface_cross_vec3, surface.distance, surface_eye_vec3);    
-
-    if (surface.pitch > max_pitch)  surface.pitch =  max_pitch;
-    if (surface.pitch < -max_pitch) surface.pitch = -max_pitch;
-
-    var yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.yaw);
-    var pitch_quat = quat4.axisAngleDegreesCreate(surface_up_minus_90_vec3[0], surface_up_minus_90_vec3[1], surface_up_minus_90_vec3[2], surface.pitch);
-    quat4.multiply(pitch_quat, yaw_quat, result_quat);
     
-    quat4.multiplyVec3(result_quat, surface_eye_vec3, new_surface_eye_vec3);
-    vec3.add(surface_look_global, new_surface_eye_vec3, new_surface_eye_global);
-    look_at.set("eye", { x: new_surface_eye_global[0],  y: new_surface_eye_global[1],  z: new_surface_eye_global[2] });
+    var yaw_quat = SceneJS._math_angleAxisQuaternion(surface_dir_v3[0], surface_dir_v3[1], surface_dir_v3[2], surface.lookat_yaw)
+    var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
 
-    // var lookat_yaw_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.yaw);
-    // var lookat_pitch_quat = quat4.axisAngleDegreesCreate(surface_up_minus_90_vec3[0], surface_up_minus_90_vec3[1], surface_up_minus_90_vec3[2], surface.pitch);
-    // var surface_look_global = [];
-    // var new_surface_look_global = [];
+    // var pitch_quat = SceneJS._math_angleAxisQuaternion(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], surface.lookat_pitch)
 
-    // next handle a possible yaw rotation to to look left or right of the flagpole in the surface POV
-    var rot_quat = quat4.axisAngleDegreesCreate(surface_up_vec3[0], surface_up_vec3[1], surface_up_vec3[2], surface.lookat_yaw); 
+    var pitch_quat = SceneJS._math_angleAxisQuaternion(0, 1, 0, -surface.lookat_pitch)
+
+    var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
+    var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
+
+    var sun_pos_v3 = [sun.pos.x, sun.pos.y, sun.pos.z];
+    var earth_pos_v3 = [earth.pos.x, earth.pos.y, earth.pos.z];
+
+    var newlook = [];
+    vec3.subtract(sun_pos_v3, earth_pos_v3, newlook);
     
-    quat4.multiplyVec3(rot_quat, new_surface_eye_vec3, new_surface_look_vec3);
-    vec3.subtract(surface_look_global, new_surface_look_vec3, new_surface_look_global);
-    look_at.set("look", { x: new_surface_look_global[0],  y: new_surface_look_global[1],  z: new_surface_look_global[2] });
+    mat4.multiplyVec3(result_mat4, newlook);
+    vec3.add(newlook, earth_pos_v3);
+    look_at.set("look", { x: newlook[0], y: newlook[1], z: newlook[2] });
+
+
+    // var yaw_quat =  SceneJS._math_angleAxisQuaternion(0, 1, 0, surface.yaw);
+    // var yaw_mat4 = SceneJS._math_newMat4FromQuaternion(yaw_quat);
+    // if (surface.pitch > surface.max_pitch)  surface.pitch =  surface.max_pitch;
+    // if (surface.pitch < -surface.max_pitch) surface.pitch = -surface.max_pitch;
+    // var pitch_quat =  SceneJS._math_angleAxisQuaternion(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], surface.pitch);
+    // var result_quat = SceneJS._math_mulQuaternions(pitch_quat, yaw_quat)
+    // var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
+    // var neweye = SceneJS._math_mulMat4v4(result_mat4, surface_eye_vec4);
+    // // 
+    // // global_surface_eye = {
+    // //     x: surface_eye_vec4[0] * -earth.radius + earth.pos.x,
+    // //     y: surface_eye_vec4[1] * -earth.radius + earth.pos.y,
+    // //     z: surface_eye_vec4[2] * earth.radius + earth.pos.z
+    // // };
+    // // look_at.set("eye", global_surface_eye);
+    // // 
+    // // look_at.set("up", { x: -surface_dir[0],  y: surface_dir[1],  z: surface_dir[2] });
+    // 
+    // var lookat_yaw_quat = SceneJS._math_angleAxisQuaternion(surface_dir[0], -surface_dir[1], surface_dir[2], surface.lookat_yaw); 
+    // var lookat_pitch_quat = SceneJS._math_angleAxisQuaternion(0, 1, 0, surface.lookat_pitch); 
+    // 
+    // var result_quat = SceneJS._math_mulQuaternions(lookat_yaw_quat, lookat_pitch_quat)
+    // var result_mat4 = SceneJS._math_newMat4FromQuaternion(result_quat);
+    // var new_look = SceneJS._math_mulMat4v4(result_mat4, [1, 0, 0, 1]);
+    // // new_look[0] = (neweye[0] - new_look[0]);
+    // // new_look[1] = (neweye[1] - new_look[1]);
+    // // new_look[2] = (neweye[2] - new_look[2]);
+    // look_at_direction(new_look);
     debugLabel();
 };
 
@@ -1711,25 +2192,58 @@ function updateLookAt() {
 };
 
 //
-// Earth In Space/Surface View Handler
+// Animation
 //
-var surface_view = document.getElementById("surface-view");
 
-function setupViewHandler() {
-    if (surface_view.checked) {
-        setupSurfaceView();
-        updateLookAt();
-        document.onkeydown = handleArrowKeysSurfaceView;
-    } else {
-        setupEarthInSpace();
-        updateLookAt();
-        document.onkeydown = handleArrowKeysEarthInSpace;
-    };
+function sampleAnimate(t) {
+    sampleTime = new Date().getTime();
+    if (keepAnimating) requestAnimFrame(sampleAnimate);
+    if (sampleTime > nextAnimationTime) {
+        nextAnimationTime = nextAnimationTime + updateInterval;
+        if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
+        if (earth_rotation.checked) {
+            angle.set("angle", earth.rotation += 0.25);
+            updateLookAt();
+            clear_solar_radiation_longitude_data();
+        };
+        sampleRender();
+        if (debug_view.checked) debugLabel();
+        infoLabel();
+        infoGraph();
+    }
 };
 
-surface_view.onchange = setupViewHandler;
-setupViewHandler();
+SceneJS.bind("error", function() {
+    keepAnimating = false;
+});
 
+SceneJS.bind("reset", function() {
+    keepAnimating = false;
+});
+
+var displayed = false;
+
+SceneJS.bind("canvas-activated", function() {
+    if (!displayed) {
+        displayed = true;
+        setLongitude(surface.longitude);
+        debugLabel();
+        controlsLabel();
+        infoLabel();
+        infoGraph();
+    }
+});
+
+window.requestAnimFrame = (function() {
+  return window.requestAnimationFrame ||
+         window.webkitRequestAnimationFrame ||
+         window.mozRequestAnimationFrame ||
+         window.oRequestAnimationFrame ||
+         window.msRequestAnimationFrame ||
+         function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+           window.setTimeout(callback, 1000/60);
+         };
+})();
 
 //
 // General Mouse handling
@@ -1747,7 +2261,6 @@ function setLatitude(lat) {
     var scale = Math.cos(surface.latitude * deg2rad);
     latitude_scale.set({ x: scale, y: 1.0, z: scale });
     earth_surface_location_latitude.set("rotation", { x: 0.0, y: 0.0, z: -1.0, angle : lat });
-    $("#latitude-slider").data().rangeinput.setValue(surface.latitude);
     infoLabel();
 };
 
@@ -1801,8 +2314,8 @@ function mouseMove(event) {
     if (dragging) {
         
         if (surface_view.checked) {
-            surface.yaw   += (event.clientX - lastX) * -0.2;
-            surface.pitch += (event.clientY - lastY) * -0.2;
+            surface.lookat_yaw   += (event.clientX - lastX) * -0.2;
+            surface.lookat_pitch += (event.clientY - lastY) * -0.2;
         } else {
             yaw   += (event.clientX - lastX) * -0.2;
             pitch += (event.clientY - lastY) * -0.2;
@@ -1906,23 +2419,11 @@ function handleArrowKeysEarthInSpace(evt) {
     };
 };
 
-function update_surface_height(d) {
+function update_surface_distance(d) {
     if (d >= surface.min_height) {
         surface.height = d;
     }
 }
-
-function decrementSurfaceDistance() {
-    if (surface.distance > 2) {
-        surface.distance -= 0.1;
-    };
-};
-
-function incrementSurfaceDistance() {
-    if (surface.distance < 10) {
-        surface.distance += 0.1;
-    };    
-};
 
 function handleArrowKeysSurfaceView(evt) {
     var distanceIncrementFactor = 30;
@@ -1930,18 +2431,19 @@ function handleArrowKeysSurfaceView(evt) {
     if (evt) {
         switch (evt.keyCode) {
             case 37:                                    // left arrow
-                if (evt.ctrlKey) {                      // control left-arrow
+                if (evt.ctrlKey) {
                     evt.preventDefault();
-                } else if (evt.metaKey) {               // option left-arrow
+                } else if (evt.metaKey) {
                     evt.preventDefault();
-                } else if (evt.altKey) {                // alt left-arrow
+                } else if (evt.altKey) {
                     incrementLongitude(); 
                     evt.preventDefault();
-                } else if (evt.shiftKey) {              // shift left-arrow 
-                    surface.lookat_yaw += 2;
+                } else if (evt.shiftKey) {
+                    surface.lookat_yaw += 2; 
                     evt.preventDefault();
                 } else {
-                    surface.yaw -= 2;                   // left arrow
+                    surface.yaw -= 2; 
+                    updateLookAt();
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -1949,7 +2451,8 @@ function handleArrowKeysSurfaceView(evt) {
 
             case 38:                                    // up arrow
                 if (evt.ctrlKey) {
-                    decrementSurfaceDistance();
+                    var increment = surface.height / distanceIncrementFactor;
+                    update_surface_distance(surface.height - increment);
                     evt.preventDefault();
                 } else if (evt.altKey) {
                     incrementLatitude(); 
@@ -1960,7 +2463,7 @@ function handleArrowKeysSurfaceView(evt) {
                     surface.lookat_pitch += 2; 
                     evt.preventDefault();
                 } else {
-                    surface.pitch += 2; 
+                    surface.pitch -= 2; 
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -1986,7 +2489,8 @@ function handleArrowKeysSurfaceView(evt) {
 
             case 40:                                    // down arrow
                 if (evt.ctrlKey) {
-                    incrementSurfaceDistance();
+                    var increment = surface.height / distanceIncrementFactor;
+                    update_surface_distance(surface.height + increment);
                     evt.preventDefault();
                 } else if (evt.altKey) {
                     decrementLatitude(); 
@@ -1997,7 +2501,7 @@ function handleArrowKeysSurfaceView(evt) {
                     surface.lookat_pitch -= 2; 
                     evt.preventDefault();
                 } else {
-                    surface.pitch -= 2; 
+                    surface.pitch += 2; 
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -2031,33 +2535,6 @@ function elementGetY(el) {
 var container = document.getElementById("container");
 
 //
-// Latitude Slider
-//
-
-$(":range").rangeinput();
-
-var latitude_slider_div     = document.getElementById("latitude-slider-div");
-var latitude_slider         = document.getElementById("latitude-slider");
-
-function latitudeSlider() {
-    var canvas_properties = the_canvas.getBoundingClientRect();
-    var container_properties = container.getBoundingClientRect();
-    latitude_slider_div.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - latitude_slider_div.offsetHeight - 200 + "px"
-    latitude_slider_div.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - latitude_slider_div.offsetWidth + "px";
-};
-
-latitudeSlider();
-
-function latitudeSliderHandler() {
-    surface.latitude = Number(latitude_slider.value);
-    clear_solar_radiation_latitude_data();
-    setLatitude(surface.latitude);
-    updateLookAt();
-};
-
-latitude_slider.onchange = latitudeSliderHandler;
-
-//
 // DebugLabel
 //
 
@@ -2068,7 +2545,7 @@ var debug_content = document.getElementById("debug-content");
 function debugLabel() {
     if (debug_label) {
         if (debug_view.checked) {
-            debug_label.style.opacity = 0.6;
+            debug_label.style.opacity = 0.8;
             debug_content.style.display = null;
         } else {
             debug_content.style.display = "none";
@@ -2083,34 +2560,26 @@ function debugLabel() {
         
         var flags = atmosphere_transparent.get('flags');
 
-        var sun_mat =  sun_material.get();
         var atmos = atmosphere_material.get();
 
-        var solar_alt = solar_altitude(surface.latitude, surface.longitude);
-        var solar_rad = solarRadiation(solar_alt);
-        
         var labelStr = "";
 
         labelStr += "<b>Sun</b><br />";
-        labelStr += sprintf("Pos:  x: %4.1f y: %4.1f z: %4.1f<br>", sun.pos.x, sun.pos.y, sun.pos.z);
-        labelStr += sprintf("baseColor:  r: %1.3f g: %1.3f b: %1.3f<br>", sun_mat.baseColor.r, sun_mat.baseColor.g, sun_mat.baseColor.b);
-        labelStr += sprintf("Specular: %1.2f, Shine: %1.2f, Emit: %1.2f<br>", sun_mat.specular, sun_mat.shine, sun_mat.emit);
-        labelStr += sprintf("Radius: %4.1f, Milkyway emit: %1.2f<br>", sun.radius, milky_way_material.get().emit);
+        labelStr += sprintf("Position:  x: %4.1f y: %4.1f z: %4.1f<br>", sun.pos.x, sun.pos.y, sun.pos.z);
+        labelStr += sprintf("Radius: %4.1f<br>", sun.radius);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Earth</b><br />";
-        labelStr += sprintf("Pos:  x: %4.1f y: %4.1f z: %4.1f<br>", earth.pos.x, earth.pos.y, earth.pos.z);
+        labelStr += sprintf("Position:  x: %4.1f y: %4.1f z: %4.1f<br>", earth.pos.x, earth.pos.y, earth.pos.z);
         labelStr += sprintf("Pitch: %4.1f, Yaw:  %4.1f<br>", pitch, yaw);
-        labelStr += sprintf("Rot:  %4.1f<br>", earth.rotation);
+        labelStr += sprintf("Rotation:  %4.1f<br>", earth.rotation);
         labelStr += sprintf("Angle: %4.1f, Radius: %4.1f<br>", angle.get().angle, earth.radius);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Surface</b><br />";
         labelStr += sprintf("Pitch: %4.1f, Yaw:  %4.1f<br>", surface.pitch, surface.yaw);
-        labelStr += sprintf("LookAt Rot:  %4.1f, Pitch: %3.1f<br>", surface.lookat_yaw, surface.lookat_pitch);
-        labelStr += sprintf("Distance-surface: %3.3f (x radius)<br>", surface.height);
-        labelStr += sprintf("Solar alt: %2.1f, rad: %3.0f  W/m2<br>", solar_alt, solar_rad);
-        labelStr += sprintf("earth.km: %1.6f<br>", earth.km);
+        labelStr += sprintf("LookAt Rotation:  %4.1f, Pitch: %3.1f<br>", surface.lookat_yaw, surface.lookat_pitch);
+        labelStr += sprintf("Distance from surface: %3.3f (x radius)<br>", surface.height);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Atmosphere</b><br />";
@@ -2118,15 +2587,13 @@ function debugLabel() {
         labelStr += "Transparency: " + flags.transparent + sprintf(", Alpha: %1.2f<br>", atmos.alpha);
         labelStr += sprintf("Specular: %1.2f, Shine: %1.2f, Emit: %1.2f<br>", atmos.specular, atmos.shine, atmos.emit, atmos.alpha);
         labelStr += "<br><hr><br>";
-
+        
         labelStr += "<b>LookAt</b><br />";
         labelStr += sprintf("Eye:  x: %4.1f y: %4.1f z: %4.1f<br>", eye.x, eye.y, eye.z);
         labelStr += sprintf("Look:  x: %4.1f y: %4.1f z: %4.1f<br>", look.x, look.y, look.z);
-        labelStr += sprintf("Up  x: %1.3f y: %1.3f z: %1.3f<br>", up.x, up.y, up.z);
-        labelStr += sprintf("Rot: %4.1f, Distance-Earth: %4.1f<br>", lookat_yaw, distance);
-        labelStr += "<br><hr><br>";
-
-        labelStr += "SceneJS Compilation: " + scenejs_compilation + '<br>';
+        labelStr += sprintf("Up  x: %4.1f y: %4.1f z: %4.1f<br>", up.x, up.y, up.z);
+        labelStr += sprintf("Rotation: %4.1f<br>", lookat_yaw);
+        labelStr += sprintf("Distance from Earth: %4.1f<br>", distance);
         labelStr += "<br><hr><br>";
 
         debug_content.innerHTML = labelStr;
@@ -2262,9 +2729,9 @@ function spectralSolarRadiation(alt) {
     }
     if (surface_view.checked) {
         normalized = {
-            r: radiation.red   / 45,
-            g: radiation.green / 45,
-            b: radiation.blue  / 45
+            r: radiation.red   / 450,
+            g: radiation.green / 450,
+            b: radiation.blue  / 450
         };
         sun_light.set("color", normalized);
         sun_material.set("baseColor", normalized);
@@ -2275,29 +2742,16 @@ function spectralSolarRadiation(alt) {
 
 function solarRadiation(alt) {
     var radiation, rad, flags;
-    if (surface_view.checked) {
-        flags = atmosphere_transparent.get('flags');
-    };
+    flags = atmosphere_transparent.get('flags');
     if (alt > 0) {
-        if (surface_view.checked) {
-            flags.transparent = true;
-        };
+        flags.transparent = false;
         if (use_airmass.checked) {
             radiation = spectralSolarRadiation(alt);
-            if (surface_view.checked) {
-                // atmosphere_material.set("alpha", 0.8);
-                var alpha = (1 - (1/Math.exp(radiation.total/2))) * 0.5;
-                if (alpha > 0.5) alpha = 0.5;
-                atmosphere_material.set("alpha", alpha);
-                atmosphere_material.set("emit", alpha);
-                milky_way_material.set("emit", (alpha - 0.5) * -0.5);                
-            };
-            
+            atmosphere_material.set("alpha", 0);
+            // atmosphere_material.set("alpha", radiation.total / 1500);
             rad = radiation.total;
         } else {
-            if (surface_view.checked) {
-                atmosphere_material.set("alpha", 0);
-            };
+            atmosphere_material.set("alpha", 0);
             if (use_horizontal_flux.checked) {
                 rad = simpleSolarRadiation(alt);
             } else {
@@ -2305,16 +2759,11 @@ function solarRadiation(alt) {
             };
         };
     } else {
-        if (surface_view.checked) {
-            flags.transparent = true;
-            atmosphere_material.set("alpha", 0);
-            milky_way_material.set("emit", 0.8);
-        };
+        flags.transparent = true;
+        atmosphere_material.set("alpha", 0);
         rad = 0;
     };
-    if (surface_view.checked) {
-        atmosphere_transparent.set('flags', flags);
-    };
+    atmosphere_transparent.set('flags', flags);
     return rad
 };
 
@@ -2370,6 +2819,9 @@ function controlsLabel() {
         var container_properties = container.getBoundingClientRect();
         controls_label.style.top = canvas_properties.top + window.pageYOffset + 45 + "px";
         controls_label.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
+        // controls_label.style.left = canvas_properties.right - elementGetX(document.getElementById("content")) - controls_label.offsetWidth + "px";
+        // var labelStr = "controls";
+        // controls_label.innerHTML = labelStr;
     };
 };
 
@@ -2528,8 +2980,8 @@ function drawSolarRadiationLatitudeGraph() {
     var x_factor = graph_width / data_length;
     var y_factor = graph_y_range / SOLAR_CONSTANT;
 
-    // data
     rad_lat_ctx.lineWidth = 2;
+
     var x0, y0, x1, y1;
     for (var x = 0; x < data_length; x++) {
         x0 = x * x_factor;
@@ -2547,64 +2999,20 @@ function drawSolarRadiationLatitudeGraph() {
         rad_lat_ctx.stroke();
     }
 
-    // grid lines
-    var x_tic_increment = graph_width / 12;
-
     rad_lat_ctx.beginPath();
-    rad_lat_ctx.lineWidth = 1;
-    rad_lat_ctx.strokeStyle = "rgba(200, 200, 200, 0.5)";
-    var y_grid_value, y_grid_px;
-    for (y_grid_value = 250; y_grid_value <= 1000; y_grid_value += 250) {
-        y_grid_px = y_grid_value * -y_factor + graph_height - 15;
-        rad_lat_ctx.moveTo(0, y_grid_px);
-        rad_lat_ctx.lineTo(graph_width, y_grid_px);
-    };
-    y_grid_px = 1000 * -y_factor + graph_height - (15 + 2);
-    for (x = x_tic_increment * 2; x <= graph_width; x += x_tic_increment * 2) {
-        rad_lat_ctx.moveTo(x, graph_base);
-        rad_lat_ctx.lineTo(x, y_grid_px);
-    };
-    rad_lat_ctx.stroke();
-
-    // X axis
-    rad_lat_ctx.lineWidth = 2;
     rad_lat_ctx.strokeStyle = "rgba(0,255,0, 1.0)";
-    rad_lat_ctx.beginPath();
     rad_lat_ctx.moveTo(0, graph_base);
     rad_lat_ctx.lineTo(graph_width, graph_base);
-
-    for (x = x_tic_increment; x < graph_width; x += x_tic_increment) {
-        rad_lat_ctx.moveTo(x, graph_base);
-        rad_lat_ctx.lineTo(x, graph_base + 3);
-    };
-    rad_lat_ctx.moveTo(1, graph_base);
-    rad_lat_ctx.lineTo(1, graph_base + 5);
     rad_lat_ctx.moveTo(graph_width / 2, graph_base);
-    rad_lat_ctx.lineTo(graph_width / 2, graph_base + 5);
-    rad_lat_ctx.moveTo(graph_width - 1, graph_base);
-    rad_lat_ctx.lineTo(graph_width - 1, graph_base + 5);
-    rad_lat_ctx.stroke();
-
-    // Y axis
-    rad_lat_ctx.lineWidth = 2;
-    rad_lat_ctx.strokeStyle = "rgba(0,255,0, 1.0)";
-    rad_lat_ctx.beginPath();
-    rad_lat_ctx.moveTo(1, graph_base);
-    rad_lat_ctx.lineTo(1, 1000 * -y_factor + graph_height - (15 + 6));
-    rad_lat_ctx.stroke();
-    for (y_grid_value = 250; y_grid_value <= 1000; y_grid_value += 250) {
-        y_grid_px = y_grid_value * -y_factor + graph_height - 15;
-        rad_lat_ctx.moveTo(0, y_grid_px);
-        rad_lat_ctx.lineTo(4, y_grid_px);
-    };
+    rad_lat_ctx.lineTo(graph_width/2, graph_base + 4);
     rad_lat_ctx.stroke();
 
     rad_lat_ctx.font = "bold 12px sans-serif";
     rad_lat_ctx.fillStyle = "rgb(255,255,255)";
-    rad_lat_ctx.fillText(sprintf("Lat: %3.0f ", surface.latitude) + ", Time: " + earthRotationToTimeStr(earth.rotation - surface.longitude), 4, 12);
-    rad_lat_ctx.fillText(sprintf("Solar Rad: %3.0f  W/m2", solar_rad), 4, 26);
-    rad_lat_ctx.fillText(sprintf("total: %3.1f kWh/m2", total_solar_radiation_latitude_data() / 1000), 4, 40);
-    rad_lat_ctx.fillText("noon", graph_width / 2 - 14, graph_height);
+    rad_lat_ctx.fillText(sprintf("Lat: %3.0f ", surface.latitude) + ", Time: " + earthRotationToTimeStr(earth.rotation - surface.longitude), 0, 12);
+    rad_lat_ctx.fillText(sprintf("Solar Rad: %3.0f  W/m2", solar_rad), 0, 26);
+    rad_lat_ctx.fillText(sprintf("total: %3.1f kWh/m2", total_solar_radiation_latitude_data() / 1000), 0, 40);
+    rad_lat_ctx.fillText("noon", graph_width / 2 - 16, graph_height);
 };
 
 function updateSolarRadiationLatitudeGraph() {
@@ -2725,58 +3133,14 @@ function drawSolarRadiationLongitudeGraph() {
         };
     };
 
-    // grid lines
-    var x_tic_increment = graph_width / 12;
-
-    rad_lon_ctx.beginPath();
-    rad_lon_ctx.lineWidth = 1;
-    rad_lon_ctx.strokeStyle = "rgba(200, 200, 200, 0.5)";
-    var y_grid_value, y_grid_px;
-    for (y_grid_value = 250; y_grid_value <= 1000; y_grid_value += 250) {
-        y_grid_px = y_grid_value * -y_factor + graph_height - 15;
-        rad_lon_ctx.moveTo(0, y_grid_px);
-        rad_lon_ctx.lineTo(graph_width, y_grid_px);
-    };
-    y_grid_px = 1000 * -y_factor + graph_height - (15 + 2);
-    for (x = x_tic_increment * 2; x <= graph_width; x += x_tic_increment * 2) {
-        rad_lon_ctx.moveTo(x, graph_base);
-        rad_lon_ctx.lineTo(x, y_grid_px);
-    };
-    rad_lon_ctx.stroke();
-    
-    // X axis
     rad_lon_ctx.lineWidth = 2;
     rad_lon_ctx.beginPath();
     rad_lon_ctx.strokeStyle = "rgba(0,255,0, 1.0)";
     rad_lon_ctx.moveTo(0, graph_base);
     rad_lon_ctx.lineTo(graph_width, graph_base);
-    var x_tic_increment = graph_width / 12;
-    for (x = x_tic_increment; x < graph_width; x += x_tic_increment) {
-        rad_lon_ctx.moveTo(x, graph_base);
-        rad_lon_ctx.lineTo(x, graph_base + 3);
-    };
-    rad_lon_ctx.moveTo(1, graph_base);
-    rad_lon_ctx.lineTo(1, graph_base + 5);
     rad_lon_ctx.moveTo(graph_width / 2, graph_base);
-    rad_lon_ctx.lineTo(graph_width / 2, graph_base + 5);
-    rad_lon_ctx.moveTo(graph_width - 1, graph_base);
-    rad_lon_ctx.lineTo(graph_width - 1, graph_base + 5);
+    rad_lon_ctx.lineTo(graph_width/2, graph_base + 4);
     rad_lon_ctx.stroke();
-
-    // Y axis
-    rad_lon_ctx.lineWidth = 2;
-    rad_lon_ctx.strokeStyle = "rgba(0,255,0, 1.0)";
-    rad_lon_ctx.beginPath();
-    rad_lon_ctx.moveTo(1, graph_base);
-    rad_lon_ctx.lineTo(1, 1000 * -y_factor + graph_height - (15 + 6));
-    rad_lon_ctx.stroke();
-    for (y_grid_value = 250; y_grid_value <= 1000; y_grid_value += 250) {
-        y_grid_px = y_grid_value * -y_factor + graph_height - 15;
-        rad_lon_ctx.moveTo(0, y_grid_px);
-        rad_lon_ctx.lineTo(4, y_grid_px);
-    };
-    rad_lon_ctx.stroke();
-    
 
     rad_lon_ctx.font = "bold 12px sans-serif";
     rad_lon_ctx.fillStyle = "rgb(255,255,255)";
@@ -2813,56 +3177,9 @@ function SolarRadiationLongitudeGraphHandler() {
 solar_radiation_longitude_graph.onchange = SolarRadiationLongitudeGraphHandler;
 SolarRadiationLongitudeGraphHandler();
 
-
-//
-// Animation
-//
-
-function sampleAnimate(t) {
-    sampleTime = new Date().getTime();
-    if (sampleTime > nextAnimationTime) {
-        nextAnimationTime = nextAnimationTime + updateInterval;
-        if (sampleTime > nextAnimationTime) nextAnimationTime = sampleTime + updateInterval;
-        if (earth_rotation.checked) {
-            angle.set("angle", earth.rotation += 0.25);
-            clear_solar_radiation_longitude_data();
-        };
-        updateLookAt();
-        sampleRender();
-        if (debug_view.checked) debugLabel();
-        infoLabel();
-        infoGraph();
-    }
-};
-
-SceneJS.bind("error", function() {
-    keepAnimating = false;
-});
-
-SceneJS.bind("reset", function() {
-    keepAnimating = false;
-});
-
-var displayed = false;
-
-SceneJS.bind("canvas-activated", function() {
-    if (!displayed) {
-        displayed = true;
-        setLongitude(surface.longitude);
-        debugLabel();
-        controlsLabel();
-        infoLabel();
-        infoGraph();
-    }
-});
-
 //
 // Startup
 //
 
-scene.start({
-    idleFunc: function() {
-        sampleAnimate();
-    }
-});
+requestAnimFrame(sampleAnimate);
 

@@ -85,10 +85,10 @@
                       <label><input id="orbital-grid" type="checkbox"/> Grid: </label>
                       <label><input id="earth-rotation" type="checkbox" checked/> Rotation</label>
                     </fieldset>
-                  </form>  
+                  </form>
                 </li>
               </ul>
-              
+
               <ul class="hlist">
                 <li>
                   <form id="select-city-latitude">
@@ -106,47 +106,10 @@
                     <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
                     <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
                     <input type="submit" value="Run" />
+                    <span id="temperature-results"></span>
                   </form>
                 </li>
-                <p><span class="tip">TIP #1:</span> For each row of data you collect, choose the season you think it is.</p>
-                <p><span class="tip">TIP #2:</span> You can sort the data in the table by clicking on the column name.</p>
               </ul>
-            </div>
-            <div class="tableFrame">
-              <table id='city-data-table' class='sortable'>
-                <thead>
-                  <tr>
-                    <th class='sortfirstdesc number'></th>
-                    <th class='text'>City</th>
-                    <th class='text'>Month</th>
-                    <th class='number'>Temp</th>
-                    <th class='number'>Prediction</th>
-                    <th class="nosort">Season ?</th>
-                    <th class="nosort">Graph</th>
-                </thead>
-                <tbody id="city-data-table-body">
-                </tbody>
-              </table>
-            </div>
-            <!-- <div class="editorFrame" id="editor">results ...</div> -->
-          </div>
-        </li>
-        <li>
-          <ul class="hlist">
-            <li>
-              <!-- <form id="show-graph">
-                 <fieldset>
-                   <legend>Show graph: </legend>
-                   <label><input id="solar-radiation-graph" type="checkbox"/> Solar Radiation</label>
-                   <label><input id="sun-earth-distance-graph" type="checkbox"/> Distance from Sun</label>
-                 </fieldset>
-               </form> -->
-             </li>
-          </ul>
-          <div class="quarterFrame">
-            <div class="glGraphQuarterFrame" id="theCanvas4"></div>
-            <div id="city-color-keys">
-              <ul id="color-key-list" />
             </div>
           </div>
         </li>
@@ -165,7 +128,7 @@
           </ul>
         </li>
       </ul>
-    </div>   
+    </div>
   </div>
 </div>
 <div id="earth-info-label1" class="earth-info-label transparent-ui"></div>
@@ -178,7 +141,7 @@
     } else {
       var libraries = [src];
     }
-    var script = document.createElement("script") 
+    var script = document.createElement("script")
     script.type = "text/javascript";
     // IE
     script.onreadystatechange = function () {
@@ -189,7 +152,7 @@
           myRequire(libraries)
         }
         if (callback) {
-          callback();            
+          callback();
         }
       }
     }
@@ -200,35 +163,34 @@
         myRequire(libraries)
       }
       if (callback) {
-        callback();            
+        callback();
       }
     }
     script.src = libraries[0];
     document.getElementsByTagName("head")[0].appendChild(script);
   };
-  
+
   window.onload=function() {
+    LITE_VERSION = true;
     var webGLEnabled = Modernizr.webgl;
     // webGLEnabled = false;
     if (webGLEnabled){
       myRequire([
         "../lib/sprintf.js",
         "../lib/scenejs-0.8.0/scenejs.js",
-        "solar-system-data.js",
-        // "sky-sphere.js",
-        "earth-axis.js",
-        // "earth-sphere.js",
-        "sun.js",
-        "earth.js",
-        "earth-orbit.js",
-        "earth-sun-line.js",
-        "jpl-earth-ephemerides.js",
-        "orbit-grid.js",
-        "seasons.js",
-        "cities.js",
-        "latitude-line.js",
-        "earth-surface-location-indicator.js",
-        "seasons1-2c.js"
+        "javascript/solar-system-data.js",
+        "javascript/earth-axis.js",
+        "javascript/sun.js",
+        "javascript/earth.js",
+        "javascript/earth-orbit.js",
+        "javascript/earth-sun-line.js",
+        "javascript/jpl-earth-ephemerides.js",
+        "javascript/orbit-grid.js",
+        "javascript/seasons.js",
+        "javascript/cities.js",
+        "javascript/latitude-line.js",
+        "javascript/earth-surface-location-indicator.js",
+        "javascript/seasons1-2.js"
       ]);
     } else {
       var content = document.getElementById('content');

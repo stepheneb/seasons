@@ -1488,7 +1488,29 @@ function _graph_checkbox_callback(element) {
     plotCityData();
 };
 
-city_latitude_temperature.onsubmit = addExperimentData;
+function justUpdateResults() {
+  if (selected_city_latitude.value == 'city ...' ||
+    city_latitude_temperature_prediction.value == '') {
+    return false;
+  }
+  var city_index = Number(selected_city_latitude.value);
+  var city = active_cities[city_index];
+  var city_location = city.location;
+
+  var the_month = scene1.month;
+  var month = month_data[the_month];
+  var results = document.getElementById("temperature-results")
+  var ave_temp = city.average_temperatures[month.index];
+  if (use_fahrenheit) ave_temp = ave_temp * 9 / 5 + 32;
+  results.textContent = sprintf("%3.1f", ave_temp);
+  return false;
+}
+
+if (LITE_VERSION) {
+  city_latitude_temperature.onsubmit = justUpdateResults;
+} else {
+  city_latitude_temperature.onsubmit = addExperimentData;
+}
 
 function experimentDataToJSON() {
     var exp_table = { rows: [] };
@@ -1670,7 +1692,7 @@ function plotCityData() {
     );
 };
 
-plotCityData();
+if (!LITE_VERSION) { plotCityData(); }
 
 var city_color_keys = document.getElementById("city-color-keys");
 
@@ -1735,7 +1757,7 @@ function generateCityColorKeys() {
     city_color_keys.appendChild(color_key_list);
 };
 
-generateCityColorKeys();
+if (!LITE_VERSION) { generateCityColorKeys(); }
 
 var dark_green = '#355506';
 
