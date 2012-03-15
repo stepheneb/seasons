@@ -13,18 +13,15 @@
 		<script type="text/javascript" src="../lib/flotr/lib/prototype.js"></script>
 		<script type="text/javascript" src="../lib/table/fastinit.js"></script>
 		<script type="text/javascript" src="../lib/table/tablesort.js"></script>
-		
+
 		<!--[if IE]>
 			<script type="text/javascript" src="../lib/flotr/lib/excanvas.js"></script>
 			<script type="text/javascript" src="../lib/flotr/lib/base64.js"></script>
 		<![endif]-->
+
 		<script type="text/javascript" src="../lib/flotr/lib/canvas2image.js"></script>
 		<script type="text/javascript" src="../lib/flotr/lib/canvastext.js"></script>
 		<script type="text/javascript" src="../lib/flotr/flotr.debug-0.2.0-test.js"></script>
-    <!-- <script src="../lib/ace/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script> -->
-    <!-- <script src="../lib/ace/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../lib/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script> -->
-    
 </head>
 <div id="container">
   <div id="header-inner">
@@ -57,22 +54,9 @@
             <div class="underCanvasUI">
               <ul class="hlist">
                 <li>
-                  <form>
-                    <fieldset>
-                      <legend>Choose month</legend>
-                      <select id="choose-month" name="chosen-month">
-                        <option value="jun" selected>June</option>
-                        <option value="sep">September</option>
-                        <option value="dec">December</option>
-                        <option value="mar">March</option>
-                      </select>
-                    </fieldset>
-                  </form>
-                </li>
-                <li>
                   <form id="choose-view">
                     <fieldset>
-                      <legend>Choose view: </legend>
+                      <legend>Select view: </legend>
                       <label><input type="radio" name="view" value="top"> Top</input></label>
                       <label><input type="radio" name="view" value="side" checked> Side</input></label>
                     </fieldset>
@@ -85,32 +69,39 @@
                       <label><input id="orbital-grid" type="checkbox"/> Grid: </label>
                       <label><input id="earth-rotation" type="checkbox" checked/> Rotation</label>
                     </fieldset>
-                  </form>  
+                  </form>
                 </li>
               </ul>
-              
-              <ul class="hlist">
-                <li>
+              <div id="results">
+                <p>
+                  <form>
+                    <label for="choose-month">Choose month:</label>
+                    <select id="choose-month" name="chosen-month">
+                      <option value="jun" selected>June</option>
+                      <option value="sep">September</option>
+                      <option value="dec">December</option>
+                      <option value="mar">March</option>
+                    </select>
+                  </form>
+                </p>
+                <p>
                   <form id="select-city-latitude">
-                    <label for="selected-city-latitude">Select a city:</label>
+                    <label for="selected-city-latitude">Choose city:</label>
                     <select id="selected-city-latitude" name="selected-city-latitude">
                       <option disabled selected>city ...</option>
                     </select>
                   </form>
-                </li>
-                <li>
-                  Selected month: <span id="selected-month"></span>
-                </li>
-                <li>
+                </p>
+                <p>
                   <form id="city-latitude-temperature">
                     <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
                     <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
                     <input type="submit" value="Collect Data" />
                   </form>
-                </li>
+                </p>
                 <p><span class="tip">TIP #1:</span> For each row of data you collect, choose the season you think it is.</p>
                 <p><span class="tip">TIP #2:</span> You can sort the data in the table by clicking on the column name.</p>
-              </ul>
+              </div>
             </div>
             <div class="tableFrame">
               <table id='city-data-table' class='sortable'>
