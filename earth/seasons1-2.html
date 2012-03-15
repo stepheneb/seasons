@@ -50,58 +50,56 @@
       </ul>
       <ul class="hlist">
         <li>
-          <div class="editorQuarterFrame">
-            <div class="underCanvasUI">
-              <ul class="hlist">
-                <li>
-                  <form id="choose-view">
-                    <fieldset>
-                      <legend>Select view: </legend>
-                      <label><input type="radio" name="view" value="top"> Top</input></label>
-                      <label><input type="radio" name="view" value="side" checked> Side</input></label>
-                    </fieldset>
-                  </form>
-                </li>
-                <li>
-                  <form id="show-me">
-                    <fieldset>
-                      <legend>Show me: </legend>
-                      <label><input id="orbital-grid" type="checkbox"/> Grid: </label>
-                      <label><input id="earth-rotation" type="checkbox" checked/> Rotation</label>
-                    </fieldset>
-                  </form>
-                </li>
-              </ul>
-              <div id="results">
-                <p>
-                  <form>
-                    <label for="choose-month">Choose month:</label>
-                    <select id="choose-month" name="chosen-month">
-                      <option value="jun" selected>June</option>
-                      <option value="sep">September</option>
-                      <option value="dec">December</option>
-                      <option value="mar">March</option>
-                    </select>
-                  </form>
-                </p>
-                <p>
-                  <form id="select-city-latitude">
-                    <label for="selected-city-latitude">Choose city:</label>
-                    <select id="selected-city-latitude" name="selected-city-latitude">
-                      <option disabled selected>city ...</option>
-                    </select>
-                  </form>
-                </p>
-                <p>
-                  <form id="city-latitude-temperature">
-                    <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
-                    <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
-                    <input type="submit" value="Collect Data" />
-                  </form>
-                </p>
-                <p><span class="tip">TIP #1:</span> For each row of data you collect, choose the season you think it is.</p>
-                <p><span class="tip">TIP #2:</span> You can sort the data in the table by clicking on the column name.</p>
-              </div>
+          <div class="underCanvasUI">
+            <ul class="hlist">
+              <li>
+                <form id="choose-view">
+                  <fieldset>
+                    <legend>Select view: </legend>
+                    <label><input type="radio" name="view" value="top"> Top</input></label>
+                    <label><input type="radio" name="view" value="side" checked> Side</input></label>
+                  </fieldset>
+                </form>
+              </li>
+              <li>
+                <form id="show-me">
+                  <fieldset>
+                    <legend>Show me: </legend>
+                    <label><input id="orbital-grid" type="checkbox"/> Grid: </label>
+                    <label><input id="earth-rotation" type="checkbox" checked/> Rotation</label>
+                  </fieldset>
+                </form>
+              </li>
+            </ul>
+            <div id="results">
+              <p>
+                <form>
+                  <label for="choose-month">Choose month:</label>
+                  <select id="choose-month" name="chosen-month">
+                    <option value="jun" selected>June</option>
+                    <option value="sep">September</option>
+                    <option value="dec">December</option>
+                    <option value="mar">March</option>
+                  </select>
+                </form>
+              </p>
+              <p>
+                <form id="select-city-latitude">
+                  <label for="selected-city-latitude">Choose city:</label>
+                  <select id="selected-city-latitude" name="selected-city-latitude">
+                    <option disabled selected>city ...</option>
+                  </select>
+                </form>
+              </p>
+              <p>
+                <form id="city-latitude-temperature">
+                  <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">Predict average temperature &deg;F</label>
+                  <input type="text" id="city-latitude-temperature-prediction" name="city-latitude-temperature-prediction" />
+                  <input type="submit" value="Collect Data" />
+                </form>
+              </p>
+              <p><span class="tip">TIP #1:</span> For each row of data you collect, choose the season you think it is.</p>
+              <p><span class="tip">TIP #2:</span> You can sort the data in the table by clicking on the column name.</p>
             </div>
             <div class="tableFrame">
               <table id='city-data-table' class='sortable'>
@@ -119,7 +117,6 @@
                 </tbody>
               </table>
             </div>
-            <!-- <div class="editorFrame" id="editor">results ...</div> -->
           </div>
         </li>
         <li>
@@ -156,7 +153,7 @@
           </ul>
         </li>
       </ul>
-    </div>   
+    </div>
   </div>
 </div>
 <div id="earth-info-label1" class="earth-info-label transparent-ui"></div>
@@ -169,7 +166,7 @@
     } else {
       var libraries = [src];
     }
-    var script = document.createElement("script") 
+    var script = document.createElement("script")
     script.type = "text/javascript";
     // IE
     script.onreadystatechange = function () {
@@ -180,7 +177,7 @@
           myRequire(libraries)
         }
         if (callback) {
-          callback();            
+          callback();
         }
       }
     }
@@ -191,13 +188,13 @@
         myRequire(libraries)
       }
       if (callback) {
-        callback();            
+        callback();
       }
     }
     script.src = libraries[0];
     document.getElementsByTagName("head")[0].appendChild(script);
   };
-  
+
   window.onload=function() {
     LITE_VERSION = false;
     var webGLEnabled = Modernizr.webgl;
