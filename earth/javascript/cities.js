@@ -20,7 +20,7 @@ var cities = [
     {
         name: "Fairbanks",
         country: "United States",
-        active: true,
+        active: false,
         color: city_colors.bright_red,
         no_tilt_color: city_colors.dark_red,
         location: {
@@ -130,7 +130,7 @@ var cities = [
         average_temperatures: [19, 20, 22, 24, 26, 27, 28, 28, 28, 26, 23, 20],
         source: "http://www.climatetemp.info/usa/miami-florida.html"
     },
-    
+
     {
         name: "Singapore",
         country: "Singapore",
@@ -244,11 +244,11 @@ var cities = [
         average_temperatures: [20, 20, 19, 16, 12, 11, 10, 10.5, 13, 14, 17, 18],
         source: "http://www.climatetemp.info/australia/melbourne.html"
     },
-    
+
     {
         name: "Rio Gallegos",
         country: "Argentina", 
-        active: true,
+        active: false,
         color: city_colors.bright_orange,
         no_tilt_color: city_colors.dark_orange,
         location: {
@@ -263,7 +263,7 @@ var cities = [
         average_temperatures: [12.5, 11.5, 11, 8, 4, 1, 1, 2.5, 6, 9, 11, 12],
         source: "http://www.climatetemp.info/argentina/rio-gallegos.html"
     },
-    
+
     {
         name: "McMurdo Station",
         country: "Antarctica",
