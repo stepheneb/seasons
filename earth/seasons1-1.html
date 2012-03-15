@@ -36,7 +36,7 @@
               <label><input id="circle-orbit" type="checkbox" value="selected" /> Circular orbit</label>
               <label><input id="orbital-grid" type="checkbox"/> Orbital grid: </label>
             </fieldset>
-          </form>  
+          </form>
         </li>
         <li>
           <form>
@@ -66,7 +66,7 @@
     } else {
       var libraries = [src];
     }
-    var script = document.createElement("script") 
+    var script = document.createElement("script")
     script.type = "text/javascript";
     // IE
     script.onreadystatechange = function () {
@@ -77,7 +77,7 @@
           myRequire(libraries)
         }
         if (callback) {
-          callback();            
+          callback();
         }
       }
     }
@@ -88,13 +88,13 @@
         myRequire(libraries)
       }
       if (callback) {
-        callback();            
+        callback();
       }
     }
     script.src = libraries[0];
     document.getElementsByTagName("head")[0].appendChild(script);
   };
-  
+
   window.onload=function() {
     var webGLEnabled = Modernizr.webgl;
     // webGLEnabled = false;
