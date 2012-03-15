@@ -3,7 +3,7 @@
 var earthSphere = SceneJS.createNode({
 
     type: "library",
-    
+
     nodes: [
 
         /* Specify the amounts of ambient, diffuse and specular
@@ -18,7 +18,7 @@ var earthSphere = SceneJS.createNode({
             shine:          2.0,
 
             nodes: [
-            
+
                 {
                     type: "translate",
                     id: "earth-position",
@@ -32,12 +32,12 @@ var earthSphere = SceneJS.createNode({
                             type: "quaternion",
                             id: "earthRotationalAxisQuaternion",
                             x : 0, y : 0, z : 1, angle : 23.5,
-                        
+
                             nodes: [
-                                
+
                                 {
                                      type: "node",
-                                     
+
                                      nodes: [
                                         {
                                             type: "node",
@@ -61,7 +61,7 @@ var earthSphere = SceneJS.createNode({
                                             angle: 0,
                                             y: 1.0,
 
-                                            nodes: [ 
+                                            nodes: [
 
                                                 { type: "sphere", id: "esphere" },
 
@@ -73,24 +73,34 @@ var earthSphere = SceneJS.createNode({
                                         }
                                     ]
                                 },
-                            
+
                                 {
                                     type: "selector",
                                     id: "earthAxisSelector",
                                     selection: [1],
 
                                     nodes: [
-                                
+
                                         // 0: no axis indicator
                                         { },
 
-                                        // 1: display axis indicator
+                                        // 1: display regular-size axis indicator
                                         {
-                                    
+
                                             type: "scale",
                                             x: earth_radius_km * 0.02,
                                             y: earth_radius_km * 1.2,
                                             z: earth_radius_km * 0.02,
+
+                                            nodes: [ { type: "sphere" } ]
+                                        },
+                                        // 2: display huge-size axis indicator
+                                        {
+
+                                            type: "scale",
+                                            x: earth_radius_km * 0.5,
+                                            y: earth_radius_km * 200,
+                                            z: earth_radius_km * 0.5,
 
                                             nodes: [ { type: "sphere" } ]
                                         }

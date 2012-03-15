@@ -1,9 +1,9 @@
 var earthSunLine = SceneJS.createNode({
 
     type: "library",
-    
+
     nodes: [
-        
+
         {
             type: "material",
             id: "earth-circle-orbit-sun-line",
@@ -14,7 +14,7 @@ var earthSunLine = SceneJS.createNode({
             emit:           1.0,
 
             nodes: [
-                            
+
                 {
                     type: "selector",
                     id: "earthSunLineSelector",
@@ -40,7 +40,7 @@ var earthSunLine = SceneJS.createNode({
                                     y : 1.0,
 
                                     nodes: [
-                            
+
                                         {
 
                                             type: "scale",
@@ -51,7 +51,8 @@ var earthSunLine = SceneJS.createNode({
 
                                             nodes: [
 
-                                                { 
+                                                {
+
                                                     type: "box",
                                                 },
                                             ]
@@ -60,39 +61,51 @@ var earthSunLine = SceneJS.createNode({
                                 }
                             ]
                         },
-                        
+
                         // {
-                        // 
+                        //
+
                         //     type: "translate", // Example translation
                         //     id: "earth-sun-line-translation",
                         //     x: earth_x_pos / 2,
                         //     y: 0.0,
                         //     z: 0.0,
-                        // 
+                        //
+
                         //     nodes : [
-                        // 
+                        //
+
                         //         // {
-                        //         // 
+                        //         //
+
                         //         //     type: "rotate",
                         //         //     id: "earth-sun-line-rotation",
                         //         //     angle: 0.0,
                         //         //     y : 0.0,
-                        //         // 
+                        //         //
+
                         //         //     nodes: [
-                        //     
+                        //
+
                         //                 {
-                        // 
+                        //
+
                         //                     type: "scale",
                         //                     x: earth_x_pos,
                         //                     y: earth_radius_km * 100,
                         //                     z: earth_radius_km * 100,
-                        // 
+                        //
+
                         //                     nodes: [
-                        // 
-                        //                         { 
-                        // 
+                        //
+
+                        //                         {
+
+                        //
+
                         //                             type: "box",
-                        // 
+                        //
+
                         //                         },
                         //                     ]
                         //                 }
@@ -100,7 +113,7 @@ var earthSunLine = SceneJS.createNode({
                         //         // }
                         //     ]
                         // },
-                        
+
                         {
                             type: "geometry",
                             primitive: "line-loop",
@@ -120,7 +133,6 @@ var earthSunLine = SceneJS.createNode({
     ]
 });
 
-
 var earth_sun_line_rotation = SceneJS.withNode("earth-sun-line-rotation");
 var earth_sun_line_translation = SceneJS.withNode("earth-sun-line-translation");
 var earth_sun_line_scale = SceneJS.withNode("earth-sun-line-scale");
@@ -131,7 +143,7 @@ var set_earth_sun_line = function(month, view) {
     var scale = {};
     var distance2 = earth_ellipse_distance_from_sun_by_month(month) / 2;
     // var distance = earth_ephemerides_datum_by_month('jun').rg * au2km * factor;
-    
+
     switch(month) {
         case "dec":
         earth_sun_line_rotation.set("angle", 180);
@@ -203,4 +215,3 @@ var set_earth_sun_line = function(month, view) {
     }
     earth_sun_line_scale.set(scale);
 }
-

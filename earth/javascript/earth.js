@@ -2,10 +2,10 @@
 var earth = SceneJS.createNode({
 
     type: "library",
-    
+
     nodes: [
         {
-            
+
             id: "earth",
             type: "boundingBox",
 
@@ -26,7 +26,7 @@ var earth = SceneJS.createNode({
             ],
 
             nodes:[
-            
+
                 /* Level 1 - a sphere to at least show a dot on the horizon
                  */
                 {
@@ -40,14 +40,14 @@ var earth = SceneJS.createNode({
 
                         {
                             type: "scale", x: sun_radius_km, y: sun_radius_km, z: sun_radius_km,
-                            
+
                             nodes: [ { type: "sphere"  } ]
                         }
                     ]
                 },
-                
+
                 {
-                    
+
                     type: "selector",
                     id: "earthTextureSelector",
                     selection: [1],
@@ -58,7 +58,7 @@ var earth = SceneJS.createNode({
                             type: "selector",
                             selection: [0],
                             nodes: [
-                                
+
                                 // selection [0], January
                                 {
                                     type: "texture",
@@ -66,12 +66,12 @@ var earth = SceneJS.createNode({
                                         { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                         { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                         { uri:"images/temperature/grads-temperature-2009-01.png", blendMode: "multiply" }
-                                        
+
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
-                                
+
                                 // selection [1], February
                                 {
                                     type: "texture",
@@ -81,9 +81,9 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-02.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
-                                
+
                                 // selection [2], March
                                 {
                                     type: "texture",
@@ -93,7 +93,7 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
 
                                 // selection [3], April
@@ -105,7 +105,7 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-04.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
 
                                 // selection [4], May
@@ -117,7 +117,7 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-05.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
 
                                 // selection [5], June
@@ -129,7 +129,7 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
 
                                 // selection [6], July
@@ -141,7 +141,7 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-07.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
 
                                 // selection [7], August
@@ -153,7 +153,7 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-08.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
 
                                 // selection [8], September
@@ -165,7 +165,7 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
 
                                 // selection [9], October
@@ -177,7 +177,7 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-10.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
 
                                 // selection [10], NOvember
@@ -189,7 +189,7 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-11.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
+
                                 },
 
                                 // selection [11], December
@@ -201,23 +201,26 @@ var earth = SceneJS.createNode({
                                         { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
                                     ],
                                     nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                    
-                                }                                
+
+                                }
+
                             ]
                         },
 
                         {
-                            
+
                             id: "earth-terrain-texture",
                             type: "texture",
                             layers: [
 
-                                { 
+                                {
+
                                    uri:"images/lat-long-grid-invert-units-1440x720-15.png",
                                    blendMode: "add",
 
                                 },
-                                { 
+                                {
+
                                     uri:"images/earth3.jpg",
 
                                     minFilter: "linear",

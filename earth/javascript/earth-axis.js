@@ -1,7 +1,7 @@
 var earthAxis = SceneJS.createNode({
 
     type: "library",
-    
+
     nodes: [
         {
             id: "earth-axis-position",
