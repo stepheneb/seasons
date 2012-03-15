@@ -6,28 +6,28 @@ SceneJS.createNode({
             type: "texture",
             layers: [ { uri: "images/earth-arrow.png" } ],
             nodes: [
-            
+
                 {
                     type: "node",
-                    
+
                     flags: {
                         transparent: true
                     },
-                    
+
                     nodes: [
-                    
+
                         {
-                    
+
                             type: "material",
                             specular: 0.0,
                             emit: 10,
-                            
+
                             nodes: [
-                                
+
                                 {
                                     type: "translate",
                                     y: sun_radius_km * 22,
-                                    
+
                                     nodes: [
                                         {
                                             type: "quad",
@@ -52,28 +52,28 @@ SceneJS.createNode({
             type: "texture",
             layers: [ { uri: "images/sun-arrow.png" } ],
             nodes: [
-            
+
                 {
                     type: "node",
-                    
+
                     flags: {
                         transparent: true
                     },
-                    
+
                     nodes: [
-                    
+
                         {
-                    
+
                             type: "material",
                             specular: 0.0,
                             emit: 10,
-                            
+
                             nodes: [
-                                
+
                                 {
                                     type: "translate",
                                     y: sun_radius_km * 22,
-                                    
+
                                     nodes: [
                                         {
                                             type: "quad",
@@ -90,14 +90,13 @@ SceneJS.createNode({
     ]
 });
 
-
 SceneJS.createNode({
-    
+
     type: "scene",
     id: "theScene",
     canvasId: "theCanvas",
     loggingElementId: "theLoggingDiv",
-    
+
     nodes: [
 
         {
@@ -116,8 +115,7 @@ SceneJS.createNode({
                     },
 
                     nodes: [
-                    
-                        
+
                         // Integrate our sky sphere, which is defined in sky-sphere.js
                         {
                             type : "instance",
@@ -129,12 +127,11 @@ SceneJS.createNode({
                             type : "instance",
                             target :"sun"
                         },
-                        
+
                         {
                             type: "instance",
                             target: "SunPointerSprite"
                         },
-                        
 
                         // Integrate our earth circular orbit, which is defined in earth-orbit.js
                         {
@@ -195,20 +192,22 @@ SceneJS.createNode({
                             emit:           1.0,
 
                             // nodes: [
-                            // 
+                            //
+
                             //     {
                             //         type   : "instance",
                             //         target : "earth-circle-orbit-sun-line"
                             //     }
-                            //     
+                            //
+
                             //   ]
                         },
-                        
+
                         {
                             type   : "instance",
                             target : "earth-circle-orbit-sun-line"
                         },
-                        
+
                         {
                             type: "translate",
                             id: "earth-pointer",
@@ -220,14 +219,12 @@ SceneJS.createNode({
                                 }
                             ]
                         },
-                                                
-                        
 
                         {
                             type: "quaternion",
                             id: "x",
                             x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-                    
+
                             rotations: [ { x : 0, y : 0, z : 1, angle : -23.5 } ],
 
                             nodes: [
@@ -249,7 +246,8 @@ SceneJS.createNode({
         },
 
         {
-            type: "lookAt", 
+            type: "lookAt",
+
             id: "lookAt",
             eye : { x: 0, y: earth_orbital_radius_km * 3, z: earth_orbital_radius_km * 0.3 },
             look : { x : earth_orbital_radius_km, y : 0.0, z : 0.0 },
@@ -271,7 +269,6 @@ SceneJS.setDebugConfigs({
  * Scene rendering loop and mouse handler stuff follows
  *---------------------------------------------------------------------*/
 
-
 var scene = new seasons.Scene({
     theScene:                    "theScene",
     camera:                      "theCamera",
@@ -284,7 +281,8 @@ var scene = new seasons.Scene({
 });
 
 var seasons_activity = new seasons.Activity({
-    version: 1.1, 
+    version: 1.1,
+
     scenes: { scene: scene }
 });
 
@@ -320,20 +318,23 @@ function sceneCompletelyLoaded() {
 	}
 }
 
-SceneJS.withNode("theScene").bind("loading-status", 
-    function(event) {	
+SceneJS.withNode("theScene").bind("loading-status",
+
+    function(event) {
+
         if (zBufferDepth == 0) {
             zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
             var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
-            SceneJS._loggingModule.info(mesg);            
+            SceneJS._loggingModule.info(mesg);
+
         }
         var params = event.params;
-        
+
         if (params.numNodesLoading > 0) {
         } else {
-        	if (!completelyLoaded) {
-        		sceneCompletelyLoaded();
-        		completelyLoaded = true;
-        	}
-        }        
+          if (!completelyLoaded) {
+            sceneCompletelyLoaded();
+            completelyLoaded = true;
+          }
+        }
     });

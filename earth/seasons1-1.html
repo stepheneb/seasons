@@ -38,22 +38,20 @@
             </fieldset>
           </form>
         </li>
-        <li>
+      </ul>
+      <div id="results">
+        <p>
           <form>
-            <fieldset>
-              <legend>Choose month</legend>
-              <select id="choose-month" name="chosen-month">
-                <option value="jun" selected>June</option>
-                <option value="sep">September</option>
-                <option value="dec">December</option>
-                <option value="mar">March</option>
-              </select>
-            </fieldset>
+            <label for="choose-month">Choose month:</label>
+            <select id="choose-month" name="chosen-month">
+              <option value="jun" selected>June</option>
+              <option value="sep">September</option>
+              <option value="dec">December</option>
+              <option value="mar">March</option>
+            </select>
           </form>
-        </li>
-      </ul>
-      <ul class="hlist">
-      </ul>
+        </p>
+      </div>
     </div>
   </div>
 </div>
@@ -96,6 +94,7 @@
   };
 
   window.onload=function() {
+    LITE_VERSION = false;
     var webGLEnabled = Modernizr.webgl;
     // webGLEnabled = false;
     if (webGLEnabled){
