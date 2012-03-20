@@ -2,13 +2,13 @@
 //
 // ******* IMPORTANT NOTE ********
 //
-//   The Y and Z data have been switched in this version of the data to 
+//   The Y and Z data have been switched in this version of the data to
 //   match up with the axis conventions of OpenGL/WegGL
 //
 // http://ssd.jpl.nasa.gov/horizons.cgi
 //
 //   Current Settings
-//   
+//
 //   Ephemeris Type [change] :    VECTORS
 //   Target Body [change] :       Earth [Geocenter] [399]
 //   Coordinate Origin [change] : Solar System Barycenter (SSB) [500@0]
@@ -18,7 +18,7 @@
 //
 // *******************************************************************************
 // Revised: Apr 03, 2003                  Earth                                399
-//  
+//
 // PHYSICAL PROPERTIES:
 //  Mean radius, km          = 6371.01+-0.02   Mass, 10^24 kg = 5.9736
 //  Equ. radius, km          = 6378.136        Mass layers:
@@ -36,64 +36,64 @@
 //  Moment of inertia        = 0.3308          Love no., k2     = 0.299
 //  Mean Temperature, K      = 270             Atm. pressure    = 1.0 bar
 //  Solar constant, W/m^2    = 1367.6          Vis. mag. V(1,0) = -3.86
-//  Volume, 10^10 km^3       = 108.321         Geometric albedo = 0.367 
-// 
+//  Volume, 10^10 km^3       = 108.321         Geometric albedo = 0.367
+//
 // DYNAMICAL CHARACTERISTICS:
 //  Obliquity to orbit, deg  = 23.45           Sidereal period  = 1.0000174  yrs
 //  Orbit velocity, km s^-1  = 29.7859         Sidereal period  = 365.25636  days
 //  Mean daily motion, n     = 0.9856474 deg/d Escape velocity  = 11.186 km s^-2
 //  Hill's sphere radius     = 234.9           Magnetic moment  = 0.61 gauss Rp^3
 // *******************************************************************************
-//  
-//  
+//
+//
 // *******************************************************************************
-// Ephemeris / WWW_USER Fri Apr 22 17:16:09 2011  Pasadena, USA     / Horizons    
+// Ephemeris / WWW_USER Fri Apr 22 17:16:09 2011  Pasadena, USA     / Horizons
 // *******************************************************************************
 // Target body name: Earth (399)                     {source: DE405}
 // Center body name: Solar System Barycenter (0)     {source: DE405}
 // Center-site name: BODY CENTER
 // *******************************************************************************
-// Start time      : A.D. 2010-Jan-01 00:00:00.0000 CT 
-// Stop  time      : A.D. 2010-Dec-31 00:00:00.0000 CT 
+// Start time      : A.D. 2010-Jan-01 00:00:00.0000 CT
+// Stop  time      : A.D. 2010-Dec-31 00:00:00.0000 CT
 // Step-size       : 1440 minutes
 // *******************************************************************************
 // Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
 // Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
-// Center radii    : (undefined)                                                  
-// Output units    : AU-D                                                         
+// Center radii    : (undefined)
+// Output units    : AU-D
 // Output format   : 03
-// Reference frame : ICRF/J2000.0                                                 
+// Reference frame : ICRF/J2000.0
 // Output type     : GEOMETRIC cartesian states
-// Coordinate systm: Ecliptic and Mean Equinox of Reference Epoch                 
+// Coordinate systm: Ecliptic and Mean Equinox of Reference Epoch
 // *******************************************************************************
 // JDCT ,   , X, Y, Z, VX, VY, VZ, LT, RG, RR,
 // *******************************************************************************
 // Coordinate system description:
-// 
+//
 //   Ecliptic and Mean Equinox of Reference Epoch
-// 
+//
 //     Reference epoch: J2000.0
 //     xy-plane: plane of the Earth's orbit at the reference epoch
 //     x-axis  : out along ascending node of instantaneous plane of the Earth's
 //               orbit and the Earth's mean equator at the reference epoch
 //     z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
 //               of Earth's north pole at the reference epoch.
-// 
+//
 // Symbol meaning [1 AU=149597870.691 km, 1 day=86400.0 s]:
-// 
+//
 //     JDCT     Epoch Julian Date, Coordinate Time
-//       X      x-component of position vector (AU)                               
-//       Y      y-component of position vector (AU)                               
-//       Z      z-component of position vector (AU)                               
-//       VX     x-component of velocity vector (AU/day)                           
-//       VY     y-component of velocity vector (AU/day)                           
-//       VZ     z-component of velocity vector (AU/day)                           
-//       LT     One-way down-leg Newtonian light-time (day)                       
-//       RG     Range; distance from coordinate center (AU)                       
-//       RR     Range-rate; radial velocity wrt coord. center (AU/day)            
-// 
+//       X      x-component of position vector (AU)
+//       Y      y-component of position vector (AU)
+//       Z      z-component of position vector (AU)
+//       VX     x-component of velocity vector (AU/day)
+//       VY     y-component of velocity vector (AU/day)
+//       VZ     z-component of velocity vector (AU/day)
+//       LT     One-way down-leg Newtonian light-time (day)
+//       RG     Range; distance from coordinate center (AU)
+//       RR     Range-rate; radial velocity wrt coord. center (AU/day)
+//
 // Geometric states/elements have no aberration corrections applied.
-// 
+//
 //  Computations by ...
 //      Solar System Dynamics Group, Horizons On-Line Ephemeris System
 //      4800 Oak Grove Drive, Jet Propulsion Laboratory
@@ -537,9 +537,9 @@ var earth_ephemerides_solar_constant_by_day_number = function(day_num) {
 
 var earth_ephemerides_location_by_day_number = function(day_num) {
     var empherides_datum = earth_ephemerides_jpl_2010[day_num];
-    return [ 
-        empherides_datum.x * au2km / scale_factor, 
-        empherides_datum.y * au2km / scale_factor, 
+    return [
+        empherides_datum.x * au2km / scale_factor,
+        empherides_datum.y * au2km / scale_factor,
         empherides_datum.z * au2km / scale_factor
     ]
 };
@@ -576,7 +576,7 @@ var sunlight_data = [
     0.335,  931.9,  0,      0.075,  0,
     0.340,  900.6,  0,      0.04,   0,
     0.345,  911.3,  0,      0.019,  0,
-    
+
     0.350,  975.5,  0,      0.007,  0,
     0.360,  975.9,  0,      0,      0,
     0.370,  1119.9, 0,      0,      0,
@@ -587,7 +587,7 @@ var sunlight_data = [
     0.420,  1740.4, 0,      0,      0,
     0.430,  1587.2, 0,      0,      0,
     0.440,  1837,   0,      0,      0,
-    
+
     0.450,  2005,   0,      0.003,  0,
     0.460,  2043,   0,      0.006,  0,
     0.470,  1987,   0,      0.009,  0,
@@ -598,7 +598,7 @@ var sunlight_data = [
     0.520,  1831,   0,      0.048,  0,
     0.530,  1891,   0,      0.063,  0,
     0.540,  1898,   0,      0.075,  0,
-    
+
     0.550,  1892,   0,      0.085,  0,
     0.570,  1840,   0,      0.12,   0,
     0.593,  1768,   0.075,  0.119,  0,
@@ -609,7 +609,7 @@ var sunlight_data = [
     0.690,  1420,   0.016,  0.028,  0.15,
     0.710,  1399,   0.0125, 0.018,  0,
     0.718,  1374,   1.8,    0.015,  0,
-    
+
     0.724,  1373,   2.5,    0.012,  0,
     0.740,  1298,   0.061,  0.01,   0,
     0.753,  1269,   0.0008, 0.008,  0,
@@ -620,7 +620,7 @@ var sunlight_data = [
     0.800,  1148,   0.036,  0,      0,
     0.816,  1091,   1.6,    0,      0,
     0.824,  1062,   2.5,    0,      0,
-    
+
     0.832,  1038,   0.5,    0,      0,
     0.840,  1022,   0.155,  0,      0,
     0.860,  998.7,  0.00001,0,      0,
@@ -631,7 +631,7 @@ var sunlight_data = [
     0.930,  830.3,  27,     0,      0,
     0.937,  814,    55,     0,      0,
     0.948,  786.9,  45,     0,      0,
-    
+
     0.965,  768.3,  4,      0,      0,
     0.980,  767,    1.48,   0,      0,
     0.994,  757.6,  0.1,    0,      0,
@@ -642,7 +642,7 @@ var sunlight_data = [
     1.130,  570.2,  70,     0,      0,
     1.145,  564.1,  75,     0,      0,
     1.161,  544.2,  10,     0,      0,
-    
+
     1.170,  533.4,  5,      0,      0,
     1.200,  501.6,  2,      0,      0,
     1.240,  477.5,  0.002,  0,      0.05,
@@ -653,7 +653,7 @@ var sunlight_data = [
     1.395,  358.9,  1000,   0,      0.00001,
     1.443,  327.5,  185,    0,      0.05,
     1.463,  317.5,  80,     0,      0.011,
-    
+
     1.477,  307.3,  80,     0,      0.005,
     1.497,  300.4,  12,     0,      0.0006,
     1.520,  292.8,  0.16,   0,      0,
@@ -664,7 +664,7 @@ var sunlight_data = [
     1.610,  244,    0.0001, 0,      0.13,
     1.630,  243.5,  0.001,  0,      0.001,
     1.646,  234.8,  0.01,   0,      0.0014,
-    
+
     1.678,  220.5,  0.036,  0,      0.0001,
     1.740,  190.8,  1.1,    0,      0.00001,
     1.800,  171.1,  130,    0,      0.00001,
@@ -675,7 +675,7 @@ var sunlight_data = [
     2.005,  113,    2.9,    0,      21,
     2.035,  108.5,  1,      0,      0.13,
     2.065,  97.5,   0.4,    0,      1,
-    
+
     2.100,  92.4,   0.22,   0,      0.08,
     2.148,  82.4,   0.25,   0,      0.001,
     2.198,  74.6,   0.33,   0,      0.00038,
@@ -686,7 +686,7 @@ var sunlight_data = [
     2.600,  38.6,   15000,  0,      0.00066,
     2.700,  36.6,   22000,  0,      100,
     2.800,  32,     8000,   0,      150,
-    
+
     2.900,  28.1,   650,    0,      0.13,
     3.000,  24.8,   240,    0,      0.0095,
     3.100,  22.1,   230,    0,      0.001,
@@ -697,7 +697,7 @@ var sunlight_data = [
     3.600,  12.7,   3.1,    0,      0.01,
     3.700,  11.5,   2.5,    0,      0.00195,
     3.800,  10.4,   1.4,    0,      0.004,
-    
+
     3.900,  9.5,    0.17,   0,      0.29,
     4.000,  8.6,    0.0045, 0,      0.025
 ]
@@ -720,12 +720,12 @@ function  ozoneTransmission(light, zenith_angle_rad, total_column_ozone) {
 };
 
 function  uniformMixedGasesTransmission(light, pressure_corrected_air_mass) {
-    return Math.exp( -1.41 * light.uniform_gas_absorption * pressure_corrected_air_mass / 
+    return Math.exp( -1.41 * light.uniform_gas_absorption * pressure_corrected_air_mass /
         Math.pow((1 + 118.93 * light.uniform_gas_absorption * pressure_corrected_air_mass), 0.45))
 };
 
 function  waterVaporTransmission(light, precipitable_water, airmass) {
-    return Math.exp( -0.2385 * light.water_absorption * precipitable_water * airmass / 
+    return Math.exp( -0.2385 * light.water_absorption * precipitable_water * airmass /
         Math.pow(1 + 20.07 * light.water_absorption * precipitable_water * airmass, 0.45))
 };
 
@@ -741,15 +741,15 @@ function airMass(alt) {
 
 function directInsolation(wave_index, day_number, altitude) {
     var index = wave_index * 5;
-    var light = { 
-        wavelength:                  sunlight_data[index], 
+    var light = {
+        wavelength:                  sunlight_data[index],
         extra_terrestrial_radiation: sunlight_data[index + 1],
         water_absorption:            sunlight_data[index + 2],
-        ozone_absorption:            sunlight_data[index + 3],  
+        ozone_absorption:            sunlight_data[index + 3],
         uniform_gas_absorption:      sunlight_data[index + 4]
     };
 
-    // var orbital_distance_factor = earth_ephemerides_jpl_2010[day_number - 1].rg;    
+    // var orbital_distance_factor = earth_ephemerides_jpl_2010[day_number - 1].rg;
     var rad_vec_correction = radVecCorrection(day_number);
 
     var zenith_angle_rad = (90 - altitude) * deg2rad;
@@ -759,14 +759,14 @@ function directInsolation(wave_index, day_number, altitude) {
     var aerosol_optical_depth = 0.27
     var total_column_ozone = 0.34;
     var alpha = 1.14
-    
+
     var rayleigh_transmission = rayleighTransmission(light, airmass);
     var ozone_transmission = ozoneTransmission(light, zenith_angle_rad, total_column_ozone);
     var uniform_mixed_gases_transmission = uniformMixedGasesTransmission(light, airmass);
     var water_vapor_transmission = waterVaporTransmission(light, precipitable_water, airmass);
     var aerosol_transmission = aerosolTransmission(light, aerosol_optical_depth, alpha, airmass);
-    var direct = light.extra_terrestrial_radiation * rad_vec_correction * 
-        rayleigh_transmission * ozone_transmission * uniform_mixed_gases_transmission * 
+    var direct = light.extra_terrestrial_radiation * rad_vec_correction *
+        rayleigh_transmission * ozone_transmission * uniform_mixed_gases_transmission *
         water_vapor_transmission * aerosol_transmission;
     return [light.wavelength, direct];
 }
