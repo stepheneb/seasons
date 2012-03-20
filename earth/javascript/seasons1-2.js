@@ -1189,29 +1189,29 @@ function addExperimentData() {
     table_data.textContent = city_latitude_temperature_prediction.value;
     table_row.appendChild(table_data);
 
-    table_data = document.createElement('td');
-    var select, option;
-    select = document.createElement('select');
-    select.name = 'season_' + city_element_id;
-    select.id = 'season_' + city_element_id;
-
-    option = document.createElement('option');
-    option.disabled = true;
-    option.textContent = "choose...";
-    select.appendChild(option);
-
-    for (i = 0; i < seasons.length; i++) {
-        option = document.createElement('option');
-        option.value = seasons[i];
-        option.textContent = seasons[i];
-        select.appendChild(option);
-    };
-    option = document.createElement('option');
-    option.value = "I'm not sure";
-    option.textContent = "I'm not sure";
-    select.appendChild(option);
-    table_data.appendChild(select);
-    table_row.appendChild(table_data);
+    // table_data = document.createElement('td');
+    // var select, option;
+    // select = document.createElement('select');
+    // select.name = 'season_' + city_element_id;
+    // select.id = 'season_' + city_element_id;
+    //
+    // option = document.createElement('option');
+    // option.disabled = true;
+    // option.textContent = "choose...";
+    // select.appendChild(option);
+    //
+    // for (i = 0; i < seasons.length; i++) {
+    //     option = document.createElement('option');
+    //     option.value = seasons[i];
+    //     option.textContent = seasons[i];
+    //     select.appendChild(option);
+    // };
+    // option = document.createElement('option');
+    // option.value = "I'm not sure";
+    // option.textContent = "I'm not sure";
+    // select.appendChild(option);
+    // table_data.appendChild(select);
+    // table_row.appendChild(table_data);
 
     // <select id="selected-city-month" name="selected-city-month">
     //   <option disabled selected>date ...</option>
