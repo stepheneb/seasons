@@ -33,7 +33,9 @@ var cities = [
             elev: 133
         },
         average_temperatures: [-24, -19.5, -13, -2, 9, 15, 16, 12.5, 7, -4, -16, -23],
-        source: "http://www.climatetemp.info/usa/fairbanks-alaska.html"
+        source: "http://www.climatetemp.info/usa/fairbanks-alaska.html",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -52,7 +54,9 @@ var cities = [
             elev: 19
         },
         average_temperatures: [-10.5, -7.5, -5, 2, 8, 12, 15, 13.5, 9, 2, -6, -10.5],
-        source: "http://www.climatetemp.info/usa/anchorage-alaska.html"
+        source: "http://www.climatetemp.info/usa/anchorage-alaska.html",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -71,7 +75,9 @@ var cities = [
             elev: 34
         },
         average_temperatures: [2.1, 4.0, 4.9, 9.1, 12.7, 17.4, 19.6, 18.1, 15.7, 10.0, 7.1, 2.1],
-        source: "http://climate.weatheroffice.gc.ca/climateData/monthlydata_e.html?Prov=XX&timeframe=3&StationID=889&Month=1&Day=1&Year=2009&cmdB1=Go"
+        source: "http://climate.weatheroffice.gc.ca/climateData/monthlydata_e.html?Prov=XX&timeframe=3&StationID=889&Month=1&Day=1&Year=2009&cmdB1=Go",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -90,7 +96,9 @@ var cities = [
             elev: 22
         },
         average_temperatures: [3, 3.5, 7, 14, 19, 24, 26, 25, 21, 15, 9, 3.5],
-        source: "http://www.climatetemp.info/usa/washington-district-of-columbia.html"
+        source: "http://www.climatetemp.info/usa/washington-district-of-columbia.html",
+        hours_of_daylight: [8.88, 10.98, 12.15, 13.43, 14.45, 14.88, 14.48, 13.47, 12.08, 10.97, 9.89, 9.43],
+        hours_of_daylight_source: "http://www.timeanddate.com/worldclock/astronomy.html?n=263"
     },
 
     {
@@ -109,7 +117,9 @@ var cities = [
             elev: 26
         },
         average_temperatures: [9, 10.5, 12, 13, 15, 16, 17, 17, 18, 16, 13, 10],
-        source: "http://www.climatetemp.info/usa/san-francisco-california.html"
+        source: "http://www.climatetemp.info/usa/san-francisco-california.html",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -128,7 +138,9 @@ var cities = [
             elev: 1
         },
         average_temperatures: [19, 20, 22, 24, 26, 27, 28, 28, 28, 26, 23, 20],
-        source: "http://www.climatetemp.info/usa/miami-florida.html"
+        source: "http://www.climatetemp.info/usa/miami-florida.html",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -147,7 +159,9 @@ var cities = [
             elev: 18
         },
         average_temperatures: [26.5, 27, 28, 28, 28, 28, 28, 27, 27, 27, 27, 26.5],
-        source: "http://www.climatetemp.info/singapore/"
+        source: "http://www.climatetemp.info/singapore/",
+        hours_of_daylight: [12.05, 12.07, 12.1, 12.13, 12.17, 12.18, 12.18, 12.13, 12.1, 12.07, 12.05, 12.05],
+        hours_of_daylight_source: "http://www.timeanddate.com/worldclock/astronomy.html?n=236"
     },
 
     {
@@ -166,7 +180,9 @@ var cities = [
             elev: 2811
         },
         average_temperatures: [15, 14.5, 15, 15, 15, 15.5, 15, 15, 15, 15, 15, 15],
-        source: "http://www.climatetemp.info/ecuador/"
+        source: "http://www.climatetemp.info/ecuador/",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -185,7 +201,9 @@ var cities = [
             elev: 184
         },
         average_temperatures: [26, 26.5, 27, 27, 26, 24, 22, 21.5, 21, 22, 23, 24],
-        source: "http://www.climatetemp.info/galapagos-islands/"
+        source: "http://www.climatetemp.info/galapagos-islands/",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -204,7 +222,9 @@ var cities = [
             elev: 13
         },
         average_temperatures: [25.5, 26.5, 26, 25, 22, 22, 21, 22, 23, 24, 25, 26],
-        source: "http://www.climatetemp.info/brazil/rio-de-janeiro.html"
+        source: "http://www.climatetemp.info/brazil/rio-de-janeiro.html",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -223,7 +243,9 @@ var cities = [
             elev: 559
         },
         average_temperatures: [20.5, 20, 17, 14, 9, 7, 6, 7, 10, 13, 15, 18.5],
-        source: "http://www.climatetemp.info/australia/canberra.html"
+        source: "http://www.climatetemp.info/australia/canberra.html",
+        hours_of_daylight: [14.15, 13.18, 12.13, 11.02, 10.15, 9.77, 10.08, 10.93, 12.13, 13.12, 14.1, 14.53],
+        hours_of_daylight_source: "http://www.timeanddate.com/worldclock/astronomy.html?n=57"
     },
 
     {
@@ -242,7 +264,9 @@ var cities = [
             elev: 15
         },
         average_temperatures: [20, 20, 19, 16, 12, 11, 10, 10.5, 13, 14, 17, 18],
-        source: "http://www.climatetemp.info/australia/melbourne.html"
+        source: "http://www.climatetemp.info/australia/melbourne.html",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -261,7 +285,9 @@ var cities = [
             elev: 22
         },
         average_temperatures: [12.5, 11.5, 11, 8, 4, 1, 1, 2.5, 6, 9, 11, 12],
-        source: "http://www.climatetemp.info/argentina/rio-gallegos.html"
+        source: "http://www.climatetemp.info/argentina/rio-gallegos.html",
+        hours_of_daylight: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        hours_of_daylight_source: "na"
     },
 
     {
@@ -280,7 +306,9 @@ var cities = [
             elev: 24
         },
         average_temperatures: [-2.9, -9.5, -18.2, -20.7, -21.7, -23, -25.7, -26.1, -24.6, -18.9, -9.7, -3.4],
-        source: "http://www.coolantarctica.com/Antarctica%20fact%20file/antarctica%20environment/climate_graph/vostok_south_pole_mcmurdo.htm"
+        source: "http://www.coolantarctica.com/Antarctica%20fact%20file/antarctica%20environment/climate_graph/vostok_south_pole_mcmurdo.htm",
+        hours_of_daylight: [24, 24, 12.62, 3.87, 0, 0, 0, 2.32, 12.55, 24, 24, 24],
+        hours_of_daylight_source: "http://www.timeanddate.com/worldclock/astronomy.html?n=1032"
     }
 
 ];
