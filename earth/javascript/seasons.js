@@ -48,7 +48,7 @@ seasons.Scene = function(options) {
     this.debugging          = (options.debugging || false);
 
     // Setting up the scene ...
-    
+
     this.scene              = SceneJS.withNode(options.theScene || "theScene");
     this.camera             = SceneJS.withNode(options.camera || "theCamera");
     this.canvas             = document.getElementById(options.canvas || "theCanvas");
@@ -59,19 +59,19 @@ seasons.Scene = function(options) {
     this.setAspectRatio();
 
     this.look               = SceneJS.withNode(options.look || "lookAt");
-    
+
     this.circleOrbit        = SceneJS.withNode("earthCircleOrbitSelector");
 
     if (options.gridSelector !== false) {
         this.gridSelector       = SceneJS.withNode(options.gridSelector || "orbit-grid-selector");
     };
-        
+
     if (options.earth_tilt !== false) {
         this.earth_tilt  = SceneJS.withNode(options.earth_tilt || "earthRotationalAxisQuaternion");
     };
 
     this.look_at_selection  = (options.look_at_selection || 'orbit');
-    
+
     if (options.latitude_line) {
         this.latitude_line = new LatitudeLine(options.latitude_line)
     };
@@ -150,7 +150,7 @@ seasons.Scene = function(options) {
     this.normalized_earth_eye_top  =   normalized_initial_earth_eye_side;
 
     // Some useful variables
-    
+
     this.month_data = {
         "jan": { index:  0, num:   1, short_name: 'Jan', long_name: 'January' },
         "feb": { index:  1, num:   2, short_name: 'Feb', long_name: 'February' },
@@ -172,10 +172,10 @@ seasons.Scene = function(options) {
 
     // Setting up callbacks for ...
     var self = this;
-    
-    // Selecting a Perspective: top, side 
+
+    // Selecting a Perspective: top, side
     this.choose_view = document.getElementById(options.choose_view || "choose-view");
-    
+
     if (this.choose_view) {
         this.choose_view.onchange = (function() {
             return function() {
@@ -184,7 +184,7 @@ seasons.Scene = function(options) {
         })();
         this.choose_view.onchange();
     }
-    
+
     // Selecting the time of year: jun, sep, dec, mar
     this.choose_month = document.getElementById(options.choose_month || "choose-month");
 
@@ -205,7 +205,7 @@ seasons.Scene = function(options) {
         })();
         this.circle_orbit.onchange();
     };
-    
+
     // Orbital Grid selector ...
     if (this.orbital_grid) {
         this.orbital_grid.onchange = (function() {
@@ -216,7 +216,7 @@ seasons.Scene = function(options) {
         this.orbital_grid.onchange();
     }
 
-    // Selecting an Earth Tilt: yes, no 
+    // Selecting an Earth Tilt: yes, no
     if (this.choose_tilt) {
         this.tilt = getRadioSelection(this.choose_tilt);
         this.choose_tilt.onchange = (function() {
@@ -232,7 +232,7 @@ seasons.Scene = function(options) {
     //
     // Rendering bits ...
     //
-    
+
     this.earthLabel();
     this.earthPointer();
 
@@ -242,7 +242,7 @@ seasons.Scene = function(options) {
     //
     // Mouse interaction bits ...
     //
-    
+
     this.earth_lastX;
     this.earth_lastY;
 
@@ -281,7 +281,7 @@ seasons.Scene = function(options) {
             self.mouseMove(event, this);
         }
     })(), true);
-    
+
 };
 
 seasons.Scene.prototype.toJSON = function() {
@@ -289,7 +289,7 @@ seasons.Scene.prototype.toJSON = function() {
         month: this.month,
         circle_orbit: this.circle_orbit ? this.circle_orbit.checked : false,
         orbital_grid: this.orbital_grid ? this.orbital_grid.checked : this.orbital_grid,
-        tilt: this.choose_tilt ? getRadioSelection(this.choose_tilt) : true, 
+        tilt: this.choose_tilt ? getRadioSelection(this.choose_tilt) : true,
         view_selection: this.view_selection,
         look_at_selection: this.look_at_selection,
         look_at: {
@@ -404,7 +404,7 @@ seasons.Scene.prototype.mouseDown = function(event, element) {
             this.sun_lastX = event.clientX;
             this.sun_lastY = event.clientY;
             break;
-            
+
         case "earth":
             this.earth_lastX = event.clientX;
             this.earth_lastY = event.clientY;
@@ -445,18 +445,18 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
         var look, eye, eye4, neweye;
         var up_downQ, up_downQM, left_rightQ, left_rightQM;
         var f, up_down_axis, angle, new_yaw, new_pitch;
-        
+
         var normalized_eye;
 
         switch(this.look_at_selection) {
             case "orbit":
-                if (!new_yaw) {                                  
+                if (!new_yaw) {
                     new_yaw   = (event.clientX - this.sun_lastX) * -0.2;
                     new_pitch = (event.clientY - this.sun_lastY) * -0.2;
                     this.sun_lastX = event.clientX;
                     this.sun_lastY = event.clientY;
                 };
-                
+
                 // test for NaN
                 if (new_yaw !== new_yaw) new_yaw = 0;
                 if (new_yaw !== new_yaw) new_pitch = 0;
@@ -478,7 +478,7 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
                 left_rightQM = left_rightQ.getMatrix();
 
                 neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
-                console.log("dragging: yaw: " + sprintf("%3.0f", this.sun_yaw) + ", eye: x: " + 
+                console.log("dragging: yaw: " + sprintf("%3.0f", this.sun_yaw) + ", eye: x: " +
                     sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]));
 
                 eye4 = SceneJS._math_dupMat4(neweye);
@@ -488,7 +488,7 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
 
                 neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
 
-                console.log("dragging: pitch: " + sprintf("%3.0f", this.sun_pitch) + ", eye: x: " + 
+                console.log("dragging: pitch: " + sprintf("%3.0f", this.sun_pitch) + ", eye: x: " +
                     sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]) );
 
                 this.look.set("eye",  { x: neweye[0], y: neweye[1], z: neweye[2] } );
@@ -502,16 +502,16 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
                     this.earth_lastX = event.clientX;
                     this.earth_lastY = event.clientY;
                 };
-                
+
                 // test for NaN
                 if (new_yaw !== new_yaw) new_yaw = 0;
                 if (new_yaw !== new_yaw) new_pitch = 0;
-        
+
                 normalized_eye = this.normalized_earth_eye;
-                
+
                 this.earth_yaw   += new_yaw;
                 this.incrementEarthPitch(new_pitch);
-            
+
                 eye4 = [normalized_initial_earth_eye_side.x, normalized_initial_earth_eye_side.y, normalized_initial_earth_eye_side.z, 1];
 
                 left_rightQ = new SceneJS.Quaternion({ x : 0, y : 1, z : 0, angle : this.earth_yaw });
@@ -519,7 +519,7 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
 
                 neweye = SceneJS._math_mulMat4v4(left_rightQM, eye4);
 
-                console.log("dragging: yaw: " + sprintf("%3.0f", this.earth_yaw) + ", eye: x: " + 
+                console.log("dragging: yaw: " + sprintf("%3.0f", this.earth_yaw) + ", eye: x: " +
                     sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]));
 
                 eye4 = SceneJS._math_dupMat4(neweye);
@@ -529,14 +529,14 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
 
                 neweye = SceneJS._math_mulMat4v4(up_downQM, eye4);
 
-                console.log("dragging: pitch: " + sprintf("%3.0f", this.earth_pitch) + ", eye: x: " + 
+                console.log("dragging: pitch: " + sprintf("%3.0f", this.earth_pitch) + ", eye: x: " +
                     sprintf("%3.0f", neweye[0]) + " y: " + sprintf("%3.0f", neweye[1]) + " z: " + sprintf("%3.0f", neweye[2]));
 
                 this.normalized_earth_eye =  { x: neweye[0], y: neweye[1], z: neweye[2] };
                 this.set_normalized_earth_eye(this.normalized_earth_eye);
                 break;
         };
-        
+
         console.log("");
         this.earthLabel();
         // if (this.linked_scene && !linked) {
@@ -596,7 +596,7 @@ seasons.Scene.prototype.earthLabel = function() {
     };
 
     if (this.earth_label) {
-        
+
         var edist = earth_ellipse_distance_from_sun_by_month(this.month);
         var solar_flux = earth_ephemerides_solar_constant_by_month(this.month);
         var labelStr = "";
@@ -660,14 +660,14 @@ seasons.Scene.prototype._perspectiveChange = function(view_selection) {
                 this.look.set("eye",  initial_earth_eye_top );
                 this.look.set("look", { x: earth_x_pos, y : 0.0, z : 0.0 } );
                 this.look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
-            
+
                 this.update_earth_look_at(normalized_initial_earth_eye_top);
                 break;
 
             case "surface" :
             break;
         }
-        
+
         break;
 
         case "side":
@@ -682,14 +682,14 @@ seasons.Scene.prototype._perspectiveChange = function(view_selection) {
                 this.look.set("eye",  initial_earth_eye_side );
                 this.look.set("look", { x: earth_x_pos, y : 0.0, z : 0.0 } );
                 this.look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
-            
+
                 this.update_earth_look_at(normalized_initial_earth_eye_side);
                 break;
 
             case "surface" :
             break;
         }
-        
+
         break;
   }
 
@@ -703,7 +703,7 @@ seasons.Scene.prototype.setEarthSunLine = function() {
     var scale = {};
     var distance2 = earth_ellipse_distance_from_sun_by_month(this.month) / 2;
     // var distance = earth_ephemerides_datum_by_month('jun').rg * au2km * factor;
-    
+
     switch(this.month) {
         case "dec":
         this.earth_sun_line_rotation.set("angle", 1.0030);
@@ -864,14 +864,14 @@ seasons.Activity.prototype.toJSON = function() {
     var json_object;
     if (this.version == "1.1") {
         scenes.scene = this.scenes.scene.toJSON();
-        json_object = { 
+        json_object = {
             version: this.version,
             scenes: scenes,
         };
     } else {
         scenes.scene1 = this.scenes.scene1.toJSON();
         scenes.scene3 = this.scenes.scene3.toJSON();
-        json_object = { 
+        json_object = {
             version: this.version,
             scenes: scenes,
             table: experimentDataToJSON()
