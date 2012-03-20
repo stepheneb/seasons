@@ -9,28 +9,28 @@ SceneJS.createNode({
             type: "texture",
             layers: [ { uri: "images/earth-arrow.png" } ],
             nodes: [
-            
+
                 {
                     type: "node",
-                    
+
                     flags: {
                         transparent: true
                     },
-                    
+
                     nodes: [
-                    
+
                         {
-                    
+
                             type: "material",
                             specular: 0.0,
                             emit: 10,
-                            
+
                             nodes: [
-                                
+
                                 {
                                     type: "translate",
                                     y: sun_radius_km * 22,
-                                    
+
                                     nodes: [
                                         {
                                             type: "quad",
@@ -54,11 +54,11 @@ SceneJS.createNode({
 
 
 SceneJS.createNode({
-    
+
     type: "node",
-    
+
     nodes: [
-    
+
         {
 
             type: "scene",
@@ -70,7 +70,7 @@ SceneJS.createNode({
             nodes: [
 
                 {
-                    type: "lookAt", 
+                    type: "lookAt",
                     id: "lookAt1",
                     eye : initial_earth_eye,
                     look : { x : earth_x_pos, y : 0, z : 0.0 },
@@ -78,7 +78,7 @@ SceneJS.createNode({
 
                     nodes: [
 
-                        {                            
+                        {
                             type: "camera",
                             id: "theCamera1",
                             optics: {
@@ -90,26 +90,26 @@ SceneJS.createNode({
                             },
 
                             nodes: [
-                            
+
                                 {
                                     type: "node",
                                     // lineWidth: 3,
-                                    
+
                                     nodes: [
-                        
+
                                         {
                                             type: "rotate",
                                             angle: 0,
                                             y: 1.0,
-                            
+
                                             nodes: [
-                        
+
                                                 // First simulate the milky-way with a stationary background sphere
                                                 {
-                                                    type: "stationary",    
-                        
+                                                    type: "stationary",
+
                                                     nodes: [
-                        
+
                                                         // Size of sky sphere
                                                         {
                                                             type: "scale",
@@ -117,7 +117,7 @@ SceneJS.createNode({
                                                             y: milky_way_apparent_radius,
                                                             z: milky_way_apparent_radius,
                                                             nodes: [
-                        
+
                                                                 // Starry texture
                                                                 {
                                                                     type: "texture",
@@ -131,7 +131,7 @@ SceneJS.createNode({
                                                                         }
                                                                     ],
                                                                     nodes: [
-                        
+
                                                                         // Material for texture to apply to
                                                                         {
                                                                             type: "material",
@@ -140,16 +140,16 @@ SceneJS.createNode({
                                                                             specular:       0.0,
                                                                             shine:          0.0,
                                                                             emit:           1.0,
-                        
+
                                                                             nodes: [
-                        
+
                                                                                 // Tilt the milky way a little bit
                                                                                 {
                                                                                     type: "rotate",
                                                                                     z: 1,
                                                                                     angle: 45.0,
                                                                                     nodes: [
-                        
+
                                                                                         // Sphere geometry
                                                                                         {
                                                                                             type: "sphere"
@@ -173,7 +173,7 @@ SceneJS.createNode({
                                             type : "instance",
                                             target :"sun"
                                         },
-                                        
+
                                         {
                                             type: "translate",
                                             id: "sun-pointer1",
@@ -225,7 +225,7 @@ SceneJS.createNode({
                                                 }
                                             ]
                                         },
-                                        
+
 
                                         // Integrate our earth elliptical orbit, which is defined in earth-orbit.js
                                         {
@@ -237,7 +237,7 @@ SceneJS.createNode({
                                             type   : "instance",
                                             target : "orbit-grid"
                                         },
-                                
+
                                         // {
                                         //     type   : "instance",
                                         //     target : "earth-circle-orbit-sun-line"
@@ -259,7 +259,7 @@ SceneJS.createNode({
                                                     selection: [0],
 
                                                     nodes: [
-                                                    
+
                                                         {},
 
                                                         {
@@ -291,7 +291,7 @@ SceneJS.createNode({
 
                                                                             nodes: [
 
-                                                                                { 
+                                                                                {
                                                                                     type: "box",
                                                                                 },
                                                                             ]
@@ -379,45 +379,45 @@ SceneJS.createNode({
                                             specular:       0.0,
                                             shine:          2.0,
                                             emit:           4.0,
-                                
+
                                             nodes: [
-                                
+
                                                 {
                                                     type: "translate",
                                                     id: "earth-position1",
                                                     x: earth_x_pos,
                                                     y: 0,
                                                     z: 0,
-                                            
+
                                                     nodes: [
-                                
+
                                                         {
                                                             type: "quaternion",
                                                             id: "earthRotationalAxisQuaternion1",
                                                             x: 0.0, y: 0.0, z: 0.0, angle: 0.0,
-                                
+
                                                             rotations: [ { x : 0, y : 0, z : 1, angle : 23.5 } ],
-                                
+
                                                             nodes: [
-                                
+
                                                                {
                                                                     type: "scale",
                                                                     x: earth_radius_km,
                                                                     y: earth_radius_km,
                                                                     z: earth_radius_km,
-                                
+
                                                                     nodes: [
-                                
+
                                                                         {
                                                                             type: "rotate",
                                                                             id: 'earth-rotation1',
                                                                             angle: 0,
                                                                             y: 1.0,
-                                
-                                                                            nodes: [ 
-                                
+
+                                                                            nodes: [
+
                                                                                 { type: "sphere", id: "esphere1", slices: 45 },
-                                
+
                                                                             ]
                                                                         }
                                                                     ]
@@ -436,18 +436,18 @@ SceneJS.createNode({
                 }
             ]
         },
-    
+
         {
 
             type: "scene",
             id: "theScene3",
             canvasId: "theCanvas3",
             loggingElementId: "theLoggingDiv3",
-    
+
             nodes: [
 
                 {
-                    type: "lookAt", 
+                    type: "lookAt",
                     id: "lookAt3",
                     eye : initial_earth_eye,
                     look : { x : earth_x_pos, y : 0, z : 0.0 },
@@ -467,14 +467,14 @@ SceneJS.createNode({
                             },
 
                             nodes: [
-                            
+
                                 {
                                     type: "node",
                                     // lineWidth: 3,
-                                
+
                                     nodes: [
-                            
-            
+
+
                                         // {
                                         //     type : "instance",
                                         //     target :"sky-sphere"
@@ -484,15 +484,15 @@ SceneJS.createNode({
                                             type: "rotate",
                                             angle: 0,
                                             y: 1.0,
-                            
+
                                             nodes: [
-                        
+
                                                 // First simulate the milky-way with a stationary background sphere
                                                 {
-                                                    type: "stationary",    
-                        
+                                                    type: "stationary",
+
                                                     nodes: [
-                        
+
                                                         // Size of sky sphere
                                                         {
                                                             type: "scale",
@@ -500,7 +500,7 @@ SceneJS.createNode({
                                                             y: milky_way_apparent_radius,
                                                             z: milky_way_apparent_radius,
                                                             nodes: [
-                        
+
                                                                 // Starry texture
                                                                 {
                                                                     type: "texture",
@@ -514,7 +514,7 @@ SceneJS.createNode({
                                                                         }
                                                                     ],
                                                                     nodes: [
-                        
+
                                                                         // Material for texture to apply to
                                                                         {
                                                                             type: "material",
@@ -523,16 +523,16 @@ SceneJS.createNode({
                                                                             specular:       0.0,
                                                                             shine:          0.0,
                                                                             emit:           1.0,
-                        
+
                                                                             nodes: [
-                        
+
                                                                                 // Tilt the milky way a little bit
                                                                                 {
                                                                                     type: "rotate",
                                                                                     z: 1,
                                                                                     angle: 45.0,
                                                                                     nodes: [
-                        
+
                                                                                         // Sphere geometry
                                                                                         {
                                                                                             type: "sphere"
@@ -582,7 +582,7 @@ SceneJS.createNode({
                                                 }
                                             ]
                                         },
-                
+
                                         {
                                             type: "material",
                                             baseColor:      { r: 1.0, g: 0.3, b: 0.1 },
@@ -601,7 +601,7 @@ SceneJS.createNode({
                                                     nodes: [
 
                                                         {},
-                                                        
+
                                                         {
 
                                                             type: "translate", // Example translation
@@ -631,7 +631,7 @@ SceneJS.createNode({
 
                                                                             nodes: [
 
-                                                                                { 
+                                                                                {
                                                                                     type: "box",
                                                                                 },
                                                                             ]
@@ -688,19 +688,19 @@ SceneJS.createNode({
                                             specular:               true,
                                             dir:                    { x: 1.0, y: 0.0, z: 0.75 }
                                         },
-                                
+
                                         {
                                             type: "translate",
                                             x: sun_x_pos,
                                             y: 0,
                                             z: 0,
-                                            nodes: [ 
+                                            nodes: [
                                                 {
                                                     type: "scale",
                                                     x: 1,
                                                     y: 1,
                                                     z: 1,
-                                                    nodes: [ 
+                                                    nodes: [
 
                                                         {
                                                             type: "node",
@@ -711,7 +711,7 @@ SceneJS.createNode({
 
                                                             nodes: [
 
-                                                                { 
+                                                                {
 
                                                                     type: "material",
 
@@ -733,10 +733,10 @@ SceneJS.createNode({
                                                             ]
                                                         }
                                                     ]
-                                                } 
+                                                }
                                             ]
                                         },
-                
+
                                         {
                                             type: "material",
                                             baseColor:      { r: 0.4, g: 0.6, b: 0.4 },
@@ -753,7 +753,7 @@ SceneJS.createNode({
                                                     y: 0,
                                                     z: 0,
 
-                                                    nodes: [ 
+                                                    nodes: [
                                                         {
                                                             type: "scale",
                                                             x: 1,
@@ -767,7 +767,7 @@ SceneJS.createNode({
                                                                     type: "selector",
                                                                     id: "earth-orbit-grid-selector3",
                                                                     selection: [0],
-                                                                    nodes: [ 
+                                                                    nodes: [
 
                                                                         // 0: off
 
@@ -793,7 +793,7 @@ SceneJS.createNode({
                                                                             positions: orbit_grid_orbit_positions,
                                                                             indices : orbit_grid_orbit_indices
 
-                                                                        }                    
+                                                                        }
                                                                     ]
                                                                 }
                                                             ]
@@ -839,7 +839,7 @@ SceneJS.createNode({
                                                                 { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
                                                             ],
                                                             nodes: [ { type : "instance", target : "earth-sphere3"  } ]
-                        
+
                                                         },
 
                                                         // selection [2], September
@@ -865,7 +865,7 @@ SceneJS.createNode({
                                                             ],
                                                             nodes: [ { type : "instance", target : "earth-sphere3"  } ]
 
-                                                        }                                
+                                                        }
                                                     ]
                                                 },
 
@@ -877,7 +877,7 @@ SceneJS.createNode({
                                                     z: 0,
 
                                                     nodes: [
-                                                        
+
                                                         //  Earth grid ...
                                                         {
                                                             type: "material",
@@ -894,7 +894,7 @@ SceneJS.createNode({
                                                                     type: "selector",
                                                                     id: "earth-grid-selector3",
                                                                     selection: [0],
-                                                                    nodes: [ 
+                                                                    nodes: [
 
                                                                         // 0: off
 
@@ -953,7 +953,7 @@ SceneJS.createNode({
                                                                                     angle: 0,
                                                                                     y: 1.0,
 
-                                                                                    nodes: [ 
+                                                                                    nodes: [
 
                                                                                         {
 
@@ -961,12 +961,12 @@ SceneJS.createNode({
                                                                                             type: "texture",
                                                                                             layers: [
 
-                                                                                                { 
+                                                                                                {
                                                                                                    uri:"images/lat-long-grid-invert-units-1440x720-15.png",
                                                                                                    blendMode: "add",
 
                                                                                                 },
-                                                                                                { 
+                                                                                                {
                                                                                                     uri:"images/earth3.jpg",
 
                                                                                                     minFilter: "linear",
@@ -1123,7 +1123,7 @@ var scene3 = new seasons.Scene({
 });
 
 var seasons_activity = new seasons.Activity({
-    version: 1.3, 
+    version: 1.3,
     scenes: { scene1: scene1, scene3: scene3 }
 });
 
@@ -1195,22 +1195,22 @@ function sceneCompletelyLoaded() {
 	}
 }
 
-SceneJS.withNode("theScene3").bind("loading-status", 
+SceneJS.withNode("theScene3").bind("loading-status",
     function(event) {	
         if (zBufferDepth == 0) {
             zBufferDepth = SceneJS.withNode("theScene3").get("ZBufferDepth");
             var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
-            SceneJS._loggingModule.info(mesg);            
+            SceneJS._loggingModule.info(mesg);
         }
         var params = event.params;
-        
+
         if (params.numNodesLoading > 0) {
         } else {
         	if (!completelyLoaded) {
         		sceneCompletelyLoaded();
         		completelyLoaded = true;
         	}
-        }        
+        }
     });
 
 //
@@ -1257,7 +1257,7 @@ for (var i = 0; i < active_cities.length; i++) {
     city = active_cities[i];
     city_location = city.location;
     city_option.value = i;
-    city_option.textContent = city.name + ', ' + city.country + ', ' + 
+    city_option.textContent = city.name + ', ' + city.country + ', ' +
         sprintf("%2.0f", city_location.latitude) + ' degrees ' + city_location.lat_dir;
     selected_city_latitude.appendChild(city_option);
 }
@@ -1354,7 +1354,7 @@ function addExperimentData() {
 
     // FIXME: hard-coded to scene3
     var the_tilt = scene3.tilt;
-    
+
     var the_month = scene1.month;
     var month = month_data[the_month];
 
@@ -1369,14 +1369,14 @@ function addExperimentData() {
     var city_element_id = city.key + '_' + the_month + '_' + the_tilt;;
 
     var ave_temp;
-    
-    // if the City/Month row already exists in the 
+
+    // if the City/Month row already exists in the
     // data table return without adding a new one
     if (document.getElementById(city_element_id)) return false;
-    
+
     table_row = document.createElement('tr');
     table_row.id = city_element_id;
-    
+
     table_row_index++;
     table_data = document.createElement('td');
     table_data.textContent = table_row_index;
@@ -1399,7 +1399,7 @@ function addExperimentData() {
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
-    
+
     ave_temp = calc_ave_temp(city.average_temperatures, month.index, the_tilt);
     if (use_fahrenheit) ave_temp = Math.round(ave_temp * 9 / 5 + 32);
     table_data.textContent = sprintf("%3.1f", ave_temp);
@@ -1435,7 +1435,7 @@ function addExperimentData() {
 
     table_data = document.createElement('td');
     var graph_checkbox = document.createElement('input');
-    graph_checkbox.id = 'graph_' + city_element_id;    
+    graph_checkbox.id = 'graph_' + city_element_id;
     graph_checkbox.type = "checkbox";
     graph_checkbox.checked = true;
     table_data.appendChild(graph_checkbox);
@@ -1444,16 +1444,16 @@ function addExperimentData() {
     var graph_checkbox_callback = function(event) {
         _graph_checkbox_callback(this);
     };
-    
+
     graph_checkbox_callbacks[graph_checkbox.id] = graph_checkbox_callback;
     graph_checkbox.onchange = graph_checkbox_callback;
     _graph_checkbox_callback(graph_checkbox);
 
     city_data_table_body.appendChild(table_row);
-    
+
     // erase previous temperature prediction
     city_latitude_temperature_prediction.value=""
-    
+
     SortableTable.load();
     return false;
 }
@@ -1545,18 +1545,18 @@ function experimentDataFromJSON(exp_table) {
     for (var i = 0; i < table_rows; i++) {
         city_data_table_body.deleteRow(0);
     };
-    
+
     for (var i = 0; i < city_data_to_plot.length; i++) {
         var city_data = city_data_to_plot[i];
         for (var j = 0; j < city_data.data.length; j++) {
             city_data.data[j] = [j, null];
         }
     };
-    
+
     var table_row, table_data;
     for (var i = 0; i < exp_table.rows.length; i++) {
         var row = exp_table.rows[i];
-        
+
         table_row = document.createElement('tr');
         table_row.id = row.id;
 
@@ -1588,7 +1588,7 @@ function experimentDataFromJSON(exp_table) {
         var select, option;
         select = document.createElement('select');
         select.name = 'season_' + row.id;
-        select.id = 'season_' + row.id; 
+        select.id = 'season_' + row.id;
         option = document.createElement('option');
         option.disabled = true;
         option.textContent = "choose...";
@@ -1610,9 +1610,9 @@ function experimentDataFromJSON(exp_table) {
 
         table_data = document.createElement('td');
         var graph_checkbox = document.createElement('input');
-        graph_checkbox.id = 'graph_' + row.id;    
+        graph_checkbox.id = 'graph_' + row.id;
         graph_checkbox.type = "checkbox";
-        
+
         if(row.graph == "on") {
             graph_checkbox.checked = true;
         } else {
@@ -1642,11 +1642,11 @@ function experimentDataFromJSON(exp_table) {
 var use_fahrenheit = true;
 
 if (use_fahrenheit) {
-    city_latitude_temperature_label.textContent = 
+    city_latitude_temperature_label.textContent =
     city_latitude_temperature_label.textContent.replace(/(C|F)$/, 'F')
 } else {
-    city_latitude_temperature_label.textContent = 
-    city_latitude_temperature_label.textContent.replace(/(C|F)$/, 'C')    
+    city_latitude_temperature_label.textContent =
+    city_latitude_temperature_label.textContent.replace(/(C|F)$/, 'C')
 }
 
 var y_axis = { title: 'Temperature deg F', min: -20, max: 90 };
@@ -1661,12 +1661,12 @@ if (!use_fahrenheit) {
 
 
 function plotCityData() {
-    var f = Flotr.draw($('theCanvas4'), city_data_to_plot, 
+    var f = Flotr.draw($('theCanvas4'), city_data_to_plot,
       {
-        xaxis:{ 
-          labelsAngle: 60, 
+        xaxis:{
+          labelsAngle: 60,
           ticks: city_x_axis_tics,
-          title: 'Month', 
+          title: 'Month',
           noTics: city_x_axis_tics.length,
           min: 0, max: city_x_axis_tics.length - 1,
         },
@@ -1683,7 +1683,7 @@ function plotCityData() {
           position: 'nw',
           sensibility: 1, // => The smaller this value, the more precise you've to point
           trackDecimals: 1,
-          trackFormatter: function(obj) { 
+          trackFormatter: function(obj) {
             return obj.series.label + ': ' + month_data[month_names[Number(obj.x) + 1]].short_name +  ', ' + obj.y + ' ' + graph_degree_string;
           }
         },
@@ -1717,12 +1717,12 @@ function generateCityColorKeys() {
         color_patch.className = "colorKeyPatch";
         color_patch.style.backgroundColor = city.color;
         color_key_item.appendChild(color_patch);
-        
+
         // add the city name
         var city_name = document.createElement('span');
         city_name.textContent = city.name;
         color_key_item.appendChild(city_name);
-        
+
         // add the new list item to the list
         color_key_list.appendChild(color_key_item);
     }
@@ -1745,12 +1745,12 @@ function generateCityColorKeys() {
         color_patch.className = "colorKeyPatch";
         color_patch.style.backgroundColor = city.no_tilt_color;
         color_key_item.appendChild(color_patch);
-        
+
         // add the city name
         var city_name = document.createElement('span');
         city_name.textContent = city.name + ' (no-tilt)';
         color_key_item.appendChild(city_name);
-        
+
         // add the new list item to the list
         color_key_list.appendChild(color_key_item);
     }
@@ -1764,17 +1764,17 @@ var dark_green = '#355506';
 function plotSolarRadiationAndEarthDistanceGraph() {
     var d1 = [];
     var d2 = [];
-    
+
     for(var i = 0; i < 12; i++) {
         d1.push([i + 1, earth_ephemerides_solar_constant_by_month(monthNamesShort[i])]);
-        d2.push([i + 1, 
+        d2.push([i + 1,
             earth_ephemerides_distance_from_sun_by_month(monthNamesShort[i]) / 1000000 / factor]);
     }
 
     var f = Flotr.draw(
-        $('theCanvas4'),[ 
-        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}}, 
-        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}}, 
+        $('theCanvas4'),[
+        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}},
+        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}},
 
         ],{
             title: "Earth's Solar Radiation and Distance from the Sun",
@@ -1782,9 +1782,9 @@ function plotSolarRadiationAndEarthDistanceGraph() {
             xaxis:{
                 ticks: [1, 3, 6, 9, 12],
                 // tickFormatter: function(n){ return '('+n+')'; }, // => displays tick values between brackets.
-                tickFormatter: function(n) { 
+                tickFormatter: function(n) {
                     var ticlabel = monthNamesShort[Number(n - 1)];
-                    return ticlabel 
+                    return ticlabel
                 }, // => displays tick values between brackets.
                 min: 1,
                 max: 12,
@@ -1798,10 +1798,10 @@ function plotSolarRadiationAndEarthDistanceGraph() {
                 title: 'Solar Radiation (W/m2)'
             },
             y2axis: {
-                color: dark_green, 
+                color: dark_green,
                 ticks: [140, 145, 150, 155, 160],
                 min: 140,
-                max: 160, 
+                max: 160,
                 title: 'Distance from Sun (Million km)'
             },
 			grid:{
@@ -1813,7 +1813,7 @@ function plotSolarRadiationAndEarthDistanceGraph() {
             legend: {
                 position: 'nw'
             },
-            
+
             mouse:{
 				track: true,
 				lineColor: 'purple',
@@ -1836,26 +1836,26 @@ function plotSolarRadiationAndEarthDistanceGraph() {
 function plotSolarRadiationGraph() {
     var d1 = [];
     var d2 = [[0,0]];
-    
+
     for(var i = 0; i < 12; i++) {
         d1.push([i + 1, earth_ephemerides_solar_constant_by_month(monthNamesShort[i])]);
-        // d2.push([i + 1, 
+        // d2.push([i + 1,
         //     earth_ephemerides_distance_from_sun_by_month(monthNamesShort[i]) / 1000000 / factor]);
     }
 
     var f = Flotr.draw(
-        $('theCanvas4'),[ 
-        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}}, 
-        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}}, 
+        $('theCanvas4'),[
+        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}},
+        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}},
 
         ],{
             title: "Earth's Solar Radiation",
             subtitle: "Solar Radiation Measured outside the atmosphere.",
             xaxis:{
                 ticks: [1, 3, 6, 9, 12],
-                tickFormatter: function(n) { 
+                tickFormatter: function(n) {
                     var ticlabel = monthNamesShort[Number(n - 1)];
-                    return ticlabel 
+                    return ticlabel
                 },
                 min: 1,
                 max: 12,
@@ -1869,10 +1869,10 @@ function plotSolarRadiationGraph() {
                 title: 'Solar Radiation (W/m2)'
             },
             y2axis: {
-                color: dark_green, 
+                color: dark_green,
                 ticks: [140, 145, 150, 155, 160],
                 min: 140,
-                max: 160, 
+                max: 160,
                 title: 'Distance from Sun (Million km)'
             },
 			grid:{
@@ -1884,7 +1884,7 @@ function plotSolarRadiationGraph() {
             legend: {
                 position: 'nw'
             },
-            
+
             mouse:{
 				track: true,
 				lineColor: 'purple',
@@ -1892,7 +1892,7 @@ function plotSolarRadiationGraph() {
 				position: 'nw',
 				sensibility: 1, // => The smaller this value, the more precise you've to point
 				trackDecimals: 1,
-                trackFormatter: function(obj) { 
+                trackFormatter: function(obj) {
                     var monthName = monthNamesShort[Number(obj.x - 1)];
                     monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
                     return  monthName + ', ' + obj.y + ' ' +obj.series.label;;
@@ -1907,26 +1907,26 @@ function plotSolarRadiationGraph() {
 function plotEarthDistanceGraph() {
     var d1 = [[0,0]];
     var d2 = [];
-    
+
     for(var i = 0; i < 12; i++) {
         // d1.push([i + 1, earth_ephemerides_solar_constant_by_month(monthNamesShort[i])]);
-        d2.push([i + 1, 
+        d2.push([i + 1,
             earth_ephemerides_distance_from_sun_by_month(monthNamesShort[i]) / 1000000 / factor]);
     }
 
     var f = Flotr.draw(
-        $('theCanvas4'),[ 
-        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}}, 
-        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}}, 
+        $('theCanvas4'),[
+        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}},
+        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}},
 
         ],{
             title: "Earth's distance from the Sun",
             subtitle: "Measured in Millions of kms",
             xaxis:{
                 ticks: [1, 3, 6, 9, 12],
-                tickFormatter: function(n) { 
+                tickFormatter: function(n) {
                     var ticlabel = monthNamesShort[Number(n - 1)];
-                    return ticlabel 
+                    return ticlabel
                 },
                 min: 1,
                 max: 12,
@@ -1940,10 +1940,10 @@ function plotEarthDistanceGraph() {
                 title: 'Solar Radiation (W/m2)'
             },
             y2axis: {
-                color: dark_green, 
+                color: dark_green,
                 ticks: [140, 145, 150, 155, 160],
                 min: 140,
-                max: 160, 
+                max: 160,
                 title: 'Distance from Sun (Million km)'
             },
 			grid:{
@@ -1955,7 +1955,7 @@ function plotEarthDistanceGraph() {
             legend: {
                 position: 'nw'
             },
-            
+
             mouse:{
 				track: true,
 				lineColor: 'purple',
@@ -1963,7 +1963,7 @@ function plotEarthDistanceGraph() {
 				position: 'nw',
 				sensibility: 1, // => The smaller this value, the more precise you've to point
 				trackDecimals: 1,
-                trackFormatter: function(obj) { 
+                trackFormatter: function(obj) {
                     var monthName = monthNamesShort[Number(obj.x - 1)];
                     monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
                     return  monthName + ', ' + obj.y + ' ' +obj.series.label;;
@@ -1981,9 +1981,9 @@ function plotNothingGraph() {
     var d2 = [[0,0]];
 
     var f = Flotr.draw(
-        $('theCanvas4'),[ 
-        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}}, 
-        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}}, 
+        $('theCanvas4'),[
+        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}},
+        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}},
 
         ],{
             title: "Earth's Solar Radiation and Distance from the Sun",
@@ -1991,9 +1991,9 @@ function plotNothingGraph() {
             xaxis:{
                 ticks: [1, 3, 6, 9, 12],
                 // tickFormatter: function(n){ return '('+n+')'; }, // => displays tick values between brackets.
-                tickFormatter: function(n) { 
+                tickFormatter: function(n) {
                     var ticlabel = monthNamesShort[Number(n - 1)];
-                    return ticlabel 
+                    return ticlabel
                 }, // => displays tick values between brackets.
                 min: 1,
                 max: 12,
@@ -2007,10 +2007,10 @@ function plotNothingGraph() {
                 title: 'Solar Radiation (W/m2)'
             },
             y2axis: {
-                color: dark_green, 
+                color: dark_green,
                 ticks: [140, 145, 150, 155, 160],
                 min: 140,
-                max: 160, 
+                max: 160,
                 title: 'Distance from Sun (Million km)'
             },
 			grid:{
@@ -2022,7 +2022,7 @@ function plotNothingGraph() {
             legend: {
                 position: 'nw'
             },
-            
+
             mouse:{
 				track: true,
 				lineColor: 'purple',
@@ -2030,7 +2030,7 @@ function plotNothingGraph() {
 				position: 'nw',
 				sensibility: 1, // => The smaller this value, the more precise you've to point
 				trackDecimals: 0,
-                trackFormatter: function(obj) { 
+                trackFormatter: function(obj) {
                     var monthName = monthNamesShort[Number(obj.x - 1)];
                     monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
                     return  monthName + ', ' + obj.y + ' ' +obj.series.label;;
