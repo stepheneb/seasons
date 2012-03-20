@@ -1363,8 +1363,14 @@ for (var d = 0; d < day_numbers.length; d++) {
 //
 // render_datatable(city_data, column_titles, formatters);
 
-function calcHoursOfDaylight(city, month) {
-  return city.hours_of_daylight[month.index]
+function calcHoursOfDaylight(city, month, tilt) {
+  if (tilt === "no") {
+    var mar = city.hours_of_daylight[2],
+        sep = city.hours_of_daylight[8];
+    return (mar+sep)/2;
+  } else {
+    return city.hours_of_daylight[month.index]
+  }
 }
 
 //
@@ -1554,7 +1560,7 @@ function addExperimentData() {
     table_row.appendChild(table_data);
 
     table_data = document.createElement('td');
-    hours_of_daylight = calcHoursOfDaylight(city, month);
+    hours_of_daylight = calcHoursOfDaylight(city, month, the_tilt);
     table_data.textContent = sprintf("%2.1f", hours_of_daylight);
     table_row.appendChild(table_data);
 
@@ -1630,7 +1636,7 @@ function _graph_checkbox_callback(element) {
     var city = active_cities[city_index];
     var city_location = city.location;
     var month = month_data[graph_id_parts[5]];
-    var hours_of_daylight = calcHoursOfDaylight(city, month);
+    var hours_of_daylight = calcHoursOfDaylight(city, month, tilt);
     var shifted_index = month.index - 1;
     if (element.checked) {
         city_data.data[shifted_index] = [shifted_index, hours_of_daylight]
