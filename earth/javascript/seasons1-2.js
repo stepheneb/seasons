@@ -1091,6 +1091,7 @@ for (var i = 0; i < active_cities.length; i++) {
 var city_latitude_temperature = document.getElementById("city-latitude-temperature");
 var city_latitude_temperature_label = document.getElementById("city-latitude-temperature-label");
 var city_latitude_temperature_prediction = document.getElementById("city-latitude-temperature-prediction");
+var city_latitude_button_results = document.getElementById("city-latitude-button-results");
 
 var selected_city_latitude = document.getElementById("selected-city-latitude");
 
@@ -1099,7 +1100,7 @@ function updateLatitudeLineAndCity() {
     var city = active_cities[city_index];
     var city_location = city.location;
     if (LITE_VERSION) {
-      var results = document.getElementById("temperature-results");
+      var results = document.getElementById("button-results");
       results.textContent = '';
     }
     scene3.latitude_line.setLatitude(city_location.signed_latitude);
@@ -1282,7 +1283,7 @@ function justUpdateResults() {
 
   var the_month = scene1.month;
   var month = month_data[the_month];
-  var results = document.getElementById("temperature-results")
+  var results = document.getElementById("button-results")
   var ave_temp = city.average_temperatures[month.index];
   if (use_fahrenheit) ave_temp = ave_temp * 9 / 5 + 32;
   results.textContent = sprintf("%3.1f", ave_temp);
@@ -1290,7 +1291,7 @@ function justUpdateResults() {
 }
 
 if (LITE_VERSION) {
-  city_latitude_temperature.onsubmit = justUpdateResults;
+  city_latitude_button_results.onsubmit = justUpdateResults;
 } else {
   city_latitude_temperature.onsubmit = addExperimentData;
 }

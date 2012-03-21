@@ -100,10 +100,9 @@
                   </form>
                 </p>
                 <p>
-                  <form id="city-latitude-temperature">
-                    <input type="submit" value="Show Average Temperature" />
-                    <span id="temperature-results"></span>
-                    <label id="city-latitude-temperature-label" for="city-latitude-temperature-prediction">&deg;F</label>
+                  <form id="city-latitude-button-results">
+                    <input type="submit" value="Show Hours of Daylight" />
+                    <span id="button-results"></span>
                   </form>
                 </p>
               </div>
@@ -138,7 +137,7 @@
     } else {
       var libraries = [src];
     }
-    var script = document.createElement("script") 
+    var script = document.createElement("script")
     script.type = "text/javascript";
     // IE
     script.onreadystatechange = function () {
@@ -149,7 +148,7 @@
           myRequire(libraries)
         }
         if (callback) {
-          callback();            
+          callback();
         }
       }
     }
@@ -160,13 +159,13 @@
         myRequire(libraries)
       }
       if (callback) {
-        callback();            
+        callback();
       }
     }
     script.src = libraries[0];
     document.getElementsByTagName("head")[0].appendChild(script);
   };
-  
+
   window.onload=function() {
     LITE_VERSION = true;
     var webGLEnabled = Modernizr.webgl;
@@ -185,7 +184,7 @@
         "javascript/cities.js",
         "javascript/latitude-line.js",
         "javascript/earth-surface-location-indicator.js",
-        "javascript/seasons1-3.js"
+        "javascript/seasons1-4.js"
       ]);
     } else {
       var content = document.getElementById('content');

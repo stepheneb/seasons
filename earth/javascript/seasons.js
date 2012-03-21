@@ -336,7 +336,7 @@ seasons.Scene.prototype._updateTilt = function(tilt) {
     this.tilt = tilt;
     var tilt_str;
     if (LITE_VERSION) {
-      var results = document.getElementById("temperature-results");
+      var results = document.getElementById("button-results");
       results.textContent = '';
     }
     switch (tilt) {
@@ -802,7 +802,7 @@ seasons.Scene.prototype._timeOfYearChange = function(month) {
     this.earthLabel();
     this.earthPointer();
     if (LITE_VERSION) {
-      var results = document.getElementById("temperature-results");
+      var results = document.getElementById("button-results");
       results.textContent = '';
     }
     if (this.linked_scene) {
