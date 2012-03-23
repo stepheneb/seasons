@@ -1365,9 +1365,7 @@ for (var d = 0; d < day_numbers.length; d++) {
 
 function calcHoursOfDaylight(city, month, tilt) {
   if (tilt === "no") {
-    var mar = city.hours_of_daylight[2],
-        sep = city.hours_of_daylight[8];
-    return (mar+sep)/2;
+    return 12;
   } else {
     return city.hours_of_daylight[month.index]
   }
