@@ -16,9 +16,9 @@ var surface_view = document.getElementById("surface-view") || { checked: false, 
 var debug_view   = document.getElementById("debug-view") || { checked: false, onchange: null };
 
 
-var solar_altitude_graph = document.getElementById("solar-altitude-graph") || 
+var solar_altitude_graph = document.getElementById("solar-altitude-graph") ||
     { checked: false, onchange: null, style: { display: null } };
-var solar_radiation_latitude_graph = document.getElementById("solar-radiation-latitude-graph") || 
+var solar_radiation_latitude_graph = document.getElementById("solar-radiation-latitude-graph") ||
     { checked: false, onchange: null, style: { display: null } };
 var solar_radiation_longitude_graph = document.getElementById("solar-radiation-longitude-graph") ||
     { checked: false, onchange: null, style: { display: null } };
@@ -283,7 +283,7 @@ var earth_rose_scale = earth.radius * 1.5;
 var earth_rose_grid_positions = rose_grid(earth_rose_scale, 24);
 var earth_rose_grid_indices = [];
 var earth_rose_grid_points = earth_rose_grid_positions.length / 3;
-for (var i = 1; i < earth_rose_grid_points; i += 2) { 
+for (var i = 1; i < earth_rose_grid_points; i += 2) {
     earth_rose_grid_indices.push(i, i+1);
 };
 
@@ -291,7 +291,7 @@ var latitude_rose_scale = earth.radius * 1.25;
 var latitude_rose_grid_positions = rose_grid(latitude_rose_scale, 24);
 var latitude_rose_grid_indices = [];
 var latitude_rose_grid_points = latitude_rose_grid_positions.length / 3;
-for (var i = 1; i < latitude_rose_grid_points; i += 2) { 
+for (var i = 1; i < latitude_rose_grid_points; i += 2) {
     latitude_rose_grid_indices.push(0, i, 0, i+1);
 };
 
@@ -323,7 +323,7 @@ var sun_rays = function() {
 var sun_ray_positions = sun_rays();
 var sun_ray_indices = [];
 var sun_ray_points = sun_ray_positions.length / 3 - 1;
-for (var i = 0; i < sun_ray_points; i++) { 
+for (var i = 0; i < sun_ray_points; i++) {
     sun_ray_indices.push(0, i);
 };
 
@@ -341,7 +341,7 @@ function update_initial_eye(d) {
     initial_eye_quat = quat4.axisAngleDegreesCreate(1, 0, 0, 0);
     initial_eye_mat4 = quat4.toMat4(initial_eye_quat);
     mat4.multiplyVec3(initial_eye_mat4, [0, 0,  distance], initial_eye_vec3);
-    initial_eye =      { 
+    initial_eye =      {
         x: initial_eye_vec3[0] + earth.pos.x,
         y: initial_eye_vec3[1] + earth.pos.y,
         z: initial_eye_vec3[2] + earth.pos.z
@@ -359,7 +359,7 @@ SceneJS.createNode({
             layers: [ { uri: "images/x3.jpg", blendMode: "add" } ],
             nodes: [
                 { type: "node", flags: {  transparent: true },
-                    nodes: [ 
+                    nodes: [
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
                                 { type: "quad", xSize: gnomon_label_size, ySize: gnomon_label_size }
@@ -381,7 +381,7 @@ SceneJS.createNode({
             layers: [ { uri: "images/y3.jpg", blendMode: "add" } ],
             nodes: [
                 { type: "node", flags: {  transparent: true },
-                    nodes: [ 
+                    nodes: [
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
                                 { type: "quad", xSize: gnomon_label_size, ySize: gnomon_label_size }
@@ -403,7 +403,7 @@ SceneJS.createNode({
             layers: [ { uri: "images/z3.jpg", blendMode: "add" } ],
             nodes: [
                 { type: "node", flags: {  transparent: true },
-                    nodes: [ 
+                    nodes: [
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
                                 { type: "quad", xSize: gnomon_label_size, ySize: gnomon_label_size }
@@ -425,7 +425,7 @@ SceneJS.createNode({
             layers: [ { uri: "images/east3.jpg", blendMode: "add" } ],
             nodes: [
                 { type: "node", flags: {  transparent: true },
-                    nodes: [ 
+                    nodes: [
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
                                 // { type: "quad", xSize: 300, ySize: 100.0 }
@@ -449,7 +449,7 @@ SceneJS.createNode({
             layers: [ { uri: "images/north3.jpg", blendMode: "add" } ],
             nodes: [
                 { type: "node", flags: {  transparent: true },
-                    nodes: [ 
+                    nodes: [
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
                                 { type: "quad", xSize: 0.0, ySize: 0.1 }
@@ -471,7 +471,7 @@ SceneJS.createNode({
             layers: [ { uri: "images/west3.jpg", blendMode: "add" } ],
             nodes: [
                 { type: "node", flags: {  transparent: true },
-                    nodes: [ 
+                    nodes: [
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
                                 { type: "quad", xSize: 0.3, ySize: 0.1 }
@@ -493,7 +493,7 @@ SceneJS.createNode({
             layers: [ { uri: "images/south3.jpg", blendMode: "add" } ],
             nodes: [
                 { type: "node", flags: {  transparent: true },
-                    nodes: [ 
+                    nodes: [
                         { type: "material", specular: 0.0, emit: 10,
                             nodes: [
                                 { type: "quad", xSize: 0.3, ySize: 0.1 }
@@ -513,7 +513,7 @@ SceneJS.createNode({
     loggingElementId: "theLoggingDiv",
 
     nodes: [
-    
+
         {
             type: "lookAt",
             id: "lookAt",
@@ -538,10 +538,10 @@ SceneJS.createNode({
 
                         // Milky-way with a stationary background sphere
                         {
-                            type: "stationary",    
-    
+                            type: "stationary",
+
                             nodes: [
-    
+
                                 // Size of sky sphere
                                 {
                                     type: "scale",
@@ -549,7 +549,7 @@ SceneJS.createNode({
                                     y: milky_way_apparent_radius,
                                     z: milky_way_apparent_radius,
                                     nodes: [
-    
+
                                         // Starry texture
                                         {
                                             type: "texture",
@@ -563,7 +563,7 @@ SceneJS.createNode({
                                                 }
                                             ],
                                             nodes: [
-    
+
                                                 // Material for texture to apply to
                                                 {
                                                     type:           "material",
@@ -573,16 +573,16 @@ SceneJS.createNode({
                                                     specular:       0.0,
                                                     shine:          0.0,
                                                     emit:           0.5,
-    
+
                                                     nodes: [
-    
+
                                                         // Tilt the milky way a little bit
                                                         {
                                                             type: "rotate",
                                                             z: 1,
                                                             angle: 45.0,
                                                             nodes: [
-    
+
                                                                 // Sphere geometry
                                                                 {
                                                                     type: "sphere"
@@ -619,15 +619,15 @@ SceneJS.createNode({
                             id: "backlight-quaternion",
                             x: 0, y: 1, z: 0,
                             angle: 0,
-                            
+
                             nodes: [
-                            
+
                                 {
                                     type: "translate",
-                                    x: earth_orbital_radius * 1.5, 
-                                    y: earth_orbital_radius * 1.5, 
+                                    x: earth_orbital_radius * 1.5,
+                                    y: earth_orbital_radius * 1.5,
                                     z: earth_orbital_radius * 1.5,
-                                    
+
                                     nodes: [
 
                                         {
@@ -661,7 +661,7 @@ SceneJS.createNode({
                         },
 
                         // surface lookat bubble
-                        
+
                         // bubble
                         {
                             type: "translate",
@@ -680,14 +680,14 @@ SceneJS.createNode({
                                     // x: surface.meter * 500,
                                     // y: surface.meter * 500,
                                     // z: surface.meter * 500,
-                                    
+
                                     nodes: [
 
                                         {
                                             type: "selector",
                                             id: "surface-lookat-bubble-selector",
                                             selection: [0],
-                                            nodes: [ 
+                                            nodes: [
 
                                                 // 0: off
 
@@ -698,9 +698,9 @@ SceneJS.createNode({
                                                 {
                                                     type: "node",
                                                     flags: { transparent: true },
-                                                    
-                                                    nodes: [  
-                                                    
+
+                                                    nodes: [
+
                                                         {
                                                             type: "material",
                                                             baseColor:      { r: 1.0, g: 0.05, b: 0.05 },
@@ -713,7 +713,7 @@ SceneJS.createNode({
                                                             baseColor:      { r: 1.0, g: 0.05, b: 0.05 },
                                                             specularColor:  { r: 1.0, g: 0.05, b: 0.05 },
                                                             specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
-                                                            nodes: [ 
+                                                            nodes: [
                                                                 {
                                                                     type: "translate", x: bubble_gnomon_length, y: 0.0, z: 0.0,
                                                                     nodes: [ { type: "cube", xSize: bubble_gnomon_length, ySize: bubble_gnomon_width, zSize: bubble_gnomon_width } ]
@@ -726,7 +726,7 @@ SceneJS.createNode({
                                                             baseColor:      { r: 0.05, g: 1.0, b: 0.05 },
                                                             specularColor:  { r: 0.05, g: 1.0, b: 0.05 },
                                                             specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
-                                                            nodes: [ 
+                                                            nodes: [
                                                                 {
                                                                     type: "translate", x: 0.0, y: bubble_gnomon_length, z: 0.0,
                                                                     nodes: [ { type: "cube", xSize: bubble_gnomon_width, ySize: bubble_gnomon_length, zSize: bubble_gnomon_width } ]
@@ -738,22 +738,22 @@ SceneJS.createNode({
                                                             baseColor:      { r: 0.05, g: 0.05, b: 1.0 },
                                                             specularColor:  { r: 0.05, g: 0.05, b: 1.0 },
                                                             specular: 0.0, shine: 0.1, emit: 0.5, alpha: 0.5,
-                                                            nodes: [ 
+                                                            nodes: [
                                                                 {
                                                                     type: "translate", x: 0.0, y: 0.0, z: bubble_gnomon_length,
                                                                     nodes: [ { type: "cube", xSize: bubble_gnomon_width, ySize: bubble_gnomon_width, zSize: bubble_gnomon_length } ]
                                                                 }
                                                             ]
                                                         },
-                                                        
+
                                                         {
                                                             // type: "node",
                                                             type: "material",
                                                             // baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
                                                             // specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
-                                                            // specular: 1.0, shine: 1.0, 
+                                                            // specular: 1.0, shine: 1.0,
                                                             // emit: 0.5, alpha: 0.1,
-                                                            
+
                                                             nodes: [
                                                                 {
                                                                     type: "translate",
@@ -772,7 +772,7 @@ SceneJS.createNode({
                                                                 }
                                                             ]
                                                         }
-                                                    ] 
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -835,7 +835,7 @@ SceneJS.createNode({
                                                             type: "selector",
                                                             id: "sun-grid-selector",
                                                             selection: [1],
-                                                            nodes: [ 
+                                                            nodes: [
 
                                                                 // 0: off
 
@@ -861,17 +861,17 @@ SceneJS.createNode({
                                                 }
                                             ]
                                         },
-                                        
+
                                     ]
                                 },
-                                
+
                                 // Sun-Earth line
                                 {
 
                                     type: "selector",
                                     id: "sun-earth-line-selector",
                                     selection: [0],
-                                    nodes: [ 
+                                    nodes: [
 
                                         // 0: off
                                         {  },
@@ -931,12 +931,12 @@ SceneJS.createNode({
                                             indices : [ 0, 1 ]
 
                                         },
-                                        
+
                                     ]
                                 },
-                                
+
                                 // Many Sun Rays
-                                
+
                                 {
                                     type: "node",
 
@@ -945,7 +945,7 @@ SceneJS.createNode({
                                     },
 
                                     nodes: [
-                                        { 
+                                        {
 
                                             type: "material",
                                             baseColor:      { r: 1.0, g: 0.95, b: 0.8 },
@@ -956,12 +956,12 @@ SceneJS.createNode({
                                             alpha:          0.6,
 
                                             nodes: [
-                                
+
                                                 {
                                                     type: "selector",
                                                     id: "sun-rays-selector",
                                                     selection: [0],
-                                                    nodes: [ 
+                                                    nodes: [
 
                                                         // 0: off
                                                         {  },
@@ -980,19 +980,19 @@ SceneJS.createNode({
                                         }
                                     ]
                                 },
-                                
+
                                 // Sun-Earth Surface Line
                                 {
                                     type: "selector",
                                     id: "sun-surface-line-selector",
                                     selection: [0],
-                                    nodes: [ 
+                                    nodes: [
 
                                         // 0: off
                                         {  },
 
                                         // 1: on
-                                        
+
                                         {
                                             type: "geometry",
                                             primitive: "lines",
@@ -1000,9 +1000,9 @@ SceneJS.createNode({
                                             positions: [
                                                 sun.pos.x, sun.pos.y, sun.pos.z,
 
-                                                earth.pos.x, 
-                                                earth.pos.y + Math.sin((surface.latitude - earth.tilt)  * deg2rad) * earth.radius, 
-                                                earth.pos.z + Math.sin(-surface.longitude * deg2rad) * earth.radius 
+                                                earth.pos.x,
+                                                earth.pos.y + Math.sin((surface.latitude - earth.tilt)  * deg2rad) * earth.radius,
+                                                earth.pos.z + Math.sin(-surface.longitude * deg2rad) * earth.radius
                                             ],
 
                                             indices : [ 0, 1 ]
@@ -1011,7 +1011,7 @@ SceneJS.createNode({
                                 }
                             ]
                         },
-                        
+
                         // Earth and other objects that are referenced from Earth's location.
                         {
                             type: "translate",
@@ -1021,21 +1021,21 @@ SceneJS.createNode({
                             z: earth.pos.z,
 
                             nodes: [
-                            
+
                                 {
                                     type: "scale",
                                     id: "earth-sub-graph-scale",
                                     x: 1,
                                     y: 1,
                                     z: 1,
-                                
+
                                     nodes: [
-                            
+
                                         {
                                             type: "matrix",
                                             id: "orbit-matrix-node",
                                             elements: jun_orbit_correction_mat4,
-                                    
+
                                             nodes: [
 
                                                 // Earth Square Grid
@@ -1062,7 +1062,7 @@ SceneJS.createNode({
                                                                     type: "selector",
                                                                     id: "earth-grid-selector",
                                                                     selection: [1],
-                                                                    nodes: [ 
+                                                                    nodes: [
 
                                                                         // 0: off
 
@@ -1122,7 +1122,7 @@ SceneJS.createNode({
                                                                     type: "selector",
                                                                     id: "earth-rose-grid-selector",
                                                                     selection: [0],
-                                                                    nodes: [ 
+                                                                    nodes: [
 
                                                                         // 0: off
 
@@ -1165,7 +1165,7 @@ SceneJS.createNode({
                                                         }
                                                     ]
                                                 },
-                        
+
                                                 // Longitude-like circle-line in the noon-midnight plane
                                                 {
                                                     type: "node",
@@ -1175,9 +1175,9 @@ SceneJS.createNode({
                                                     },
 
                                                     nodes: [
-                            
+
                                                         // Longitude-like circle-line in the noon-midnight plane
-                                                        { 
+                                                        {
                                                             type: "material",
                                                             baseColor:      { r: 0.6, g: 0.5, b: 0.02 },
                                                             specularColor:  { r: 0.6, g: 0.5, b: 0.02 },
@@ -1187,12 +1187,12 @@ SceneJS.createNode({
                                                             alpha:          0.6,
 
                                                             nodes: [
-                            
+
                                                                 {
                                                                     type: "selector",
                                                                     id: "noon-midnight-selector",
                                                                     selection: [0],
-                                                                    nodes: [ 
+                                                                    nodes: [
 
                                                                         // 0: off
 
@@ -1201,7 +1201,7 @@ SceneJS.createNode({
                                                                         // 1: on: sun noon-midnight indicator
 
                                                                         {
-                                                                            type: "rotate", 
+                                                                            type: "rotate",
                                                                             x: 0.0,
                                                                             z: 0.0,
                                                                             y: 1.0,
@@ -1210,7 +1210,7 @@ SceneJS.createNode({
                                                                             nodes: [
 
                                                                                 {
-                                                                                    type: "rotate", 
+                                                                                    type: "rotate",
                                                                                     id: "noon-midnight-rotation",
                                                                                     x: 1.0,
                                                                                     z: 0.0,
@@ -1236,7 +1236,7 @@ SceneJS.createNode({
                                                         },
 
                                                         // Longitude-like circle-line in the dawn-dusk plane
-                                                        { 
+                                                        {
                                                             type: "material",
                                                             baseColor:      { r: 0.6, g: 0.02, b: 0.5 },
                                                             specularColor:  { r: 0.6, g: 0.02, b: 0.5 },
@@ -1246,12 +1246,12 @@ SceneJS.createNode({
                                                             alpha:          0.3,
 
                                                             nodes: [
-                            
+
                                                                 {
                                                                     type: "selector",
                                                                     id: "sunrise-set-selector",
                                                                     selection: [0],
-                                                                    nodes: [ 
+                                                                    nodes: [
 
                                                                         // 0: off
 
@@ -1260,7 +1260,7 @@ SceneJS.createNode({
                                                                         // 1: on: sun rise/set indicator
 
                                                                         {
-                                                                            type: "rotate", 
+                                                                            type: "rotate",
                                                                             x: 0.0,
                                                                             z: 0.0,
                                                                             y: 1.0,
@@ -1269,7 +1269,7 @@ SceneJS.createNode({
                                                                             nodes: [
 
                                                                                 {
-                                                                                    type: "rotate", 
+                                                                                    type: "rotate",
                                                                                     id: "sunrise-set-rotation",
                                                                                     x: 1.0,
                                                                                     z: 0.0,
@@ -1301,15 +1301,15 @@ SceneJS.createNode({
                                                     type: "quaternion",
                                                     id:   "earth-tilt-quaternion",
                                                     x: 1, y: 0, z: 0,
-                                                    // x: earth_tilt_axis[0], 
-                                                    // y: earth_tilt_axis[1], 
+                                                    // x: earth_tilt_axis[0],
+                                                    // y: earth_tilt_axis[1],
                                                     // z: earth_tilt_axis[2],
-                                                    angle: earth.tilt, 
+                                                    angle: earth.tilt,
 
                                                     nodes: [
-                            
+
                                                         // Adjustable Latitude Line
-                                                        { 
+                                                        {
                                                             type: "material",
                                                             baseColor:      { r: 1.0, g: 0.02, b: 0.02 },
                                                             specularColor:  { r: 1.0, g: 0.02, b: 0.02 },
@@ -1324,7 +1324,7 @@ SceneJS.createNode({
                                                                     type: "selector",
                                                                     id: "latitude-line-selector",
                                                                     selection: [1],
-                                                                    nodes: [ 
+                                                                    nodes: [
 
                                                                         // 0: off
 
@@ -1340,7 +1340,7 @@ SceneJS.createNode({
                                                                             nodes: [
 
                                                                                 {
-                                                                                    type: "scale", 
+                                                                                    type: "scale",
                                                                                     id: "latitude-scale",
                                                                                     x: Math.cos(surface.latitude * deg2rad),
                                                                                     z: Math.cos(surface.latitude * deg2rad),
@@ -1355,12 +1355,12 @@ SceneJS.createNode({
                                                                                             height: surface_line_width,
                                                                                             rings: 128
                                                                                         },
-                                                    
+
                                                                                         {
                                                                                             type: "selector",
                                                                                             id: "lat-hour-markers-selector",
                                                                                             selection: [0],
-                                                                                            nodes: [ 
+                                                                                            nodes: [
 
                                                                                                 // 0: off
 
@@ -1385,37 +1385,37 @@ SceneJS.createNode({
                                                                 }
                                                             ]
                                                         },
-                    
-                                                        { 
-                                                            type: "rotate", 
-                                                            id: "day-of-year-angle-node", 
+
+                                                        {
+                                                            type: "rotate",
+                                                            id: "day-of-year-angle-node",
                                                             angle: 90,
                                                             x: 0.0,
                                                             y: 1.0,
                                                             z: 0.0,
-                                                            
+
                                                             nodes: [
-                            
-                                                                { 
+
+                                                                {
                                                                     type: "rotate",
-                                                                    id: "rotation", 
-                                                                    angle: initial_earth_rotation, 
+                                                                    id: "rotation",
+                                                                    angle: initial_earth_rotation,
                                                                     y: 1.0,
-                            
+
                                                                     nodes: [
-                        
+
                                                                         // Adjustable Longitude Line
                                                                         {
                                                                             type: "selector",
                                                                             id: "longitude-line-selector",
                                                                             selection: [1],
-                                                                            nodes: [ 
+                                                                            nodes: [
 
                                                                                 // 0: off
 
                                                                                 {  },
 
-                                                                                { 
+                                                                                {
                                                                                     type: "material",
                                                                                     baseColor:      { r: 1.0, g: 0.02, b: 0.02 },
                                                                                     specularColor:  { r: 1.0, g: 0.02, b: 0.02 },
@@ -1427,7 +1427,7 @@ SceneJS.createNode({
 
                                                                                         // Longitude Line
                                                                                         {
-                                                                                            type: "rotate", 
+                                                                                            type: "rotate",
                                                                                             x: 0.0,
                                                                                             z: 1.0,
                                                                                             y: 0.0,
@@ -1436,7 +1436,7 @@ SceneJS.createNode({
                                                                                             nodes: [
 
                                                                                                 {
-                                                                                                    type: "rotate", 
+                                                                                                    type: "rotate",
                                                                                                     id: "longitude-rotation",
                                                                                                     x: 1.0,
                                                                                                     z: 0.0,
@@ -1461,13 +1461,13 @@ SceneJS.createNode({
                                                                                 }
                                                                             ]
                                                                         },
-                                                                
+
                                                                         // Earth's atmosphere
                                                                         {
                                                                             type: "selector",
                                                                             id: "earth-atmosphere-selector",
                                                                             selection: [0],
-                                                                            nodes: [ 
+                                                                            nodes: [
 
                                                                                 // 0: off
 
@@ -1479,7 +1479,7 @@ SceneJS.createNode({
                                                                                     flags: {
                                                                                         transparent: true
                                                                                     },
-                                                                        
+
                                                                                     nodes: [
 
                                                                                         {
@@ -1495,16 +1495,16 @@ SceneJS.createNode({
                                                                                             nodes: [
 
                                                                                                 {
-                                                                                                    type: "scale", 
-                                                                                                    x: earth.radius * 1.05, 
-                                                                                                    y: earth.radius * 1.05, 
+                                                                                                    type: "scale",
+                                                                                                    x: earth.radius * 1.05,
+                                                                                                    y: earth.radius * 1.05,
                                                                                                     z: earth.radius * 1.05,
 
                                                                                                     nodes: [
 
-                                                                                                        { 
+                                                                                                        {
                                                                                                             type: "sphere",
-                                                                                                            slices: 128, rings: 128 
+                                                                                                            slices: 128, rings: 128
                                                                                                         }
                                                                                                     ]
                                                                                                 }
@@ -1529,32 +1529,32 @@ SceneJS.createNode({
                                                                                     type: "scale", x: earth.radius, y: earth.radius, z: earth.radius,
 
                                                                                     nodes: [
-                                                                                    
+
                                                                                         {
                                                                                             type: "library",
                                                                                             id:   "earth-sphere",
-                                                                                            
+
                                                                                             nodes: [
-                                                                                                { 
+                                                                                                {
                                                                                                     type: "sphere",
-                                                                                                    slices: 256, rings: 128 
+                                                                                                    slices: 256, rings: 128
                                                                                                 }
                                                                                             ]
                                                                                         },
-                                                                                    
+
                                                                                         {
-                                                                                        
+
                                                                                             type: "selector",
                                                                                             id: "earthTextureSelector",
                                                                                             selection: [1],
                                                                                             nodes: [
-                                                                                        
+
                                                                                                 {
                                                                                                     id: "earthTemperatureTextureSelector",
                                                                                                     type: "selector",
                                                                                                     selection: [0],
                                                                                                     nodes: [
-                                                                                        
+
                                                                                                         // selection [0], January
                                                                                                         {
                                                                                                             type: "texture",
@@ -1562,12 +1562,12 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/earth-continental-outline-edges-invert.png", blendMode: "multiply" },
                                                                                                                 { uri:"images/lat-long-grid-invert-units-1440x720-15.png", blendMode: "add" },
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-01.png", blendMode: "multiply" }
-                                                                                        
+
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [1], February
                                                                                                         {
                                                                                                             type: "texture",
@@ -1577,9 +1577,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-02.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [2], March
                                                                                                         {
                                                                                                             type: "texture",
@@ -1589,9 +1589,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-03.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [3], April
                                                                                                         {
                                                                                                             type: "texture",
@@ -1601,9 +1601,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-04.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [4], May
                                                                                                         {
                                                                                                             type: "texture",
@@ -1613,9 +1613,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-05.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [5], June
                                                                                                         {
                                                                                                             type: "texture",
@@ -1625,9 +1625,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-06.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [6], July
                                                                                                         {
                                                                                                             type: "texture",
@@ -1637,9 +1637,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-07.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [7], August
                                                                                                         {
                                                                                                             type: "texture",
@@ -1649,9 +1649,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-08.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [8], September
                                                                                                         {
                                                                                                             type: "texture",
@@ -1661,9 +1661,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-09.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [9], October
                                                                                                         {
                                                                                                             type: "texture",
@@ -1673,9 +1673,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-10.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [10], NOvember
                                                                                                         {
                                                                                                             type: "texture",
@@ -1685,9 +1685,9 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-11.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
+
                                                                                                         },
-                                                                                        
+
                                                                                                         // selection [11], December
                                                                                                         {
                                                                                                             type: "texture",
@@ -1697,25 +1697,25 @@ SceneJS.createNode({
                                                                                                                 { uri:"images/temperature/grads-temperature-2009-12.png", blendMode: "multiply" }
                                                                                                             ],
                                                                                                             nodes: [ { type : "instance", target : "earth-sphere"  } ]
-                                                                                        
-                                                                                                        }                                
+
+                                                                                                        }
                                                                                                     ]
                                                                                                 },
-                                                                                        
+
                                                                                                 {
-                                                                                        
+
                                                                                                     id: "earth-terrain-texture",
                                                                                                     type: "texture",
                                                                                                     layers: [
-                                                                                        
-                                                                                                        { 
+
+                                                                                                        {
                                                                                                            uri:"images/lat-long-grid-invert-units-1440x720-15.png",
                                                                                                            blendMode: "add",
-                                                                                        
+
                                                                                                         },
-                                                                                                        { 
+                                                                                                        {
                                                                                                             uri:"images/earth3.jpg",
-                                                                                        
+
                                                                                                             minFilter: "linear",
                                                                                                             magFilter: "linear",
                                                                                                             wrapS: "repeat",
@@ -1732,18 +1732,18 @@ SceneJS.createNode({
                                                                                                             sourceType: "unsignedByte",
                                                                                                             applyTo:"baseColor",
                                                                                                             blendMode: "multiply",
-                                                                                        
+
                                                                                                             /* Texture rotation angle in degrees
                                                                                                              */
                                                                                                             rotate: 180.0,
-                                                                                        
+
                                                                                                             /* Texture translation offset
                                                                                                              */
                                                                                                             translate : {
                                                                                                                 x: 0,
                                                                                                                 y: 0
                                                                                                             },
-                                                                                        
+
                                                                                                             /* Texture scale factors
                                                                                                              */
                                                                                                             scale : {
@@ -1754,9 +1754,9 @@ SceneJS.createNode({
                                                                                                     ],
 
                                                                                                     nodes: [
-                                                                                                        { 
+                                                                                                        {
                                                                                                             type: "sphere",
-                                                                                                            slices: 256, rings: 128 
+                                                                                                            slices: 256, rings: 128
                                                                                                         }
                                                                                                     ]
 
@@ -1765,22 +1765,22 @@ SceneJS.createNode({
                                                                                             ]
                                                                                         },
 
-                                                                                        // 
+                                                                                        //
                                                                                         // {
-                                                                                        // 
+                                                                                        //
                                                                                         //     id: "earth-terrain-texture",
                                                                                         //     type: "texture",
                                                                                         //     layers: [
-                                                                                        // 
-                                                                                        //         { 
+                                                                                        //
+                                                                                        //         {
                                                                                         //            uri:"images/lat-long-grid-invert-units-1440x720-15.png",
                                                                                         //            blendMode: "add",
-                                                                                        // 
+                                                                                        //
                                                                                         //         },
-                                                                                        // 
-                                                                                        //         { 
+                                                                                        //
+                                                                                        //         {
                                                                                         //             uri:"images/earth3.jpg",
-                                                                                        // 
+                                                                                        //
                                                                                         //             minFilter: "linear",
                                                                                         //             magFilter: "linear",
                                                                                         //             wrapS: "repeat",
@@ -1797,18 +1797,18 @@ SceneJS.createNode({
                                                                                         //             sourceType: "unsignedByte",
                                                                                         //             applyTo:"baseColor",
                                                                                         //             blendMode: "multiply",
-                                                                                        // 
+                                                                                        //
                                                                                         //             /* Texture rotation angle in degrees
                                                                                         //              */
                                                                                         //             rotate: 180.0,
-                                                                                        // 
+                                                                                        //
                                                                                         //             /* Texture translation offset
                                                                                         //              */
                                                                                         //             translate : {
                                                                                         //                 x: 0,
                                                                                         //                 y: 0
                                                                                         //             },
-                                                                                        // 
+                                                                                        //
                                                                                         //             /* Texture scale factors
                                                                                         //              */
                                                                                         //             scale : {
@@ -1817,16 +1817,16 @@ SceneJS.createNode({
                                                                                         //             }
                                                                                         //         }
                                                                                         //     ],
-                                                                                        //                                                     
-                                                                                        //     nodes: [ 
-                                                                                        //         { 
+                                                                                        //
+                                                                                        //     nodes: [
+                                                                                        //         {
                                                                                         //             type: "sphere",
-                                                                                        //             slices: 256, rings: 128 
+                                                                                        //             slices: 256, rings: 128
                                                                                         //         }
                                                                                         //     ]
                                                                                         // },
-                                                                                                                                                                
-                                                                        
+
+
                                                                                         // Earth Surface Indicator
                                                                                         {
                                                                                             type: "node",
@@ -1858,14 +1858,14 @@ SceneJS.createNode({
                                                                                                                             x: 0,
                                                                                                                             y: 1 + surface.min_height - surface.disk.height / 2,
                                                                                                                             z: 0,
-                                                                                                                            
+
                                                                                                                             nodes: [
                                                                                                                                 {
                                                                                                                                     type: "selector",
                                                                                                                                     id: "surface-disc-selector",
                                                                                                                                     selection: [0],
 
-                                                                                                                                    nodes: [ 
+                                                                                                                                    nodes: [
 
                                                                                                                                         // 0: Earth in Space View
                                                                                                                                         {
@@ -1889,11 +1889,11 @@ SceneJS.createNode({
                                                                                                                                         },
 
                                                                                                                                         // 1: Surface View
-                                                                                                                                    
+
                                                                                                                                         {
-                                                                                                                                            
+
                                                                                                                                             nodes: [
-                                                                                                                                                { 
+                                                                                                                                                {
                                                                                                                                                     type: "material",
                                                                                                                                                     id:   "surface-disk-material",
                                                                                                                                                     baseColor:      { r: 0.01, g: 0.2, b: 0.0 },
@@ -1911,13 +1911,13 @@ SceneJS.createNode({
                                                                                                                                                         }
                                                                                                                                                     ]
                                                                                                                                                 },
-                                                                                                                                                
+
                                                                                                                                                 {
                                                                                                                                                     type: "translate",
                                                                                                                                                     x: 0,
                                                                                                                                                     y: surface.disk.height / 2,
                                                                                                                                                     z: 0,
-                                                                                                                                                    
+
                                                                                                                                                     nodes: [
                                                                                                                                                         {
                                                                                                                                                             type: "translate",
@@ -1930,13 +1930,13 @@ SceneJS.createNode({
                                                                                                                                                         //     x: 0,  y: 0, z: surface.disk.width,
                                                                                                                                                         //     nodes: [ { type: "instance", target: "north-label" } ]
                                                                                                                                                         // },
-                                                                                                                                                        // 
+                                                                                                                                                        //
                                                                                                                                                         // {
                                                                                                                                                         //     type: "translate",
                                                                                                                                                         //     x: -surface.disk.width,  y: 0, z: 0,
                                                                                                                                                         //     nodes: [ { type: "instance", target: "west-label" } ]
                                                                                                                                                         // },
-                                                                                                                                                        // 
+                                                                                                                                                        //
                                                                                                                                                         // {
                                                                                                                                                         //     type: "translate",
                                                                                                                                                         //     x: 0,  y: 0, z: surface.disk.width,
@@ -1948,7 +1948,7 @@ SceneJS.createNode({
                                                                                                                                                             flags: { transparent: true },
 
                                                                                                                                                             nodes: [
-                                                                                                                                                                { 
+                                                                                                                                                                {
                                                                                                                                                                     type: "material",
                                                                                                                                                                     baseColor:      { r: 0.5, g: 0.05, b: 0.05 },
                                                                                                                                                                     specularColor:  { r: 0.5, g: 0.05, b: 0.05 },
@@ -2011,7 +2011,7 @@ SceneJS.createNode({
                                                                                                                                                             ]
                                                                                                                                                         },
 
-                                                                                                                                                        { 
+                                                                                                                                                        {
                                                                                                                                                             type: "material",
                                                                                                                                                             id:   "flagpole-material",
                                                                                                                                                             baseColor:      { r: 0.5, g: 0.5, b: 0.5 },
@@ -2038,7 +2038,7 @@ SceneJS.createNode({
                                                                                                                                                                 }
                                                                                                                                                             ]
                                                                                                                                                         },
-                                                                                                                                                        
+
                                                                                                                                                         // Solar Panel
                                                                                                                                                         {
                                                                                                                                                             type: "translate",
@@ -2047,8 +2047,8 @@ SceneJS.createNode({
                                                                                                                                                             z: 0,
 
                                                                                                                                                             nodes: [
-                                                                                                                                                            
-                                                                                                                                                                { 
+
+                                                                                                                                                                {
                                                                                                                                                                     type: "material",
                                                                                                                                                                     baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
                                                                                                                                                                     specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
@@ -2059,14 +2059,14 @@ SceneJS.createNode({
 
                                                                                                                                                                         {
                                                                                                                                                                             type: "texture",
-                                                                                                                                                                            layers: [ 
-                                                                                                                                                                                { 
+                                                                                                                                                                            layers: [
+                                                                                                                                                                                {
                                                                                                                                                                                     uri: "images/solarpanel1.jpg",
                                                                                                                                                                                     applyTo: "baseColor",
                                                                                                                                                                                     blendMode: "multiply" ,
                                                                                                                                                                                     wrapS: "repeat",
                                                                                                                                                                                     wrapT: "repeat",
-                                                                                                                                                                                } 
+                                                                                                                                                                                }
                                                                                                                                                                             ],
                                                                                                                                                                             nodes: [
                                                                                                                                                                                 {
@@ -2249,16 +2249,16 @@ var sun_earth_line_selector =  SceneJS.withNode("sun-earth-line-selector");
 function sunEarthLineHandler() {
     if (sun_earth_line.checked) {
         switch (earth.day_number) {
-        case day_number_by_month.jun: 
+        case day_number_by_month.jun:
             sun_earth_line_selector.set("selection", [1]);
             break;
-        case day_number_by_month.sep: 
+        case day_number_by_month.sep:
             sun_earth_line_selector.set("selection", [2]);
             break;
-        case day_number_by_month.dec: 
+        case day_number_by_month.dec:
             sun_earth_line_selector.set("selection", [3]);
             break;
-        case day_number_by_month.mar: 
+        case day_number_by_month.mar:
             sun_earth_line_selector.set("selection", [4]);
             break;
         default:
@@ -2278,7 +2278,7 @@ sunEarthLineHandler();
 //
 // var sun_surface_line = document.getElementById("sun-surface-line");
 // var sun_surface_line_selector =  SceneJS.withNode("sun-surface-line-selector");
-// 
+//
 // function sunSurfaceLineHandler() {
 //     if (sun_surface_line.checked) {
 //         sun_surface_line_selector.set("selection", [1]);
@@ -2286,10 +2286,10 @@ sunEarthLineHandler();
 //         sun_surface_line_selector.set("selection", [0]);
 //     };
 // };
-// 
+//
 // sun_surface_line.onchange = sunSurfaceLineHandler;
 // sunSurfaceLineHandler();
-// 
+//
 //
 // Sun rise/set surface indicator Handler
 //
@@ -2390,7 +2390,7 @@ function setEarthPositionByMon(mon) {
     earth.month = mon;
     var day_number = day_number_by_month[mon];
     earth.day_number = day_number;
-    
+
     switch (mon) {
         case 'jun':
             pos = earth_pos_jun_vec3;
@@ -2490,7 +2490,7 @@ function setupEarthInSpace() {
     // earth.meter = meter /earth.radius;
     earth_sub_graph_scale.set({ x: 1, y: 1, z: 1})
     // earth_sub_graph._targetNode._setDirty();
-    
+
     // setEarthPositionByDay(earth.day_number)
     var optics = camera.get("optics");
     optics.fovy = 50;
@@ -2527,8 +2527,8 @@ function setupEarthInSpace() {
 function updateEarthInSpaceLookAt() {
     // first handle yaw and pitch for our lookAt-arcball navigation around Earth
     // background: http://rainwarrior.thenoos.net/dragon/arcball.html
-    
-    
+
+
     var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, yaw);
     var yaw_mat4 = quat4.toMat4(yaw_quat);
 
@@ -2538,14 +2538,14 @@ function updateEarthInSpaceLookAt() {
 
     var neweye = vec3.create();
     quat4.multiplyVec3(result_quat, initial_eye_vec3, neweye);
-    look_at.set("eye", { 
-        x: neweye[0] + earth.pos.x, 
-        y: neweye[1] + earth.pos.y, 
-        z: neweye[2] + earth.pos.z 
+    look_at.set("eye", {
+        x: neweye[0] + earth.pos.x,
+        y: neweye[1] + earth.pos.y,
+        z: neweye[2] + earth.pos.z
     });
-    
+
     // next handle a possible yaw rotation to look left or right of Earth in the ecliptic plane
-    var rot_quat = quat4.axisAngleDegreesCreate(0, 1, 0, lookat_yaw); 
+    var rot_quat = quat4.axisAngleDegreesCreate(0, 1, 0, lookat_yaw);
 
     var new_look = vec3.create();
     quat4.multiplyVec3(rot_quat, neweye, new_look);
@@ -2643,7 +2643,7 @@ function lat_long_to_global_cartesian(lat, lon, r) {
     mat4.multiplyVec3(orbit_correction_mat4, lat_lon);
     vec3.add(lat_lon, [earth.pos.x, earth.pos.y, earth.pos.z] )
     return lat_lon;
-    
+
 
     // var q2 = quat4.axisVecAngleDegreesCreate(earth_tilt_axis, earth.tilt);
 
@@ -2668,7 +2668,7 @@ function calculate_surface_cross(lat, lon) {
         lon = -lon;
     } else if (lat < -90) {
         lat -= surface.latitude * 2;
-        lon = -lon;        
+        lon = -lon;
     };
     surface_up_minus_90_vec3 = lat_long_to_cartesian_corrected_for_tilt(lat, lon);
     quat4.multiplyVec3(orbit_correction_quat, surface_up_minus_90_vec3);
@@ -2677,13 +2677,13 @@ function calculate_surface_cross(lat, lon) {
 };
 
 function calculateSurfaceEyeUpLook() {
-    
+
     // calculate unit vector from center of Earth to surface location
     surface_dir_vec3 = lat_long_to_cartesian_corrected_for_tilt(surface.latitude, surface.longitude);
-    
+
     // quat4.multiplyVec3(earth_orbit_correction_quat, surface_dir_vec3);
     quat4.multiplyVec3(orbit_correction_quat, surface_dir_vec3);
-    
+
     // generate an up axis direction vector for the lookAt (integrates tilt)
     surface_up_vec3 = vec3.create(surface_dir_vec3);
 
@@ -2695,11 +2695,11 @@ function calculateSurfaceEyeUpLook() {
     // generate an appropriate offset from the flagpole using the cross-product of the
     // current surface_up with the surface_up vector rotated 90 degrees northward
     calculate_surface_cross();
-    vec3.scale(surface_cross_vec3, surface.distance * 10000 * surface.meter, surface_eye_vec3);    
+    vec3.scale(surface_cross_vec3, surface.distance * 10000 * surface.meter, surface_eye_vec3);
     vec3.add(flagpole_global, surface_eye_vec3, surface_eye_global);
 
     surface_look_global = vec3.create(flagpole_global);
-    
+
     var lookat = {
         eye:  { x: surface_eye_global[0],  y: surface_eye_global[1],  z: surface_eye_global[2]  },
         up:   { x: surface_up_vec3[0],     y: surface_up_vec3[1],     z: surface_up_vec3[2]     },
@@ -2716,26 +2716,26 @@ function calculateSurfacePitchAxis(up, yaw) {
 };
 
 //
-// inputs: 
+// inputs:
 //    surface.yaw, surface.pitch
 //    surface.lookat_yaw, surface.lookat_pitch
 
 function updateSurfaceViewLookAt() {
     var result_quat = quat4.create();
-    
+
     // update the scenegraph lookAt
     var lookat = calculateSurfaceEyeUpLook();
     // look_at.set("eye", lookat.eye);
     look_at.set("up", lookat.up);
-    
-    vec3.scale(surface_cross_vec3, surface.distance * 10000 * surface.meter, surface_eye_vec3);    
+
+    vec3.scale(surface_cross_vec3, surface.distance * 10000 * surface.meter, surface_eye_vec3);
 
     // calculate a yaw quaternion for rotation left-right around the lookAt point
     var yaw_quat = quat4.axisVecAngleDegreesCreate(surface_up_vec3, surface.yaw);
-    
+
     // calculate a yaw vector for calculating a pitch axis
     var yaw_vec3 = []; quat4.multiplyVec3(yaw_quat, surface_eye_vec3, yaw_vec3);
-    
+
     // calculate a pitch axis and quat for rotation up-down around the lookAt point
     var pitch_axis = calculateSurfacePitchAxis(surface_up_vec3, yaw_vec3);
     var pitch_quat =  quat4.axisVecAngleDegreesCreate(pitch_axis, -surface.pitch);
@@ -2749,9 +2749,9 @@ function updateSurfaceViewLookAt() {
     look_at.set("eye", { x: new_surface_eye_global[0],  y: new_surface_eye_global[1],  z: new_surface_eye_global[2] });
 
     // calculate pitch and yaw rotation of where you are looking at in the surface POV
-    var lookat_pitch_quat = quat4.axisVecAngleDegreesCreate(pitch_axis, -surface.lookat_pitch); 
+    var lookat_pitch_quat = quat4.axisVecAngleDegreesCreate(pitch_axis, -surface.lookat_pitch);
     quat4.multiplyVec3(lookat_pitch_quat, new_surface_eye_vec3, new_surface_look_vec3);
-    var lookat_yaw_quat = quat4.axisVecAngleDegreesCreate(surface_up_vec3, surface.lookat_yaw); 
+    var lookat_yaw_quat = quat4.axisVecAngleDegreesCreate(surface_up_vec3, surface.lookat_yaw);
     quat4.multiplyVec3(lookat_yaw_quat, new_surface_eye_vec3, new_surface_look_vec3);
 
     // combine the lookat pitch and yaw quats and apply to the initial surface lookAt
@@ -2778,7 +2778,7 @@ var surface_lookat_bubble_pos = SceneJS.withNode("surface-lookat-bubble-pos");
 var surface_lookat_bubble_scale = SceneJS.withNode("surface-lookat-bubble-scale");
 
 function setupSurfaceView() {
-    
+
     was_earth_grid_checked = earth_grid.checked;
     earth_grid.checked = false;
     earthGridHandler();
@@ -2802,17 +2802,17 @@ function setupSurfaceView() {
     atmosphere_material.set("emit", 0.9);
 
     surface_disc_selector.set("selection", [1]);
-    
+
     earth_atmosphere_selector.set("selection", [1]);
     earth.radius = earth_diameter * surface_earth_scale_factor / 2;
     // earth.km = km / earth.radius;
     // earth.meter = meter / earth.radius;
-    earth_sub_graph_scale.set({ 
-        x: surface_earth_scale_factor, 
-        y: surface_earth_scale_factor, 
+    earth_sub_graph_scale.set({
+        x: surface_earth_scale_factor,
+        y: surface_earth_scale_factor,
         z: surface_earth_scale_factor
     });
-    
+
     var surface_300m = surface.meter * 300;
     surface_lookat_bubble_scale.set({ x: surface_300m, y: surface_300m, z: surface_300m });
     // earth_sub_graph._targetNode._setDirty();
@@ -2979,7 +2979,7 @@ function modulo(num, mod) {
 
 function mouseMove(event) {
     if (dragging) {
-        
+
         if (surface_view.checked) {
             surface.yaw   += (event.clientX - lastX) * -0.2;
             surface.pitch += (event.clientY - lastY) * -0.2;
@@ -3002,7 +3002,7 @@ the_canvas.addEventListener('mouseup', mouseUp, true);
 
 function handleArrowKeysEarthInSpace(evt) {
     var distanceIncrementFactor = 40;
-    evt = (evt) ? evt : ((window.event) ? event : null); 
+    evt = (evt) ? evt : ((window.event) ? event : null);
     if (evt) {
         switch (evt.keyCode) {
             case 37:                                    // left arrow
@@ -3011,13 +3011,13 @@ function handleArrowKeysEarthInSpace(evt) {
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.altKey) {
-                    incrementLongitude(); 
+                    incrementLongitude();
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
                     incrementLookatYaw(2);
                     evt.preventDefault();
                 } else {
-                    incrementYaw(-2); 
+                    incrementYaw(-2);
                     updateLookAt();
                     evt.preventDefault();
                 }
@@ -3030,7 +3030,7 @@ function handleArrowKeysEarthInSpace(evt) {
                     updateLookAt();
                     evt.preventDefault();
                 } else if (evt.altKey) {
-                    incrementLatitude(); 
+                    incrementLatitude();
                     evt.preventDefault();
                 } else if (evt.metaKey) {
                     evt.preventDefault();
@@ -3049,14 +3049,14 @@ function handleArrowKeysEarthInSpace(evt) {
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.altKey) {
-                    decrementLongitude(); 
+                    decrementLongitude();
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
                     incrementLookatYaw(-2);
                     updateLookAt();
                     evt.preventDefault();
                 } else {
-                    incrementYaw(2); 
+                    incrementYaw(2);
                     updateLookAt();
                     evt.preventDefault();
                 }
@@ -3069,14 +3069,14 @@ function handleArrowKeysEarthInSpace(evt) {
                     updateLookAt();
                     evt.preventDefault();
                 } else if (evt.altKey) {
-                    decrementLatitude(); 
+                    decrementLatitude();
                     evt.preventDefault();
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
                     evt.preventDefault();
                 } else {
-                    incrementPitch(2); 
+                    incrementPitch(2);
                     updateLookAt();
                     evt.preventDefault();
                 }
@@ -3117,7 +3117,7 @@ function incrementSurfaceDistance() {
 
 function handleArrowKeysSurfaceView(evt) {
     var distanceIncrementFactor = 30;
-    evt = (evt) ? evt : ((window.event) ? event : null); 
+    evt = (evt) ? evt : ((window.event) ? event : null);
     if (evt) {
         switch (evt.keyCode) {
             case 37:                                    // left arrow
@@ -3126,7 +3126,7 @@ function handleArrowKeysSurfaceView(evt) {
                 } else if (evt.metaKey) {               // option left-arrow
                     evt.preventDefault();
                 } else if (evt.altKey) {                // alt left-arrow
-                    incrementLongitude(); 
+                    incrementLongitude();
                     evt.preventDefault();
                 } else if (evt.shiftKey) {              // shift left-arrow
                     incrementSurfaceLookatYaw(2);
@@ -3143,12 +3143,12 @@ function handleArrowKeysSurfaceView(evt) {
                     decrementSurfaceDistance();
                     evt.preventDefault();
                 } else if (evt.altKey) {
-                    incrementLatitude(); 
+                    incrementLatitude();
                     evt.preventDefault();
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    incrementSurfaceLookatPitch(2); 
+                    incrementSurfaceLookatPitch(2);
                     evt.preventDefault();
                 } else {
                     incrementSurfacePitch(-2);
@@ -3163,13 +3163,13 @@ function handleArrowKeysSurfaceView(evt) {
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.altKey) {
-                    decrementLongitude(); 
+                    decrementLongitude();
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    incrementSurfaceLookatYaw(-2); 
+                    incrementSurfaceLookatYaw(-2);
                     evt.preventDefault();
                 } else {
-                    incrementSurfaceYaw(2); 
+                    incrementSurfaceYaw(2);
                     evt.preventDefault();
                 }
                 updateSurfaceViewLookAt();
@@ -3180,12 +3180,12 @@ function handleArrowKeysSurfaceView(evt) {
                     incrementSurfaceDistance();
                     evt.preventDefault();
                 } else if (evt.altKey) {
-                    decrementLatitude(); 
+                    decrementLatitude();
                     evt.preventDefault();
                 } else if (evt.metaKey) {
                     evt.preventDefault();
                 } else if (evt.shiftKey) {
-                    incrementSurfaceLookatPitch(-2); 
+                    incrementSurfaceLookatPitch(-2);
                     evt.preventDefault();
                 } else {
                     incrementSurfacePitch(2);
@@ -3271,9 +3271,9 @@ function debugLabel() {
         var eye = look_at.get("eye");
         var look = look_at.get("look");
         var up = look_at.get("up");
-        
+
         var atmos_trans = atmosphere_transparent.get();
-        
+
         var flags = atmosphere_transparent.get('flags');
 
         var sun_mat =  sun_material.get();
@@ -3281,7 +3281,7 @@ function debugLabel() {
 
         var solar_alt = solar_altitude(surface.latitude, surface.longitude);
         var solar_rad = solarRadiation(solar_alt);
-        
+
         var labelStr = "";
 
         labelStr += "<b>Sun</b><br />";
@@ -3397,7 +3397,7 @@ function solar_flux() {
 
 function simpleSolarRadiation(alt) {
     var result = solar_flux() * Math.sin(alt * deg2rad) * SOLAR_FACTOR_AM1;
-    return result < 0 ? 0 : result; 
+    return result < 0 ? 0 : result;
 };
 
 function useAirMNassHandler() {
@@ -3479,9 +3479,9 @@ function solarRadiation(alt) {
                 if (alpha > 0.5) alpha = 0.5;
                 atmosphere_material.set("alpha", alpha);
                 atmosphere_material.set("emit", alpha);
-                milky_way_material.set("emit", (alpha - 0.5) * -0.5);                
+                milky_way_material.set("emit", (alpha - 0.5) * -0.5);
             };
-            
+
             rad = radiation.total;
         } else {
             if (surface_view.checked) {
@@ -3517,9 +3517,9 @@ function infoLabel() {
             info_label.style.opacity = null;
         };
 
-        earth.pos.y + Math.sin((surface.latitude - earth.tilt)  * deg2rad) * earth.radius, 
-        earth.pos.z + Math.sin(-surface.longitude * deg2rad) * earth.radius 
-        
+        earth.pos.y + Math.sin((surface.latitude - earth.tilt)  * deg2rad) * earth.radius,
+        earth.pos.z + Math.sin(-surface.longitude * deg2rad) * earth.radius
+
         var solar_alt = solar_altitude(surface.latitude, surface.longitude);
         var solar_rad = solarRadiation(solar_alt);
 
@@ -3607,7 +3607,7 @@ graph_view.onchange = infoGraph;
 function drawSolarAltitudeGraph() {
     var alt_ctx = altitude_graph_canvas.getContext('2d');
     alt_ctx.clearRect(0,0,graph_width,graph_height);
-    
+
     var graph_base = graph_height - 15;
     var graph_y_range = graph_base - 20;
 
@@ -3701,14 +3701,14 @@ function drawSolarRadiationLatitudeGraph() {
     var time = earthRotationToDecimalTime(earth.rotation - surface.longitude);
     var index = Math.round(time * 10);
     solar_radiation_latitude_data[index] = solar_rad;
-    
+
     var rad_lat_ctx = radiation_lat_graph_canvas.getContext('2d');
     rad_lat_ctx.clearRect(0,0,graph_width,graph_height);
 
     var data_length = solar_radiation_latitude_data.length;
     var graph_base = graph_height - 15;
     var graph_y_range = graph_base - 30;
-    
+
     var x_factor = graph_width / data_length;
     var y_factor = graph_y_range / SOLAR_CONSTANT;
 
@@ -3720,11 +3720,11 @@ function drawSolarRadiationLatitudeGraph() {
         y0 = graph_base;
         y1 = solar_radiation_latitude_data[x] * -y_factor + graph_height - 15;
         if (x == index) {
-            rad_lat_ctx.strokeStyle = "rgba(255,0,0, 1.0)"; 
+            rad_lat_ctx.strokeStyle = "rgba(255,0,0, 1.0)";
         } else {
             rad_lat_ctx.strokeStyle = "rgba(255,255,0, 1.0)";
         };
-        
+
         rad_lat_ctx.beginPath();
         rad_lat_ctx.moveTo(x0, y0);
         rad_lat_ctx.lineTo(x0, y1);
@@ -3862,14 +3862,14 @@ function drawSolarRadiationLongitudeGraph() {
     } else {
         solar_radiation_longitude_data_new = true;
     };
-    
+
     var rad_lon_ctx = radiation_lon_graph_canvas.getContext('2d');
     rad_lon_ctx.clearRect(0,0,graph_width,graph_height);
 
     var data_length = solar_radiation_longitude_data.length;
     var graph_base = graph_height - 15;
     var graph_y_range = graph_base - 30;
-    
+
     var x_factor = graph_width / data_length;
     var y_factor = graph_y_range / SOLAR_CONSTANT;
 
@@ -3927,7 +3927,7 @@ function drawSolarRadiationLongitudeGraph() {
         rad_lon_ctx.lineTo(x, y_grid_px);
     };
     rad_lon_ctx.stroke();
-    
+
     // X axis
     rad_lon_ctx.lineWidth = 2;
     rad_lon_ctx.beginPath();
@@ -3960,7 +3960,7 @@ function drawSolarRadiationLongitudeGraph() {
         rad_lon_ctx.lineTo(4, y_grid_px);
     };
     rad_lon_ctx.stroke();
-    
+
 
     rad_lon_ctx.font = "bold 12px sans-serif";
     rad_lon_ctx.fillStyle = "rgb(255,255,255)";
@@ -4065,9 +4065,9 @@ function chooseTiltHandler() {
     };
     earth_tilt_quat = quat4.axisAngleDegreesCreate(0, 0, 1,  earth.tilt);
     earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
-    earth_tilt_quaternion.set("rotation", { 
-        x: earth_tilt_axis[0], 
-        y: earth_tilt_axis[1], 
+    earth_tilt_quaternion.set("rotation", {
+        x: earth_tilt_axis[0],
+        y: earth_tilt_axis[1],
         z: earth_tilt_axis[2],
         angle : earth.tilt });
     infoLabel();
