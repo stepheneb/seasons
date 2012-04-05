@@ -4,15 +4,20 @@ var city_colors = {
   bright_red:       '#ff0000',
   dark_red:         '#990000',
   bright_blue:      '#4444ff',
+  bright_blue2:     '#0000ff',
   dark_blue:        '#110077',
+  dark_blue2:       '#000066',
   bright_green:     '#00dd00',
   dark_green:       '#118800',
   bright_purple:    '#cc00cc',
+  bright_purple2:   '#ff11ff',
   dark_purple:      '#770099',
   bright_orange:    '#ee6600',
   dark_orange:      '#aa4400',
   bright_turquoise: '#00ccbb',
+  bright_turquoise2:'#00bbbb',
   dark_turquoise:   '#008877',
+  dark_turquoise2:  '#007777',
 };
 
 var cities = [
@@ -84,8 +89,8 @@ var cities = [
         name: "Washington, D.C.",
         country: "United States",
         active: true,
-        color: city_colors.bright_blue,
-        no_tilt_color: city_colors.dark_blue,
+        color: city_colors.bright_blue2,
+        no_tilt_color: city_colors.dark_blue2,
         location: {
             signed_longitude: 77.02,
             signed_latitude: 38.54,
@@ -147,8 +152,8 @@ var cities = [
         name: "Singapore",
         country: "Singapore",
         active: true,
-        color: city_colors.bright_green,
-        no_tilt_color: city_colors.dark_green,
+        color: city_colors.bright_red,
+        no_tilt_color: city_colors.dark_red,
         location: {
             signed_longitude: -103.55,
             signed_latitude: 1.14,
@@ -231,7 +236,7 @@ var cities = [
         name: "Canberra",
         country: "Australia",
         active: true,
-        color: city_colors.bright_purple,
+        color: city_colors.bright_purple2,
         no_tilt_color: city_colors.dark_purple,
         location: {
             signed_longitude: -149.08,
@@ -294,8 +299,8 @@ var cities = [
         name: "McMurdo Station",
         country: "Antarctica",
         active: true,
-        color: city_colors.bright_turquoise,
-        no_tilt_color: city_colors.dark_turquoise,
+        color: city_colors.bright_turquoise2,
+        no_tilt_color: city_colors.dark_turquoise2,
         location: {
             signed_longitude: -166.73,
             signed_latitude: -77.88,
