@@ -1,6 +1,6 @@
 
 
-var dark_side = 0.0;
+var dark_side = 0.3;
 
 /*----------------------------------------------------------------------
  * Canvases 1 and 3
@@ -602,7 +602,7 @@ SceneJS.createNode({
                                     type: "light",
                                     mode:                   "point",
                                     pos:                    { x: sun_x_pos, y: 0, z: 0 },
-                                    color:                  { r: 0.9, g: 0.9, b: 0.9 },
+                                    color:                  { r: 3.0, g: 3.0, b: 3.0 },
                                     diffuse:                true,
                                     specular:               true,
 
@@ -745,82 +745,120 @@ SceneJS.createNode({
                                                 },
 
                                                 {
-                                                    type: "scale",
-                                                    x: earth_radius_km,
-                                                    y: earth_radius_km,
-                                                    z: earth_radius_km,
+                                                    id : "earth-sphere3",
+                                                    type: "material",
+                                                    baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
+                                                    specularColor:  { r: 0.0, g: 0.0, b: 0.0 },
+                                                    specular:       0.0,
+                                                    shine:          2.0,
 
                                                     nodes: [
+
                                                         {
-                                                            type: "rotate",
-                                                            id: 'earth-rotation3',
-                                                            angle: 0,
-                                                            y: 1.0,
+                                                            type: "scale",
+                                                            x: earth_radius_km,
+                                                            y: earth_radius_km,
+                                                            z: earth_radius_km,
+
                                                             nodes: [
+
                                                                 {
-                                                                    id: "earth-terrain-texture3",
-                                                                    type: "texture",
-                                                                    layers: [
-                                                                        {
-                                                                            uri:"images/earth3.jpg",
-                                                                            wrapS: "repeat",
-                                                                            wrapT: "repeat",
-                                                                            applyTo:"baseColor",
-                                                                            blendMode: "add",
-                                                                            rotate: 180.0,              // Texture rotation angle in degrees
-                                                                            scale: { x: -1.0, y: 1.0 }  // Texture scale factors
-                                                                        },
-                                                                        {
-                                                                           uri:"images/lat-long-grid-invert-units-1440x720-15.png",
-                                                                           applyTo: "emit",
-                                                                           blendMode: "add",
-                                                                        },
-                                                                        {
-                                                                           uri:"images/earth-continental-outline-edges.png",
-                                                                           applyTo: "emit",
-                                                                           blendMode: "add",
-                                                                        }
-                                                                    ],
+                                                                    type: "rotate",
+                                                                    id: 'earth-rotation3',
+                                                                    angle: 0,
+                                                                    y: 1.0,
+
                                                                     nodes: [
+
                                                                         {
-                                                                            id : "earth-sphere3",
-                                                                            type: "material",
-                                                                            specular:       0.0,
-                                                                            shine:          1.0,
-                                                                            emit:           0.0,
-                                                                            baseColor:      { r: 0.45, g: 0.45, b: 0.45 },
-                                                                            nodes: [ { type: "sphere", id: "esphere3", slices: 45 } ]
+
+                                                                            id: "earth-terrain-texture3",
+                                                                            type: "texture",
+                                                                            layers: [
+
+                                                                                {
+
+                                                                                   uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+                                                                                   blendMode: "add",
+
+                                                                                },
+                                                                                {
+
+                                                                                    uri:"images/earth3.jpg",
+
+                                                                                    minFilter: "linear",
+                                                                                    magFilter: "linear",
+                                                                                    wrapS: "repeat",
+                                                                                    wrapT: "repeat",
+                                                                                    isDepth: false,
+                                                                                    depthMode:"luminance",
+                                                                                    depthCompareMode: "compareRToTexture",
+                                                                                    depthCompareFunc: "lequal",
+                                                                                    flipY: false,
+                                                                                    width: 1,
+                                                                                    height: 1,
+                                                                                    internalFormat:"lequal",
+                                                                                    sourceFormat:"alpha",
+                                                                                    sourceType: "unsignedByte",
+                                                                                    applyTo:"baseColor",
+                                                                                    blendMode: "multiply",
+
+                                                                                    /* Texture rotation angle in degrees
+                                                                                     */
+                                                                                    rotate: 180.0,
+
+                                                                                    /* Texture translation offset
+                                                                                     */
+                                                                                    translate : {
+                                                                                        x: 0,
+                                                                                        y: 0
+                                                                                    },
+
+                                                                                    /* Texture scale factors
+                                                                                     */
+                                                                                    scale : {
+                                                                                        x: -1.0,
+                                                                                        y: 1.0
+                                                                                    }
+                                                                                }
+                                                                            ],
+
+                                                                            nodes: [
+
+                                                                                { type: "sphere", id: "esphere3", slices: 45 }
+                                                                            ]
+                                                                        },
+
+                                                                        {
+                                                                             type: "node",
+                                                                             id: "earth-surface-location-destination",
                                                                         }
                                                                     ]
-                                                                },
-                                                                {
-                                                                     type: "node",
-                                                                     id: "earth-surface-location-destination",
                                                                 }
                                                             ]
-                                                        }
-                                                    ]
-                                                },
+                                                        },
 
-                                                {
-                                                    type: "selector",
-                                                    id: "earthAxisSelector3",
-                                                    selection: [1],
-
-                                                    nodes: [
-
-                                                        // 0: no axis indicator
-                                                        { },
-
-                                                        // 1: display axis indicator
                                                         {
+                                                            type: "selector",
+                                                            id: "earthAxisSelector3",
+                                                            selection: [1],
 
-                                                            type: "scale",
-                                                            x: earth_radius_km * 0.02,
-                                                            y: earth_radius_km * 1.2,
-                                                            z: earth_radius_km * 0.02,
+                                                            nodes: [
 
-                                                            nodes: [ { type: "sphere" } ]
+                                                                // 0: no axis indicator
+                                                                { },
+
+                                                                // 1: display axis indicator
+                                                                {
+
+                                                                    type: "scale",
+                                                                    x: earth_radius_km * 0.02,
+                                                                    y: earth_radius_km * 1.2,
+                                                                    z: earth_radius_km * 0.02,
+
+                                                                    nodes: [ { type: "sphere" } ]
+                                                                }
+                                                            ]
                                                         }
                                                     ]
                                                 }
@@ -1261,33 +1299,31 @@ if (LITE_VERSION) {
 
 function experimentDataToJSON() {
     var exp_table = { rows: [] };
-    if (city_data_table_body) {
-      var rows = city_data_table_body.childElements();
-      var row_count = city_data_table_body.childElementCount;
-      for (var r = 0; r < row_count; r++) {
-          var row = rows[r];
-          var cells = row.childElements();
-          exp_table.rows.push({
-              id:              row.id,
-              index:           cells[0].textContent,
-              city:            cells[1].textContent,
-              month:           cells[2].textContent,
-              temp:            cells[3].textContent,
-              pred:            cells[4].textContent,
-              graph:           cells[5].childElements()[0].value,
-              state:   {
-                  scene1: JSON.stringify(scene1.toJSON()),
-                  scene3: JSON.stringify(scene3.toJSON())
-              }
-          });
-      }
-      exp_table.table_row_index = table_row_index;
+    var rows = city_data_table_body.childElements();
+    var row_count = city_data_table_body.childElementCount;
+    for (var r = 0; r < row_count; r++) {
+        var row = rows[r];
+        var cells = row.childElements();
+        exp_table.rows.push({
+            id:              row.id,
+            index:           cells[0].textContent,
+            city:            cells[1].textContent,
+            month:           cells[2].textContent,
+            temp:            cells[3].textContent,
+            pred:            cells[4].textContent,
+            seasons:         cells[5].childElements()[0].value,
+            graph:           cells[6].childElements()[0].value,
+            state:   {
+                scene1: JSON.stringify(scene1.toJSON()),
+                scene3: JSON.stringify(scene3.toJSON())
+            }
+        });
     }
+    exp_table.table_row_index = table_row_index;
     return exp_table;
 }
 
 function experimentDataFromJSON(exp_table) {
-    if (!city_data_table_body) { return };
     var table_rows = city_data_table_body.rows.length;
     for (var i = 0; i < table_rows; i++) {
         city_data_table_body.deleteRow(0);
@@ -1325,6 +1361,31 @@ function experimentDataFromJSON(exp_table) {
 
         table_data = document.createElement('td');
         table_data.textContent = row.pred;
+        table_row.appendChild(table_data);
+
+        table_data = document.createElement('td');
+        var select, option;
+        select = document.createElement('select');
+        select.name = 'season_' + row.id;
+        select.id = 'season_' + row.id;
+
+        option = document.createElement('option');
+        option.disabled = true;
+        option.textContent = "choose...";
+        select.appendChild(option);
+
+        for (j = 0; j < seasons.length; j++) {
+            option = document.createElement('option');
+            option.value = seasons[j];
+            option.textContent = seasons[j];
+            select.appendChild(option);
+        };
+        option = document.createElement('option');
+        option.value = "I'm not sure";
+        option.textContent = "I'm not sure";
+        select.appendChild(option);
+        select.value = row.seasons
+        table_data.appendChild(select);
         table_row.appendChild(table_data);
 
         table_data = document.createElement('td');
