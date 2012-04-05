@@ -1684,10 +1684,9 @@ function experimentDataToJSON() {
               city:            cells[1].textContent,
               month:           cells[2].textContent,
               tilt:            cells[3].textContent,
-              temp:            cells[4].textContent,
+              daylight:        cells[4].textContent,
               pred:            cells[5].textContent,
-              seasons:         cells[6].childElements()[0].value,
-              graph:           cells[7].childElements()[0].value,
+              graph:           cells[6].childElements()[0].value,
               state:   {
                   scene1: JSON.stringify(scene1.toJSON()),
                   scene3: JSON.stringify(scene3.toJSON())
@@ -1701,100 +1700,75 @@ function experimentDataToJSON() {
 
 
 function experimentDataFromJSON(exp_table) {
-    if (city_data_table_body) {
-      var table_rows = city_data_table_body.rows.length;
-      for (var i = 0; i < table_rows; i++) {
-          city_data_table_body.deleteRow(0);
-      };
+    if (!city_data_table_body) { return };
+    var table_rows = city_data_table_body.rows.length;
+    for (var i = 0; i < table_rows; i++) {
+        city_data_table_body.deleteRow(0);
+    };
 
-      for (var i = 0; i < city_data_to_plot.length; i++) {
-          var city_data = city_data_to_plot[i];
-          for (var j = 0; j < city_data.data.length; j++) {
-              city_data.data[j] = [j, null];
-          }
-      };
+    for (var i = 0; i < city_data_to_plot.length; i++) {
+        var city_data = city_data_to_plot[i];
+        for (var j = 0; j < city_data.data.length; j++) {
+            city_data.data[j] = [j, null];
+        }
+    };
 
-      var table_row, table_data;
-      for (var i = 0; i < exp_table.rows.length; i++) {
-          var row = exp_table.rows[i];
+    var table_row, table_data;
+    for (var i = 0; i < exp_table.rows.length; i++) {
+        var row = exp_table.rows[i];
 
-          table_row = document.createElement('tr');
-          table_row.id = row.id;
+        table_row = document.createElement('tr');
+        table_row.id = row.id;
 
-          table_data = document.createElement('td');
-          table_data.textContent = row.index;
-          table_row.appendChild(table_data);
+        table_data = document.createElement('td');
+        table_data.textContent = row.index;
+        table_row.appendChild(table_data);
 
-          table_data = document.createElement('td');
-          table_data.textContent = row.city;
-          table_row.appendChild(table_data);
+        table_data = document.createElement('td');
+        table_data.textContent = row.city;
+        table_row.appendChild(table_data);
 
-          table_data = document.createElement('td');
-          table_data.textContent = row.month;
-          table_row.appendChild(table_data);
+        table_data = document.createElement('td');
+        table_data.textContent = row.month;
+        table_row.appendChild(table_data);
 
-          table_data = document.createElement('td');
-          table_data.textContent = row.tilt;
-          table_row.appendChild(table_data);
+        table_data = document.createElement('td');
+        table_data.textContent = row.tilt;
+        table_row.appendChild(table_data);
 
-          table_data = document.createElement('td');
-          table_data.textContent = row.temp;
-          table_row.appendChild(table_data);
+        table_data = document.createElement('td');
+        table_data.textContent = row.daylight;
+        table_row.appendChild(table_data);
 
-          table_data = document.createElement('td');
-          table_data.textContent = row.pred;
-          table_row.appendChild(table_data);
+        table_data = document.createElement('td');
+        table_data.textContent = row.pred;
+        table_row.appendChild(table_data);
 
-          table_data = document.createElement('td');
-          var select, option;
-          select = document.createElement('select');
-          select.name = 'season_' + row.id;
-          select.id = 'season_' + row.id;
-          option = document.createElement('option');
-          option.disabled = true;
-          option.textContent = "choose...";
-          select.appendChild(option);
+        table_data = document.createElement('td');
+        var graph_checkbox = document.createElement('input');
+        graph_checkbox.id = 'graph_' + row.id;
+        graph_checkbox.type = "checkbox";
 
-          for (j = 0; j < seasons.length; j++) {
-              option = document.createElement('option');
-              option.value = seasons[j];
-              option.textContent = seasons[j];
-              select.appendChild(option);
-          };
-          option = document.createElement('option');
-          option.value = "I'm not sure";
-          option.textContent = "I'm not sure";
-          select.appendChild(option);
-          select.value = row.seasons
-          table_data.appendChild(select);
-          table_row.appendChild(table_data);
+        if(row.graph == "on") {
+            graph_checkbox.checked = true;
+        } else {
+            graph_checkbox.checked = false;
+        }
+        table_data.appendChild(graph_checkbox);
+        table_row.appendChild(table_data);
 
-          table_data = document.createElement('td');
-          var graph_checkbox = document.createElement('input');
-          graph_checkbox.id = 'graph_' + row.id;
-          graph_checkbox.type = "checkbox";
+        var graph_checkbox_callback = function(event) {
+            _graph_checkbox_callback(this);
+        };
 
-          if(row.graph == "on") {
-              graph_checkbox.checked = true;
-          } else {
-              graph_checkbox.checked = false;
-          }
-          table_data.appendChild(graph_checkbox);
-          table_row.appendChild(table_data);
+        graph_checkbox_callbacks[graph_checkbox.id] = graph_checkbox_callback;
+        graph_checkbox.onchange = graph_checkbox_callback;
+        _graph_checkbox_callback(graph_checkbox);
 
-          var graph_checkbox_callback = function(event) {
-              _graph_checkbox_callback(this);
-          };
-
-          graph_checkbox_callbacks[graph_checkbox.id] = graph_checkbox_callback;
-          graph_checkbox.onchange = graph_checkbox_callback;
-          _graph_checkbox_callback(graph_checkbox);
-
-          city_data_table_body.appendChild(table_row);
-      };
-      plotCityData();
-      table_row_index = exp_table.table_row_index;
-    }
+        city_data_table_body.appendChild(table_row);
+    };
+    plotCityData();
+    table_row_index = exp_table.table_row_index;
 };
 
 //
