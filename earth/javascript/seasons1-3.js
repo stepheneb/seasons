@@ -1516,33 +1516,36 @@ if (LITE_VERSION) {
 
 function experimentDataToJSON() {
     var exp_table = { rows: [] };
-    var rows = city_data_table_body.childElements();
-    var row_count = city_data_table_body.childElementCount;
-    for (var r = 0; r < row_count; r++) {
-        var row = rows[r];
-        var cells = row.childElements();
-        exp_table.rows.push({
-            id:              row.id,
-            index:           cells[0].textContent,
-            city:            cells[1].textContent,
-            month:           cells[2].textContent,
-            tilt:            cells[3].textContent,
-            temp:            cells[4].textContent,
-            pred:            cells[5].textContent,
-            seasons:         cells[6].childElements()[0].value,
-            graph:           cells[7].childElements()[0].value,
-            state:   {
-                scene1: JSON.stringify(scene1.toJSON()),
-                scene3: JSON.stringify(scene3.toJSON())
-            }
-        });
+    if (city_data_table_body) {
+      var rows = city_data_table_body.childElements();
+      var row_count = city_data_table_body.childElementCount;
+      for (var r = 0; r < row_count; r++) {
+          var row = rows[r];
+          var cells = row.childElements();
+          exp_table.rows.push({
+              id:              row.id,
+              index:           cells[0].textContent,
+              city:            cells[1].textContent,
+              month:           cells[2].textContent,
+              tilt:            cells[3].textContent,
+              temp:            cells[4].textContent,
+              pred:            cells[5].textContent,
+              seasons:         cells[6].childElements()[0].value,
+              graph:           cells[7].childElements()[0].value,
+              state:   {
+                  scene1: JSON.stringify(scene1.toJSON()),
+                  scene3: JSON.stringify(scene3.toJSON())
+              }
+          });
+      }
+      exp_table.table_row_index = table_row_index;
     }
-    exp_table.table_row_index = table_row_index;
     return exp_table;
 }
 
 
 function experimentDataFromJSON(exp_table) {
+    if (!city_data_table_body) { return };
     var table_rows = city_data_table_body.rows.length;
     for (var i = 0; i < table_rows; i++) {
         city_data_table_body.deleteRow(0);
