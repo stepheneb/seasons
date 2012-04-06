@@ -74,13 +74,13 @@ View.prototype.SeasonsNode.generatePage = function(view){
    * be handled in the seasonsEvents.js file
    */
 	var modelTypeDropDownHtml = '<select id="modelTypeDropDown" onchange="eventManager.fire(\'seasonsModelTypeUpdated\')">' +
-	'<option value="whatTemperaturePatternsDoYouSee">1 What Temperature Patterns Do You See?</option>' +
-	'<option value="whatTemperaturePatternsDoYouSeeLite">1 What Temperature Patterns Do You See? (lite)</option>' +
-	'<option value="whatIstheShapeofEarthsOrbit">2 What is the Shape of Earth\'s Orbit</option>' +
-	'<option value="howDoesEarthsTiltAffectTemperature">3 How Does Earth\'s Tilt Affect Temperature?</option>' +
-	'<option value="howDoesEarthsTiltAffectTemperatureLite">3 How Does Earth\'s Tilt Affect Temperature? (lite)</option>' +
-	'<option value="howDoesEarthsTiltAffectHoursOfDaylight">4 How Does Earth\'s Tilt Affect Hours of Daylight?</option>' +
-	'<option value="howDoesEarthsTiltAffectHoursOfDaylightLite">4 How Does Earth\'s Tilt Affect Hours of Daylight? (lite)</option>' +
+	'<option value="whatTemperaturePatternsDoYouSee">Investigate: Temperature Patterns Around the World</option>' +
+	'<option value="whatTemperaturePatternsDoYouSeeLite">Explore: Temperature Patterns Around the World</option>' +
+	'<option value="whatIstheShapeofEarthsOrbit">Investigate: Sun-Earth Distance and Shape of Earth\'s Orbit</option>' +
+	'<option value="howDoesEarthsTiltAffectTemperature">Investigate: Tilt and Temperature Patterns</option>' +
+	'<option value="howDoesEarthsTiltAffectTemperatureLite">Explore: Tilt and Temperature Patterns</option>' +
+	'<option value="howDoesEarthsTiltAffectHoursOfDaylight">Investigate: Tilt and Hours of Daylight</option>' +
+	'<option value="howDoesEarthsTiltAffectHoursOfDaylightLite">Explore: Tilt and Hours of Daylight</option>' +
 	'</select>';
 
 	//var promptTextArea = createElement(document, 'textarea', {id: 'promptTextArea', rows:'20', cols:'85', onkeyup:"eventManager.fire('seasonsUpdatePrompt')"});
