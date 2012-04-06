@@ -1312,8 +1312,7 @@ function experimentDataToJSON() {
               month:           cells[2].textContent,
               temp:            cells[3].textContent,
               pred:            cells[4].textContent,
-              seasons:         cells[5].childElements()[0].value,
-              graph:           cells[6].childElements()[0].value,
+              graph:           cells[5].childElements()[0].value,
               state:   {
                   scene1: JSON.stringify(scene1.toJSON()),
                   scene3: JSON.stringify(scene3.toJSON())
@@ -1364,31 +1363,6 @@ function experimentDataFromJSON(exp_table) {
 
         table_data = document.createElement('td');
         table_data.textContent = row.pred;
-        table_row.appendChild(table_data);
-
-        table_data = document.createElement('td');
-        var select, option;
-        select = document.createElement('select');
-        select.name = 'season_' + row.id;
-        select.id = 'season_' + row.id;
-
-        option = document.createElement('option');
-        option.disabled = true;
-        option.textContent = "choose...";
-        select.appendChild(option);
-
-        for (j = 0; j < seasons.length; j++) {
-            option = document.createElement('option');
-            option.value = seasons[j];
-            option.textContent = seasons[j];
-            select.appendChild(option);
-        };
-        option = document.createElement('option');
-        option.value = "I'm not sure";
-        option.textContent = "I'm not sure";
-        select.appendChild(option);
-        select.value = row.seasons
-        table_data.appendChild(select);
         table_row.appendChild(table_data);
 
         table_data = document.createElement('td');
