@@ -8,7 +8,9 @@ var city_colors = {
   dark_blue:        '#110077',
   dark_blue2:       '#000066',
   bright_green:     '#00dd00',
+  bright_green2:    '#00ff00',
   dark_green:       '#118800',
+  dark_green2:      '#789600',
   bright_purple:    '#cc00cc',
   bright_purple2:   '#ff11ff',
   dark_purple:      '#770099',
@@ -299,7 +301,7 @@ var cities = [
         name: "McMurdo Station",
         country: "Antarctica",
         active: true,
-        color: city_colors.bright_turquoise2,
+        color: city_colors.bright_green2,
         no_tilt_color: city_colors.dark_turquoise2,
         location: {
             signed_longitude: -166.73,
