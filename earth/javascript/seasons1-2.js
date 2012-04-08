@@ -1312,7 +1312,7 @@ function experimentDataToJSON() {
               month:           cells[2].textContent,
               temp:            cells[3].textContent,
               pred:            cells[4].textContent,
-              graph:           cells[5].childElements()[0].value,
+              graph:           cells[5].childElements()[0].checked,
               state:   {
                   scene1: JSON.stringify(scene1.toJSON()),
                   scene3: JSON.stringify(scene3.toJSON())
@@ -1371,7 +1371,7 @@ function experimentDataFromJSON(exp_table) {
 
         graph_checkbox.type = "checkbox";
 
-        if(row.graph == "on") {
+        if(row.graph) {
             graph_checkbox.checked = true;
         } else {
             graph_checkbox.checked = false;

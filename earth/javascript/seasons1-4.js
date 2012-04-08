@@ -1686,7 +1686,7 @@ function experimentDataToJSON() {
               tilt:            cells[3].textContent,
               daylight:        cells[4].textContent,
               pred:            cells[5].textContent,
-              graph:           cells[6].childElements()[0].value,
+              graph:           cells[6].childElements()[0].checked,
               state:   {
                   scene1: JSON.stringify(scene1.toJSON()),
                   scene3: JSON.stringify(scene3.toJSON())
@@ -1749,7 +1749,7 @@ function experimentDataFromJSON(exp_table) {
         graph_checkbox.id = 'graph_' + row.id;
         graph_checkbox.type = "checkbox";
 
-        if(row.graph == "on") {
+        if(row.graph) {
             graph_checkbox.checked = true;
         } else {
             graph_checkbox.checked = false;
