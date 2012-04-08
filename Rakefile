@@ -7,14 +7,65 @@ wise4_node = 'wise4/node'
 catalina_home = ENV['CATALINA_HOME']
 seasons_node_path = '/webapps/vlewrapper/vle/node/seasons2'
 
+files = [
+  "earth/images/earth-arrow.png",
+  "earth/images/earth3.jpg",
+  "earth/images/lat-long-grid-invert-units-1440x720-15.png",
+  "earth/images/milky_way_panorama_3000x1500.jpg",
+  "earth/images/sun-arrow.png",
+  "earth/javascript/cities.js",
+  "earth/javascript/earth-axis.js",
+  "earth/javascript/earth-orbit.js",
+  "earth/javascript/earth-sphere.js",
+  "earth/javascript/earth-sun-line.js",
+  "earth/javascript/earth-surface-location-indicator.js",
+  "earth/javascript/earth.js",
+  "earth/javascript/jpl-earth-ephemerides.js",
+  "earth/javascript/latitude-line.js",
+  "earth/javascript/orbit-grid.js",
+  "earth/javascript/seasons.js",
+  "earth/javascript/seasons1-1.js",
+  "earth/javascript/seasons1-2.js",
+  "earth/javascript/seasons1-3.js",
+  "earth/javascript/seasons1-4.js",
+  "earth/javascript/sky-sphere.js",
+  "earth/javascript/solar-system-data.js",
+  "earth/javascript/sun.js",
+  "earth/seasons1-1.html",
+  "earth/seasons1-2-lite.html",
+  "earth/seasons1-2.html",
+  "earth/seasons1-3-lite.html",
+  "earth/seasons1-3.html",
+  "earth/seasons1-4-lite.html",
+  "earth/seasons1-4.html",
+  "images/tablesort/down.gif",
+  "lib/flotr/flotr.debug-0.2.0-test.js",
+  "lib/flotr/lib/canvas2image.js",
+  "lib/flotr/lib/canvastext.js",
+  "lib/flotr/lib/prototype.js",
+  "lib/modernizr-1.6.js",
+  "lib/scenejs-0.8.0/scenejs.js",
+  "lib/sprintf.js",
+  "lib/table/fastinit.js",
+  "lib/table/tablesort.js",
+  "stylesheets/box-shadow.png",
+  "stylesheets/flotr.css",
+  "stylesheets/style.css",
+  "stylesheets/table.css",
+  "stylesheets/video-js.css"
+]
+
 namespace :wise4 do
   desc "generate WISE4 step in: #{File.expand_path(wise4_dist_node_seasons)}"
   task :generate_step do
     rm_rf(wise4_dist) if File.exists?(wise4_dist)
     mkdir_p(wise4_dist_node_seasons)
     cp_r(wise4_node + '/.', wise4_dist_node_seasons)
-    cp_r('stylesheets', wise4_dist_node_seasons)
-    cp_r(%w{ stylesheets images lib earth}, wise4_dist_node_seasons)
+    files.each do |file|
+      dest_path = wise4_dist_node_seasons + '/' + File.dirname(file)
+      mkdir_p(dest_path)
+      cp(file, dest_path)
+    end
   end
 
   desc "copy WISE4 seasons step to local vle: $CATALINA_HOME#{seasons_node_path}"
