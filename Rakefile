@@ -3,6 +3,7 @@ wise4_dist = 'wise4/dist'
 wise4_dist_node_seasons = 'wise4/dist/node/seasons'
 
 wise4_node = 'wise4/node'
+wise4_icons = 'wise4/icons'
 
 catalina_home = ENV['CATALINA_HOME']
 seasons_node_path = '/webapps/vlewrapper/vle/node/seasons2'
@@ -61,6 +62,7 @@ namespace :wise4 do
     rm_rf(wise4_dist) if File.exists?(wise4_dist)
     mkdir_p(wise4_dist_node_seasons)
     cp_r(wise4_node + '/.', wise4_dist_node_seasons)
+    cp_r(wise4_icons, wise4_dist_node_seasons)
     files.each do |file|
       dest_path = wise4_dist_node_seasons + '/' + File.dirname(file)
       mkdir_p(dest_path)

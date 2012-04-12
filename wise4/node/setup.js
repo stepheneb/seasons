@@ -78,8 +78,11 @@ var dependencies = [
  * 'Quiz'
  */
 var nodeClasses = [
-	{nodeClass:'display', nodeClassText:'Seasons'}
+	{nodeClass:'seasons', nodeClassText:'Seasons'}
 ];
+
+var nodeIconPath = 'node/seasons/icons/';
+componentloader.addNodeIconPath('SeasonsNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
 
