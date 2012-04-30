@@ -837,26 +837,64 @@ SceneJS.createNode({
                                                                 }
                                                             ]
                                                         },
-
                                                         {
                                                             type: "selector",
                                                             id: "earthAxisSelector3",
                                                             selection: [1],
-
                                                             nodes: [
-
                                                                 // 0: no axis indicator
                                                                 { },
-
                                                                 // 1: display axis indicator
                                                                 {
-
-                                                                    type: "scale",
-                                                                    x: earth_radius_km * 0.06,
-                                                                    y: earth_radius_km * 1.4,
-                                                                    z: earth_radius_km * 0.06,
-
-                                                                    nodes: [ { type: "sphere" } ]
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "material",
+                                                                            baseColor:      { r: 0.9, g: 0.1, b: 0.1 },
+                                                                            specularColor:  { r: 0.1, g: 0.1, b: 0.1 },
+                                                                            specular:       0.2,
+                                                                            shine:          0.2,
+                                                                            emit:           0.1,
+                                                                            nodes: [
+                                                                                {
+                                                                                    type: "scale",
+                                                                                    x: earth_radius_km * 0.02,
+                                                                                    y: earth_radius_km * 2.4,
+                                                                                    z: earth_radius_km * 0.02,
+                                                                                    nodes: [ { type: "disk" } ]
+                                                                                },
+                                                                                {
+                                                                                    nodes: [
+                                                                                        {
+                                                                                            type: "translate",
+                                                                                            y: earth_radius_km * 1.2,
+                                                                                            nodes: [
+                                                                                                {
+                                                                                                    type: "rotate",
+                                                                                                    angle: 90,
+                                                                                                    x: -1.0,
+                                                                                                    nodes: [
+                                                                                                        {
+                                                                                                            type: "scale",
+                                                                                                            x: earth_radius_km * 0.05,
+                                                                                                            y: earth_radius_km * 0.05,
+                                                                                                            z: earth_radius_km * 0.05,
+                                                                                                            nodes: [
+                                                                                                              { type: "sphere",
+                                                                                                                slices: 4,
+                                                                                                                rings: 4,
+                                                                                                                sweep: 0.5
+                                                                                                              }
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ]
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
                                                                 }
                                                             ]
                                                         }
