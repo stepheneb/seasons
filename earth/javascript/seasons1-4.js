@@ -967,7 +967,7 @@ SceneJS.createNode({
 
                                                                                                 },
                                                                                                 {
-                                                                                                    uri:"images/earth3.jpg",
+                                                                                                    uri:"images/earth3-monochrome.jpg",
 
                                                                                                     minFilter: "linear",
                                                                                                     magFilter: "linear",
