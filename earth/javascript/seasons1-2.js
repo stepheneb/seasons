@@ -903,6 +903,7 @@ var scene1 = new seasons.Scene({
 
     choose_view:                 "choose-view",
     choose_month:                "choose-month",
+    choose_month_callback:       updateLatitudeLineAndCity,
     earth_pointer:               "earth-pointer1",
     earth_label:                 true,
     earth_info_label:            "earth-info-label1",
@@ -1093,9 +1094,8 @@ var city_latitude_temperature_label = document.getElementById("city-latitude-tem
 var city_latitude_temperature_prediction = document.getElementById("city-latitude-temperature-prediction");
 var city_latitude_button_results = document.getElementById("city-latitude-button-results");
 
-var selected_city_latitude = document.getElementById("selected-city-latitude");
-
 function updateLatitudeLineAndCity() {
+  if (selected_city_latitude) {
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
     var city_location = city.location;
@@ -1104,7 +1104,9 @@ function updateLatitudeLineAndCity() {
       results.textContent = '';
     }
     scene3.latitude_line.setLatitude(city_location.signed_latitude);
-    scene3.earth_surface_location.setLocation(city_location.signed_latitude, city_location.signed_longitude)
+    scene3.earth_surface_location.setLocation(city_location.signed_latitude, city_location.signed_longitude);
+    scene3.earth_rotation.set("angle", city_location.signed_longitude + scene3.get_orbital_angle());
+  }
 };
 
 selected_city_latitude.onchange = updateLatitudeLineAndCity;

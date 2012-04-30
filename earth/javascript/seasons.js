@@ -196,6 +196,13 @@ seasons.Scene = function(options) {
     })();
     this.choose_month.onchange();
 
+    // optional callback if month changes
+    if (typeof options.choose_month_callback === 'function') {
+      this.choose_month_callback = options.choose_month_callback
+    } else {
+      this.choose_month_callback = false;
+    }
+
     // Circular Orbital Path selector ...
     if (this.circle_orbit) {
         this.circle_orbit.onchange = (function() {
@@ -361,6 +368,12 @@ seasons.Scene.prototype.set_earth_position = function(newpos) {
     this.earth_position.set({ x: newpos[0], y: newpos[1], z: newpos[2] })
 }
 
+seasons.Scene.prototype.get_orbital_angle = function() {
+  var mon = this.month || 'jun';
+  var angle = this.month_data[mon].index * 30 - 150;
+  return angle;
+}
+
 seasons.Scene.prototype.get_earth_distance = function() {
     return earth_ellipse_distance_from_sun_by_month(this.month);
 }
@@ -382,9 +395,15 @@ seasons.Scene.prototype.get_normalized_earth_eye = function() {
 seasons.Scene.prototype.set_normalized_earth_eye = function(normalized_eye) {
     var eye = {}
     var ep = this.earth_position.get();
-    eye.x = normalized_eye.x + ep.x;
-    eye.y = normalized_eye.y + ep.y;
-    eye.z = normalized_eye.z + ep.z;
+    var v1 = [normalized_eye.x,  normalized_eye.y,  normalized_eye.z];
+    var m1 = [];
+    var angle = this.get_orbital_angle();
+    mat4.identity(m1);
+    mat4.rotateY(m1, angle * deg2rad);
+    mat4.multiplyVec3(m1, v1);
+    eye.x = v1[0] + ep.x;
+    eye.y = v1[1] + ep.y;
+    eye.z = v1[2] + ep.z;
     var eye = this.look.set("eye", eye);
 }
 
@@ -393,8 +412,7 @@ seasons.Scene.prototype.update_earth_look_at = function(normalized_eye) {
     var ep = this.earth_position.get();
     var v1 = [ normalized_eye.x,  normalized_eye.y,  normalized_eye.z];
     var m1 = [];
-    var mon = this.month || 'jun';
-    var angle = this.month_data[mon].index*30-150;
+    var angle = this.get_orbital_angle();
     mat4.identity(m1);
     mat4.rotateY(m1, angle * deg2rad);
     mat4.multiplyVec3(m1, v1);
@@ -676,7 +694,6 @@ seasons.Scene.prototype._perspectiveChange = function(view_selection) {
                 this.look.set("eye",  initial_earth_eye_top );
                 this.look.set("look", { x: earth_x_pos, y : 0.0, z : 0.0 } );
                 this.look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
-
                 this.update_earth_look_at(normalized_initial_earth_eye_top);
                 break;
 
@@ -698,8 +715,7 @@ seasons.Scene.prototype._perspectiveChange = function(view_selection) {
                 this.look.set("eye",  initial_earth_eye_side );
                 this.look.set("look", { x: earth_x_pos, y : 0.0, z : 0.0 } );
                 this.look.set("up",  { x: 0.0, y: 1.0, z: 0.0 } );
-
-                this.update_earth_look_at(normalized_initial_earth_eye_side);
+                this.update_earth_look_at(this.normalized_earth_eye);
                 break;
 
             case "surface" :
@@ -823,6 +839,9 @@ seasons.Scene.prototype._timeOfYearChange = function(month) {
     }
     if (this.linked_scene) {
         this.linked_scene._timeOfYearChange(month);
+    };
+    if(this.choose_month_callback) {
+      this.choose_month_callback();
     };
 }
 
