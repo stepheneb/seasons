@@ -391,9 +391,16 @@ seasons.Scene.prototype.set_normalized_earth_eye = function(normalized_eye) {
 seasons.Scene.prototype.update_earth_look_at = function(normalized_eye) {
     var eye = {};
     var ep = this.earth_position.get();
-    eye.x = normalized_eye.x + ep.x;
-    eye.y = normalized_eye.y + ep.y;
-    eye.z = normalized_eye.z + ep.z;
+    var v1 = [ normalized_eye.x,  normalized_eye.y,  normalized_eye.z];
+    var m1 = [];
+    var mon = this.month || 'jun';
+    var angle = this.month_data[mon].index*30-150;
+    mat4.identity(m1);
+    mat4.rotateY(m1, angle * deg2rad);
+    mat4.multiplyVec3(m1, v1);
+    eye.x = v1[0] + ep.x;
+    eye.y = v1[1] + ep.y;
+    eye.z = v1[2] + ep.z;
     this.look.set("look", ep );
     this.look.set("eye",  eye );
 }
