@@ -1,4 +1,3 @@
-
 var dark_side = 0.3;
 
 SceneJS.createNode({
@@ -2002,21 +2001,18 @@ if (!LITE_VERSION) { generateCityColorKeys(); }
 var dark_green = '#355506';
 
 function plotSolarRadiationAndEarthDistanceGraph() {
-    var d1 = [];
-    var d2 = [];
-
+    var d1 = [], d2 = [];
     for(var i = 0; i < 12; i++) {
         d1.push([i + 1, earth_ephemerides_solar_constant_by_month(monthNamesShort[i])]);
         d2.push([i + 1,
             earth_ephemerides_distance_from_sun_by_month(monthNamesShort[i]) / 1000000 / factor]);
     }
-
     var f = Flotr.draw(
-        $('theCanvas4'),[
-        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}},
-        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}},
-
-        ],{
+        $('theCanvas4'),
+        [ { data:d1, label:'W/m2', lines: { show: false }, points: { show: true } },
+          { data:d2, label:'Million km', yaxis:2, lines: { show: false }, points: { show: true } }
+        ],
+        {
             title: "Earth's Solar Radiation and Distance from the Sun",
             subtitle: "Solar Radiation Measured outside the atmosphere.",
             xaxis:{
@@ -2048,12 +2044,10 @@ function plotSolarRadiationAndEarthDistanceGraph() {
 				verticalLines: true,
 				backgroundColor: 'white'
 			},
-
             HtmlText: false,
             legend: {
                 position: 'nw'
             },
-
             mouse:{
 				track: true,
 				lineColor: 'purple',
@@ -2070,24 +2064,20 @@ function plotSolarRadiationAndEarthDistanceGraph() {
 			crosshair:{
 				mode: 'xy'
 			}
-        });
+        }
+    );
 };
 
 function plotSolarRadiationGraph() {
-    var d1 = [];
-    var d2 = [[0,0]];
-
+    var d1 = [],
+        d2 = [[0,0]];
     for(var i = 0; i < 12; i++) {
         d1.push([i + 1, earth_ephemerides_solar_constant_by_month(monthNamesShort[i])]);
-        // d2.push([i + 1,
-        //     earth_ephemerides_distance_from_sun_by_month(monthNamesShort[i]) / 1000000 / factor]);
     }
-
     var f = Flotr.draw(
-        $('theCanvas4'),[
-        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}},
-        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}},
-
+        $('theCanvas4'),
+        [ { data:d1, label:'W/m2', lines: { show: false }, points: { show: true } },
+          { data:d2, label:'Million km', yaxis:2, lines: { show: false }, points: { show: true } }
         ],{
             title: "Earth's Solar Radiation",
             subtitle: "Solar Radiation Measured outside the atmosphere.",
@@ -2119,12 +2109,10 @@ function plotSolarRadiationGraph() {
 				verticalLines: true,
 				backgroundColor: 'white'
 			},
-			
             HtmlText: false,
             legend: {
                 position: 'nw'
             },
-
             mouse:{
 				track: true,
 				lineColor: 'purple',
@@ -2141,25 +2129,23 @@ function plotSolarRadiationGraph() {
 			crosshair:{
 				mode: 'xy'
 			}
-        });
+        }
+    );
 };
 
 function plotEarthDistanceGraph() {
-    var d1 = [[0,0]];
-    var d2 = [];
-
+    var d1 = [[0,0]],
+        d2 = [];
     for(var i = 0; i < 12; i++) {
-        // d1.push([i + 1, earth_ephemerides_solar_constant_by_month(monthNamesShort[i])]);
         d2.push([i + 1,
             earth_ephemerides_distance_from_sun_by_month(monthNamesShort[i]) / 1000000 / factor]);
     }
-
     var f = Flotr.draw(
-        $('theCanvas4'),[
-        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}},
-        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}},
-
-        ],{
+        $('theCanvas4'),
+        [ { data:d1, label:'W/m2', lines: { show: false }, points: { show: true } },
+          { data:d2, label:'Million km', yaxis:2, lines: { show: false }, points: { show: true } }
+        ],
+        {
             title: "Earth's distance from the Sun",
             subtitle: "Measured in Millions of kms",
             xaxis:{
@@ -2186,33 +2172,33 @@ function plotEarthDistanceGraph() {
                 max: 160,
                 title: 'Distance from Sun (Million km)'
             },
-			grid:{
-				verticalLines: true,
-				backgroundColor: 'white'
-			},
-			
+            grid:{
+                verticalLines: true,
+                backgroundColor: 'white'
+            },
             HtmlText: false,
             legend: {
                 position: 'nw'
             },
 
             mouse:{
-				track: true,
-				lineColor: 'purple',
-				relative: true,
-				position: 'nw',
-				sensibility: 1, // => The smaller this value, the more precise you've to point
-				trackDecimals: 1,
+                track: true,
+                lineColor: 'purple',
+                relative: true,
+                position: 'nw',
+                sensibility: 1, // => The smaller this value, the more precise you've to point
+                trackDecimals: 1,
                 trackFormatter: function(obj) {
                     var monthName = monthNamesShort[Number(obj.x - 1)];
                     monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
                     return  monthName + ', ' + obj.y + ' ' +obj.series.label;;
                 }
-			},
-			crosshair:{
-				mode: 'xy'
-			}
-        });
+            },
+            crosshair:{
+                mode: 'xy'
+            }
+        }
+    );
 };
 
 
@@ -2221,11 +2207,11 @@ function plotNothingGraph() {
     var d2 = [[0,0]];
 
     var f = Flotr.draw(
-        $('theCanvas4'),[
-        {data:d1, label:'W/m2', lines: {show: false}, points: {show: true}},
-        {data:d2, label:'Million km', yaxis:2, lines: {show: false}, points: {show: true}},
-
-        ],{
+        $('theCanvas4'),
+        [ { data:d1, label:'W/m2', lines: { show: false }, points: { show: true } },
+          { data:d2, label:'Million km', yaxis:2, lines: { show: false }, points: { show: true } },
+        ],
+        {
             title: "Earth's Solar Radiation and Distance from the Sun",
             subtitle: "Solar Radiation Measured outside the atmosphere.",
             xaxis:{
@@ -2253,33 +2239,32 @@ function plotNothingGraph() {
                 max: 160,
                 title: 'Distance from Sun (Million km)'
             },
-			grid:{
-				verticalLines: true,
-				backgroundColor: 'white'
-			},
-			
+            grid:{
+                verticalLines: true,
+                backgroundColor: 'white'
+            },
             HtmlText: false,
             legend: {
                 position: 'nw'
             },
-
             mouse:{
-				track: true,
-				lineColor: 'purple',
-				relative: true,
-				position: 'nw',
-				sensibility: 1, // => The smaller this value, the more precise you've to point
-				trackDecimals: 0,
+                track: true,
+                lineColor: 'purple',
+                relative: true,
+                position: 'nw',
+                sensibility: 1, // => The smaller this value, the more precise you've to point
+                trackDecimals: 0,
                 trackFormatter: function(obj) {
                     var monthName = monthNamesShort[Number(obj.x - 1)];
                     monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
                     return  monthName + ', ' + obj.y + ' ' +obj.series.label;;
                 }
-			},
-			crosshair:{
-				mode: 'xy'
-			}
-        });
+            },
+            crosshair:{
+                mode: 'xy'
+            }
+        }
+    );
 };
 
 // Graph selection
@@ -2298,9 +2283,6 @@ function showGraphChange() {
 
 // show_graph.onchange = showGraphChange;
 // show_graph.onchange();
-
-
-
 
 var scaleCanvas = function(canvas, width, height) {
     if (width && height) {
@@ -2341,4 +2323,3 @@ if (document.getElementById("editor")) {
     renderer.setShowGutter(false);
     session.setUseWrapMode(true);
 }
-

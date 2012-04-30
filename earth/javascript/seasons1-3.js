@@ -1297,7 +1297,7 @@ function sceneCompletelyLoaded() {
 }
 
 SceneJS.withNode("theScene3").bind("loading-status",
-    function(event) {	
+    function(event) {
         if (zBufferDepth == 0) {
             zBufferDepth = SceneJS.withNode("theScene3").get("ZBufferDepth");
             var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
@@ -1307,10 +1307,10 @@ SceneJS.withNode("theScene3").bind("loading-status",
 
         if (params.numNodesLoading > 0) {
         } else {
-        	if (!completelyLoaded) {
-        		sceneCompletelyLoaded();
-        		completelyLoaded = true;
-        	}
+            if (!completelyLoaded) {
+                sceneCompletelyLoaded();
+                completelyLoaded = true;
+            }
         }
     });
 
