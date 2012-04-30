@@ -7,7 +7,7 @@
     <link href="../stylesheets/video-js.css" rel="stylesheet" type="text/css"/>
 
     <script type="text/javascript" src="../lib/modernizr-1.6.js"></script>
-
+    <script type="text/javascript" src="../lib/glmatrix.js"></script>
 </head>
 <div id="container">
   <div id="header-inner">
@@ -95,6 +95,7 @@
 
   window.onload=function() {
     LITE_VERSION = false;
+    NO_YAW_NAVIGATION = true;
     var webGLEnabled = Modernizr.webgl;
     // webGLEnabled = false;
     if (webGLEnabled){

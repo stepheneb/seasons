@@ -454,6 +454,7 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
         var f, up_down_axis, angle, new_yaw, new_pitch;
 
         var normalized_eye;
+        var allow_yaw = (typeof NO_YAW_NAVIGATION === 'undefined') || !NO_YAW_NAVIGATION;
 
         switch(this.look_at_selection) {
             case "orbit":
@@ -467,6 +468,10 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
                 // test for NaN
                 if (new_yaw !== new_yaw) new_yaw = 0;
                 if (new_yaw !== new_yaw) new_pitch = 0;
+
+                if (!allow_yaw) {
+                  new_yaw = 0
+                };
 
                 this.sun_yaw   += new_yaw;
                 this.incrementSunPitch(new_pitch);
@@ -513,6 +518,10 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
                 // test for NaN
                 if (new_yaw !== new_yaw) new_yaw = 0;
                 if (new_yaw !== new_yaw) new_pitch = 0;
+
+                if (!allow_yaw) {
+                  new_yaw = 0
+                };
 
                 normalized_eye = this.normalized_earth_eye;
 
