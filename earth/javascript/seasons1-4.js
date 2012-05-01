@@ -1106,29 +1106,59 @@ SceneJS.createNode({
                                                                                                     nodes: [ { type: "disk" } ]
                                                                                                 },
                                                                                                 {
+                                                                                                    type: "material",
+                                                                                                    baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                    specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                    specular:       0.2,
+                                                                                                    shine:          0.2,
+                                                                                                    emit:           1.0,
                                                                                                     nodes: [
                                                                                                         {
                                                                                                             type: "translate",
                                                                                                             y: earth_radius_km * 1.2,
                                                                                                             nodes: [
                                                                                                                 {
-                                                                                                                    type: "rotate",
-                                                                                                                    angle: 90,
-                                                                                                                    x: -1.0,
+                                                                                                                    type: "billboard",
                                                                                                                     nodes: [
                                                                                                                         {
                                                                                                                             type: "scale",
-                                                                                                                            x: earth_radius_km * 0.05,
-                                                                                                                            y: earth_radius_km * 0.05,
-                                                                                                                            z: earth_radius_km * 0.05,
+                                                                                                                            x: 0.2,
+                                                                                                                            y: 0.2,
+                                                                                                                            z: 0.2,
                                                                                                                             nodes: [
-                                                                                                                              { type: "sphere",
-                                                                                                                                slices: 4,
-                                                                                                                                rings: 4,
-                                                                                                                                sweep: 0.5
-                                                                                                                              }
+                                                                                                                                {
+                                                                                                                                    type: "text",
+                                                                                                                                    mode: "vector",
+                                                                                                                                    text: " North"
+                                                                                                                                }
                                                                                                                             ]
                                                                                                                         }
+                                                                                                                    ]
+                                                                                                                }
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ]
+                                                                                                },
+                                                                                                {
+                                                                                                    type: "translate",
+                                                                                                    y: earth_radius_km * 1.2,
+                                                                                                    nodes: [
+                                                                                                        {
+                                                                                                            type: "rotate",
+                                                                                                            angle: 90,
+                                                                                                            x: -1.0,
+                                                                                                            nodes: [
+                                                                                                                {
+                                                                                                                    type: "scale",
+                                                                                                                    x: earth_radius_km * 0.05,
+                                                                                                                    y: earth_radius_km * 0.05,
+                                                                                                                    z: earth_radius_km * 0.05,
+                                                                                                                    nodes: [
+                                                                                                                      { type: "sphere",
+                                                                                                                        slices: 4,
+                                                                                                                        rings: 4,
+                                                                                                                        sweep: 0.5
+                                                                                                                      }
                                                                                                                     ]
                                                                                                                 }
                                                                                                             ]
