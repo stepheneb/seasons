@@ -1,52 +1,5 @@
 var dark_side = 0.3;
 
-SceneJS.createNode({
-    id: "EarthPointerSprite",
-    type: "billboard",
-    nodes: [
-        {
-            type: "texture",
-            layers: [ { uri: "images/earth-arrow.png" } ],
-            nodes: [
-
-                {
-                    type: "node",
-
-                    flags: {
-                        transparent: true
-                    },
-
-                    nodes: [
-
-                        {
-
-                            type: "material",
-                            specular: 0.0,
-                            emit: 10,
-
-                            nodes: [
-
-                                {
-                                    type: "translate",
-                                    y: sun_radius_km * 22,
-
-                                    nodes: [
-                                        {
-                                            type: "quad",
-                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20,
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-});
-
-
 /*----------------------------------------------------------------------
  * Canvases 1 and 3
  *---------------------------------------------------------------------*/
@@ -179,40 +132,31 @@ SceneJS.createNode({
                                             x: 0, y: 0, z: 0,
                                             nodes: [
                                                 {
-                                                    type: "billboard",
+                                                    type: "material",
+                                                    baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                    specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                    specular:       0.2,
+                                                    shine:          0.2,
+                                                    emit:           1.0,
                                                     nodes: [
                                                         {
-                                                            type: "texture",
-                                                            layers: [ { uri: "images/sun-arrow.png" } ],
+                                                            type: "translate",
+                                                            y: sun_radius_km * 11,
+                                                            x: sun_radius_km * -18,
                                                             nodes: [
-
                                                                 {
-                                                                    type: "node",
-
-                                                                    flags: {
-                                                                        transparent: true
-                                                                    },
-
+                                                                    type: "billboard",
                                                                     nodes: [
-
                                                                         {
-
-                                                                            type: "material",
-                                                                            specular: 0.0,
-                                                                            emit: 10,
-
+                                                                            type: "scale",
+                                                                            x: 4000,
+                                                                            y: 4000,
+                                                                            z: 4000,
                                                                             nodes: [
-
                                                                                 {
-                                                                                    type: "translate",
-                                                                                    y: sun_radius_km * 22,
-
-                                                                                    nodes: [
-                                                                                        {
-                                                                                            type: "quad",
-                                                                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20,
-                                                                                        }
-                                                                                    ]
+                                                                                    type: "text",
+                                                                                    mode: "vector",
+                                                                                    text: "Sun"
                                                                                 }
                                                                             ]
                                                                         }
@@ -224,7 +168,6 @@ SceneJS.createNode({
                                                 }
                                             ]
                                         },
-
 
                                         // Integrate our earth elliptical orbit, which is defined in earth-orbit.js
                                         {
@@ -323,41 +266,31 @@ SceneJS.createNode({
                                             x: earth_x_pos, y: sun_radius_km * 10.5, z: 0,
                                             nodes: [
                                                 {
-                                                    id: "EarthPointerSprite",
-                                                    type: "billboard",
+                                                    type: "material",
+                                                    baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                    specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                    specular:       0.2,
+                                                    shine:          0.2,
+                                                    emit:           1.0,
                                                     nodes: [
                                                         {
-                                                            type: "texture",
-                                                            layers: [ { uri: "images/earth-arrow.png" } ],
+                                                            type: "translate",
+                                                            y: sun_radius_km * 8,
+                                                            x: sun_radius_km * -8,
                                                             nodes: [
-
                                                                 {
-                                                                    type: "node",
-
-                                                                    flags: {
-                                                                        transparent: true
-                                                                    },
-
+                                                                    type: "billboard",
                                                                     nodes: [
-
                                                                         {
-
-                                                                            type: "material",
-                                                                            specular: 0.0,
-                                                                            emit: 10,
-
+                                                                            type: "scale",
+                                                                            x: 3000,
+                                                                            y: 3000,
+                                                                            z: 3000,
                                                                             nodes: [
-
                                                                                 {
-                                                                                    type: "translate",
-                                                                                    y: sun_radius_km * 22,
-
-                                                                                    nodes: [
-                                                                                        {
-                                                                                            type: "quad",
-                                                                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20,
-                                                                                        }
-                                                                                    ]
+                                                                                    type: "text",
+                                                                                    mode: "vector",
+                                                                                    text: "Earth"
                                                                                 }
                                                                             ]
                                                                         }
@@ -439,10 +372,45 @@ SceneJS.createNode({
                                                                                             nodes: [
                                                                                                 {
                                                                                                     type: "scale",
-                                                                                                    x: earth_radius_km * 40,
+                                                                                                    x: earth_radius_km * 30,
                                                                                                     y: earth_radius_km * 1600,
-                                                                                                    z: earth_radius_km * 40,
+                                                                                                    z: earth_radius_km * 30,
                                                                                                     nodes: [ { type: "disk" } ]
+                                                                                                },
+                                                                                                {
+                                                                                                    type: "material",
+                                                                                                    baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                    specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                    specular:       0.2,
+                                                                                                    shine:          0.2,
+                                                                                                    emit:           1.0,
+                                                                                                    nodes: [
+                                                                                                        {
+                                                                                                            type: "translate",
+                                                                                                            y: earth_radius_km * 1200,
+                                                                                                            x: earth_radius_km * -600,
+                                                                                                            nodes: [
+                                                                                                                {
+                                                                                                                    type: "billboard",
+                                                                                                                    nodes: [
+                                                                                                                        {
+                                                                                                                            type: "scale",
+                                                                                                                            x: 2500,
+                                                                                                                            y: 2500,
+                                                                                                                            z: 2500,
+                                                                                                                            nodes: [
+                                                                                                                                {
+                                                                                                                                    type: "text",
+                                                                                                                                    mode: "vector",
+                                                                                                                                    text: " North"
+                                                                                                                                }
+                                                                                                                            ]
+                                                                                                                        }
+                                                                                                                    ]
+                                                                                                                }
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ]
                                                                                                 },
                                                                                                 {
                                                                                                     nodes: [
@@ -457,9 +425,9 @@ SceneJS.createNode({
                                                                                                                     nodes: [
                                                                                                                         {
                                                                                                                             type: "scale",
-                                                                                                                            x: earth_radius_km * 80,
-                                                                                                                            y: earth_radius_km * 80,
-                                                                                                                            z: earth_radius_km * 80,
+                                                                                                                            x: earth_radius_km * 100,
+                                                                                                                            y: earth_radius_km * 100,
+                                                                                                                            z: earth_radius_km * 100,
                                                                                                                             nodes: [
                                                                                                                               { type: "sphere",
                                                                                                                                 slices: 4,
