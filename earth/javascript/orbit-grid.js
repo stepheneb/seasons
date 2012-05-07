@@ -39,47 +39,38 @@ var orbitGrid = SceneJS.createNode({
             specular:       1.0,
             shine:          2.0,
             emit:           1.0,
-
             nodes: [
-            
                 {
                     type: "translate",
                     x: sun_x_pos,
                     y: 0,
                     z: 0,
-
-                    nodes: [ 
+                    nodes: [
                         {
                             type: "scale",
                             x: 1,
                             y: 0,
                             z: 1,
-                            
                             nodes: [
-
                                 {
-
                                     type: "selector",
                                     id: "orbit-grid-selector",
                                     selection: [2],
-                                    nodes: [ 
-                        
+                                    nodes: [
                                         // 0: off
-                         
                                         {  },
-
                                         // 1: on: orbit grid for Orbit view
-                        
                                         {
-                                            type: "geometry",
-                                            id: "orbit-grid-orbit-geometry",
-                                            primitive: "lines",
-
-                                            positions: orbit_grid_orbit_positions,
-                                            indices : orbit_grid_orbit_indices
-
-                                        }                    
-                                        
+                                            nodes: [
+                                                {
+                                                    type: "geometry",
+                                                    id: "orbit-grid-orbit-geometry",
+                                                    primitive: "lines",
+                                                    positions: orbit_grid_orbit_positions,
+                                                    indices : orbit_grid_orbit_indices
+                                                }
+                                            ]
+                                        }
                                     ]
                                 }
                             ]
