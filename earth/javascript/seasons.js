@@ -55,6 +55,7 @@ seasons.Scene = function(options) {
     this.optics             = this.camera.get("optics");
 
     this.linked_scene       = (options.linked_scene || false);
+    this.linked_from_scene       = (options.linked_from_scene || false);
 
     this.setAspectRatio();
 
@@ -64,59 +65,75 @@ seasons.Scene = function(options) {
 
     if (options.gridSelector !== false) {
         this.gridSelector       = SceneJS.withNode(options.gridSelector || "orbit-grid-selector");
-    };
+    }
 
     if (options.earth_tilt !== false) {
         this.earth_tilt  = SceneJS.withNode(options.earth_tilt || "earthRotationalAxisQuaternion");
-    };
+    }
 
     this.look_at_selection  = (options.look_at_selection || 'orbit');
 
     if (options.latitude_line) {
-        this.latitude_line = new LatitudeLine(options.latitude_line)
-    };
+        this.latitude_line = new LatitudeLine(options.latitude_line);
+    }
 
     if (options.earth_surface_location) {
-        this.earth_surface_location = new EarthSurfaceLocationIndicator("earth-surface-location-destination")
-    };
+        this.earth_surface_location = new EarthSurfaceLocationIndicator("earth-surface-location-destination");
+    }
 
     if (options.choose_view === false) {
         this.choose_view = false;
     } else {
         this.choose_view = document.getElementById(options.choose_view || "choose-view");
         this.view_selection = getRadioSelection(this.choose_view);
-    };
+    }
 
     if (options.orbital_grid === false) {
         this.orbital_grid = false;
     } else {
         this.orbital_grid = document.getElementById(options.orbital_grid || "orbital-grid");
-    };
+    }
 
     if (options.earth_pointer === false) {
         this.earth_pointer = false;
     } else {
         this.earth_pointer      = SceneJS.withNode(options.earth_pointer || "earth-pointer");
-    };
+    }
 
     if (options.circle_orbit === false) {
         this.circle_orbit = false;
     } else {
         this.circle_orbit = document.getElementById(options.circle_orbit || "circle-orbit");
-    };
+    }
 
     this.earth_label        = (options.earth_label || false);
     if (this.earth_label) {
         this.earth_info_label   = document.getElementById(options.earth_info_label || "earth-info-label");
-    };
+    }
 
     this.choose_tilt        = (options.choose_tilt || false);
     if (this.choose_tilt) {
         this.choose_tilt = document.getElementById(options.choose_tilt || "choose-tilt");
-    };
+    }
 
     this.earth_position      = SceneJS.withNode(options.earth_position || "earth-position");
     this.earth_rotation      = SceneJS.withNode(options.earth_rotation || "earth-rotation");
+
+    if (options.spaceship_position) {
+        this.spaceship_position       = SceneJS.withNode(options.spaceship_position);
+        this.spaceship_rotation_yaw   = SceneJS.withNode(options.spaceship_rotation_yaw);
+        this.spaceship_rotation_pitch = SceneJS.withNode(options.spaceship_rotation_pitch);
+    } else {
+        this.spaceship_position       = false;
+        this.spaceship_rotation_yaw   = false;
+        this.spaceship_rotation_pitch = false;
+    }
+
+    if (options.spaceship_rotation) {
+        this.spaceship_rotation = SceneJS.withNode(options.spaceship_rotation);
+    } else {
+        this.spaceship_rotation = false;
+    }
 
     if (options.earth_sun_line === false) {
         this.earth_sun_line = false;
@@ -128,7 +145,7 @@ seasons.Scene = function(options) {
         this.earth_sun_line_rotation =    SceneJS.withNode(options.earth_sun_line_rotation || "earth-sun-line-rotation");
         this.earth_sun_line_translation = SceneJS.withNode(options.earth_sun_line_translation || "earth-sun-line-translation");
         this.earth_sun_line_scale =       SceneJS.withNode(options.earth_sun_line_scale || "earth-sun-line-scale");
-    };
+    }
 
     this.ellipseOrbitSelector = SceneJS.withNode(options.ellipseOrbitSelector || "earthEllipseOrbitSelector");
     this.earthTextureSelector = SceneJS.withNode(options.earthTextureSelector || "earthTextureSelector");
@@ -166,7 +183,7 @@ seasons.Scene = function(options) {
         "dec": { index: 11, num:  12, short_name: 'Dec', long_name: 'December' }
     };
 
-    this.month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+    this.month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
     this.seasons = ["Fall", "Winter", "Spring", "Summer"];
 
@@ -180,7 +197,7 @@ seasons.Scene = function(options) {
         this.choose_view.onchange = (function() {
             return function() {
                 self.perspectiveChange(this);
-            }
+            };
         })();
         this.choose_view.onchange();
     }
@@ -188,17 +205,17 @@ seasons.Scene = function(options) {
     // Selecting the time of year: jun, sep, dec, mar
     this.choose_month = document.getElementById(options.choose_month || "choose-month");
 
-    this.month = this.choose_month.value
+    this.month = this.choose_month.value;
     this.choose_month.onchange = (function() {
         return function() {
             self.timeOfYearChange(this);
-        }
+        };
     })();
     this.choose_month.onchange();
 
     // optional callback if month changes
     if (typeof options.choose_month_callback === 'function') {
-      this.choose_month_callback = options.choose_month_callback
+      this.choose_month_callback = options.choose_month_callback;
     } else {
       this.choose_month_callback = false;
     }
@@ -208,17 +225,17 @@ seasons.Scene = function(options) {
         this.circle_orbit.onchange = (function() {
             return function() {
                 self.circleOrbitPathChange(this);
-            }
+            };
         })();
         this.circle_orbit.onchange();
-    };
+    }
 
     // Orbital Grid selector ...
     if (this.orbital_grid) {
         this.orbital_grid.onchange = (function() {
             return function() {
                 self.orbitalGridChange(this);
-            }
+            };
         })();
         this.orbital_grid.onchange();
     }
@@ -229,7 +246,7 @@ seasons.Scene = function(options) {
         this.choose_tilt.onchange = (function() {
             return function() {
                 self.updateTilt(this);
-            }
+            };
         })();
         this.choose_tilt.onchange();
     } else {
@@ -268,25 +285,25 @@ seasons.Scene = function(options) {
     this.canvas.addEventListener('mousedown', (function() {
         return function(event) {
             self.mouseDown(event, this);
-        }
+        };
     })(), true);
 
     this.canvas.addEventListener('mouseup', (function() {
         return function(event) {
             self.mouseUp(event, this);
-        }
+        };
     })(), true);
 
     this.canvas.addEventListener('mouseout', (function() {
         return function(event) {
             self.mouseOut(event, this);
-        }
+        };
     })(), true);
 
     this.canvas.addEventListener('mousemove', (function() {
         return function(event) {
             self.mouseMove(event, this);
-        }
+        };
     })(), true);
 
 };
@@ -302,10 +319,10 @@ seasons.Scene.prototype.toJSON = function() {
         look_at: {
             eye: JSON.stringify(this.look.get("eye")),
             look: JSON.stringify(this.look.get("look")),
-            up: JSON.stringify(this.look.get("up")),
+            up: JSON.stringify(this.look.get("up"))
         }
     };
-    return state
+    return state;
 };
 
 seasons.Scene.prototype.toJSONStr = function() {
@@ -337,8 +354,8 @@ seasons.Scene.prototype.updateTilt = function(form_element) {
 };
 
 seasons.Scene.prototype._updateTilt = function(tilt) {
-    if (tilt == true) tilt = 'yes';
-    if (tilt == false) tilt = 'no';
+    if (tilt === true) tilt = 'yes';
+    if (tilt === false) tilt = 'no';
     if (this.choose_tilt) setRadioSelection (this.choose_tilt, tilt);
     this.tilt = tilt;
     var tilt_str;
@@ -356,31 +373,31 @@ seasons.Scene.prototype._updateTilt = function(tilt) {
             this.earth_tilt.set("rotation", { x : 0, y : 0, z : 1, angle : 0 });
             tilt_str = "No Tilt";
             break;
-    };
+    }
 };
 
 seasons.Scene.prototype.get_earth_position = function() {
     var ep = this.earth_position.get();
     return [ep.x, ep.y, ep.z];
-}
+};
 
 seasons.Scene.prototype.set_earth_position = function(newpos) {
-    this.earth_position.set({ x: newpos[0], y: newpos[1], z: newpos[2] })
-}
+    this.earth_position.set({ x: newpos[0], y: newpos[1], z: newpos[2] });
+};
 
 seasons.Scene.prototype.get_orbital_angle = function() {
   var mon = this.month || 'jun';
   var angle = this.month_data[mon].index * 30 - 150;
   return angle;
-}
+};
 
 seasons.Scene.prototype.get_earth_distance = function() {
     return earth_ellipse_distance_from_sun_by_month(this.month);
-}
+};
 
 seasons.Scene.prototype.get_solar_flux = function() {
     return earth_ephemerides_solar_constant_by_month(this.month);
-}
+};
 
 seasons.Scene.prototype.get_normalized_earth_eye = function() {
     var normalized_eye = {};
@@ -390,29 +407,31 @@ seasons.Scene.prototype.get_normalized_earth_eye = function() {
     normalized_eye.y = eye.y - ep.y;
     normalized_eye.z = eye.z - ep.z;
     return normalized_eye;
-}
+};
 
 seasons.Scene.prototype.set_normalized_earth_eye = function(normalized_eye) {
-    var eye = {}
-    var ep = this.earth_position.get();
-    var v1 = [normalized_eye.x,  normalized_eye.y,  normalized_eye.z];
-    var m1 = [];
-    var angle = this.get_orbital_angle();
+    var eye = {},
+        ep = this.earth_position.get(),
+        v1 = [normalized_eye.x,  normalized_eye.y,  normalized_eye.z],
+        m1 = [],
+        angle = this.get_orbital_angle();
+
     mat4.identity(m1);
     mat4.rotateY(m1, angle * deg2rad);
     mat4.multiplyVec3(m1, v1);
     eye.x = v1[0] + ep.x;
     eye.y = v1[1] + ep.y;
     eye.z = v1[2] + ep.z;
-    var eye = this.look.set("eye", eye);
-}
+    eye = this.look.set("eye", eye);
+};
 
 seasons.Scene.prototype.update_earth_look_at = function(normalized_eye) {
-    var eye = {};
-    var ep = this.earth_position.get();
-    var v1 = [ normalized_eye.x,  normalized_eye.y,  normalized_eye.z];
-    var m1 = [];
-    var angle = this.get_orbital_angle();
+    var eye = {},
+        ep = this.earth_position.get(),
+        v1 = [normalized_eye.x,  normalized_eye.y,  normalized_eye.z],
+        m1 = [],
+        angle = this.get_orbital_angle();
+
     mat4.identity(m1);
     mat4.rotateY(m1, angle * deg2rad);
     mat4.multiplyVec3(m1, v1);
@@ -421,7 +440,56 @@ seasons.Scene.prototype.update_earth_look_at = function(normalized_eye) {
     eye.z = v1[2] + ep.z;
     this.look.set("look", ep );
     this.look.set("eye",  eye );
-}
+};
+
+seasons.Scene.prototype.updateSpaceshipPosition = function() {
+    if (this.spaceship_position && this.linked_from_scene) {
+        var pos = {},
+            normalized_eye,
+            v1 = vec3.create(),
+            v2 = vec3.create(),
+            v3 = vec3.create(),
+            v4 = vec3.create(),
+            m1 = mat4.create(),
+            dot,
+            north,
+            orbital_angle = this.get_orbital_angle(),
+            pitch_angle;
+
+        normalized_eye = this.linked_from_scene.normalized_earth_eye;
+        v1 = [normalized_eye.x,  normalized_eye.y,  normalized_eye.z];
+        mat4.identity(m1);
+        mat4.rotateY(m1, (orbital_angle) * deg2rad);
+        mat4.multiplyVec3(m1, v1);
+        vec3.scale(v1, earth_radius_km * 25);
+        pos.x = v1[0];
+        pos.y = v1[1];
+        pos.z = v1[2];
+        this.spaceship_position.set(pos);
+        this.spaceship_rotation_yaw.set("angle", orbital_angle - 90);
+        vec3.normalize(v1, v2);
+        vec3.set(v2, v3);
+        north = v3[1];
+        v3[1] = 0;
+        dot = vec3.dot(v2, v3, v4);
+        pitch_angle = Math.acos(dot) * rad2deg;
+        if (north > 0) { pitch_angle = -pitch_angle; }
+        switch (this.month) {
+            case "jun":
+            this.spaceship_rotation_pitch.set({ "angle":  pitch_angle, x: 1.0, z: 0.0 });
+            break;
+            case "sep":
+            this.spaceship_rotation_pitch.set({ "angle":  -pitch_angle, x: 0.0, z: 1.0 });
+            break;
+            case "dec":
+            this.spaceship_rotation_pitch.set({ "angle": -pitch_angle, x: 1.0, z: 0.0 });
+            break;
+            case "mar":
+            this.spaceship_rotation_pitch.set({ "angle": pitch_angle, x: 0.0, z: 1.0 });
+            break;
+        }
+    }
+};
 
 seasons.Scene.prototype.mouseDown = function(event, element) {
     switch(this.look_at_selection) {
@@ -437,16 +505,16 @@ seasons.Scene.prototype.mouseDown = function(event, element) {
     }
     this.dragging = true;
     this.canvas.style.cursor = "pointer";
-}
+};
 
 seasons.Scene.prototype.mouseUp = function(event, element) {
     this.dragging = false;
-}
+};
 
 
 seasons.Scene.prototype.mouseOut = function(event, element) {
     this.dragging = false;
-}
+};
 
 seasons.Scene.prototype.incrementEarthPitch = function(num) {
     this.earth_pitch += num;
@@ -469,10 +537,10 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
         this.canvas.style.cursor = "pointer";
         var look, eye, eye4, neweye;
         var up_downQ, up_downQM, left_rightQ, left_rightQM;
-        var f, up_down_axis, angle, new_yaw, new_pitch;
+        var f, up_down_axis, angle;
 
         var normalized_eye;
-        var allow_yaw = (typeof NO_YAW_NAVIGATION === 'undefined') || !NO_YAW_NAVIGATION;
+        var constrain_navigation = (typeof CONSTRAIN_NAVIGATION !== 'undefined') && CONSTRAIN_NAVIGATION;
 
         switch(this.look_at_selection) {
             case "orbit":
@@ -481,15 +549,15 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
                     new_pitch = (event.clientY - this.sun_lastY) * -0.2;
                     this.sun_lastX = event.clientX;
                     this.sun_lastY = event.clientY;
-                };
+                }
 
                 // test for NaN
                 if (new_yaw !== new_yaw) new_yaw = 0;
                 if (new_yaw !== new_yaw) new_pitch = 0;
 
-                if (!allow_yaw) {
-                  new_yaw = 0
-                };
+                if (constrain_navigation) {
+                  new_pitch = 0;
+                }
 
                 this.sun_yaw   += new_yaw;
                 this.incrementSunPitch(new_pitch);
@@ -531,15 +599,15 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
 
                     this.earth_lastX = event.clientX;
                     this.earth_lastY = event.clientY;
-                };
+                }
 
                 // test for NaN
                 if (new_yaw !== new_yaw) new_yaw = 0;
                 if (new_yaw !== new_yaw) new_pitch = 0;
 
-                if (!allow_yaw) {
-                  new_yaw = 0
-                };
+                if (constrain_navigation) {
+                  new_yaw = 0;
+                }
 
                 normalized_eye = this.normalized_earth_eye;
 
@@ -568,17 +636,19 @@ seasons.Scene.prototype.mouseMove = function(event, element, new_yaw, new_pitch,
 
                 this.normalized_earth_eye =  { x: neweye[0], y: neweye[1], z: neweye[2] };
                 this.set_normalized_earth_eye(this.normalized_earth_eye);
+                this.updateSpaceshipPosition();
                 break;
-        };
+        }
 
         console.log("");
         this.earthLabel();
+         if (this.linked_scene) { this.linked_scene.updateSpaceshipPosition(); }
         // if (this.linked_scene && !linked) {
         //     this.linked_scene.dragging = true;
         //     this.linked_scene.mouseMove(event, element, new_yaw, new_pitch, true);
         //     this.linked_scene.dragging = false;
         // };
-    };
+    }
 };
 
 seasons.Scene.prototype.earthPointer = function() {
@@ -633,7 +703,7 @@ seasons.Scene.prototype.earthLabel = function() {
 
         var edist = earth_ellipse_distance_from_sun_by_month(this.month);
         var solar_flux = earth_ephemerides_solar_constant_by_month(this.month);
-        var labelStr = "";
+        var labelStr = "", lpos;
         labelStr += sprintf("Earth Distance: %3.0f million km<br>", edist * scale_factor / 1000000);
         // labelStr += sprintf("Solar Radiation:  %4.1f W/m2<br>", solar_flux);
         if (this.debugging) {
@@ -648,11 +718,11 @@ seasons.Scene.prototype.earthLabel = function() {
 
             if ( this.look_at_selection === 'orbit') {
                 if (this.earth_pointer) {
-                    var lpos = this.earth_pointer.get();
+                    lpos = this.earth_pointer.get();
                     labelStr += sprintf("<br>point x: %6.0f y: %6.0f z: %6.0f", lpos.x, lpos.y, lpos.z);
                 }
-            };
-        };
+            }
+        }
         this.earth_info_label.innerHTML = labelStr;
 
         this.earth_info_label.style.top = this.canvas_properties().top + window.pageYOffset  + this.canvas_properties().height - this.earth_info_label.offsetHeight - 10 + "px";
@@ -665,13 +735,14 @@ seasons.Scene.prototype.earthLabel = function() {
 seasons.Scene.prototype.setAspectRatio = function() {
     this.optics.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
     this.camera.set("optics", this.optics);
-}
+};
 
 
 seasons.Scene.prototype.setCamera = function(settings) {
+    var prop;
     for(prop in settings) this.optics[prop] = settings[prop];
     this.camera.set("optics", optics);
-}
+};
 
 
 seasons.Scene.prototype.perspectiveChange = function(form_element) {
@@ -709,6 +780,7 @@ seasons.Scene.prototype._perspectiveChange = function(view_selection) {
                 this.look.set("eye",  initial_sun_eye_side );
                 this.look.set("look", { x: sun_x_pos, y : 0.0, z : 0.0 } );
                 this.look.set("up",   { x: 0.0, y: 1.0, z: 0.0 } );
+                this.updateSpaceshipPosition();
                 break;
 
             case 'earth':
@@ -727,8 +799,8 @@ seasons.Scene.prototype._perspectiveChange = function(view_selection) {
 
   if (this.linked_scene) {
       this.linked_scene._perspectiveChange(this.view_selection);
-  };
-}
+  }
+};
 
 
 seasons.Scene.prototype.setEarthSunLine = function() {
@@ -810,8 +882,8 @@ seasons.Scene.prototype.setEarthSunLine = function() {
     this.earth_sun_line_scale.set(scale);
     if (this.linked_scene) {
         this.linked_scene.setEarthSunLine();
-    };
-}
+    }
+};
 
 
 seasons.Scene.prototype.timeOfYearChange = function(form_element) {
@@ -833,17 +905,18 @@ seasons.Scene.prototype._timeOfYearChange = function(month) {
     this.setEarthSunLine();
     this.earthLabel();
     this.earthPointer();
+    this.updateSpaceshipPosition();
     if (LITE_VERSION) {
       var results = document.getElementById("button-results");
       results.textContent = '';
     }
     if (this.linked_scene) {
         this.linked_scene._timeOfYearChange(month);
-    };
+    }
     if(this.choose_month_callback) {
       this.choose_month_callback();
-    };
-}
+    }
+};
 
 
 // Orbital Paths Indicators
@@ -872,7 +945,7 @@ seasons.Scene.prototype._circleOrbitPathChange = function(circle_orbit) {
 // Orbital Grid
 
 seasons.Scene.prototype.orbitalGridChange = function(checkbox) {
-  this._orbitalGridChange(checkbox.checked)
+  this._orbitalGridChange(checkbox.checked);
 };
 
 seasons.Scene.prototype._orbitalGridChange = function(orbital_grid) {
@@ -881,10 +954,10 @@ seasons.Scene.prototype._orbitalGridChange = function(orbital_grid) {
         this.gridSelector.set("selection", [1]);
     } else {
         this.gridSelector.set("selection", [0]);
-    };
+    }
     if (this.linked_scene) {
         this.linked_scene._orbitalGridChange(orbital_grid);
-    };
+    }
 };
 
 var seasonsActivity = {};
@@ -901,7 +974,7 @@ seasons.Activity.prototype.toJSON = function() {
         scenes.scene = this.scenes.scene.toJSON();
         json_object = {
             version: this.version,
-            scenes: scenes,
+            scenes: scenes
         };
     } else {
         scenes.scene1 = this.scenes.scene1.toJSON();
@@ -911,7 +984,7 @@ seasons.Activity.prototype.toJSON = function() {
             scenes: scenes,
             table: experimentDataToJSON()
         };
-    };
+    }
     return json_object;
 };
 

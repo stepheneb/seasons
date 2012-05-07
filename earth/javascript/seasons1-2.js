@@ -175,6 +175,171 @@ SceneJS.createNode({
                                     type   : "instance",
                                     target : "orbit-grid"
                                 },
+                                {
+                                    type: "translate",
+                                    x: 0, y: 0, z: 0,
+                                    nodes: [
+                                        {
+                                            type: "material",
+                                            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                            specular:       0.2,
+                                            shine:          0.2,
+                                            emit:           1.0,
+                                            nodes: [
+                                                {
+                                                    type: "translate",
+                                                    y: 0,
+                                                    x: earth_orbital_radius_km * 1.3,
+                                                    z: 0,
+                                                    nodes: [
+                                                        {
+                                                            type: "billboard",
+                                                            nodes: [
+                                                                {
+                                                                    type: "scale",
+                                                                    x: 4000,
+                                                                    y: 4000,
+                                                                    z: 4000,
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "text",
+                                                                            mode: "vector",
+                                                                            text: "Jun"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    type: "translate",
+                                                    y: 0,
+                                                    x: 0,
+                                                    z: earth_orbital_radius_km * 1.3,
+                                                    nodes: [
+                                                        {
+                                                            type: "billboard",
+                                                            nodes: [
+                                                                {
+                                                                    type: "scale",
+                                                                    x: 4000,
+                                                                    y: 4000,
+                                                                    z: 4000,
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "text",
+                                                                            mode: "vector",
+                                                                            text: "Sep"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    type: "translate",
+                                                    y: 0,
+                                                    x: earth_orbital_radius_km * -1.3,
+                                                    z: 0,
+                                                    nodes: [
+                                                        {
+                                                            type: "billboard",
+                                                            nodes: [
+                                                                {
+                                                                    type: "scale",
+                                                                    x: 4000,
+                                                                    y: 4000,
+                                                                    z: 4000,
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "text",
+                                                                            mode: "vector",
+                                                                            text: "Dec"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    type: "translate",
+                                                    y: 0,
+                                                    x: 0,
+                                                    z: earth_orbital_radius_km * -1.3,
+                                                    nodes: [
+                                                        {
+                                                            type: "billboard",
+                                                            nodes: [
+                                                                {
+                                                                    type: "scale",
+                                                                    x: 4000,
+                                                                    y: 4000,
+                                                                    z: 4000,
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "text",
+                                                                            mode: "vector",
+                                                                            text: "Mar"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: "material",
+                                    baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                    specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                    specular:       2.0,
+                                    shine:          2.0,
+                                    emit:           1.0,
+                                    nodes: [
+                                        {
+                                            type: "translate",
+                                            x: 0,
+                                            y: 0,
+                                            z: 0,
+                                            nodes: [
+                                                {
+                                                    type: "scale",
+                                                    x: 4000,
+                                                    y: 4000,
+                                                    z: 4000,
+                                                    nodes: [
+                                                        {
+                                                            type: "translate",
+                                                            x: 0,
+                                                            y: 0,
+                                                            z: 0,
+                                                            nodes: [
+                                                                {
+                                                                    type: "billboard",
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "text",
+                                                                            mode: "vector",
+                                                                            text: "Jun"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+
 
                                 // {
                                 //     type   : "instance",
@@ -318,7 +483,55 @@ SceneJS.createNode({
                                             z: 0,
 
                                             nodes: [
-
+                                                {
+                                                     type: "scale",
+                                                     x: earth_radius_km,
+                                                     y: earth_radius_km,
+                                                     z: earth_radius_km,
+                                                     nodes: [
+                                                         {
+                                                            type: "translate",
+                                                            id:   "spaceship_position",
+                                                            y: earth_radius_km * 0,
+                                                            x: earth_radius_km * 0,
+                                                            z: earth_radius_km * 0,
+                                                            nodes: [
+                                                                {
+                                                                    type: "rotate",
+                                                                    id:   "spaceship_rotation_pitch",
+                                                                    angle: 0,
+                                                                    x:  1.0,
+                                                                    y:  0.0,
+                                                                    z:  0.0,
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "rotate",
+                                                                            id:   "spaceship_rotation_yaw",
+                                                                            angle: 90,
+                                                                            x:  0.0,
+                                                                            y:  1.0,
+                                                                            z:  0.0,
+                                                                            nodes: [
+                                                                                {
+                                                                                    type: "scale",
+                                                                                    x: 1000,
+                                                                                    y: 1000,
+                                                                                    z: 1000,
+                                                                                    nodes: [
+                                                                                        {
+                                                                                            type: "instance",
+                                                                                            target: "spaceship"
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
                                                 {
                                                     type: "quaternion",
                                                     id: "earthRotationalAxisQuaternion1",
@@ -360,45 +573,45 @@ SceneJS.createNode({
                                                                             nodes: [
                                                                                 {
                                                                                     type: "material",
-                                                                                    baseColor:      { r: 0.9, g: 0.1, b: 0.1 },
-                                                                                    specularColor:  { r: 0.1, g: 0.1, b: 0.1 },
-                                                                                    specular:       0.5,
-                                                                                    shine:          0.5,
-                                                                                    emit:           0.5,
+                                                                                    baseColor:      { r: 1.0, g: 0.1, b: 0.1 },
+                                                                                    specularColor:  { r: 1.0, g: 0.1, b: 0.1 },
+                                                                                    specular:       2.0,
+                                                                                    shine:          2.0,
+                                                                                    emit:           0.8,
                                                                                     nodes: [
                                                                                         {
                                                                                             type: "scale",
-                                                                                            x: earth_radius_km * 30,
+                                                                                            x: earth_radius_km * 40,
                                                                                             y: earth_radius_km * 1600,
-                                                                                            z: earth_radius_km * 30,
+                                                                                            z: earth_radius_km * 40,
                                                                                             nodes: [ { type: "disk" } ]
                                                                                         },
                                                                                         {
-                                                                                            type: "material",
-                                                                                            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
-                                                                                            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
-                                                                                            specular:       0.2,
-                                                                                            shine:          0.2,
-                                                                                            emit:           1.0,
+                                                                                            type: "translate",
+                                                                                            y: earth_radius_km * 1200,
+                                                                                            x: earth_radius_km * -600,
                                                                                             nodes: [
                                                                                                 {
-                                                                                                    type: "translate",
-                                                                                                    y: earth_radius_km * 1200,
-                                                                                                    x: earth_radius_km * -600,
+                                                                                                    type: "billboard",
                                                                                                     nodes: [
                                                                                                         {
-                                                                                                            type: "billboard",
+                                                                                                            type: "scale",
+                                                                                                            x: 2500,
+                                                                                                            y: 2500,
+                                                                                                            z: 2500,
                                                                                                             nodes: [
                                                                                                                 {
-                                                                                                                    type: "scale",
-                                                                                                                    x: 2500,
-                                                                                                                    y: 2500,
-                                                                                                                    z: 2500,
+                                                                                                                    type: "material",
+                                                                                                                    baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                                    specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                                    specular:       2.0,
+                                                                                                                    shine:          2.0,
+                                                                                                                    emit:           2.0,
                                                                                                                     nodes: [
                                                                                                                         {
                                                                                                                             type: "text",
                                                                                                                             mode: "vector",
-                                                                                                                            text: " North"
+                                                                                                                            text: "Earth Axis"
                                                                                                                         }
                                                                                                                     ]
                                                                                                                 }
@@ -428,6 +641,7 @@ SceneJS.createNode({
                                                                                                                       { type: "sphere",
                                                                                                                         slices: 4,
                                                                                                                         rings: 4,
+                                                                                                                        majorAxis: 2.0,
                                                                                                                         sweep: 0.5
                                                                                                                       }
                                                                                                                     ]
@@ -1038,6 +1252,9 @@ var scene1 = new seasons.Scene({
     look:                        "lookAt1",
     earth_position:              "earth-position1",
     earth_rotation:              "earth-rotation1",
+    spaceship_position:          "spaceship_position",
+    spaceship_rotation_yaw:      "spaceship_rotation_yaw",
+    spaceship_rotation_pitch:    "spaceship_rotation_pitch",
 
     earth_sun_line_rotation:     "earth-sun-line-rotation1",
     earth_sun_line_translation:  "earth-sun-line-translation1",
@@ -1079,6 +1296,9 @@ var scene3 = new seasons.Scene({
     earth_info_label:            "earth-info-label3",
     debugging:                   true,
 });
+
+scene1.linked_from_scene = scene3;
+scene1.updateSpaceshipPosition();
 
 var seasons_activity = new seasons.Activity({
     version: 1.2,
@@ -1239,7 +1459,7 @@ var city_latitude_temperature_prediction = document.getElementById("city-latitud
 var city_latitude_button_results = document.getElementById("city-latitude-button-results");
 
 function updateLatitudeLineAndCity() {
-  if (selected_city_latitude) {
+  if (selected_city_latitude && selected_city_latitude.value !== "city ...") {
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
     var city_location = city.location;
