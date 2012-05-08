@@ -13,10 +13,11 @@ var spaceship = SceneJS.createNode({
                     nodes: [
                         {
                             type: "material",
-                            baseColor:      { r: 0.1, g: 0.8, b: 0.2 },
-                            specularColor:  { r: 0.1, g: 0.8, b: 0.2 },
-                            specular:       0.3,
+                            baseColor:      { r: 0.1, g: 0.2, b: 1.0 },
+                            specularColor:  { r: 0.1, g: 0.2, b: 1.0 },
+                            specular:       1.0,
                             shine:          1.0,
+                            emit:           0.8,
                             nodes: [
                                 {
                                     type: "sphere",
@@ -47,10 +48,11 @@ var spaceship = SceneJS.createNode({
                                     nodes: [
                                         {
                                             type: "material",
-                                            baseColor:      { r: 1.0, g: 0.1, b: 0.1 },
-                                            specularColor:  { r: 1.0, g: 0.1, b: 0.1 },
-                                            specular:       0.3,
+                                            baseColor:      { r: 0.1, g: 1.0, b: 0.1 },
+                                            specularColor:  { r: 0.1, g: 1.0, b: 0.1 },
+                                            specular:       1.0,
                                             shine:          1.0,
+                                            emit:           0.5,
                                             nodes: [
                                                 {
                                                     type: "disk",
@@ -74,8 +76,8 @@ var spaceship = SceneJS.createNode({
                     nodes: [
                         {
                             type: "scale",
-                            x: 0.2,
-                            y: 0.2,
+                            x: 3,
+                            y: 0.3,
                             z: 0.3,
                             nodes: [
                                 {
@@ -95,7 +97,7 @@ var spaceship = SceneJS.createNode({
                                                     type: "sphere",
                                                     slices: 30,
                                                     rings: 30,
-                                                    semiMajorAxis: 10
+                                                    semiMajorAxis: 1
                                                 }
                                             ]
                                         }
@@ -104,68 +106,92 @@ var spaceship = SceneJS.createNode({
                             ]
                         },
                         {
-                            type: "scale",
-                            x: 0.1,
-                            y: 0.1,
-                            z: 0.25,
+                            type: "material",
+                            baseColor:      { r: 1.0, g: 0.4, b: 0.2 },
+                            specularColor:  { r: 1.0, g: 0.4, b: 0.2 },
+                            specular:       1.0,
+                            shine:          2.0,
+                            emit:           0.5,
                             nodes: [
                                 {
-                                    type: "material",
-                                    baseColor:      { r: 1.0, g: 0.4, b: 0.2 },
-                                    specularColor:  { r: 1.0, g: 0.4, b: 0.2 },
-                                    specular:       1.0,
-                                    shine:          2.0,
-                                    emit:           0.5,
+                                    type: "rotate",
+                                    angle: 20,
+                                    z: 1.0,
                                     nodes: [
                                         {
-                                            type: "rotate",
-                                            angle: 20,
-                                            z: 1.0,
+                                            type: "scale",
+                                            x: 2.0,
+                                            y: 0.2,
+                                            z: 0.2,
                                             nodes: [
                                                 {
                                                     type: "sphere",
                                                     slices: 30,
                                                     rings: 30,
-                                                    semiMajorAxis: 10
+                                                    semiMajorAxis: 1
                                                 }
                                             ]
-                                        },
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: "rotate",
+                                    angle: -20,
+                                    z: 1.0,
+                                    nodes: [
                                         {
-                                            type: "rotate",
-                                            angle: -20,
-                                            z: 1.0,
+                                            type: "scale",
+                                            x: 2.0,
+                                            y: 0.2,
+                                            z: 0.2,
                                             nodes: [
                                                 {
                                                     type: "sphere",
                                                     slices: 30,
                                                     rings: 30,
-                                                    semiMajorAxis: 10
+                                                    semiMajorAxis: 1
                                                 }
                                             ]
-                                        },
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: "rotate",
+                                    angle: 20,
+                                    y: 1.0,
+                                    nodes: [
                                         {
-                                            type: "rotate",
-                                            angle: 20,
-                                            y: 1.0,
+                                            type: "scale",
+                                            x: 2.0,
+                                            y: 0.2,
+                                            z: 0.2,
                                             nodes: [
                                                 {
                                                     type: "sphere",
                                                     slices: 30,
                                                     rings: 30,
-                                                    semiMajorAxis: 10
+                                                    semiMajorAxis: 1
                                                 }
                                             ]
-                                        },
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: "rotate",
+                                    angle: -20,
+                                    y: 1.0,
+                                    nodes: [
                                         {
-                                            type: "rotate",
-                                            angle: -20,
-                                            y: 1.0,
+                                            type: "scale",
+                                            x: 2.0,
+                                            y: 0.2,
+                                            z: 0.2,
                                             nodes: [
                                                 {
                                                     type: "sphere",
                                                     slices: 30,
                                                     rings: 30,
-                                                    semiMajorAxis: 10
+                                                    semiMajorAxis: 1
                                                 }
                                             ]
                                         }
