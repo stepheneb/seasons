@@ -610,7 +610,7 @@ SceneJS.createNode({
                                                                                         {
                                                                                             type: "translate",
                                                                                             y: earth_radius_km * 1200,
-                                                                                            x: earth_radius_km * -600,
+                                                                                            x: earth_radius_km * -200,
                                                                                             nodes: [
                                                                                                 {
                                                                                                     type: "billboard",
@@ -622,17 +622,25 @@ SceneJS.createNode({
                                                                                                             z: 3500,
                                                                                                             nodes: [
                                                                                                                 {
-                                                                                                                    type: "material",
-                                                                                                                    baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
-                                                                                                                    specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
-                                                                                                                    specular:       2.0,
-                                                                                                                    shine:          2.0,
-                                                                                                                    emit:           2.0,
+                                                                                                                    type: "translate",
+                                                                                                                    x: -5,
+                                                                                                                    y: 0,
+                                                                                                                    z: 0,
                                                                                                                     nodes: [
                                                                                                                         {
-                                                                                                                            type: "text",
-                                                                                                                            mode: "vector",
-                                                                                                                            text: "Earth Axis"
+                                                                                                                            type: "material",
+                                                                                                                            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                                            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+                                                                                                                            specular:       2.0,
+                                                                                                                            shine:          2.0,
+                                                                                                                            emit:           2.0,
+                                                                                                                            nodes: [
+                                                                                                                                {
+                                                                                                                                    type: "text",
+                                                                                                                                    mode: "vector",
+                                                                                                                                    text: "Earth Axis"
+                                                                                                                                }
+                                                                                                                            ]
                                                                                                                         }
                                                                                                                     ]
                                                                                                                 }
