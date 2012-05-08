@@ -158,9 +158,9 @@ SceneJS.createNode({
                                                             nodes: [
                                                                 {
                                                                     type: "scale",
-                                                                    x: 4000,
-                                                                    y: 4000,
-                                                                    z: 4000,
+                                                                    x: 6000,
+                                                                    y: 6000,
+                                                                    z: 6000,
                                                                     nodes: [
                                                                         {
                                                                             type: "text",
@@ -617,9 +617,9 @@ SceneJS.createNode({
                                                                                                     nodes: [
                                                                                                         {
                                                                                                             type: "scale",
-                                                                                                            x: 2500,
-                                                                                                            y: 2500,
-                                                                                                            z: 2500,
+                                                                                                            x: 3500,
+                                                                                                            y: 3500,
+                                                                                                            z: 3500,
                                                                                                             nodes: [
                                                                                                                 {
                                                                                                                     type: "material",
