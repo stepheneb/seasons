@@ -181,11 +181,11 @@ SceneJS.createNode({
                                     nodes: [
                                         {
                                             type: "material",
-                                            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
-                                            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
-                                            specular:       0.2,
-                                            shine:          0.2,
-                                            emit:           1.0,
+                                            baseColor:          { r: 1.0, g: 1.0, b: 0.0 },
+                                            specularColor:      { r: 1.0, g: 1.0, b: 0.0 },
+                                            specular:           5.0,
+                                            shine:              5.0,
+                                            emit:               20.0,
                                             nodes: [
                                                 {
                                                     type: "translate",
