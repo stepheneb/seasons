@@ -798,7 +798,7 @@ seasons.Scene.prototype._perspectiveChange = function(view_selection) {
   }
 
   if (this.linked_scene) {
-      this.linked_scene._perspectiveChange(this.view_selection);
+      this.linked_scene.updateSpaceshipPosition();
   }
 };
 
@@ -900,7 +900,9 @@ seasons.Scene.prototype._timeOfYearChange = function(month) {
 
     this.set_earth_position(earth_ellipse_location_by_month(this.month));
 
-    this._perspectiveChange(this.view_selection);
+    if (this.look_at_selection !== 'orbit') {
+        this._perspectiveChange(this.view_selection);
+    }
     this.earth_rotation.set("angle", this.earth_rotation.get("angle") + rotation_increment);
     this.setEarthSunLine();
     this.earthLabel();
