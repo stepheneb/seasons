@@ -190,7 +190,7 @@ SceneJS.createNode({
                                                 {
                                                     type: "translate",
                                                     y: 0,
-                                                    x: earth_orbital_radius_km * 1.3,
+                                                    x: earth_orbital_radius_km * 1.1,
                                                     z: earth_orbital_radius_km * -0.2,
                                                     nodes: [
                                                         {
@@ -230,7 +230,7 @@ SceneJS.createNode({
                                                     type: "translate",
                                                     y: 0,
                                                     x: earth_orbital_radius_km * -0.2,
-                                                    z: earth_orbital_radius_km * -1.3,
+                                                    z: earth_orbital_radius_km * -1.1,
                                                     nodes: [
                                                         {
                                                             type: "scale",
@@ -268,7 +268,7 @@ SceneJS.createNode({
                                                 {
                                                     type: "translate",
                                                     y: 0,
-                                                    x: earth_orbital_radius_km * -1.3,
+                                                    x: earth_orbital_radius_km * -1.1,
                                                     z: earth_orbital_radius_km * 0.2,
                                                     nodes: [
                                                         {
@@ -308,7 +308,7 @@ SceneJS.createNode({
                                                     type: "translate",
                                                     y: 0,
                                                     x: earth_orbital_radius_km * 0.2,
-                                                    z: earth_orbital_radius_km * 1.3,
+                                                    z: earth_orbital_radius_km * 1.1,
                                                     nodes: [
                                                         {
                                                             type: "scale",
