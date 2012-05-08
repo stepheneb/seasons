@@ -151,6 +151,179 @@ SceneJS.createNode({
                         },
 
                         {
+                            type: "translate",
+                            x: 0, y: 0, z: 0,
+                            nodes: [
+                                {
+                                    type: "material",
+                                    baseColor:          { r: 1.0, g: 1.0, b: 0.0 },
+                                    specularColor:      { r: 1.0, g: 1.0, b: 0.0 },
+                                    specular:           5.0,
+                                    shine:              5.0,
+                                    emit:               20.0,
+                                    nodes: [
+                                        {
+                                            type: "translate",
+                                            y: 0,
+                                            x: earth_orbital_radius_km * 1.15,
+                                            z: earth_orbital_radius_km * -0.2,
+                                            nodes: [
+                                                {
+                                                    type: "scale",
+                                                    x: 10000,
+                                                    y: 10000,
+                                                    z: 10000,
+                                                    nodes: [
+                                                        {
+                                                            type: "rotate",
+                                                            angle: -90,
+                                                            x:     1.0,
+                                                            y:     0.0,
+                                                            z:     0.0,
+                                                            nodes: [
+                                                                {
+                                                                    type: "rotate",
+                                                                    angle: -90,
+                                                                    x:     0.0,
+                                                                    y:     0.0,
+                                                                    z:     1.0,
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "text",
+                                                                            mode: "vector",
+                                                                            text: "Jun"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            type: "translate",
+                                            y: 0,
+                                            x: earth_orbital_radius_km * -0.2,
+                                            z: earth_orbital_radius_km * -1.15,
+                                            nodes: [
+                                                {
+                                                    type: "scale",
+                                                    x: 10000,
+                                                    y: 10000,
+                                                    z: 10000,
+                                                    nodes: [
+                                                        {
+                                                            type: "rotate",
+                                                            angle: -90,
+                                                            x:     1.0,
+                                                            y:     0.0,
+                                                            z:     0.0,
+                                                            nodes: [
+                                                                {
+                                                                    type: "rotate",
+                                                                    angle: 0,
+                                                                    x:     0.0,
+                                                                    y:     0.0,
+                                                                    z:     1.0,
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "text",
+                                                                            mode: "vector",
+                                                                            text: "Sep"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            type: "translate",
+                                            y: 0,
+                                            x: earth_orbital_radius_km * -1.15,
+                                            z: earth_orbital_radius_km * 0.2,
+                                            nodes: [
+                                                {
+                                                    type: "scale",
+                                                    x: 10000,
+                                                    y: 10000,
+                                                    z: 10000,
+                                                    nodes: [
+                                                        {
+                                                            type: "rotate",
+                                                            angle: -90,
+                                                            x:     1.0,
+                                                            y:     0.0,
+                                                            z:     0.0,
+                                                            nodes: [
+                                                                {
+                                                                    type: "rotate",
+                                                                    angle: 90,
+                                                                    x:     0.0,
+                                                                    y:     0.0,
+                                                                    z:     1.0,
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "text",
+                                                                            mode: "vector",
+                                                                            text: "Dec"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            type: "translate",
+                                            y: 0,
+                                            x: earth_orbital_radius_km * 0.2,
+                                            z: earth_orbital_radius_km * 1.15,
+                                            nodes: [
+                                                {
+                                                    type: "scale",
+                                                    x: 10000,
+                                                    y: 10000,
+                                                    z: 10000,
+                                                    nodes: [
+                                                        {
+                                                            type: "rotate",
+                                                            angle: -90,
+                                                            x:     1.0,
+                                                            y:     0.0,
+                                                            z:     0.0,
+                                                            nodes: [
+                                                                {
+                                                                    type: "rotate",
+                                                                    angle: 180,
+                                                                    x:     0.0,
+                                                                    y:     0.0,
+                                                                    z:     1.0,
+                                                                    nodes: [
+                                                                        {
+                                                                            type: "text",
+                                                                            mode: "vector",
+                                                                            text: "Mar"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                    ]
+                                }
+                            ]
+                        },
+
+                        {
                             type: "light",
                             mode:                   "dir",
                             color:                  { r: 3.0, g: 3.0, b: 3.0 },
