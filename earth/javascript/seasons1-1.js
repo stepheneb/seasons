@@ -91,6 +91,91 @@ SceneJS.createNode({
 });
 
 SceneJS.createNode({
+    id: "SunPointerVectorText",
+    type: "translate",
+    x: 0, y: 0, z: 0,
+    nodes: [
+        {
+            type: "material",
+            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+            specular:       0.2,
+            shine:          0.2,
+            emit:           1.0,
+            nodes: [
+                {
+                    type: "translate",
+                    y: sun_radius_km * 20,
+                    x: sun_radius_km * -20,
+                    nodes: [
+                        {
+                            type: "billboard",
+                            nodes: [
+                                {
+                                    type: "scale",
+                                    x: 6000,
+                                    y: 6000,
+                                    z: 6000,
+                                    nodes: [
+                                        {
+                                            type: "text",
+                                            mode: "vector",
+                                            text: "Sun"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
+    id: "EarthPointerVectorText",
+    type: "translate",
+    x: earth_x_pos, y: 0, z: 0,
+    nodes: [
+        {
+            type: "material",
+            baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
+            specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
+            specular:       0.2,
+            shine:          0.2,
+            emit:           1.0,
+            nodes: [
+                {
+                    type: "translate",
+                    y: sun_radius_km * 20,
+                    nodes: [
+                        {
+                            type: "billboard",
+                            nodes: [
+                                {
+                                    type: "scale",
+                                    x: 4000,
+                                    y: 4000,
+                                    z: 4000,
+                                    nodes: [
+                                        {
+                                            type: "text",
+                                            mode: "vector",
+                                            text: "Earth"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+SceneJS.createNode({
 
     type: "scene",
     id: "theScene",
