@@ -150,8 +150,7 @@ SceneJS.createNode({
                                             nodes: [
                                                 {
                                                     type: "translate",
-                                                    y: sun_radius_km * 11,
-                                                    x: sun_radius_km * -18,
+                                                    y: sun_radius_km * 20,
                                                     nodes: [
                                                         {
                                                             type: "billboard",
