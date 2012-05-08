@@ -11,6 +11,7 @@ seasons_node_path = '/webapps/vlewrapper/vle/node/seasons2'
 files = [
   "earth/images/earth-arrow.png",
   "earth/images/earth3.jpg",
+  "earth/images/earth3-monochrome.jpg",
   "earth/images/lat-long-grid-invert-units-1440x720-15.png",
   "earth/images/milky_way_panorama_3000x1500.jpg",
   "earth/images/sun-arrow.png",
@@ -31,6 +32,7 @@ files = [
   "earth/javascript/seasons1-4.js",
   "earth/javascript/sky-sphere.js",
   "earth/javascript/solar-system-data.js",
+  "earth/javascript/spaceship.js",
   "earth/javascript/sun.js",
   "earth/seasons1-1.html",
   "earth/seasons1-2-lite.html",
@@ -44,6 +46,7 @@ files = [
   "lib/flotr/lib/canvas2image.js",
   "lib/flotr/lib/canvastext.js",
   "lib/flotr/lib/prototype.js",
+  "lib/glmatrix.js",
   "lib/modernizr-1.6.js",
   "lib/scenejs-0.8.0/scenejs.js",
   "lib/sprintf.js",
