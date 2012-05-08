@@ -217,7 +217,7 @@ SceneJS.createNode({
                                                     type: "translate",
                                                     y: 0,
                                                     x: 0,
-                                                    z: earth_orbital_radius_km * 1.3,
+                                                    z: earth_orbital_radius_km * -1.3,
                                                     nodes: [
                                                         {
                                                             type: "billboard",
@@ -269,7 +269,7 @@ SceneJS.createNode({
                                                     type: "translate",
                                                     y: 0,
                                                     x: 0,
-                                                    z: earth_orbital_radius_km * -1.3,
+                                                    z: earth_orbital_radius_km * 1.3,
                                                     nodes: [
                                                         {
                                                             type: "billboard",
