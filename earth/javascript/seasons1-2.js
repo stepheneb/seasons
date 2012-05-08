@@ -191,21 +191,34 @@ SceneJS.createNode({
                                                     type: "translate",
                                                     y: 0,
                                                     x: earth_orbital_radius_km * 1.3,
-                                                    z: 0,
+                                                    z: earth_orbital_radius_km * -0.2,
                                                     nodes: [
                                                         {
-                                                            type: "billboard",
+                                                            type: "scale",
+                                                            x: 10000,
+                                                            y: 10000,
+                                                            z: 10000,
                                                             nodes: [
                                                                 {
-                                                                    type: "scale",
-                                                                    x: 4000,
-                                                                    y: 4000,
-                                                                    z: 4000,
+                                                                    type: "rotate",
+                                                                    angle: -90,
+                                                                    x:     1.0,
+                                                                    y:     0.0,
+                                                                    z:     0.0,
                                                                     nodes: [
                                                                         {
-                                                                            type: "text",
-                                                                            mode: "vector",
-                                                                            text: "Jun"
+                                                                            type: "rotate",
+                                                                            angle: -90,
+                                                                            x:     0.0,
+                                                                            y:     0.0,
+                                                                            z:     1.0,
+                                                                            nodes: [
+                                                                                {
+                                                                                    type: "text",
+                                                                                    mode: "vector",
+                                                                                    text: "Jun"
+                                                                                }
+                                                                            ]
                                                                         }
                                                                     ]
                                                                 }
@@ -216,22 +229,35 @@ SceneJS.createNode({
                                                 {
                                                     type: "translate",
                                                     y: 0,
-                                                    x: 0,
+                                                    x: earth_orbital_radius_km * -0.2,
                                                     z: earth_orbital_radius_km * -1.3,
                                                     nodes: [
                                                         {
-                                                            type: "billboard",
+                                                            type: "scale",
+                                                            x: 10000,
+                                                            y: 10000,
+                                                            z: 10000,
                                                             nodes: [
                                                                 {
-                                                                    type: "scale",
-                                                                    x: 4000,
-                                                                    y: 4000,
-                                                                    z: 4000,
+                                                                    type: "rotate",
+                                                                    angle: -90,
+                                                                    x:     1.0,
+                                                                    y:     0.0,
+                                                                    z:     0.0,
                                                                     nodes: [
                                                                         {
-                                                                            type: "text",
-                                                                            mode: "vector",
-                                                                            text: "Sep"
+                                                                            type: "rotate",
+                                                                            angle: 0,
+                                                                            x:     0.0,
+                                                                            y:     0.0,
+                                                                            z:     1.0,
+                                                                            nodes: [
+                                                                                {
+                                                                                    type: "text",
+                                                                                    mode: "vector",
+                                                                                    text: "Sep"
+                                                                                }
+                                                                            ]
                                                                         }
                                                                     ]
                                                                 }
@@ -243,21 +269,34 @@ SceneJS.createNode({
                                                     type: "translate",
                                                     y: 0,
                                                     x: earth_orbital_radius_km * -1.3,
-                                                    z: 0,
+                                                    z: earth_orbital_radius_km * 0.2,
                                                     nodes: [
                                                         {
-                                                            type: "billboard",
+                                                            type: "scale",
+                                                            x: 10000,
+                                                            y: 10000,
+                                                            z: 10000,
                                                             nodes: [
                                                                 {
-                                                                    type: "scale",
-                                                                    x: 4000,
-                                                                    y: 4000,
-                                                                    z: 4000,
+                                                                    type: "rotate",
+                                                                    angle: -90,
+                                                                    x:     1.0,
+                                                                    y:     0.0,
+                                                                    z:     0.0,
                                                                     nodes: [
                                                                         {
-                                                                            type: "text",
-                                                                            mode: "vector",
-                                                                            text: "Dec"
+                                                                            type: "rotate",
+                                                                            angle: 90,
+                                                                            x:     0.0,
+                                                                            y:     0.0,
+                                                                            z:     1.0,
+                                                                            nodes: [
+                                                                                {
+                                                                                    type: "text",
+                                                                                    mode: "vector",
+                                                                                    text: "Dec"
+                                                                                }
+                                                                            ]
                                                                         }
                                                                     ]
                                                                 }
@@ -268,29 +307,42 @@ SceneJS.createNode({
                                                 {
                                                     type: "translate",
                                                     y: 0,
-                                                    x: 0,
+                                                    x: earth_orbital_radius_km * 0.2,
                                                     z: earth_orbital_radius_km * 1.3,
                                                     nodes: [
                                                         {
-                                                            type: "billboard",
+                                                            type: "scale",
+                                                            x: 10000,
+                                                            y: 10000,
+                                                            z: 10000,
                                                             nodes: [
                                                                 {
-                                                                    type: "scale",
-                                                                    x: 4000,
-                                                                    y: 4000,
-                                                                    z: 4000,
+                                                                    type: "rotate",
+                                                                    angle: -90,
+                                                                    x:     1.0,
+                                                                    y:     0.0,
+                                                                    z:     0.0,
                                                                     nodes: [
                                                                         {
-                                                                            type: "text",
-                                                                            mode: "vector",
-                                                                            text: "Mar"
+                                                                            type: "rotate",
+                                                                            angle: 180,
+                                                                            x:     0.0,
+                                                                            y:     0.0,
+                                                                            z:     1.0,
+                                                                            nodes: [
+                                                                                {
+                                                                                    type: "text",
+                                                                                    mode: "vector",
+                                                                                    text: "Mar"
+                                                                                }
+                                                                            ]
                                                                         }
                                                                     ]
                                                                 }
                                                             ]
                                                         }
                                                     ]
-                                                }
+                                                },
                                             ]
                                         }
                                     ]
