@@ -1480,6 +1480,7 @@ var city_latitude_temperature_prediction = document.getElementById("city-latitud
 var city_latitude_button_results = document.getElementById("city-latitude-button-results");
 
 function updateLatitudeLineAndCity() {
+  var earth_rotation = document.getElementById("earth-rotation");
   if (selected_city_latitude && selected_city_latitude.value !== "city ...") {
     var city_index = Number(selected_city_latitude.value);
     var city = active_cities[city_index];
@@ -1491,6 +1492,9 @@ function updateLatitudeLineAndCity() {
     scene3.latitude_line.setLatitude(city_location.signed_latitude);
     scene3.earth_surface_location.setLocation(city_location.signed_latitude, city_location.signed_longitude);
     scene3.earth_rotation.set("angle", city_location.signed_longitude + scene3.get_orbital_angle());
+  }
+  if (earth_rotation) {
+    earth_rotation.checked = false;
   }
 };
 
