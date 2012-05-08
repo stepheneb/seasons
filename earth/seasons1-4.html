@@ -34,7 +34,7 @@
       <ul class="hlist">
         <li>
           <div class="glCanvasQuarterFrame">
-            <p>View: Earth from Space</p>
+            <p>View: Earth from Spaceship</p>
             <canvas id="theCanvas3">
             </canvas>
           </div>
@@ -53,7 +53,7 @@
         <li>
           <div class="underCanvasUI">
             <ul class="hlist">
-              <li>
+              <li style="display:none;">
                 <form id="choose-view">
                   <fieldset>
                     <legend>Select view: </legend>
@@ -67,7 +67,7 @@
                   <fieldset>
                     <legend>Show me: </legend>
                     <label style="display:none;"><input id="orbital-grid" type="checkbox" checked/> Grid: </label>
-                    <label><input id="earth-rotation" type="checkbox" checked/> Rotation</label>
+                    <label><input id="earth-rotation" type="checkbox"/> Rotation</label>
                   </fieldset>
                 </form>
               </li>
@@ -173,7 +173,7 @@
     } else {
       var libraries = [src];
     }
-    var script = document.createElement("script") 
+    var script = document.createElement("script")
     script.type = "text/javascript";
     // IE
     script.onreadystatechange = function () {
@@ -204,7 +204,7 @@
 
   window.onload=function() {
     LITE_VERSION = false;
-    NO_YAW_NAVIGATION = true;
+    CONSTRAIN_NAVIGATION = true;
     var webGLEnabled = Modernizr.webgl;
     if (webGLEnabled){
       myRequire([
@@ -221,6 +221,7 @@
         "javascript/cities.js",
         "javascript/latitude-line.js",
         "javascript/earth-surface-location-indicator.js",
+        "javascript/spaceship.js",
         "javascript/seasons1-4.js"
       ]);
     } else {

@@ -446,43 +446,6 @@ SceneJS.createNode({
                                     type: "translate",
                                     id: "earth-pointer1",
                                     x: earth_x_pos, y: sun_radius_km * 10.5, z: 0,
-                                    // nodes: [
-                                    //     {
-                                    //         type: "material",
-                                    //         baseColor:      { r: 1.0, g: 1.0, b: 1.0 },
-                                    //         specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
-                                    //         specular:       0.2,
-                                    //         shine:          0.2,
-                                    //         emit:           1.0,
-                                    //         nodes: [
-                                    //             {
-                                    //                 type: "translate",
-                                    //                 y: sun_radius_km * 8,
-                                    //                 x: sun_radius_km * -8,
-                                    //                 nodes: [
-                                    //                     {
-                                    //                         type: "billboard",
-                                    //                         nodes: [
-                                    //                             {
-                                    //                                 type: "scale",
-                                    //                                 x: 3000,
-                                    //                                 y: 3000,
-                                    //                                 z: 3000,
-                                    //                                 nodes: [
-                                    //                                     {
-                                    //                                         type: "text",
-                                    //                                         mode: "vector",
-                                    //                                         text: "Earth"
-                                    //                                     }
-                                    //                                 ]
-                                    //                             }
-                                    //                         ]
-                                    //                     }
-                                    //                 ]
-                                    //             }
-                                    //         ]
-                                    //     }
-                                    // ]
                                 },
                                 {
                                     id : "earth-sphere1",
