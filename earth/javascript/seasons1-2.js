@@ -115,6 +115,19 @@ SceneJS.createNode({
                                     ]
                                 },
 
+                                {
+                                    type: "light",
+                                    mode:                   "point",
+                                    pos:                    { x: sun_x_pos, y: 0, z: 0 },
+                                    color:                  { r: 1.0, g: 1.0, b: 1.0 },
+                                    diffuse:                true,
+                                    specular:               true,
+
+                                    constantAttenuation: 1.0,
+                                    quadraticAttenuation: 0.0,
+                                    linearAttenuation: 0.0
+                                },
+
                                 // Integrate our sun, which is defined in sun.js
 
                                 {
@@ -175,6 +188,7 @@ SceneJS.createNode({
                                     type   : "instance",
                                     target : "orbit-grid"
                                 },
+
                                 {
                                     type: "translate",
                                     x: 0, y: 0, z: 0,
@@ -1183,7 +1197,7 @@ SceneJS.createNode({
                                                                                                                 {
                                                                                                                     type: "text",
                                                                                                                     mode: "vector",
-                                                                                                                    text: " North"
+                                                                                                                    text: "Earth Axis"
                                                                                                                 }
                                                                                                             ]
                                                                                                         }
