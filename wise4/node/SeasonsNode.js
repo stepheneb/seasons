@@ -192,7 +192,11 @@ SeasonsNode.prototype.renderGradingView = function(divId, nodeVisit, childDivIdP
    * TODO: rename seasonsState to match the variable name you
    * changed in the previous line above
    */
-	var studentWork = seasonsState.getStudentWork();
+	var studentWork = "";
+
+	if(seasonsState != null) {
+		studentWork = seasonsState.response;
+	}
 
 	//put the student work into the div
 	$('#' + divId).html(studentWork);
