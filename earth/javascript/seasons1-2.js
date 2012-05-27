@@ -1236,68 +1236,71 @@ SceneJS.setDebugConfigs({
  * Scene rendering loop and mouse handler stuff follows
  *---------------------------------------------------------------------*/
 
-var scene1 = new seasons.Scene({
-    theScene:                    "theScene1",
-    camera:                      "theCamera1",
-    canvas:                      "theCanvas1",
-    look:                        "lookAt1",
-    earth_position:              "earth-position1",
-    earth_rotation:              "earth-rotation1",
-    spaceship_position:          "spaceship_position",
-    spaceship_rotation_yaw:      "spaceship_rotation_yaw",
-    spaceship_rotation_pitch:    "spaceship_rotation_pitch",
+var seasons_activity, scene1, scene1;
 
-    earth_sun_line_rotation:     "earth-sun-line-rotation1",
-    earth_sun_line_translation:  "earth-sun-line-translation1",
-    earth_sun_line_scale:        "earth-sun-line-scale1",
-
-    earth_tilt:                  "earthRotationalAxisQuaternion1",
-
-    choose_view:                 "choose-view",
-    choose_month:                "choose-month",
-    choose_month_callback:       updateLatitudeLineAndCity,
-    earth_pointer:               "earth-pointer1",
-    earth_label:                 true,
-    earth_info_label:            "earth-info-label1",
-    debugging:                   false,
-});
-
-var scene3 = new seasons.Scene({
-    theScene:                    "theScene3",
-    camera:                      "theCamera3",
-    canvas:                      "theCanvas3",
-    look:                        "lookAt3",
-    earth_position:              "earth-position3",
-    earth_rotation:              "earth-rotation3",
-    latitude_line:               "latitude-line-destination3",
-    look_at_selection:           "earth",
-    gridSelector:                "earth-grid-selector3",
-    earth_sun_line_rotation:     "earth-sun-line-rotation3",
-    earth_sun_line_translation:  "earth-sun-line-translation3",
-    earth_sun_line_scale:        "earth-sun-line-scale3",
-
-    earth_tilt:                  "earthRotationalAxisQuaternion3",
-
-    choose_view:                 "choose-view",
-    choose_month:                "choose-month",
-    linked_scene:                scene1,
-    earth_surface_location:      true,
-    earth_pointer:               false,
-    earth_label:                 false,
-    earth_info_label:            "earth-info-label3",
-    debugging:                   true,
-});
-
-scene1.linked_from_scene = scene3;
-scene1.updateSpaceshipPosition();
-
-var seasons_activity = new seasons.Activity({
+seasons_activity = new seasons.Activity({
     version: 1.2,
+    scenes: { 
+      scene1: new seasons.Scene({
+          theScene:                    "theScene1",
+          camera:                      "theCamera1",
+          canvas:                      "theCanvas1",
+          look:                        "lookAt1",
+          earth_position:              "earth-position1",
+          earth_rotation:              "earth-rotation1",
+          spaceship_position:          "spaceship_position",
+          spaceship_rotation_yaw:      "spaceship_rotation_yaw",
+          spaceship_rotation_pitch:    "spaceship_rotation_pitch",
 
-    scenes: { scene1: scene1, scene3: scene3 }
+          earth_sun_line_rotation:     "earth-sun-line-rotation1",
+          earth_sun_line_translation:  "earth-sun-line-translation1",
+          earth_sun_line_scale:        "earth-sun-line-scale1",
+
+          earth_tilt:                  "earthRotationalAxisQuaternion1",
+
+          choose_view:                 "choose-view",
+          choose_month:                "choose-month",
+          choose_month_callbacks:       [updateLatitudeLineAndCity, chooseMonthLogger],
+          earth_pointer:               "earth-pointer1",
+          earth_label:                 true,
+          earth_info_label:            "earth-info-label1",
+          debugging:                   false,
+      }),
+      scene3: new seasons.Scene({
+          theScene:                    "theScene3",
+          camera:                      "theCamera3",
+          canvas:                      "theCanvas3",
+          look:                        "lookAt3",
+          earth_position:              "earth-position3",
+          earth_rotation:              "earth-rotation3",
+          latitude_line:               "latitude-line-destination3",
+          look_at_selection:           "earth",
+          gridSelector:                "earth-grid-selector3",
+          earth_sun_line_rotation:     "earth-sun-line-rotation3",
+          earth_sun_line_translation:  "earth-sun-line-translation3",
+          earth_sun_line_scale:        "earth-sun-line-scale3",
+
+          earth_tilt:                  "earthRotationalAxisQuaternion3",
+
+          choose_view:                 "choose-view",
+          choose_month:                "choose-month",
+          linked_scene:                scene1,
+          earth_surface_location:      true,
+          earth_pointer:               false,
+          earth_label:                 false,
+          earth_info_label:            "earth-info-label3",
+          debugging:                   true,
+      })
+    }
 });
 
-// scene1.linked_scene = scene3;
+scene1 = seasons_activity.scenes.scene1;
+scene3 = seasons_activity.scenes.scene3;
+
+scene3.linked_scene = scene1;
+scene1.linked_from_scene = scene3;
+
+scene1.updateSpaceshipPosition();
 
 SceneJS.setDebugConfigs({
     compilation : {
@@ -1468,7 +1471,21 @@ function updateLatitudeLineAndCity() {
   }
 };
 
-selected_city_latitude.onchange = updateLatitudeLineAndCity;
+function updateLatitudeLineAndCityHandler() {
+  var city = active_cities[Number(selected_city_latitude.value)];
+  updateLatitudeLineAndCity();
+  seasons_activity.logInteraction({ "choose city": city.name });
+}
+selected_city_latitude.onchange = updateLatitudeLineAndCityHandler;
+
+function earthRotationLogger() {
+  seasons_activity.logInteraction({ "rotation": earth_rotation.checked })
+}
+earth_rotation.onchange = earthRotationLogger;
+
+function chooseMonthLogger(month) {
+  seasons_activity.logInteraction({ "choose month": month })
+}
 
 var city_data_table = document.getElementById("city-data-table");
 var city_data_table_body = document.getElementById("city-data-table-body");
@@ -2218,3 +2235,5 @@ function takeSnapshot() {
         s1_small.src = png_small;
     }
 }
+
+choose_month.onchange();

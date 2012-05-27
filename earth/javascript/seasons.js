@@ -49,6 +49,8 @@ seasons.Scene = function(options) {
 
     // Setting up the scene ...
 
+    this.logger = options.logger || function() {};
+
     this.scene              = SceneJS.withNode(options.theScene || "theScene");
     this.camera             = SceneJS.withNode(options.camera || "theCamera");
     this.canvas             = document.getElementById(options.canvas || "theCanvas");
@@ -205,20 +207,27 @@ seasons.Scene = function(options) {
     // Selecting the time of year: jun, sep, dec, mar
     this.choose_month = document.getElementById(options.choose_month || "choose-month");
 
+    // optional callbacks if month changes
+    this.choose_month_callbacks = [];
+    if (options.choose_month_callbacks) {
+      if (typeof options.choose_month_callbacks === 'function') {
+        this.choose_month_callbacks.push(options.choose_month_callbacks);
+      } else {
+        if (typeof options.choose_month_callbacks.length === "number") {
+          for(var i = 0; i < options.choose_month_callbacks.length; i++) {
+            this.choose_month_callbacks.push(options.choose_month_callbacks[i]);
+          }
+        }
+      }
+    }
+
     this.month = this.choose_month.value;
     this.choose_month.onchange = (function() {
         return function() {
             self.timeOfYearChange(this);
         };
     })();
-    this.choose_month.onchange();
-
-    // optional callback if month changes
-    if (typeof options.choose_month_callback === 'function') {
-      this.choose_month_callback = options.choose_month_callback;
-    } else {
-      this.choose_month_callback = false;
-    }
+    // this.choose_month.onchange();
 
     // Circular Orbital Path selector ...
     if (this.circle_orbit) {
@@ -329,7 +338,7 @@ seasons.Scene.prototype.toJSONStr = function() {
     return JSON.stringify(this.toJSON());
 };
 
-seasons.Scene.prototype.fromJSON = function(state) {
+seasons.Scene.prototype.fromJSON = function(state, logger) {
     this._timeOfYearChange(state.month);
     this._circleOrbitPathChange(state.circle_orbit);
     this._orbitalGridChange(state.orbital_grid);
@@ -339,10 +348,11 @@ seasons.Scene.prototype.fromJSON = function(state) {
     this.look.set("eye", JSON.parse(state.look_at.eye));
     this.look.set("up", JSON.parse(state.look_at.up));
     this.look.set("look", JSON.parse(state.look_at.look));
+    this.logger = logger || function() {};
 };
 
-seasons.Scene.prototype.fromJSONstr = function(json_state_str) {
-    this.fromJSON(JSON.parse(json_state_str));
+seasons.Scene.prototype.fromJSONstr = function(json_state_str, logger) {
+    this.fromJSON(JSON.parse(json_state_str, logger));
 };
 
 seasons.Scene.prototype.render = function() {
@@ -665,7 +675,7 @@ seasons.Scene.prototype.earthPointer = function() {
 
 seasons.Scene.prototype.elementGetX = function(el) {
     var xpos = 0;
-    while( el != null ) {
+    while( el !== null ) {
         xpos += el.offsetLeft;
         el = el.offsetParent;
     }
@@ -674,7 +684,7 @@ seasons.Scene.prototype.elementGetX = function(el) {
 
 seasons.Scene.prototype.elementGetY = function(el) {
     var ypos = 0;
-    while( el != null ) {
+    while( el !== null ) {
         ypos += el.offsetTop;
         el = el.offsetParent;
     }
@@ -684,7 +694,7 @@ seasons.Scene.prototype.elementGetY = function(el) {
 seasons.Scene.prototype.earthLabel = function() {
     var getY = function getY(el) {
         var ypos = 0;
-        while( el != null ) {
+        while( el !== null ) {
             ypos += el.offsetTop;
             el = el.offsetParent;
         }
@@ -692,7 +702,7 @@ seasons.Scene.prototype.earthLabel = function() {
     };
     var getX = function getX(el) {
         var xpos = 0;
-        while( el != null ) {
+        while( el !== null ) {
             xpos += el.offsetLeft;
             el = el.offsetParent;
         }
@@ -728,7 +738,7 @@ seasons.Scene.prototype.earthLabel = function() {
         this.earth_info_label.style.top = this.canvas_properties().top + window.pageYOffset  + this.canvas_properties().height - this.earth_info_label.offsetHeight - 10 + "px";
         this.earth_info_label.style.left = this.canvas_properties().right - this.elementGetX(document.getElementById("content")) - this.earth_info_label.offsetWidth + "px";
 
-    };
+    }
 };
 
 
@@ -915,8 +925,10 @@ seasons.Scene.prototype._timeOfYearChange = function(month) {
     if (this.linked_scene) {
         this.linked_scene._timeOfYearChange(month);
     }
-    if(this.choose_month_callback) {
-      this.choose_month_callback();
+    if(this.choose_month_callbacks.length > 0) {
+      for(var i = 0; i < this.choose_month_callbacks.length; i++) {
+        this.choose_month_callbacks[i](month);
+      }
     }
 };
 
@@ -965,8 +977,34 @@ seasons.Scene.prototype._orbitalGridChange = function(orbital_grid) {
 var seasonsActivity = {};
 
 seasons.Activity = function(options) {
-    this.version = options.version;
-    this.scenes = options.scenes;
+    self = this;
+    self.startTime = Date.now();
+    self.version = options.version;
+    self.scenes = options.scenes;
+    var scenes = [];
+    if (self.scenes.scene1) {
+      self.scenes.scene1.logger = self.logInteraction;
+      scenes.scene1 = self.scenes.scene1.toJSON();
+    }
+    if (self.scenes.scene3) {
+      self.scenes.scene3.logger = self.logInteraction;
+      scenes.scene3 = self.scenes.scene3.toJSON();
+    }
+    self.log = [];
+    self.logInteraction({
+      "start": Date(),
+      // "choose month": this.choose_month.value,
+      // "choose city": city.name,
+      // "rotation": earth_rotation.checked,
+      "scenes": scenes
+    });
+};
+
+seasons.Activity.prototype.logInteraction = function(interaction) {
+    var time = (Date.now() - self.startTime) / 1000,
+        item;
+    item = [time, interaction];
+    self.log.push(item);
 };
 
 seasons.Activity.prototype.toJSON = function() {
@@ -987,6 +1025,7 @@ seasons.Activity.prototype.toJSON = function() {
             table: experimentDataToJSON()
         };
     }
+    json_object.log = this.log;
     return json_object;
 };
 
@@ -1008,6 +1047,8 @@ seasons.Activity.prototype.fromJSON = function(json_object) {
         experimentDataFromJSON(json_object.table);
         break;
     }
+    this.log = json_object.log || {};
+    this.logInteraction("load state from saved JSON");
 };
 
 // export namespace

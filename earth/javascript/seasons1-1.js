@@ -535,7 +535,8 @@ var scene = new seasons.Scene({
     earth_label:                 true,
     earth_info_label:            "earth-info-label",
     choose_view:                 "choose-view",
-    choose_month:                "choose-month"
+    choose_month:                "choose-month",
+    choose_month_callbacks:       chooseMonthLogger
 });
 
 var seasons_activity = new seasons.Activity({
@@ -543,6 +544,12 @@ var seasons_activity = new seasons.Activity({
 
     scenes: { scene: scene }
 });
+
+var choose_month = document.getElementById("choose-month");
+
+function chooseMonthLogger(month) {
+  seasons_activity.logInteraction({ "choose month": month })
+}
 
 window.render = function() {
     SceneJS.withNode("theScene").start();
@@ -577,7 +584,6 @@ function sceneCompletelyLoaded() {
 }
 
 SceneJS.withNode("theScene").bind("loading-status",
-
     function(event) {
 
         if (zBufferDepth == 0) {
@@ -596,3 +602,6 @@ SceneJS.withNode("theScene").bind("loading-status",
           }
         }
     });
+
+
+choose_month.onchange();
