@@ -112,8 +112,8 @@ SEASONS2.prototype.getLatestState = function() {
  */
 SEASONS2.prototype.save = function() {
 	//get the answer the student wrote
-	var seasons2_activity = window.document.getElementById("modelIFrame").contentWindow.seasons2_activity;
-	var json_str = JSON.stringify(seasons2_activity);
+	var seasons_activity = window.document.getElementById("modelIFrame").contentWindow.seasons_activity;
+	var json_str = JSON.stringify(seasons_activity);
 	console.log("save, json_str:" + json_str);
 
 	/*
@@ -156,9 +156,9 @@ SEASONS2.prototype.save = function() {
  * TODO: rename TemplateNode
  */
 SEASONS2.prototype.modelIFrameLoaded = function(){
-	var seasons2_activity = window.document.getElementById("modelIFrame").contentWindow.seasons2_activity;
+	var seasons_activity = window.document.getElementById("modelIFrame").contentWindow.seasons_activity;
 
-	console.log("modelIFrameLoaded, seasons2_activity:" + seasons2_activity);
+	console.log("modelIFrameLoaded, seasons_activity:" + seasons_activity);
 	//load any previous responses the student submitted for this step
 	var latestState = this.getLatestState();
 
@@ -174,7 +174,7 @@ SEASONS2.prototype.modelIFrameLoaded = function(){
 		var state = JSON.parse(json_str);
 
 		// TODO: UNCOMMENT WHEN setState is implemented.
-		seasons2_activity.fromJSON(state);
+		seasons_activity.fromJSON(state);
 	}
 };
 
