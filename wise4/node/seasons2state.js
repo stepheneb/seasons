@@ -1,5 +1,5 @@
 /*
- * This is a seasons state object that developers can use to create new
+ * This is a seasons2 state object that developers can use to create new
  * step types.
  *
  * TODO: Copy this file and rename it to
@@ -17,7 +17,7 @@
  * e.g. if you are creating a quiz step it would look something like
  * vlewrapper/WebContent/vle/node/quiz/
  *
- * TODO: in this file, change all occurrences of the word 'SEASONSSTATE' to
+ * TODO: in this file, change all occurrences of the word 'SEASONS2STATE' to
  *
  * <new step type>STATE
  * e.g. for example if you are creating a quiz step it would look
@@ -29,13 +29,13 @@
  * student work. An instance of this object will be created each time the student
  * submits an answer.
  *
- * TODO: rename SEASONSSTATE
+ * TODO: rename SEASONS2STATE
  *
  * note: you can change the variables in this constructor, the response variable
  * is just used as an example. you can add any variables that will help you
  * represent the student's work for your step type.
  */
-function SEASONSSTATE(response) {
+function SEASONS2STATE(response) {
 	//the text response the student wrote
 	this.response = "";
 
@@ -50,42 +50,42 @@ function SEASONSSTATE(response) {
  * The student work is retrieved and then this function is called to parse the student
  * work so that we can display the previous answer the student submitted.
  *
- * TODO: rename SEASONSSTATE
+ * TODO: rename SEASONS2STATE
  *
  * note: you can change the variables in the stateJSONObj, the response
  * variable is just used as an example. you can add any variables that will
  * help you represent the student's work for your type of step.
  *
  * @param stateJSONObj a JSONObject representing the student work
- * @return a SEASONSSTATE object
+ * @return a SEASONS2STATE object
  */
-SEASONSSTATE.prototype.parseDataJSONObj = function(stateJSONObj) {
+SEASONS2STATE.prototype.parseDataJSONObj = function(stateJSONObj) {
 	//obtain the student work from the JSONObject
 	var response = stateJSONObj.response;
 
 	/*
    * create a state object with the student work
-   * TODO: rename SEASONSSTATE
+   * TODO: rename SEASONS2STATE
    */
-	var seasonsState = new SEASONSSTATE(response);
+	var seasons2State = new SEASONS2STATE(response);
 
 	//return the state object
-	return seasonsState;
+	return seasons2State;
 };
 
 /**
  * Get the student work for display purposes such as in the grading tool.
  *
- * TODO: rename SEASONSSTATE
+ * TODO: rename SEASONS2STATE
  *
  * @return the student work
  */
-SEASONSSTATE.prototype.getStudentWork = function() {
+SEASONS2STATE.prototype.getStudentWork = function() {
 	return this.response;
 };
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	//TODO: rename seasons/seasonsstate.js
-	eventManager.fire('scriptLoaded', 'vle/node/seasons/seasonsstate.js');
+	//TODO: rename seasons2/seasons2state.js
+	eventManager.fire('scriptLoaded', 'vle/node/seasons2/seasons2state.js');
 }

@@ -1,9 +1,9 @@
 /**
- * Sets the SeasonsNode type as an object of this view
+ * Sets the Seasons2Node type as an object of this view
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  */
-View.prototype.SeasonsNode = {};
+View.prototype.Seasons2Node = {};
 
 /*
  * Add the name of the common component that this step will use. The
@@ -11,7 +11,7 @@ View.prototype.SeasonsNode = {};
  * need to create div elements with the appropriate id for the
  * authoring tool to insert the component into. Any additional custom
  * authoring components specific to your step type will be written
- * by you in the generatePage() function. You may leave the array
+ * by you in the generatePage() function. You may leaveSeason the array
  * empty if you are not using any common components.
  *
  * Here are the available common components
@@ -30,9 +30,9 @@ View.prototype.SeasonsNode = {};
  * 'starterSentenceAuthoringContainer'
  *
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  */
-View.prototype.SeasonsNode.commonComponents = [];
+View.prototype.Seasons2Node.commonComponents = [];
 
 /**
  * Generates the authoring page. This function will create the authoring
@@ -43,9 +43,9 @@ View.prototype.SeasonsNode.commonComponents = [];
  * student will see. You will also need to populate the textarea with
  * the pre-existing prompt if the step has been authored before.
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  */
-View.prototype.SeasonsNode.generatePage = function(view){
+View.prototype.Seasons2Node.generatePage = function(view){
 	this.view = view;
 
 	//get the content of the step
@@ -70,10 +70,10 @@ View.prototype.SeasonsNode.generatePage = function(view){
 	/*
    * create the modelType dropdown
    *
-   * onchange will fire the 'seasonsModelTypeUpdated' event which will
-   * be handled in the seasonsEvents.js file
+   * onchange will fire the 'seasons2ModelTypeUpdated' event which will
+   * be handled in the seasons2Events.js file
    */
-	var modelTypeDropDownHtml = '<select id="modelTypeDropDown" onchange="eventManager.fire(\'seasonsModelTypeUpdated\')">' +
+	var modelTypeDropDownHtml = '<select id="modelTypeDropDown" onchange="eventManager.fire(\'seasons2ModelTypeUpdated\')">' +
 	'<option value="whatTemperaturePatternsDoYouSee">Investigate: Temperature Patterns Around the World</option>' +
 	'<option value="whatTemperaturePatternsDoYouSeeLite">Explore: Temperature Patterns Around the World</option>' +
 	'<option value="whatIstheShapeofEarthsOrbit">Investigate: Sun-Earth Distance and Shape of Earth\'s Orbit</option>' +
@@ -83,7 +83,7 @@ View.prototype.SeasonsNode.generatePage = function(view){
 	'<option value="howDoesEarthsTiltAffectHoursOfDaylightLite">Explore: Tilt and Hours of Daylight</option>' +
 	'</select>';
 
-	//var promptTextArea = createElement(document, 'textarea', {id: 'promptTextArea', rows:'20', cols:'85', onkeyup:"eventManager.fire('seasonsUpdatePrompt')"});
+	//var promptTextArea = createElement(document, 'textarea', {id: 'promptTextArea', rows:'20', cols:'85', onkeyup:"eventManager.fire('seasons2UpdatePrompt')"});
 
 	//add the authoring components to the page
 	pageDiv.appendChild(promptText);
@@ -105,18 +105,18 @@ View.prototype.SeasonsNode.generatePage = function(view){
  * Get the array of common components which is an array with
  * string elements being the name of the common component
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  */
-View.prototype.SeasonsNode.getCommonComponents = function() {
+View.prototype.Seasons2Node.getCommonComponents = function() {
 	return this.commonComponents;
 };
 
 /**
  * Updates this content object when requested, usually when preview is to be refreshed
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  */
-View.prototype.SeasonsNode.updateContent = function(){
+View.prototype.Seasons2Node.updateContent = function(){
 	/* update content object */
 	this.view.activeContent.setContent(this.content);
 };
@@ -125,9 +125,9 @@ View.prototype.SeasonsNode.updateContent = function(){
  * Populate the authoring textarea where the user types the prompt that
  * the student will read
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  */
-View.prototype.SeasonsNode.populatePrompt = function() {
+View.prototype.Seasons2Node.populatePrompt = function() {
 	//get the prompt from the content and set it into the authoring textarea
 	$('#promptTextArea').val(this.content.prompt);
 };
@@ -135,7 +135,7 @@ View.prototype.SeasonsNode.populatePrompt = function() {
 /**
  * Updates the content's modeltype to match that of what the user specified
  */
-View.prototype.SeasonsNode.updateModelType = function(){
+View.prototype.Seasons2Node.updateModelType = function(){
 	/* update content */
 	this.content.modelType = $('#modelTypeDropDown').val();
 
@@ -148,7 +148,7 @@ View.prototype.SeasonsNode.updateModelType = function(){
 /**
  * Updates the content's prompt to match that of what the user input
  */
-View.prototype.SeasonsNode.updatePrompt = function(){
+View.prototype.Seasons2Node.updatePrompt = function(){
 	/* update content */
 	this.content.prompt = $('#promptTextArea').val();
 
@@ -161,12 +161,12 @@ View.prototype.SeasonsNode.updatePrompt = function(){
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	/*
-   * TODO: rename seasons to your new folder name
-   * TODO: rename authorview_seasons
+   * TODO: rename seasons2 to your new folder name
+   * TODO: rename authorview_seasons2
    *
    * e.g. if you were creating a quiz step it would look like
    *
    * eventManager.fire('scriptLoaded', 'vle/node/quiz/authorview_quiz.js');
    */
-	eventManager.fire('scriptLoaded', 'vle/node/seasons/authorview_seasons.js');
+	eventManager.fire('scriptLoaded', 'vle/node/seasons2/authorview_seasons2.js');
 };

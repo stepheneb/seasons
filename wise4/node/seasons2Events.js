@@ -3,18 +3,18 @@
  * This handles events and calls the appropriate function to handle
  * the event.
  *
- * TODO: rename seasonsDispatcher
+ * TODO: rename seasons2Dispatcher
  * For example if you are creating a quiz node you would change it to
  * quizDispatcher
  */
-View.prototype.seasonsDispatcher = function(type,args,obj){
+View.prototype.seasons2Dispatcher = function(type,args,obj){
 	/*
    * check to see if the event name matches
    *
-   * TODO: rename seasonsUpdatePrompt
+   * TODO: rename seasons2UpdatePrompt
    * wait until you implement the authoring before you rename this
    */
-	if(type == 'seasonsUpdatePrompt') {
+	if(type == 'seasons2UpdatePrompt') {
 		/*
      * the event name matches so we will call the function that
      * handles that event
@@ -22,10 +22,10 @@ View.prototype.seasonsDispatcher = function(type,args,obj){
      * TODO: rename TemplateNode
      * wait until you implement the authoring before you rename this
      */
-		obj.SeasonsNode.updatePrompt();
-	} else if (type == 'seasonsModelTypeUpdated') {
-		obj.SeasonsNode.updateModelType();
-	} else if (type == 'seasonsModelIFrameLoaded') {
+		obj.Seasons2Node.updatePrompt();
+	} else if (type == 'seasons2ModelTypeUpdated') {
+		obj.Seasons2Node.updateModelType();
+	} else if (type == 'seasons2ModelIFrameLoaded') {
 		obj.getCurrentNode().modelIFrameLoaded();
 	}
 };
@@ -37,12 +37,12 @@ View.prototype.seasonsDispatcher = function(type,args,obj){
  */
 var events = [
 	/*
-   * TODO: rename seasonsUpdatePrompt
+   * TODO: rename seasons2UpdatePrompt
    * wait until you implement the authoring before you rename this
    */
-	'seasonsUpdatePrompt',
-	'seasonsModelTypeUpdated',
-	'seasonsModelIFrameLoaded'
+	'seasons2UpdatePrompt',
+	'seasons2ModelTypeUpdated',
+	'seasons2ModelIFrameLoaded'
 ];
 
 /*
@@ -51,23 +51,23 @@ var events = [
  */
 for(var x=0; x<events.length; x++) {
 	/*
-   * TODO: rename seasonsDispatcher
+   * TODO: rename seasons2Dispatcher
    * For example if you are creating a quiz node you would change it to
    * quizDispatcher. The name for the dispatcher should match the function
    * name at the top of this file.
    */
-	componentloader.addEvent(events[x], 'seasonsDispatcher');
+	componentloader.addEvent(events[x], 'seasons2Dispatcher');
 };
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	/*
-   * TODO: rename seasons to your new folder name
-   * TODO: rename seasonsEvents
+   * TODO: rename seasons2 to your new folder name
+   * TODO: rename seasons2Events
    *
    * e.g. if you were creating a quiz step it would look like
    *
    * eventManager.fire('scriptLoaded', 'vle/node/quiz/quizEvents.js');
    */
-	eventManager.fire('scriptLoaded', 'vle/node/seasons/seasonsEvents.js');
+	eventManager.fire('scriptLoaded', 'vle/node/seasons2/seasons2Events.js');
 };

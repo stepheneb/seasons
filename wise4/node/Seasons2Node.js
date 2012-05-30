@@ -1,12 +1,12 @@
 /*
- * This a seasons Node that developers can use to create new
+ * This a seasons2 Node that developers can use to create new
  * step types. Copy this file and rename it to
  *
  * <new step type>Node.js
  * e.g. for example if you are creating a quiz step type it would
  * look something like QuizNode.js
  *
- * and then in this file change all occurrences of the word 'SeasonsNode' to
+ * and then in this file change all occurrences of the word 'Seasons2Node' to
  *
  * <new step type>Node
  *
@@ -14,37 +14,37 @@
  * change it to be QuizNode
  */
 
-SeasonsNode.prototype = new Node(); //TODO: rename SeasonsNode
-SeasonsNode.prototype.constructor = SeasonsNode; //TODO: rename both occurrences of SeasonsNode
-SeasonsNode.prototype.parentNode = Node.prototype; //TODO: rename SeasonsNode
+Seasons2Node.prototype = new Node(); //TODO: rename Seasons2Node
+Seasons2Node.prototype.constructor = Seasons2Node; //TODO: rename both occurrences of Seasons2Node
+Seasons2Node.prototype.parentNode = Node.prototype; //TODO: rename Seasons2Node
 
 /*
  * the name that displays in the authoring tool when the author creates a new step
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  * TODO: rename Template to whatever you would like this step to be displayed as in
  * the authoring tool when the author creates a new step
  * e.g. if you are making a QuizNode you would set authoringToolName to to "Quiz"
  */
-SeasonsNode.authoringToolName = "Seasons";
+Seasons2Node.authoringToolName = "Seasons2";
 
 /*
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  * TODO: set the authoringToolDescription to describe the step type, this description
  * will be seen by the author when they add a new step to their project to help
  * them understand what kind of step this is
  */
-SeasonsNode.authoringToolDescription = "This is a generic step only used by developers";
+Seasons2Node.authoringToolDescription = "This is a generic step only used by developers";
 
 /**
  * This is the constructor for the Node
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  *
  * @param nodeType
  * @param view
  */
-function SeasonsNode(nodeType, view) {
+function Seasons2Node(nodeType, view) {
 	this.view = view;
 	this.type = nodeType;
 	this.prevWorkNodeIds = [];
@@ -55,12 +55,12 @@ function SeasonsNode(nodeType, view) {
  * the previous student answers, if any, so that it can reload
  * the student's previous answers into the step.
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  *
  * @param stateJSONObj
  * @return a new state object
  */
-SeasonsNode.prototype.parseDataJSONObj = function(stateJSONObj) {
+Seasons2Node.prototype.parseDataJSONObj = function(stateJSONObj) {
 	/*
    * TODO: rename TEMPLATESTATE
    *
@@ -68,7 +68,7 @@ SeasonsNode.prototype.parseDataJSONObj = function(stateJSONObj) {
    * that you will use for representing student data for this
    * type of step. copy and modify the file below
    *
-   * vlewrapper/WebContent/vle/node/seasons/seasonsstate.js
+   * vlewrapper/WebContent/vle/node/seasons2/seasons2state.js
    *
    * and use the object defined in your new state.js file instead
    * of TEMPLATESTATE. for example if you are creating a
@@ -79,7 +79,7 @@ SeasonsNode.prototype.parseDataJSONObj = function(stateJSONObj) {
    * and in that file you would define QUIZSTATE and therefore
    * would change the TEMPLATESTATE to QUIZSTATE below
    */
-	return SEASONSSTATE.prototype.parseDataJSONObj(stateJSONObj);
+	return SEASONS2STATE.prototype.parseDataJSONObj(stateJSONObj);
 };
 
 /**
@@ -99,12 +99,12 @@ SeasonsNode.prototype.parseDataJSONObj = function(stateJSONObj) {
  *
  * Note: In most cases you will not have to change the code in this function
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  *
  * @param studentWork
  * @return translated student work
  */
-SeasonsNode.prototype.translateStudentWork = function(studentWork) {
+Seasons2Node.prototype.translateStudentWork = function(studentWork) {
 	return studentWork;
 };
 
@@ -112,11 +112,11 @@ SeasonsNode.prototype.translateStudentWork = function(studentWork) {
  * This function is called when the student exits the step. It is mostly
  * used for error checking.
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  *
  * Note: In most cases you will not have to change anything here.
  */
-SeasonsNode.prototype.onExit = function() {
+Seasons2Node.prototype.onExit = function() {
 	//check if the content panel has been set
 	if(this.contentPanel) {
 
@@ -165,20 +165,20 @@ SeasonsNode.prototype.onExit = function() {
  * uses the same ids as the show flagged work div
  * @param workgroupId the id of the workgroup this work belongs to
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  * Note: you may need to add code to this function if the student
  * data for your step is complex or requires additional processing.
  * look at SensorNode.renderGradingView() as an example of a step that
  * requires additional processing
  */
-SeasonsNode.prototype.renderGradingView = function(divId, nodeVisit, childDivIdPrefix, workgroupId) {
+Seasons2Node.prototype.renderGradingView = function(divId, nodeVisit, childDivIdPrefix, workgroupId) {
 	/*
    * Get the latest student state object for this step
-   * TODO: rename seasonsState to reflect your new step type
+   * TODO: rename seasons2State to reflect your new step type
    *
    * e.g. if you are creating a quiz step you would change it to quizState
    */
-	var seasonsState = nodeVisit.getLatestWork();
+	var seasons2State = nodeVisit.getLatestWork();
 
 	/*
    * get the step work id from the node visit in case we need to use it in
@@ -189,10 +189,10 @@ SeasonsNode.prototype.renderGradingView = function(divId, nodeVisit, childDivIdP
 	var stepWorkId = nodeVisit.id;
 
 	/*
-   * TODO: rename seasonsState to match the variable name you
+   * TODO: rename seasons2State to match the variable name you
    * changed in the previous line above
    */
-	var studentWork = seasonsState.getStudentWork();
+	var studentWork = seasons2State.getStudentWork();
 
 	//put the student work into the div
 	$('#' + divId).html(studentWork);
@@ -202,49 +202,49 @@ SeasonsNode.prototype.renderGradingView = function(divId, nodeVisit, childDivIdP
  * Get the html file associated with this step that we will use to
  * display to the student.
  *
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  *
  * @return a content object containing the content of the associated
  * html for this step type
  */
-SeasonsNode.prototype.getHTMLContentTemplate = function() {
+Seasons2Node.prototype.getHTMLContentTemplate = function() {
 	/*
-   * TODO: rename both occurrences of seasons
+   * TODO: rename both occurrences of seasons2
    *
    * e.g. if you are creating a quiz step you would change it to
    *
    * node/quiz/quiz.html
    */
-	return createContent('node/seasons/seasons.html');
+	return createContent('node/seasons2/seasons2.html');
 };
 
 /**
  * Callback when the iFrame has completed loading the model.
  * @return
  */
-SeasonsNode.prototype.modelIFrameLoaded = function() {
-	this.contentPanel.seasons.modelIFrameLoaded();
+Seasons2Node.prototype.modelIFrameLoaded = function() {
+	this.contentPanel.seasons2.modelIFrameLoaded();
 };
 
 /*
  * Add this node to the node factory so the vle knows it exists.
- * TODO: rename both occurrences of SeasonsNode
+ * TODO: rename both occurrences of Seasons2Node
  *
  * e.g. if you are creating a quiz step you would change it to
  *
  * NodeFactory.addNode('QuizNode', QuizNode);
  */
-NodeFactory.addNode('SeasonsNode', SeasonsNode);
+NodeFactory.addNode('Seasons2Node', Seasons2Node);
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	/*
-   * TODO: rename seasons to your new folder name
-   * TODO: rename SeasonsNode
+   * TODO: rename seasons2 to your new folder name
+   * TODO: rename Seasons2Node
    *
    * e.g. if you were creating a quiz step it would look like
    *
    * eventManager.fire('scriptLoaded', 'vle/node/quiz/QuizNode.js');
    */
-	eventManager.fire('scriptLoaded', 'vle/node/seasons/SeasonsNode.js');
+	eventManager.fire('scriptLoaded', 'vle/node/seasons2/Seasons2Node.js');
 };

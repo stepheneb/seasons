@@ -1,5 +1,5 @@
 /*
- * This is a seasons step object that developers can use to create new
+ * This is a seasons2 step object that developers can use to create new
  * step types.
  *
  * TODO: Copy this file and rename it to
@@ -18,7 +18,7 @@
  * vlewrapper/WebContent/vle/node/quiz/
  *
  *
- * TODO: in this file, change all occurrences of the word 'SEASONS' to the
+ * TODO: in this file, change all occurrences of the word 'SEASONS2' to the
  * name of your new step type
  *
  * <new step type>
@@ -29,11 +29,11 @@
 /**
  * This is the constructor for the object that will perform the logic for
  * the step when the students work on it. An instance of this object will
- * be created in the .html for this step (look at seasons.html)
+ * be created in the .html for this step (look at seasons2.html)
  *
- * TODO: rename SEASONS
+ * TODO: rename SEASONS2
  */
-function SEASONS(node, view) {
+function SEASONS2(node, view) {
 	this.node = node;
 	this.view = view;
 	this.content = node.getContent().getContentJSON();
@@ -51,30 +51,30 @@ function SEASONS(node, view) {
  * previous work the student has submitted when they previously worked on this
  * step, if any.
  *
- * TODO: rename SEASONS
+ * TODO: rename SEASONS2
  *
  * note: you do not have to use 'promptDiv' or 'studentResponseTextArea', they
  * are just provided as examples. you may create your own html ui elements in
- * the .html file for this step (look at seasons.html).
+ * the .html file for this step (look at seasons2.html).
  */
-SEASONS.prototype.render = function() {
+SEASONS2.prototype.render = function() {
 	// get type of model
 	var modelType = this.content.modelType;
 
 	if (modelType == "whatIstheShapeofEarthsOrbit") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-1.html");
+		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons21-1.html");
 	} else if (modelType == "whatTemperaturePatternsDoYouSee") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-2.html");
+		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons21-2.html");
 	} else if (modelType == "whatTemperaturePatternsDoYouSeeLite") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-2-lite.html");
+		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons21-2-lite.html");
 	} else if (modelType == "howDoesEarthsTiltAffectTemperature") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-3.html");
+		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons21-3.html");
 	} else if (modelType == "howDoesEarthsTiltAffectTemperatureLite") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-3-lite.html");
+		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons21-3-lite.html");
 	} else if (modelType == "howDoesEarthsTiltAffectHoursOfDaylight") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-4.html");
+		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons21-4.html");
 	} else if (modelType == "howDoesEarthsTiltAffectHoursOfDaylightLite") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons/earth/seasons1-4-lite.html");
+		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons21-4-lite.html");
 	}
 };
 
@@ -83,12 +83,12 @@ SEASONS.prototype.render = function() {
 /**
  * This function retrieves the latest student work
  *
- * TODO: rename SEASONS
+ * TODO: rename SEASONS2
  *
  * @return the latest state object or null if the student has never submitted
  * work for this step
  */
-SEASONS.prototype.getLatestState = function() {
+SEASONS2.prototype.getLatestState = function() {
 	var latestState = null;
 
 	//check if the states array has any elements
@@ -104,50 +104,50 @@ SEASONS.prototype.getLatestState = function() {
  * This function retrieves the student work from the html ui, creates a state
  * object to represent the student work, and then saves the student work.
  *
- * TODO: rename SEASONS
+ * TODO: rename SEASONS2
  *
  * note: you do not have to use 'studentResponseTextArea', they are just
  * provided as examples. you may create your own html ui elements in
- * the .html file for this step (look at seasons.html).
+ * the .html file for this step (look at seasons2.html).
  */
-SEASONS.prototype.save = function() {
+SEASONS2.prototype.save = function() {
 	//get the answer the student wrote
-	var seasons_activity = window.document.getElementById("modelIFrame").contentWindow.seasons_activity;
-	var json_str = JSON.stringify(seasons_activity);
+	var seasons2_activity = window.document.getElementById("modelIFrame").contentWindow.seasons2_activity;
+	var json_str = JSON.stringify(seasons2_activity);
 	console.log("save, json_str:" + json_str);
 
 	/*
    * create the student state that will store the new work the student
    * just submitted
    *
-   * TODO: rename SEASONSSTATE
+   * TODO: rename SEASONS2STATE
    *
-   * make sure you rename SEASONSSTATE to the state object type
+   * make sure you rename SEASONS2STATE to the state object type
    * that you will use for representing student data for this
    * type of step. copy and modify the file below
    *
-   * vlewrapper/WebContent/vle/node/seasons/seasonsstate.js
+   * vlewrapper/WebContent/vle/node/seasons2/seasons2state.js
    *
    * and use the object defined in your new state.js file instead
-   * of SEASONSSTATE. for example if you are creating a new
+   * of SEASONS2STATE. for example if you are creating a new
    * quiz step type you would copy the file above to
    *
    * vlewrapper/WebContent/vle/node/quiz/quizstate.js
    *
    * and in that file you would define QUIZSTATE and therefore
-   * would change the SEASONSSTATE to QUIZSTATE below
+   * would change the SEASONS2STATE to QUIZSTATE below
    */
-	var seasonsState = new SEASONSSTATE(json_str);
+	var seasons2State = new SEASONS2STATE(json_str);
 
 	/*
    * fire the event to push this state to the global view.states object.
    * the student work is saved to the server once they move on to the
    * next step.
    */
-	eventManager.fire('pushStudentWork', seasonsState);
+	eventManager.fire('pushStudentWork', seasons2State);
 
 	//push the state object into this or object's own copy of states
-	this.states.push(seasonsState);
+	this.states.push(seasons2State);
 };
 
 /**
@@ -155,10 +155,10 @@ SEASONS.prototype.save = function() {
  *
  * TODO: rename TemplateNode
  */
-SEASONS.prototype.modelIFrameLoaded = function(){
-	var seasons_activity = window.document.getElementById("modelIFrame").contentWindow.seasons_activity;
+SEASONS2.prototype.modelIFrameLoaded = function(){
+	var seasons2_activity = window.document.getElementById("modelIFrame").contentWindow.seasons2_activity;
 
-	console.log("modelIFrameLoaded, seasons_activity:" + seasons_activity);
+	console.log("modelIFrameLoaded, seasons2_activity:" + seasons2_activity);
 	//load any previous responses the student submitted for this step
 	var latestState = this.getLatestState();
 
@@ -166,7 +166,7 @@ SEASONS.prototype.modelIFrameLoaded = function(){
 		/*
      * get the response from the latest state. the response variable is
      * just provided as an example. you may use whatever variables you
-     * would like from the state object (look at seasonsstate.js)
+     * would like from the state object (look at seasons2state.js)
      */
 		var json_str = latestState.response;
 		console.log("modelIFrameLoaded, json_str:" + json_str);
@@ -174,19 +174,19 @@ SEASONS.prototype.modelIFrameLoaded = function(){
 		var state = JSON.parse(json_str);
 
 		// TODO: UNCOMMENT WHEN setState is implemented.
-		seasons_activity.fromJSON(state);
+		seasons2_activity.fromJSON(state);
 	}
 };
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	/*
-   * TODO: rename seasons to your new folder name
-   * TODO: rename seasons.js
+   * TODO: rename seasons2 to your new folder name
+   * TODO: rename seasons2.js
    *
    * e.g. if you were creating a quiz step it would look like
    *
    * eventManager.fire('scriptLoaded', 'vle/node/quiz/quiz.js');
    */
-	eventManager.fire('scriptLoaded', 'vle/node/seasons/seasons.js');
+	eventManager.fire('scriptLoaded', 'vle/node/seasons2/seasons2.js');
 }

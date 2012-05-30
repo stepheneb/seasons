@@ -1,110 +1,110 @@
 var coreScripts = [
     /*
-     * TODO: rename seasons
-     * TODO: rename SeasonsNode.js
+     * TODO: rename seasons2
+     * TODO: rename Seasons2Node.js
      *
      * For example if you are creating a quiz node you would change it to
      * 'vle/node/quiz/QuizNode.js'
      */
-	'vle/node/seasons/SeasonsNode.js',
+	'vle/node/seasons2/Seasons2Node.js',
 	/*
-     * TODO: rename seasons
-     * TODO: rename seasonsEvents.js
+     * TODO: rename seasons2
+     * TODO: rename seasons2Events.js
      *
      * For example if you are creating a quiz node you would change it to
      * 'vle/node/quiz/QuizEvents.js'
    */
-	'vle/node/seasons/seasonsEvents.js'
+	'vle/node/seasons2/seasons2Events.js'
 ];
 
 var studentVLEScripts = [
   /*
-     * TODO: rename seasons
-     * TODO: rename seasons.js
+     * TODO: rename seasons2
+     * TODO: rename seasons2.js
      *
      * For example if you are creating a quiz node you would change it to
      * 'vle/node/quiz/quiz.js'
   */
-	'vle/node/seasons/seasons.js',
+	'vle/node/seasons2/seasons2.js',
 	/*
-     * TODO: rename seasons
-     * TODO: rename seasonsstate.js
+     * TODO: rename seasons2
+     * TODO: rename seasons2state.js
      *
      * For example if you are creating a quiz node you would change it to
      * 'vle/node/quiz/quizstate.js'
   */
-	'vle/node/seasons/seasonsstate.js',
+	'vle/node/seasons2/seasons2state.js',
 	'vle/jquery/js/jquery-1.6.1.min.js',
 	'vle/jquery/js/jquery-ui-1.8.custom.min.js'
 ];
 
 var authorScripts = [
 	/*
-   * TODO: rename seasons
-   * TODO: rename authorview_seasons.js
+   * TODO: rename seasons2
+   * TODO: rename authorview_seasons2.js
    *
    * For example if you are creating a quiz node you would change it to
    * 'vle/node/quiz/authorview_quiz.js'
    */
-	'vle/node/seasons/authorview_seasons.js'
+	'vle/node/seasons2/authorview_seasons2.js'
 ];
 
 var gradingScripts = [
   /*
-   * TODO: rename seasons
-   * TODO: rename seasonsstate.js
+   * TODO: rename seasons2
+   * TODO: rename seasons2state.js
    *
    * For example if you are creating a quiz node you would change it to
    * 'vle/node/quiz/quizstate.js'
    */
-	'vle/node/seasons/seasonsstate.js'
+	'vle/node/seasons2/seasons2state.js'
 ];
 
 var dependencies = [
   /*
-   * TODO: rename seasons
-   * TODO: rename SeasonsNode.js
+   * TODO: rename seasons2
+   * TODO: rename Seasons2Node.js
    *
    * For example if you are creating a quiz node you would change it to
    * 'vle/node/quiz/QuizNode.js'
   */
-	{child:"vle/node/seasons/SeasonsNode.js", parent:["vle/node/Node.js"]}
+	{child:"vle/node/seasons2/Seasons2Node.js", parent:["vle/node/Node.js"]}
 ];
 
 /*
- * TODO: rename Seasons
+ * TODO: rename Seasons2
  *
  * For example if you are creating a quiz node you would change it to
  * 'Quiz'
  */
 var nodeClasses = [
-	{nodeClass:'seasons', nodeClassText:'Seasons'}
+	{nodeClass:'seasons2', nodeClassText:'Seasons2'}
 ];
 
-var nodeIconPath = 'node/seasons/icons/';
-componentloader.addNodeIconPath('SeasonsNode', nodeIconPath);
+var nodeIconPath = 'node/seasons2/icons/';
+componentloader.addNodeIconPath('Seasons2Node', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
 
 /*
- * TODO: rename seasons
+ * TODO: rename seasons2
  *
  * For example if you are creating a quiz node you would change it to
  * 'quiz'
  */
-scriptloader.addScriptToComponent('seasons', studentVLEScripts);
+scriptloader.addScriptToComponent('seasons2', studentVLEScripts);
 
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);
 scriptloader.addDependencies(dependencies);
 
 /*
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  *
  * For example if you are creating a quiz node you would change it to
  * 'QuizNode'
  */
-componentloader.addNodeClasses('SeasonsNode', nodeClasses);
+componentloader.addNodeClasses('Seasons2Node', nodeClasses);
 
 var nodeTemplateParams = [
 	{
@@ -114,7 +114,7 @@ var nodeTemplateParams = [
      * For example if you are creating a quiz node you would change it to
      * 'node/quiz/quizTemplate.qz'
      */
-		nodeTemplateFilePath:'node/seasons/seasonsTemplate.ss',
+		nodeTemplateFilePath:'node/seasons2/seasons2Template.ss',
 
 		/*
      * TODO: rename the extension value for your step type, the value of the
@@ -129,21 +129,21 @@ var nodeTemplateParams = [
 ];
 
 /*
- * TODO: rename SeasonsNode
+ * TODO: rename Seasons2Node
  *
  * For example if you are creating a quiz node you would change it to
  * 'QuizNode'
  */
-componentloader.addNodeTemplateParams('SeasonsNode', nodeTemplateParams);
+componentloader.addNodeTemplateParams('Seasons2Node', nodeTemplateParams);
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	/*
-   * TODO: rename seasons to your new folder name
+   * TODO: rename seasons2 to your new folder name
    *
    * For example if you were creating a quiz step it would look like
    *
    * eventManager.fire('scriptLoaded', 'vle/node/quiz/setup.js');
    */
-	eventManager.fire('scriptLoaded', 'vle/node/seasons/setup.js');
+	eventManager.fire('scriptLoaded', 'vle/node/seasons2/setup.js');
 };

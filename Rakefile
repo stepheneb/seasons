@@ -1,12 +1,12 @@
 
 wise4_dist = 'wise4/dist'
-wise4_dist_node_seasons = 'wise4/dist/node/seasons'
+wise4_dist_node_seasons2 = 'wise4/dist/node/seasons2'
 
 wise4_node = 'wise4/node'
 wise4_icons = 'wise4/icons'
 
 catalina_home = ENV['CATALINA_HOME']
-seasons_node_path = '/webapps/vlewrapper/vle/node/seasons2'
+seasons2_node_path = '/webapps/vlewrapper/vle/node/seasons2'
 
 files = [
   "earth/images/earth-arrow.png",
@@ -60,26 +60,26 @@ files = [
 ]
 
 namespace :wise4 do
-  desc "generate WISE4 step in: #{File.expand_path(wise4_dist_node_seasons)}"
+  desc "generate WISE4 step in: #{File.expand_path(wise4_dist_node_seasons2)}"
   task :generate_step do
     rm_rf(wise4_dist) if File.exists?(wise4_dist)
-    mkdir_p(wise4_dist_node_seasons)
-    cp_r(wise4_node + '/.', wise4_dist_node_seasons)
-    cp_r(wise4_icons, wise4_dist_node_seasons)
+    mkdir_p(wise4_dist_node_seasons2)
+    cp_r(wise4_node + '/.', wise4_dist_node_seasons2)
+    cp_r(wise4_icons, wise4_dist_node_seasons2)
     files.each do |file|
-      dest_path = wise4_dist_node_seasons + '/' + File.dirname(file)
+      dest_path = wise4_dist_node_seasons2 + '/' + File.dirname(file)
       mkdir_p(dest_path)
       cp(file, dest_path)
     end
   end
 
-  desc "copy WISE4 seasons step to local vle: $CATALINA_HOME#{seasons_node_path}"
+  desc "copy WISE4 seasons2 step to local vle: $CATALINA_HOME#{seasons2_node_path}"
   task :copy_step_to_local_vle => [ :generate_step ] do
     if catalina_home
-      wise4_vle_seasons_node_path = catalina_home + seasons_node_path
-      rm_rf(wise4_vle_seasons_node_path) if File.exists?(wise4_vle_seasons_node_path)
-      mkdir(wise4_vle_seasons_node_path)
-      cp_r(wise4_dist_node_seasons + '/.', wise4_vle_seasons_node_path)
+      wise4_vle_seasons2_node_path = catalina_home + seasons2_node_path
+      rm_rf(wise4_vle_seasons2_node_path) if File.exists?(wise4_vle_seasons2_node_path)
+      mkdir(wise4_vle_seasons2_node_path)
+      cp_r(wise4_dist_node_seasons2 + '/.', wise4_vle_seasons2_node_path)
     else
       raise "\n*** $CATALINA_HOME must be defined in your environment to use this task.\n"
     end

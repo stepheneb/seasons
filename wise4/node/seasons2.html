@@ -1,20 +1,20 @@
 <html>
   <head>
     <script type="text/javascript">
-      var seasons;
+      var seasons2;
 
       function loadContentAfterScriptsLoad(node) {
-        seasons = new SEASONS(node, node.view);
-        seasons.render();
+        seasons2 = new SEASONS2(node, node.view);
+        seasons2.render();
       };
 
       function loadContent(node) {
-        scriptloader.loadScripts('seasons', document, node.id, eventManager);
+        scriptloader.loadScripts('seasons2', document, node.id, eventManager);
       };
 
       // This is called when the student clicks on the save button below in the body
       function save() {
-        seasons.save();
+        seasons2.save();
       }
     </script>
     <style type="text/css">
