@@ -34,6 +34,7 @@ files = [
   "earth/javascript/solar-system-data.js",
   "earth/javascript/spaceship.js",
   "earth/javascript/sun.js",
+  "earth/blank.cur",
   "earth/seasons1-1.html",
   "earth/seasons1-2-lite.html",
   "earth/seasons1-2.html",
