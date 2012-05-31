@@ -1502,7 +1502,7 @@ var completelyLoaded = false;
 function sceneCompletelyLoaded() {
 	if (parent && parent.eventManager) {
 		if (typeof parent.eventManager != "undefined") {
-			parent.eventManager.fire("seasonsModelIFrameLoaded");
+			parent.eventManager.fire("seasons2ModelIFrameLoaded");
 		}
 	}
 }
