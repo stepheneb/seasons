@@ -25,7 +25,7 @@ View.prototype.seasons2Dispatcher = function(type,args,obj){
 		obj.Seasons2Node.updatePrompt();
 	} else if (type == 'seasons2ModelTypeUpdated') {
 		obj.Seasons2Node.updateModelType();
-	} else if (type == 'seasons2ModelIFrameLoaded') {
+	} else if (type == 'seasonsModelIFrameLoaded') {
 		obj.getCurrentNode().modelIFrameLoaded();
 	}
 };
@@ -42,7 +42,7 @@ var events = [
    */
 	'seasons2UpdatePrompt',
 	'seasons2ModelTypeUpdated',
-	'seasons2ModelIFrameLoaded'
+	'seasonsModelIFrameLoaded'
 ];
 
 /*
