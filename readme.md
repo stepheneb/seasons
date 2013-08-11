@@ -1,7 +1,7 @@
 Seasons visualizations using WebGL
 ==================================
 
-These are deployed here: http://visual-demos.dev.concord.org/seasons/index.html
+These are deployed here: http://stepheneb.github.io/seasons/index.html
 
 The code for integrating this work as a WISE4 step is located here: wise4/node.
 
