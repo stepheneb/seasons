@@ -213,9 +213,9 @@ SceneJS.createNode({
                                                             nodes: [
                                                                 {
                                                                     type: "scale",
-                                                                    x: 10000,
-                                                                    y: 10000,
-                                                                    z: 10000,
+                                                                    x: 15000,
+                                                                    y: 15000,
+                                                                    z: 15000,
                                                                     nodes: [
                                                                         {
                                                                             type: "rotate",
@@ -252,9 +252,9 @@ SceneJS.createNode({
                                                             nodes: [
                                                                 {
                                                                     type: "scale",
-                                                                    x: 10000,
-                                                                    y: 10000,
-                                                                    z: 10000,
+                                                                    x: 15000,
+                                                                    y: 15000,
+                                                                    z: 15000,
                                                                     nodes: [
                                                                         {
                                                                             type: "rotate",
@@ -291,9 +291,9 @@ SceneJS.createNode({
                                                             nodes: [
                                                                 {
                                                                     type: "scale",
-                                                                    x: 10000,
-                                                                    y: 10000,
-                                                                    z: 10000,
+                                                                    x: 15000,
+                                                                    y: 15000,
+                                                                    z: 15000,
                                                                     nodes: [
                                                                         {
                                                                             type: "rotate",
@@ -330,9 +330,9 @@ SceneJS.createNode({
                                                             nodes: [
                                                                 {
                                                                     type: "scale",
-                                                                    x: 10000,
-                                                                    y: 10000,
-                                                                    z: 10000,
+                                                                    x: 15000,
+                                                                    y: 15000,
+                                                                    z: 15000,
                                                                     nodes: [
                                                                         {
                                                                             type: "rotate",
@@ -1295,9 +1295,9 @@ SceneJS.createNode({
                                                                                                                     nodes: [
                                                                                                                         {
                                                                                                                             type: "scale",
-                                                                                                                            x: 0.2,
-                                                                                                                            y: 0.2,
-                                                                                                                            z: 0.2,
+                                                                                                                            x: 0.3,
+                                                                                                                            y: 0.3,
+                                                                                                                            z: 0.3,
                                                                                                                             nodes: [
                                                                                                                                 {
                                                                                                                                     type: "text",
