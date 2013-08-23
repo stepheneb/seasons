@@ -637,6 +637,37 @@ var month_distance = document.getElementById("month-distance");
 
 var table_row_index = 0;
 
+var distance_data_to_plot = [];
+distance_data_to_plot.push({
+  "labe;": "Distance",
+  "color": "#0000ff",
+  "lines": {
+    "show": false
+  },
+  "bars": {
+    "show": true
+  },
+  "data": [
+    [0, null],
+    [1, null],
+    [2, null],
+    [3, null],
+    [4, null],
+    [5, null],
+    [6, null],
+    [7, null],
+    [8, null],
+    [9, null],
+    [10, null],
+    [11, null]
+  ]
+});
+
+var distance_x_axis_tics = [];
+for (var i = 0; i < 12; i++) {
+  distance_x_axis_tics.push([i , month_data[month_names[i]].short_name]);
+}
+
 function addExperimentData() {
 
     var the_month = scene.month;
@@ -667,11 +698,53 @@ function addExperimentData() {
 
     month_data_table_body.appendChild(table_row);
 
+    distance_data_to_plot[0].data[month.index][1] = +distance_str;
+    plotEarthDistanceGraph();
+
     SortableTable.load();
     return false;
+}
+
+
+function plotEarthDistanceGraph() {
+    var f = Flotr.draw($('theCanvas4'), distance_data_to_plot,
+      {
+        xaxis:{
+          labelsAngle: 60,
+          ticks: distance_x_axis_tics,
+          title: 'Month',
+          noTics: distance_x_axis_tics.length,
+          min: 0, max: distance_x_axis_tics.length - 1
+        },
+        yaxis: {
+          title: 'Distance (millions of km)',
+          min: 140,
+          max: 160
+        },
+        title: "Distance from Sun to Earth by Month",
+        grid:{ verticalLines: true, backgroundColor: 'white' },
+        HtmlText: false,
+        legend: false,
+        // legend: { position: 'nw', margin: 1, backgroundOpacity: 0.1 },
+        mouse:{
+          track: true,
+          lineColor: 'purple',
+          relative: true,
+          position: 'nw',
+          sensibility: 1, // => The smaller this value, the more precise you've to point
+          trackDecimals: 1,
+          trackFormatter: function(obj) {
+
+            return obj.series.label + ': ' + month_data[month_names[Number(obj.x) + 1]].short_name +  ', ' + obj.y;
+          }
+        },
+        crosshair:{ mode: 'xy' }
+      }
+    );
 }
 
 choose_month.onchange();
 
 month_distance.onsubmit = addExperimentData;
 
+plotEarthDistanceGraph();
