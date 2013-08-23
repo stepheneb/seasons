@@ -710,8 +710,8 @@ seasons.Scene.prototype.earthLabel = function() {
 
         var edist = earth_ellipse_distance_from_sun_by_month(this.month);
         var solar_flux = earth_ephemerides_solar_constant_by_month(this.month);
-        var labelStr = "", lpos;
-        labelStr += sprintf("Earth Distance: %3.0f million km<br>", edist * scale_factor / 1000000);
+        var labelStr = this.month_data[this.month].long_name + " ";
+        labelStr += sprintf("Earth Distance: %3.1f million km<br>", edist * scale_factor / 1000000);
         // labelStr += sprintf("Solar Radiation:  %4.1f W/m2<br>", solar_flux);
         if (this.debugging) {
             var earth_pos = this.get_earth_position();
