@@ -674,6 +674,72 @@ function addExperimentData() {
     return false;
 }
 
+function experimentDataToJSON() {
+    var exp_table = { rows: [] };
+    if (month_data_table_body) {
+      var rows = month_data_table_body.childElements();
+      var row_count = month_data_table_body.childElementCount;
+      for (var r = 0; r < row_count; r++) {
+          var row = rows[r];
+          var cells = row.childElements();
+          exp_table.rows.push({
+              id:       row.id,
+              index:    cells[0].textContent,
+              month:    cells[1].textContent,
+              distance: cells[2].textContent,
+              state: {
+                scene: JSON.stringify(scene.toJSON())
+              }
+          });
+      }
+      exp_table.table_row_index = table_row_index;
+    }
+    return exp_table;
+}
+
+function experimentDataFromJSON(exp_table) {
+  var i, j;
+  if (!month_data_table_body) { return; }
+  var table_rows = month_data_table_body.rows.length;
+  for (i = 0; i < table_rows; i++) {
+      month_data_table_body.deleteRow(0);
+  }
+
+  var distance_data = distance_data_to_plot[0];
+  for (j = 0; j < distance_data.data.length; j++) {
+    distance_data.data[j] = [j, null];
+  }
+
+  var table_row, table_data;
+  for (i = 0; i < exp_table.rows.length; i++) {
+    var row = exp_table.rows[i],
+        month = month_data[row.month.toLowerCase()],
+        distance_str = row.distance;
+
+    table_row = document.createElement('tr');
+    table_row.id = row.id;
+
+    table_data = document.createElement('td');
+    table_data.textContent = row.index;
+    table_row.appendChild(table_data);
+
+    table_data = document.createElement('td');
+    table_data.textContent = row.month;
+    table_row.appendChild(table_data);
+
+    table_data = document.createElement('td');
+    table_data.textContent = distance_str;
+    table_row.appendChild(table_data);
+
+    table_row.appendChild(table_data);
+
+    distance_data_to_plot[0].data[month.index+1][1] = +distance_str;
+
+    month_data_table_body.appendChild(table_row);
+  }
+  plotEarthDistanceGraph();
+  table_row_index = exp_table.table_row_index;
+}
 
 var distance_data_to_plot = [];
 distance_data_to_plot.push({

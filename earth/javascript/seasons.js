@@ -956,7 +956,8 @@ seasons.Activity.prototype.toJSON = function() {
         scenes.scene = this.scenes.scene.toJSON();
         json_object = {
             version: this.version,
-            scenes: scenes
+            scenes: scenes,
+            table: experimentDataToJSON()
         };
     } else {
         scenes.scene1 = this.scenes.scene1.toJSON();
@@ -975,6 +976,7 @@ seasons.Activity.prototype.fromJSON = function(json_object) {
     switch (json_object.version) {
         case 1.1:
         this.scenes.scene.fromJSON(json_object.scenes.scene);
+        experimentDataFromJSON(json_object.table);
         break;
 
         case 1.2:
