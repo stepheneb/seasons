@@ -31,7 +31,7 @@ SceneJS.createNode({
                                     nodes: [
                                         {
                                             type: "quad",
-                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20,
+                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20
                                         }
                                     ]
                                 }
@@ -77,7 +77,7 @@ SceneJS.createNode({
                                     nodes: [
                                         {
                                             type: "quad",
-                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20,
+                                            xSize: sun_radius_km * 20, ySize: sun_radius_km * 20
                                         }
                                     ]
                                 }
@@ -196,7 +196,7 @@ SceneJS.createNode({
                         fovy : 45.0,
                         aspect : 1.365,
                         near : earth_radius_km,
-                        far : milky_way_apparent_radius * 10,
+                        far : milky_way_apparent_radius * 10
                     },
 
                     nodes: [
@@ -402,7 +402,7 @@ SceneJS.createNode({
                                                     ]
                                                 }
                                             ]
-                                        },
+                                        }
                                     ]
                                 }
                             ]
@@ -447,7 +447,7 @@ SceneJS.createNode({
                             specularColor:  { r: 1.0, g: 1.0, b: 1.0 },
                             specular:       1.0,
                             shine:          2.0,
-                            emit:           1.0,
+                            emit:           1.0
 
                             // nodes: [
                             //
@@ -548,7 +548,7 @@ var seasons_activity = new seasons.Activity({
 var choose_month = document.getElementById("choose-month");
 
 function chooseMonthLogger(month) {
-  seasons_activity.logInteraction({ "choose month": month })
+  seasons_activity.logInteraction({ "choose month": month });
 }
 
 window.render = function() {
@@ -563,7 +563,9 @@ SceneJS.bind("reset", function() {
     window.clearInterval(pInterval);
 });
 
-var pInterval = setInterval("window.render()", 30);
+var pInterval = setInterval(function () {
+  window.render();
+}, 30);
 
 var zBufferDepth = 0;
 
@@ -586,7 +588,7 @@ function sceneCompletelyLoaded() {
 SceneJS.withNode("theScene").bind("loading-status",
     function(event) {
 
-        if (zBufferDepth == 0) {
+        if (zBufferDepth === 0) {
             zBufferDepth = SceneJS.withNode("theScene").get("ZBufferDepth");
             var mesg = "using webgl context with Z-buffer depth of: " + zBufferDepth + " bits";
             SceneJS._loggingModule.info(mesg);

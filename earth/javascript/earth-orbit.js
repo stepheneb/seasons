@@ -8,21 +8,22 @@ var circlePoints = function(scale) {
     var pi2 = Math.PI * 2;
     var increment = pi2 / earth_circle_orbit_segments;
     var angle = 0;
+    var i;
     if (typeof(scale) === "number") {
-        for (var i = 0; i < earth_circle_orbit_segments; i++, angle += increment) {
+        for (i = 0; i < earth_circle_orbit_segments; i++, angle += increment) {
             points.push(Math.sin(angle) * scale, 0, Math.cos(angle) * scale);
         }
     } else {
-        for (var i = 0; i < earth_circle_orbit_segments; i++, angle += increment) {
+        for (i = 0; i < earth_circle_orbit_segments; i++, angle += increment) {
             points.push(Math.sin(angle), 0, Math.cos(angle));
         }
     }
     return points;
-}
+};
 
 var earth_circle_orbit_positions = circlePoints(earth_orbital_radius_km);
 var earth_circle_orbit_indices = [];
-for (var i = 0; i < earth_circle_orbit_segments; i++) { earth_circle_orbit_indices.push(i) };
+for (var i = 0; i < earth_circle_orbit_segments; i++) { earth_circle_orbit_indices.push(i); }
 
 var earth_circle_location_by_month = function(month) {
     var day2 = 0;
@@ -135,24 +136,24 @@ var ellipse = function(scale) {
     var pi2 = Math.PI * 2;
     var increment = pi2 / earth_ellipse_orbit_segments;
     var angle = 0;
+    var i;
     if (typeof(scale) === "number") {
-        for (var i = 0; i < earth_ellipse_orbit_segments; i++, angle += increment) {
+        for (i = 0; i < earth_ellipse_orbit_segments; i++, angle += increment) {
             points.push(Math.sin(angle) * scale, 0, Math.cos(angle) * scale);
         }
     } else {
-        for (var i = 0; i < earth_ellipse_orbit_segments; i++, angle += increment) {
+        for (i = 0; i < earth_ellipse_orbit_segments; i++, angle += increment) {
             points.push(Math.sin(angle), 0, Math.cos(angle));
         }
     }
     return points;
-}
+};
 
 var earth_ellipse_orbit_positions = circlePoints(earth_orbital_radius_km);
 var earth_ellipse_orbit_indices = [];
-for (var i = 0; i < earth_circle_orbit_segments; i++) { earth_ellipse_orbit_indices.push(i) };
+for (var i = 0; i < earth_circle_orbit_segments; i++) { earth_ellipse_orbit_indices.push(i); }
 
 var earth_ellipse_points = function(index) {
-    earth_orbital_radius_km
     var y = (1 / earthOrbitData.semiMajorAxis) * Math.sin(index * 2 * Math.PI);
     var x =  earthOrbitData.semiMajorAxis * Math.cos(index * 2 * Math.PI);
 
@@ -163,7 +164,7 @@ var earth_ellipse_points = function(index) {
     // y = y * au2km * factor;
 
     return [ x, 0, y ];
-}
+};
 
 var earth_ellipse_location_by_month = function(month) {
     var ellipse;
@@ -186,19 +187,19 @@ var earth_ellipse_location_by_month = function(month) {
         break;
     }
     return ellipse;
-}
+};
 
 var earth_ellipse_distance_from_sun_by_month = function(month) {
     var ep = earth_ellipse_location_by_month(month);
-    var distance = Math.sqrt(ep[0] * ep[0] + ep[1] * ep[1] + ep[2] * ep[2])
+    var distance = Math.sqrt(ep[0] * ep[0] + ep[1] * ep[1] + ep[2] * ep[2]);
     return distance;
-}
+};
 
 var earth_ellipse_solar_constant_by_month = function(month) {
     var ep = earth_ellipse_location_by_month(month);
-    var distance = Math.sqrt(ep[0] * ep[0] + ep[1] * ep[1] + ep[2] * ep[2])
+    var distance = Math.sqrt(ep[0] * ep[0] + ep[1] * ep[1] + ep[2] * ep[2]);
     return distance;
-}
+};
 
 
 // var earth_ellipse_location_points_by_month = function(month) {
