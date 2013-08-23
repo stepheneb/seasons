@@ -637,37 +637,6 @@ var month_distance = document.getElementById("month-distance");
 
 var table_row_index = 0;
 
-var distance_data_to_plot = [];
-distance_data_to_plot.push({
-  "labe;": "Distance",
-  "color": "#0000ff",
-  "lines": {
-    "show": false
-  },
-  "bars": {
-    "show": true
-  },
-  "data": [
-    [0, null],
-    [1, null],
-    [2, null],
-    [3, null],
-    [4, null],
-    [5, null],
-    [6, null],
-    [7, null],
-    [8, null],
-    [9, null],
-    [10, null],
-    [11, null]
-  ]
-});
-
-var distance_x_axis_tics = [];
-for (var i = 0; i < 12; i++) {
-  distance_x_axis_tics.push([i , month_data[month_names[i]].short_name]);
-}
-
 function addExperimentData() {
 
     var the_month = scene.month;
@@ -698,13 +667,49 @@ function addExperimentData() {
 
     month_data_table_body.appendChild(table_row);
 
-    distance_data_to_plot[0].data[month.index][1] = +distance_str;
+    distance_data_to_plot[0].data[month.index+1][1] = +distance_str;
     plotEarthDistanceGraph();
 
     SortableTable.load();
     return false;
 }
 
+
+var distance_data_to_plot = [];
+distance_data_to_plot.push({
+  "label": "Distance",
+  "color": "#0000ff",
+  "lines": {
+    "show": false
+  },
+  "bars": {
+    "show": true,
+    "barWidth": 0.9
+  },
+  "data": [
+    [0, null],
+    [1, null],
+    [2, null],
+    [3, null],
+    [4, null],
+    [5, null],
+    [6, null],
+    [7, null],
+    [8, null],
+    [9, null],
+    [10, null],
+    [11, null],
+    [12, null],
+    [13, null]
+  ]
+});
+
+var distance_x_axis_tics = [];
+distance_x_axis_tics.push([0 , ""]);
+for (var i = 1; i < 13; i++) {
+  distance_x_axis_tics.push([i , month_data[month_names[i-1]].short_name]);
+}
+distance_x_axis_tics.push([13 , ""]);
 
 function plotEarthDistanceGraph() {
     var f = Flotr.draw($('theCanvas4'), distance_data_to_plot,
@@ -729,13 +734,12 @@ function plotEarthDistanceGraph() {
         mouse:{
           track: true,
           lineColor: 'purple',
-          relative: true,
+          relative: false,
           position: 'nw',
           sensibility: 1, // => The smaller this value, the more precise you've to point
           trackDecimals: 1,
           trackFormatter: function(obj) {
-
-            return obj.series.label + ': ' + month_data[month_names[Number(obj.x) + 1]].short_name +  ', ' + obj.y;
+            return obj.series.label + ': ' + month_data[month_names[Number(obj.x) - 1]].short_name +  ', ' + obj.y;
           }
         },
         crosshair:{ mode: 'xy' }
