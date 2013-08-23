@@ -168,18 +168,18 @@ seasons.Scene = function(options) {
     // Some useful variables
 
     this.month_data = {
-        "jan": { index:  0, num:   1, short_name: 'Jan', long_name: 'January' },
-        "feb": { index:  1, num:   2, short_name: 'Feb', long_name: 'February' },
-        "mar": { index:  2, num:   3, short_name: 'Mar', long_name: 'March' },
-        "apr": { index:  3, num:   4, short_name: 'Apr', long_name: 'April' },
-        "may": { index:  4, num:   5, short_name: 'May', long_name: 'May' },
-        "jun": { index:  5, num:   6, short_name: 'Jun', long_name: 'June' },
-        "jul": { index:  6, num:   7, short_name: 'Jul', long_name: 'July' },
-        "aug": { index:  7, num:   8, short_name: 'Aug', long_name: 'August' },
-        "sep": { index:  8, num:   9, short_name: 'Sep', long_name: 'September' },
-        "oct": { index:  9, num:  10, short_name: 'Oct', long_name: 'October' },
-        "nov": { index: 10, num:  11, short_name: 'Nov', long_name: 'Novemeber' },
-        "dec": { index: 11, num:  12, short_name: 'Dec', long_name: 'December' }
+        "jan": { index:  0, num:   1, angle: 210, short_name: 'Jan', long_name: 'January' },
+        "feb": { index:  1, num:   2, angle: 240, short_name: 'Feb', long_name: 'February' },
+        "mar": { index:  2, num:   3, angle: 270, short_name: 'Mar', long_name: 'March' },
+        "apr": { index:  3, num:   4, angle: 300, short_name: 'Apr', long_name: 'April' },
+        "may": { index:  4, num:   5, angle: 330, short_name: 'May', long_name: 'May' },
+        "jun": { index:  5, num:   6, angle:   0, short_name: 'Jun', long_name: 'June' },
+        "jul": { index:  6, num:   7, angle:  30, short_name: 'Jul', long_name: 'July' },
+        "aug": { index:  7, num:   8, angle:  60, short_name: 'Aug', long_name: 'August' },
+        "sep": { index:  8, num:   9, angle:  90, short_name: 'Sep', long_name: 'September' },
+        "oct": { index:  9, num:  10, angle: 120, short_name: 'Oct', long_name: 'October' },
+        "nov": { index: 10, num:  11, angle: 150, short_name: 'Nov', long_name: 'Novemeber' },
+        "dec": { index: 11, num:  12, angle: 180, short_name: 'Dec', long_name: 'December' }
     };
 
     this.month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
@@ -813,77 +813,22 @@ seasons.Scene.prototype._perspectiveChange = function(view_selection) {
 seasons.Scene.prototype.setEarthSunLine = function() {
     var scale = {};
     var distance2 = earth_ellipse_distance_from_sun_by_month(this.month) / 2;
+    var angle = this.month_data[this.month].angle;
+
     // var distance = earth_ephemerides_datum_by_month('jun').rg * au2km * factor;
 
-    switch(this.month) {
-        case "dec":
-        this.earth_sun_line_rotation.set("angle", 1.0030);
-        this.earth_sun_line_translation.set({ x: -distance2 , y: 0.0, z: 0 });
-        scale.x = distance2;
-        switch(this.look_at_selection) {
-            case "orbit":
-            scale.y = sun_earth_line_size_large;
-            scale.z = sun_earth_line_size_large;
-            break;
-
-            case "earth":
-            scale.y = sun_earth_line_size_med;
-            scale.z = sun_earth_line_size_med;
-            break;
-        }
+    this.earth_sun_line_rotation.set("angle", angle);
+    this.earth_sun_line_translation.set({ x: Math.cos(angle * deg2rad)*distance2 , y: 0, z: Math.sin(angle * deg2rad)*-distance2 });
+    scale.x = distance2;
+    switch(this.look_at_selection) {
+        case "orbit":
+        scale.y = sun_earth_line_size_large;
+        scale.z = sun_earth_line_size_large;
         break;
 
-        case "sep":
-        this.earth_sun_line_rotation.set("angle", -2.4025);
-        this.earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: -distance2 });
-        scale.z = distance2 * 1.1;
-        switch(this.look_at_selection) {
-            case "orbit":
-            scale.x = sun_earth_line_size_large;
-            scale.y = sun_earth_line_size_large;
-            break;
-
-            case "earth":
-            // scale.x = sun_earth_line_size_large / 400;
-            // scale.y = sun_earth_line_size_large / 400;
-            scale.x = sun_earth_line_size_med;
-            scale.y = sun_earth_line_size_med;
-            break;
-        }
-        break;
-
-        case "jun":
-        this.earth_sun_line_rotation.set("angle", 0);
-        this.earth_sun_line_translation.set({ x: distance2 , y: 0.0, z: 0 });
-        scale.x = distance2;
-        switch(this.look_at_selection) {
-            case "orbit":
-            scale.y = sun_earth_line_size_large;
-            scale.z = sun_earth_line_size_large;
-            break;
-
-            case "earth":
-            scale.y = sun_earth_line_size_med;
-            scale.z = sun_earth_line_size_med;
-            break;
-        }
-        break;
-
-        case "mar":
-        this.earth_sun_line_rotation.set("angle", 182.4025);
-        this.earth_sun_line_translation.set({ x: sun_x_pos, y: 0.0, z: distance2 });
-        scale.z = distance2 * 1.0004;
-        switch(this.look_at_selection) {
-            case "orbit":
-            scale.x = sun_earth_line_size_large;
-            scale.y = sun_earth_line_size_large;
-            break;
-
-            case "earth":
-            scale.x = sun_earth_line_size_med;
-            scale.y = sun_earth_line_size_med;
-            break;
-        }
+        case "earth":
+        scale.y = sun_earth_line_size_med;
+        scale.z = sun_earth_line_size_med;
         break;
     }
     this.earth_sun_line_scale.set(scale);

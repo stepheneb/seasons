@@ -545,6 +545,8 @@ var seasons_activity = new seasons.Activity({
     scenes: { scene: scene }
 });
 
+var scene = seasons_activity.scenes.scene;
+
 var choose_month = document.getElementById("choose-month");
 
 function chooseMonthLogger(month) {
@@ -605,5 +607,71 @@ SceneJS.withNode("theScene").bind("loading-status",
         }
     });
 
+//
+// month-distance experiment table and graph
+//
+
+var month_data = {
+    "jan": { index:  0, num:   1, short_name: 'JAN', long_name: 'January' },
+    "feb": { index:  1, num:   2, short_name: 'FEB', long_name: 'February' },
+    "mar": { index:  2, num:   3, short_name: 'MAR', long_name: 'March' },
+    "apr": { index:  3, num:   4, short_name: 'APR', long_name: 'April' },
+    "may": { index:  4, num:   5, short_name: 'MAY', long_name: 'May' },
+    "jun": { index:  5, num:   6, short_name: 'JUN', long_name: 'June' },
+    "jul": { index:  6, num:   7, short_name: 'JUL', long_name: 'July' },
+    "aug": { index:  7, num:   8, short_name: 'AUG', long_name: 'August' },
+    "sep": { index:  8, num:   9, short_name: 'SEP', long_name: 'September' },
+    "oct": { index:  9, num:  10, short_name: 'OCT', long_name: 'October' },
+    "nov": { index: 10, num:  11, short_name: 'NOV', long_name: 'Novemeber' },
+    "dec": { index: 11, num:  12, short_name: 'DEC', long_name: 'December' }
+};
+
+var month_names = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
+var seasons = ["Fall", "Winter", "Spring", "Summer"];
+
+var month_data_table = document.getElementById("month-data-table");
+var month_data_table_body = document.getElementById("month-data-table-body");
+
+var month_distance = document.getElementById("month-distance");
+
+var table_row_index = 0;
+
+function addExperimentData() {
+
+    var the_month = scene.month;
+    var month = month_data[the_month];
+    var distance_str = (scene.get_earth_distance()/1000).toPrecision(4);
+
+    var month_element_id = 'table-row-id-' + the_month;
+
+    // if the Month row already exists in the
+    // data table return without adding a new one
+    if (document.getElementById(month_element_id)) return false;
+
+    table_row = document.createElement('tr');
+    table_row.id = month_element_id;
+
+    table_row_index++;
+    table_data = document.createElement('td');
+    table_data.textContent = table_row_index;
+    table_row.appendChild(table_data);
+
+    table_data = document.createElement('td');
+    table_data.textContent = month.short_name;
+    table_row.appendChild(table_data);
+
+    table_data = document.createElement('td');
+    table_data.textContent = distance_str;
+    table_row.appendChild(table_data);
+
+    month_data_table_body.appendChild(table_row);
+
+    SortableTable.load();
+    return false;
+}
 
 choose_month.onchange();
+
+month_distance.onsubmit = addExperimentData;
+

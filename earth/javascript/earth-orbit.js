@@ -47,7 +47,7 @@ var earth_circle_location_by_month = function(month) {
         break;
     }
     return loc;
-}
+};
 
 var earthCircleOrbit = SceneJS.createNode({
     type: "library",    
@@ -174,17 +174,50 @@ var earth_ellipse_location_by_month = function(month) {
         ellipse = earth_ellipse_points(0/365 - month_rotation);
         break;
 
+        case "jul":
+        ellipse = earth_ellipse_points((365-31)/365 - month_rotation);
+        break;
+
+        case "aug":
+        ellipse = earth_ellipse_points((365-62)/365 - month_rotation);
+        break;
+
         case "sep":
         ellipse = earth_ellipse_points(274/365 - month_rotation);
+        break;
+
+        case "oct":
+        ellipse = earth_ellipse_points((274-31)/365 - month_rotation);
+        break;
+
+        case "nov":
+        ellipse = earth_ellipse_points((274-61)/365 - month_rotation);
         break;
 
         case "dec":
         ellipse = earth_ellipse_points(182/365 - month_rotation);
         break;
 
+        case "jan":
+        ellipse = earth_ellipse_points((182-31)/365 - month_rotation);
+        break;
+
+        case "feb":
+        ellipse = earth_ellipse_points((182-62)/365 - month_rotation);
+        break;
+
         case "mar":
         ellipse = earth_ellipse_points(91/365 - month_rotation);
         break;
+
+        case "apr":
+        ellipse = earth_ellipse_points((91-30)/365 - month_rotation);
+        break;
+
+        case "may":
+        ellipse = earth_ellipse_points((91-61)/365 - month_rotation);
+        break;
+
     }
     return ellipse;
 };
