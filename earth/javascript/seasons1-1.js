@@ -670,7 +670,7 @@ function addExperimentData() {
     distance_data_to_plot[0].data[month.index+1][1] = +distance_str;
     plotEarthDistanceGraph();
 
-    SortableTable.load();
+    SortableTable.sort(month_data_table);
     return false;
 }
 
@@ -812,6 +812,9 @@ function plotEarthDistanceGraph() {
       }
     );
 }
+
+
+SortableTable.load();
 
 choose_month.onchange();
 
