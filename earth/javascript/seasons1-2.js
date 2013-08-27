@@ -1826,7 +1826,6 @@ function plotCityData() {
           sensibility: 1, // => The smaller this value, the more precise you've to point
           trackDecimals: 1,
           trackFormatter: function(obj) {
-
             return obj.series.label + ': ' + month_data[month_names[Number(obj.x) + 1]].short_name +  ', ' + obj.y + ' ' + graph_degree_string;
           }
         },
