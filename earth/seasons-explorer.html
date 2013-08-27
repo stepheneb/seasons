@@ -129,14 +129,22 @@
               </select>
             </fieldset>
           </form>
-          <form id="choose-month">
-            <fieldset>
-              <legend>Month</legend>
-              <label><input type="radio" name="month" value="jun" checked> Jun</input></label>
-              <label><input type="radio" name="month" value="sep"> Sep</input></label><br />
-              <label><input type="radio" name="month" value="dec"> Dec</input></label>
-              <label><input type="radio" name="month" value="mar"> Mar</input></label>
-            </fieldset>
+          <form>
+            <label for="choose-month">Choose month:</label>
+            <select id="choose-month" name="chosen-month">
+              <option value="jan">January</option>
+              <option value="feb">February</option>
+              <option value="mar">March</option>
+              <option value="apr">April</option>
+              <option value="may">May</option>
+              <option value="jun" selected>June</option>
+              <option value="jul">July</option>
+              <option value="aug">August</option>
+              <option value="sep">September</option>
+              <option value="oct">October</option>
+              <option value="nov">November</option>
+              <option value="dec">December</option>
+            </select>
           </form>
           <form id="choose-tilt">
             <fieldset>
