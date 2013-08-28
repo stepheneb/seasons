@@ -87,7 +87,7 @@
           <fieldset>
             <legend>Controls</legend>
             <label><input id="earth-rotation" type="checkbox"/> enable rotation</label><br />
-            <label style="display:none;"><input id="surface-view" type="checkbox"/> Surface View</label><br />
+            <label style="display:none;"><input id="surface-view" type="checkbox"/> Surface View</label>
           </fieldset>
           <br />
           <fieldset>
@@ -96,7 +96,6 @@
             <label><input id="solar-radiation-latitude-graph" type="checkbox"/> solar radiation (one day)</label><br />
             <label><input id="solar-radiation-longitude-graph" type="checkbox"/> solar radiation (one time)</label><br />
           </fieldset>
-          <br />
           <fieldset style="display:none;">
             <legend>Ecliptic Grids</legend>
             <label><input id="earth-grid" type="checkbox"/> Earth Square</label><br />
@@ -107,8 +106,8 @@
           <fieldset>
             <legend>Display markers</legend>
             <label style="display:none;"><input id="sun-earth-line" type="checkbox"/> Center Ray</label>
-            <label><input id="sun-rise-set" type="checkbox" />sunrise/sunset</label><br />
-            <label><input id="lat-hour-markers" type="checkbox"/>hours of day</label><br />
+            <label><input id="sun-rise-set" type="checkbox" /> sunrise/sunset</label><br />
+            <label><input id="lat-hour-markers" type="checkbox"/> hours of day</label><br />
           </fieldset>
           <br />
           <form id="select-city">
@@ -120,21 +119,23 @@
             </fieldset>
           </form>
           <form>
-            <label for="choose-month">Choose month:</label>
-            <select id="choose-month" name="chosen-month">
-              <option value="jan">January</option>
-              <option value="feb">February</option>
-              <option value="mar">March</option>
-              <option value="apr">April</option>
-              <option value="may">May</option>
-              <option value="jun" selected>June</option>
-              <option value="jul">July</option>
-              <option value="aug">August</option>
-              <option value="sep">September</option>
-              <option value="oct">October</option>
-              <option value="nov">November</option>
-              <option value="dec">December</option>
-            </select>
+            <fieldset>
+              <legend>Choose month:</legend>
+              <select id="choose-month" name="chosen-month">
+                <option value="jan">January</option>
+                <option value="feb">February</option>
+                <option value="mar">March</option>
+                <option value="apr">April</option>
+                <option value="may">May</option>
+                <option value="jun" selected>June</option>
+                <option value="jul">July</option>
+                <option value="aug">August</option>
+                <option value="sep">September</option>
+                <option value="oct">October</option>
+                <option value="nov">November</option>
+                <option value="dec">December</option>
+              </select>
+            </fieldset>
           </form>
           <form id="choose-tilt">
             <fieldset>
@@ -215,7 +216,6 @@
 
   window.onload=function() {
     LITE_VERSION = true;
-    CONSTRAIN_NAVIGATION = true;
     var webGLEnabled = Modernizr.webgl;
     if (webGLEnabled){
       myRequire([
