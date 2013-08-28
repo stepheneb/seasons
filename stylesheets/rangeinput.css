@@ -1,7 +1,7 @@
 
 /* slider root element */
 .slider { 
-	background:#3C72E6 url(../../../img/gradient/h30.png) repeat-x 0 0; 
+	background:#3C72E6 repeat-x 0 0; 
 	height:9px; 
 	position:relative; 
 	cursor:pointer;
@@ -25,7 +25,7 @@
 
 /* drag handle */
 .handle { 
-	background:#fff url(../../../img/gradient/h30.png) repeat-x 0 0; 
+	background:#fff repeat-x 0 0; 
 	height:28px;
 	width:28px;
 	top:-12px;
