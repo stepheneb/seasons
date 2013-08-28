@@ -95,25 +95,38 @@ var earth = {
     meter: meter / (earth_diameter / 2),
     yaw: 0,
     orbitAngle: function() {
-      var a =  Math.acos(vec3.dot(earth_pos_jun_normalized_vec3, this.pos_vec3_normalized)) * rad2deg;
-      return a;
+      var ang,
+          cross = vec3.create(),
+          sign;
+      ang =  Math.acos(vec3.dot(earth_pos_jun_normalized_vec3, this.pos_vec3_normalized)) * rad2deg,
+      vec3.cross(earth_pos_jun_normalized_vec3, this.pos_vec3_normalized, cross);
+      sign = vec3.dot([0,1,0],cross);
+      if(sign < 0) {
+        ang *= -1;
+      };
+      return modulo(ang, 360);
     },
     yawedOrbitAngle: function() {
-      return 270 - this.orbitAngle();
+      return modulo(270 - this.orbitAngle(), 360);
     },
     yawOffset: function() {
-      return this.yaw - this.yawedOrbitAngle();
+      return modulo(this.yaw - (this.orbitAngle()-90), 360);
     },
     calculatePosition: function(p) {
+      var yaw_difference = this.yawOffset();
       this.pos.x = p[0];
       this.pos.y = p[1];
       this.pos.z = p[2];
       vec3.set(p, this.pos_vec3);
       vec3.normalize(this.pos_vec3, this.pos_vec3_normalized);
-      this.orbit_correct_degrees = Math.acos(vec3.dot([0, this.pos_vec3_normalized[1], -1], earth_pos_jun_normalized_vec3)) * rad2deg;
+      orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], this.pos_vec3_normalized)) * rad2deg
+      // this.orbit_correct_degrees = Math.acos(vec3.dot(earth_pos_jun_normalized_vec3, this.pos_vec3_normalized)) * rad2deg;
+      // this.orbit_correct_degrees = Math.acos(vec3.dot([0, this.pos_vec3_normalized[1], -1], earth_pos_jun_normalized_vec3)) * rad2deg;
       this.orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, this.orbit_correction_degrees);
       quat4.toMat4(this.orbit_correction_quat, this.orbit_correction_mat4);
-      this.day_of_year_angle = modulo(this.yawedOrbitAngle()-180, 360);
+      this.day_of_year_angle = modulo(this.orbitAngle()-270, 360);
+      this.yaw = this.orbitAngle()-90;
+      this.yaw = modulo(this.yaw + yaw_difference, 360);
     },
     updatePosition: function(p) {
       var a;
@@ -2452,12 +2465,9 @@ var day_of_year_grid_angle_node = SceneJS.withNode("day-of-year-grid-angle-node"
 var orbit_matrix_node = SceneJS.withNode("orbit-matrix-node");
 
 function setEarthPositionByMon(mon) {
-    var yaw_difference = earth.yawOffset();
     earth.updatePositionByMonth(mon);
     earth_sub_graph.set(earth.pos);
     backlight_quaternion.set("rotation", { x:0, y:1, z: 0, angle: earth.yawedOrbitAngle() - 135 });
-    earth.yaw = earth.yawedOrbitAngle();
-    incrementYaw(yaw_difference);
     sunEarthLineHandler();
 };
 
