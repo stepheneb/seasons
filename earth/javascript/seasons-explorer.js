@@ -69,6 +69,19 @@ var sun = {
     radius: sun_diameter / 2
 };
 
+
+function copyVec3ToObj(v3, obj) {
+  obj.x = v3[0];
+  obj.y = v3[1];
+  obj.z = v3[2];
+}
+
+function copyObjToVec3(obj, v3) {
+  v3[0] = obj.x;
+  v3[1] = obj.y;
+  v3[2] = obj.z;
+}
+
 var initial_earth_rotation = 0;
 
 var earth = {
@@ -77,23 +90,42 @@ var earth = {
       y: initial_earth_pos_vec3[1],
       z: initial_earth_pos_vec3[2]
     },
+    getYaw: function() {
+      if(typeof earthInSpaceLookAt === 'undefined') {
+        return 0;
+      } else {
+        return earthInSpaceLookAt.yaw;
+      }
+    },
+    setYaw: function(y) {
+      if(typeof earthInSpaceLookAt !== 'undefined') {
+        earthInSpaceLookAt.yaw = y;
+      }
+    },
     orbit_correction_degrees: 0,
     orbit_correction_quat: quat4.create(),
     orbit_correction_mat4: mat4.create(),
     pos_vec3: vec3.create(),
     pos_vec3_normalized: vec3.create(),
-    distance: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
+    distanceFromSun: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
     radius:  earth_diameter / 2,
-    tilt: orbitalTilt,
-    // tilt_axis: { x: 1, y: 0, z: 0 },
-    tilt_axis: { x: earth_tilt_axis[0], y: earth_tilt_axis[1], z: earth_tilt_axis[2] },
+
+    // tilt_axis = vec3.normalize(earth_ephemerides_location_by_month('sep'));
+    tilt: {
+      x: 1,
+      y: 0,
+      z: 0,
+      axis_vec3: vec3.create([1, 0, 0
+        ]),
+      angle: orbitalTilt
+    },
+
     day_number: initial_day_number,
     day_of_year_angle: 0,
     month: 'jun',
     rotation: initial_earth_rotation,
     km: km / (earth_diameter / 2),
     meter: meter / (earth_diameter / 2),
-    yaw: 0,
     orbitAngle: function() {
       var ang,
           cross = vec3.create(),
@@ -110,7 +142,7 @@ var earth = {
       return modulo(270 - this.orbitAngle(), 360);
     },
     yawOffset: function() {
-      return modulo(this.yaw - (this.orbitAngle()-90), 360);
+      return modulo(this.getYaw() - (this.orbitAngle()-90), 360);
     },
     calculatePosition: function(p) {
       var yaw_difference = this.yawOffset();
@@ -125,8 +157,9 @@ var earth = {
       this.orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, this.orbit_correction_degrees);
       quat4.toMat4(this.orbit_correction_quat, this.orbit_correction_mat4);
       this.day_of_year_angle = modulo(this.orbitAngle()-270, 360);
-      this.yaw = this.orbitAngle()-90;
-      this.yaw = modulo(this.yaw + yaw_difference, 360);
+      this.setYaw(this.orbitAngle()-90);
+      this.setYaw(modulo(this.getYaw() + yaw_difference, 360));
+      this.distanceFromSun = earth_ephemerides_distance_from_sun_by_day_number(this.day_number);
     },
     updatePosition: function(p) {
       var a;
@@ -138,19 +171,97 @@ var earth = {
       day_of_year_angle_node.set({ angle: this.day_of_year_angle, x: 0, y: 1, z: 0 });
       day_of_year_grid_angle_node.set({ angle: this.day_of_year_angle, x: 0, y: 1, z: 0 });
     },
+    positionByDayNumber: function(dayNum) {
+      return earth_ephemerides_location_by_day_number(dayNum);
+    },
+    positionByMonth: function(mon) {
+      return earth_ephemerides_location_by_day_number(day_number_by_month[mon]);
+    },
     updatePositionByMonth: function(m) {
       this.month = m;
       this.day_number = day_number_by_month[m];
-      this.updatePosition(earth_ephemerides_location_by_day_number(this.day_number));
+      this.updatePosition(this.positionByDayNumber(this.day_number));
     },
-    positionByMonth: function(m) {
-      return earth_ephemerides_location_by_day_number(day_number_by_month[m]);
+    updatePositionByDayNumber: function(dayNum) {
+      this.day_number = dayNum;
+      this.month = month_by_day_number(dayNum);
+      this.updatePosition(this.positionByDayNumber(this.day_number));
     }
 };
 
 earth.calculatePosition(earth_pos_jun_normalized_vec3);
 
-earth.yaw = earth.yawedOrbitAngle();
+earthInSpaceLookAt = {
+  yaw: 0,
+  lookAtYaw: 0,
+  pitch: -1,
+  distance: earth.radius * 3,
+  eye: {},
+  eye_vec3: vec3.create(),
+  initial_eye: {},
+  initial_eye_vec3: vec3.create(),
+  look: {},
+  look_vec3: vec3.create(),
+  // var up = []; vec3.cross(earth_pos_jun_normalized_vec3, earth_pos_mar_normalized_vec3, up);
+  up: {
+    x: 0,
+    y: 1,
+    z: 0
+  },
+  up_vec3: vec3.create([0, 1, 0]),
+  lookAt: {},
+
+  // local variables
+  _yaw_quat    : quat4.create(),
+  _yaw_mat4    : mat4.create(),
+  _pitch_quat  : quat4.create(),
+  _result_quat : quat4.create(),
+  _rot_quat    : quat4.create(),
+  _new_eye     : vec3.create(),
+
+  calculateUpdate: function() {
+    // first handle yaw and pitch for our lookAt-arcball navigation around Earth
+    // background: http://rainwarrior.thenoos.net/dragon/arcball.html
+    this._yaw_quat = quat4.axisAngleDegreesCreate(0, 1, 0, this.yaw),
+    this._yaw_mat4 = quat4.toMat4(this._yaw_quat),
+    this._pitch_quat = quat4.axisAngleDegreesCreate(this._yaw_mat4[0], this._yaw_mat4[1], this._yaw_mat4[2], this.pitch),
+    quat4.multiply(this._pitch_quat, this._yaw_quat, this._result_quat);
+
+    // update the eye coordinates
+    quat4.multiplyVec3(this._result_quat, this.initial_eye_vec3, this._new_eye);
+    vec3.add(this._new_eye, earth.pos_vec3, this.eye_vec3)
+    copyVec3ToObj(this.eye_vec3, this.eye)
+
+    // next handle a possible yaw rotation to look left or right of Earth in the ecliptic plane
+    this._rot_quat = quat4.axisAngleDegreesCreate(0, 1, 0, this.lookAtYaw);
+
+    // update the look coordinates
+    quat4.multiplyVec3(this._rot_quat, this._new_eye, this.look_vec3);
+    vec3.subtract(this._new_eye, this.look_vec3, this.look_vec3);
+    vec3.add(this.look_vec3, earth.pos_vec3)
+    copyVec3ToObj(this.look_vec3, this.look)
+  },
+  update: function() {
+    this.calculateUpdate();
+    this.lookAt.set("eye", this.eye);
+    this.lookAt.set("look", this.look);
+    debugLabel();
+  },
+  calculateInitialEye: function(d) {
+    var initial_eye_quat = quat4.axisAngleDegreesCreate(1, 0, 0, 0),
+        initial_eye_mat4 = quat4.toMat4(initial_eye_quat);
+    this.distance = d;
+    mat4.multiplyVec3(initial_eye_mat4, [0, 0,  this.distance], this.initial_eye_vec3);
+    copyVec3ToObj(this.initial_eye_vec3, this.initial_eye)
+  },
+  initialize: function(scenejs_element) {
+    this.calculateInitialEye(earth.radius * 3);
+    this.lookAt = SceneJS.withNode(scenejs_element);
+    this.update();
+  }
+}
+
+earthInSpaceLookAt.yaw = earth.yawedOrbitAngle();
 
 function getSunEarthLinePositions(month) {
   var ep = earth.positionByMonth(month);
@@ -246,17 +357,11 @@ var bubble_gnomon_length = bubble_gnomon_radius * 2.5;
 var bubble_gnomon_width  = bubble_gnomon_radius / 10;
 var gnomon_label_size = bubble_gnomon_width * surface_earth_scale_factor * 0.001;
 
-var earth_tilt_quat = quat4.axisVecAngleDegreesCreate(earth_tilt_axis,  earth.tilt);
+var earth_tilt_quat = quat4.axisVecAngleDegreesCreate(earth.tilt.axis_vec3,  earth.tilt.angle);
 
 var dark_side_light = 0.1;
 var max_pitch = 85;
-
-var distance = earth.radius * 3;
 // var distance = 9.6;
-
-var pitch    = -1;
-
-var lookat_yaw = 0;
 
 
 //
@@ -372,8 +477,6 @@ function update_initial_eye(d) {
         z: initial_eye_vec3[2] + earth.pos.z
     };
 };
-
-update_initial_eye(distance);
 
 SceneJS.createNode({
     id: "x-label",
@@ -1066,7 +1169,7 @@ SceneJS.createNode({
                                                 sun.pos.x, sun.pos.y, sun.pos.z,
 
                                                 earth.pos.x,
-                                                earth.pos.y + Math.sin((surface.latitude - earth.tilt)  * deg2rad) * earth.radius,
+                                                earth.pos.y + Math.sin((surface.latitude - earth.tilt.angle)  * deg2rad) * earth.radius,
                                                 earth.pos.z + Math.sin(-surface.longitude * deg2rad) * earth.radius
                                             ],
 
@@ -1370,11 +1473,10 @@ SceneJS.createNode({
                                                 {
                                                     type: "quaternion",
                                                     id:   "earth-tilt-quaternion",
-                                                    x: 1, y: 0, z: 0,
-                                                    // x: earth_tilt_axis[0],
-                                                    // y: earth_tilt_axis[1],
-                                                    // z: earth_tilt_axis[2],
-                                                    angle: earth.tilt,
+                                                    x: earth.tilt.x,
+                                                    y: earth.tilt.y,
+                                                    z: earth.tilt.z,
+                                                    angle: earth.tilt.angle,
 
                                                     nodes: [
 
@@ -2203,6 +2305,9 @@ var angle = SceneJS.withNode("rotation")
 var scene = SceneJS.withNode("theScene")
 
 var look_at = SceneJS.withNode("lookAt");
+
+earthInSpaceLookAt.initialize("lookAt");
+
 var camera = SceneJS.withNode("camera");
 
 var latitude_translate = SceneJS.withNode("latitude-translate");
@@ -2471,6 +2576,13 @@ function setEarthPositionByMon(mon) {
     sunEarthLineHandler();
 };
 
+function setEarthPositionByDayNumber(dayNum) {
+    earth.updatePositionDayNumber(dayNum);
+    earth_sub_graph.set(earth.pos);
+    backlight_quaternion.set("rotation", { x:0, y:1, z: 0, angle: earth.yawedOrbitAngle() - 135 });
+    sunEarthLineHandler();
+};
+
 var sun_light                 = SceneJS.withNode("sun-light");
 var sun_material              = SceneJS.withNode("sun-material");
 var milky_way_material        = SceneJS.withNode("milky-way-material");
@@ -2538,7 +2650,9 @@ function setupEarthInSpace() {
         was_sun_earth_line_checked = false;
     };
 
-    look_at.set("up", { x: up[0], y: up[1], z: up[2] });
+    earthInSpaceLookAt.update();
+    return
+    look_at.set("up", earthInSpaceLookAt.up);
 };
 
 //
@@ -2548,35 +2662,7 @@ function updateEarthInSpaceLookAt() {
     // first handle yaw and pitch for our lookAt-arcball navigation around Earth
     // background: http://rainwarrior.thenoos.net/dragon/arcball.html
 
-
-    var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, earth.yaw);
-    var yaw_mat4 = quat4.toMat4(yaw_quat);
-
-    var pitch_quat =  quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
-    var result_quat = quat4.create();
-    quat4.multiply(pitch_quat, yaw_quat, result_quat);
-
-    var neweye = vec3.create();
-    quat4.multiplyVec3(result_quat, initial_eye_vec3, neweye);
-    look_at.set("eye", {
-        x: neweye[0] + earth.pos.x,
-        y: neweye[1] + earth.pos.y,
-        z: neweye[2] + earth.pos.z
-    });
-
-    // next handle a possible yaw rotation to look left or right of Earth in the ecliptic plane
-    var rot_quat = quat4.axisAngleDegreesCreate(0, 1, 0, lookat_yaw);
-
-    var new_look = vec3.create();
-    quat4.multiplyVec3(rot_quat, neweye, new_look);
-
-    // mat4.multiplyVec3(rot_mat4, neweye, new_look);
-
-    new_look[0] = (neweye[0] - new_look[0]) + earth.pos.x;
-    new_look[1] = (neweye[1] - new_look[1]) + earth.pos.y;
-    new_look[2] = (neweye[2] - new_look[2]) + earth.pos.z;
-    look_at.set("look", { x: new_look[0], y: new_look[1], z: new_look[2] });
-    debugLabel();
+    earthInSpaceLookAt.update();
 };
 
 //
@@ -2613,18 +2699,18 @@ function lat_long_to_cartesian_corrected_for_tilt(lat, lon, r) {
     var v2 = [];
 
     switch (earth.month) {
-        case 'jun': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'jul': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'aug': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'sep': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], earth.tilt); break;
-        case 'oct': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'nov': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'dec': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], -earth.tilt); break;
-        case 'jan': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'feb': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'mar': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], -earth.tilt); break;
-        case 'apr': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'may': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
+        case 'jun': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'jul': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'aug': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'sep': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0],  earth.tilt.angle); break;
+        case 'oct': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'nov': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'dec': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], -earth.tilt.angle); break;
+        case 'jan': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'feb': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'mar': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], -earth.tilt.angle); break;
+        case 'apr': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'may': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
     };
 
     // var q2 = quat4.axisVecAngleDegreesCreate(earth_tilt_axis, earth.tilt);
@@ -2659,18 +2745,18 @@ function lat_long_to_global_cartesian(lat, lon, r) {
     // return lat_lon;
 
     switch (earth.month) {
-        case 'jun': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'jul': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'aug': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'sep': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], earth.tilt); break;
-        case 'oct': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'nov': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'dec': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], -earth.tilt); break;
-        case 'jan': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'feb': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'mar': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], -earth.tilt); break;
-        case 'apr': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
-        case 'may': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt); break;
+        case 'jun': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'jul': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'aug': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'sep': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0],  earth.tilt.angle); break;
+        case 'oct': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'nov': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'dec': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], -earth.tilt.angle); break;
+        case 'jan': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'feb': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'mar': q2 = quat4.axisVecAngleDegreesCreate([1, 0, 0], -earth.tilt.angle); break;
+        case 'apr': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
+        case 'may': q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1],  earth.tilt.angle); break;
     };
 
     // var q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt);
@@ -2861,10 +2947,7 @@ function setupSurfaceView() {
 
     // update the scenegraph lookAt
     var lookat = calculateSurfaceEyeUpLook();
-    look_at.set("eye", lookat.eye);
-    look_at.set("up", lookat.up);
-    look_at.set("look",  lookat.look)
-
+    earthInSpaceLookAt.update();
 };
 
 
@@ -2950,22 +3033,26 @@ function decrementLongitude() {
 };
 
 function incrementYaw(num) {
-    earth.yaw += num;
-    earth.yaw = modulo(earth.yaw, 360);
-    return earth.yaw;
+    earthInSpaceLookAt.yaw += num;
+    earthInSpaceLookAt.yaw = modulo(earthInSpaceLookAt.yaw, 360);
+    return earthInSpaceLookAt.yaw;
 };
 
 function incrementPitch(num) {
+    var pitch = earthInSpaceLookAt.pitch;
     pitch += num;
     if (pitch > max_pitch)  pitch =  max_pitch;
     if (pitch < -max_pitch) pitch = -max_pitch;
+    earthInSpaceLookAt.pitch = pitch;
     return pitch;
 };
 
 function incrementLookatYaw(num) {
-    lookat_yaw += num;
-    lookat_yaw = modulo(lookat_yaw, 360);
-    return lookat_yaw;
+    var yaw = earthInSpaceLookAt.lookAtYaw;
+    yaw += num;
+    yaw = modulo(yaw, 360);
+    earthInSpaceLookAt.lookAtYaw = yaw;
+    return yaw;
 };
 
 function incrementSurfaceYaw(num) {
@@ -3019,8 +3106,8 @@ function mouseMove(event) {
             surface.yaw   += (event.clientX - lastX) * -0.2;
             surface.pitch += (event.clientY - lastY) * -0.2;
         } else {
-            earth.yaw   += (event.clientX - lastX) * -0.2;
-            pitch += (event.clientY - lastY) * -0.2;
+            earthInSpaceLookAt.yaw   += (event.clientX - lastX) * -0.2;
+            earthInSpaceLookAt.pitch += (event.clientY - lastY) * -0.2;
         };
         lastX = event.clientX;
         lastY = event.clientY;
@@ -3060,8 +3147,8 @@ function handleArrowKeysEarthInSpace(evt) {
 
             case 38:                                    // up arrow
                 if (evt.ctrlKey) {
-                    var increment = distance / distanceIncrementFactor;
-                    update_initial_eye(distance - increment);
+                    var increment = earthInSpaceLookAt.distance / distanceIncrementFactor;
+                    earthInSpaceLookAt.calculateInitialEye(earthInSpaceLookAt.distance - increment);
                     updateLookAt();
                     evt.preventDefault();
                 } else if (evt.altKey) {
@@ -3099,8 +3186,8 @@ function handleArrowKeysEarthInSpace(evt) {
 
             case 40:                                    // down arrow
                 if (evt.ctrlKey) {
-                    var increment = distance / distanceIncrementFactor;
-                    update_initial_eye(distance + increment);
+                    var increment = earthInSpaceLookAt.distance / distanceIncrementFactor;
+                    earthInSpaceLookAt.calculateInitialEye(earthInSpaceLookAt.distance + increment);
                     updateLookAt();
                     evt.preventDefault();
                 } else if (evt.altKey) {
@@ -3303,9 +3390,9 @@ function debugLabel() {
             surface_lookat_bubble_selector.set("selection", [0]);
         };
 
-        var eye = look_at.get("eye");
-        var look = look_at.get("look");
-        var up = look_at.get("up");
+        var eye = earthInSpaceLookAt.lookAt.get("eye");
+        var look = earthInSpaceLookAt.lookAt.get("look");
+        var up = earthInSpaceLookAt.lookAt.get("up");
 
         var atmos_trans = atmosphere_transparent.get();
 
@@ -3328,10 +3415,10 @@ function debugLabel() {
 
         labelStr += "<b>Earth</b><br />";
         labelStr += sprintf("Pos:  x: %4.1f y: %4.1f z: %4.1f<br>", earth.pos.x, earth.pos.y, earth.pos.z);
-        labelStr += sprintf("Yaw:  %3.0f, Pitch: %4.1f<br>", earth.yaw, pitch);
-        labelStr += sprintf("LookAt Yaw:  %4.1f<br>", lookat_yaw);
+        labelStr += sprintf("Yaw:  %3.0f, Pitch: %4.1f<br>", earthInSpaceLookAt.yaw, earthInSpaceLookAt.pitch);
+        labelStr += sprintf("LookAt Yaw:  %4.1f<br>", earthInSpaceLookAt.lookAtYaw);
         labelStr += sprintf("Rot:  %4.1f, Day angle: %3.3f<br>", earth.rotation, earth.day_of_year_angle);
-        labelStr += sprintf("Angle: %4.1f, Radius: %4.1f, Dist: %4.1f<br>", angle.get().angle, earth.radius, distance);
+        labelStr += sprintf("Angle: %4.1f, Radius: %4.1f, Dist: %4.1f<br>", angle.get().angle, earth.radius, earthInSpaceLookAt.distance);
         labelStr += "<br><hr><br>";
 
         labelStr += "<b>Surface</b><br />";
@@ -3352,7 +3439,7 @@ function debugLabel() {
         labelStr += sprintf("Eye:  x: %4.1f y: %4.1f z: %4.1f<br>", eye.x, eye.y, eye.z);
         labelStr += sprintf("Look:  x: %4.1f y: %4.1f z: %4.1f<br>", look.x, look.y, look.z);
         labelStr += sprintf("Up  x: %1.5f y: %1.5f z: %1.5f<br>", up.x, up.y, up.z);
-        labelStr += sprintf("Rot: %4.1f, Distance-Earth: %4.1f<br>", lookat_yaw, distance);
+        labelStr += sprintf("Rot: %4.1f, Distance-Earth: %4.1f<br>", earthInSpaceLookAt.lookAtYaw, earthInSpaceLookAt.distance);
         labelStr += "<br><hr><br>";
 
         labelStr += "SceneJS Compilation: " + scenejs_compilation + '<br>';
@@ -3414,7 +3501,7 @@ var info_view   = document.getElementById("info-view");
 var info_content = document.getElementById("info-content");
 
 function solar_altitude(lat, lon) {
-    var corrected_tilt = Math.sin(earth.day_of_year_angle * deg2rad) * earth.tilt;
+    var corrected_tilt = Math.sin(earth.day_of_year_angle * deg2rad) * earth.tilt.angle;
     var center   = lat_long_to_cartesian(corrected_tilt, earth.rotation);
 
     var loc      = lat_long_to_cartesian(lat, lon);
@@ -3552,7 +3639,7 @@ function infoLabel() {
             info_label.style.opacity = null;
         };
 
-        earth.pos.y + Math.sin((surface.latitude - earth.tilt)  * deg2rad) * earth.radius,
+        earth.pos.y + Math.sin((surface.latitude - earth.tilt.angle)  * deg2rad) * earth.radius,
         earth.pos.z + Math.sin(-surface.longitude * deg2rad) * earth.radius
 
         var solar_alt = solar_altitude(surface.latitude, surface.longitude);
@@ -4087,23 +4174,22 @@ var choose_tilt = document.getElementById("choose-tilt");
 var earth_tilt_quaternion = SceneJS.withNode("earth-tilt-quaternion");
 
 function chooseTiltHandler() {
-    var tilt = getRadioSelection(choose_tilt);
+    var tilt = getRadioSelection(choose_tilt),
+        rotation = {};
     switch (tilt) {
         case "yes":
-            earth.tilt = orbitalTilt;
+            earth.tilt.angle = orbitalTilt;
             break;
 
         case "no":
-            earth.tilt = 0;
+            earth.tilt.angle = 0;
             break;
     };
-    earth_tilt_quat = quat4.axisAngleDegreesCreate(0, 0, 1,  earth.tilt);
+    // earth.tilt.axis_vec3
+    earth_tilt_quat = quat4.axisVecAngleDegreesCreate(earth.tilt.axis_vec3,  earth.tilt.angle);
+    // earth_tilt_quat = quat4.axisAngleDegreesCreate(0, 0, 1,  earth.tilt.angle);
     earth_tilt_mat4 = quat4.toMat4(earth_tilt_quat);
-    earth_tilt_quaternion.set("rotation", {
-        x: earth_tilt_axis[0],
-        y: earth_tilt_axis[1],
-        z: earth_tilt_axis[2],
-        angle : earth.tilt });
+    earth_tilt_quaternion.set("rotation", earth.tilt);
     infoLabel();
 };
 
