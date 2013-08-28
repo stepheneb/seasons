@@ -3793,9 +3793,6 @@ function solarAltitudeGraphHandler() {
     infoGraph();
 };
 
-solar_altitude_graph.onchange = solarAltitudeGraphHandler;
-solarAltitudeGraphHandler();
-
 //
 // Solar Radiation Latitude Graph Handler
 //
@@ -3937,9 +3934,6 @@ function SolarRadiationLatitudeGraphHandler() {
     };
     infoGraph();
 };
-
-solar_radiation_latitude_graph.onchange = SolarRadiationLatitudeGraphHandler;
-SolarRadiationLatitudeGraphHandler();
 
 //
 // Solar Radiation Longitude Graph Handler
@@ -4116,6 +4110,12 @@ function SolarRadiationLongitudeGraphHandler() {
     infoGraph();
 };
 
+solar_altitude_graph.onchange = solarAltitudeGraphHandler;
+solarAltitudeGraphHandler();
+
+solar_radiation_latitude_graph.onchange = SolarRadiationLatitudeGraphHandler;
+SolarRadiationLatitudeGraphHandler();
+
 solar_radiation_longitude_graph.onchange = SolarRadiationLongitudeGraphHandler;
 SolarRadiationLongitudeGraphHandler();
 
@@ -4132,14 +4132,18 @@ function getRadioSelection(form_element) {
     return false;
 };
 
+
 var selected_city = document.getElementById("selected-city");
 var city_option;
 var active_cities = [];
 var city, city_location;
 
 for (var c = 0; c < cities.length; c++) {
-    // if (cities[c].active) active_cities.push(cities[c]);
-    active_cities.push(cities[c]);
+    if (typeof LITE_VERSION !== 'undefined') {
+      if (cities[c].active) active_cities.push(cities[c]);
+    } else {
+      active_cities.push(cities[c]);
+    }
 };
 
 for (var i = 0; i < active_cities.length; i++) {
