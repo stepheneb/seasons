@@ -134,7 +134,7 @@ var earth = {
       orbit_matrix_node.set("elements", this.orbit_correction_mat4);
       a = this.orbitAngle();
       sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-      sunrise_set_mon_rotation.set({ angle: this.yawedOrbitAngle(), x: 0, y: 1.0, z: 0.0 });
+      sunrise_set_mon_rotation.set({ angle: this.day_of_year_angle, x: 0, y: 1.0, z: 0.0 });
       day_of_year_angle_node.set({ angle: this.day_of_year_angle, x: 0, y: 1, z: 0 });
       day_of_year_grid_angle_node.set({ angle: this.day_of_year_angle, x: 0, y: 1, z: 0 });
     },
