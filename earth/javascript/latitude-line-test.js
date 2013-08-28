@@ -53,50 +53,10 @@ var earth_orbital_radius = au2km / scale_factor;
 
 var milky_way_apparent_radius = earth_orbital_radius * 10;
 
-// Day numbers
-var jun_day_number = day_number_by_month['jun'];
-var jul_day_number = day_number_by_month['jul'];
-var aug_day_number = day_number_by_month['aug'];
-var sep_day_number = day_number_by_month['sep'];
-var oct_day_number = day_number_by_month['oct'];
-var nov_day_number = day_number_by_month['nov'];
-var dec_day_number = day_number_by_month['dec'];
-var jan_day_number = day_number_by_month['jan'];
-var feb_day_number = day_number_by_month['feb'];
-var mar_day_number = day_number_by_month['mar'];
-var apr_day_number = day_number_by_month['apr'];
-var may_day_number = day_number_by_month['may'];
-
-// Earth positions by month
-var earth_pos_jun_vec3 = earth_ephemerides_location_by_day_number(jun_day_number);
-var earth_pos_jul_vec3 = earth_ephemerides_location_by_day_number(jul_day_number);
-var earth_pos_aug_vec3 = earth_ephemerides_location_by_day_number(aug_day_number);
-var earth_pos_sep_vec3 = earth_ephemerides_location_by_day_number(sep_day_number);
-var earth_pos_oct_vec3 = earth_ephemerides_location_by_day_number(oct_day_number);
-var earth_pos_nov_vec3 = earth_ephemerides_location_by_day_number(nov_day_number);
-var earth_pos_dec_vec3 = earth_ephemerides_location_by_day_number(dec_day_number);
-var earth_pos_jan_vec3 = earth_ephemerides_location_by_day_number(jan_day_number);
-var earth_pos_feb_vec3 = earth_ephemerides_location_by_day_number(feb_day_number);
-var earth_pos_mar_vec3 = earth_ephemerides_location_by_day_number(mar_day_number);
-var earth_pos_apr_vec3 = earth_ephemerides_location_by_day_number(apr_day_number);
-var earth_pos_may_vec3 = earth_ephemerides_location_by_day_number(may_day_number);
-
-// Earth normalized position by month
-var earth_pos_jun_normalized_vec3 = []; vec3.normalize(earth_pos_jun_vec3, earth_pos_jun_normalized_vec3);
-var earth_pos_jul_normalized_vec3 = []; vec3.normalize(earth_pos_jul_vec3, earth_pos_jul_normalized_vec3);
-var earth_pos_aug_normalized_vec3 = []; vec3.normalize(earth_pos_aug_vec3, earth_pos_aug_normalized_vec3);
-var earth_pos_sep_normalized_vec3 = []; vec3.normalize(earth_pos_sep_vec3, earth_pos_sep_normalized_vec3);
-var earth_pos_oct_normalized_vec3 = []; vec3.normalize(earth_pos_oct_vec3, earth_pos_oct_normalized_vec3);
-var earth_pos_nov_normalized_vec3 = []; vec3.normalize(earth_pos_nov_vec3, earth_pos_nov_normalized_vec3);
-var earth_pos_dec_normalized_vec3 = []; vec3.normalize(earth_pos_dec_vec3, earth_pos_dec_normalized_vec3);
-var earth_pos_jan_normalized_vec3 = []; vec3.normalize(earth_pos_jan_vec3, earth_pos_jan_normalized_vec3);
-var earth_pos_feb_normalized_vec3 = []; vec3.normalize(earth_pos_feb_vec3, earth_pos_feb_normalized_vec3);
-var earth_pos_mar_normalized_vec3 = []; vec3.normalize(earth_pos_mar_vec3, earth_pos_mar_normalized_vec3);
-var earth_pos_apr_normalized_vec3 = []; vec3.normalize(earth_pos_apr_vec3, earth_pos_apr_normalized_vec3);
-var earth_pos_may_normalized_vec3 = []; vec3.normalize(earth_pos_may_vec3, earth_pos_may_normalized_vec3);
-
-var initial_day_number = jun_day_number;
-var initial_earth_pos_vec3 = earth_pos_jun_vec3;
+var initial_day_number = day_number_by_month['jun'];
+var initial_earth_pos_vec3 = earth_ephemerides_location_by_day_number(initial_day_number);
+var earth_pos_normalized_vec3 = vec3.normalize(initial_earth_pos_vec3);
+var earth_pos_jun_normalized_vec3 = initial_earth_pos_vec3;
 
 // var up = []; vec3.cross(earth_pos_jun_normalized_vec3, earth_pos_mar_normalized_vec3, up);
 var up = [0, 1, 0]
@@ -113,21 +73,79 @@ var initial_earth_rotation = 0;
 
 var earth = {
     pos: {
-        x: initial_earth_pos_vec3[0],
-        y: initial_earth_pos_vec3[1],
-        z: initial_earth_pos_vec3[2]
+      x: initial_earth_pos_vec3[0],
+      y: initial_earth_pos_vec3[1],
+      z: initial_earth_pos_vec3[2]
     },
+    orbit_correction_degrees: 0,
+    orbit_correction_quat: quat4.create(),
+    orbit_correction_mat4: mat4.create(),
+    pos_vec3: vec3.create(),
+    pos_vec3_normalized: vec3.create(),
     distance: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
     radius:  earth_diameter / 2,
     tilt: orbitalTilt,
     // tilt_axis: { x: 1, y: 0, z: 0 },
     tilt_axis: { x: earth_tilt_axis[0], y: earth_tilt_axis[1], z: earth_tilt_axis[2] },
     day_number: initial_day_number,
+    day_of_year_angle: 0,
     month: 'jun',
     rotation: initial_earth_rotation,
     km: km / (earth_diameter / 2),
-    meter: meter / (earth_diameter / 2)
+    meter: meter / (earth_diameter / 2),
+    yaw: 0,
+    orbitAngle: function() {
+      var a =  Math.acos(vec3.dot(earth_pos_jun_normalized_vec3, this.pos_vec3_normalized)) * rad2deg;
+      return a;
+    },
+    yawedOrbitAngle: function() {
+      return 270 - this.orbitAngle();
+    },
+    yawOffset: function() {
+      return this.yaw - this.yawedOrbitAngle();
+    },
+    calculatePosition: function(p) {
+      this.pos.x = p[0];
+      this.pos.y = p[1];
+      this.pos.z = p[2];
+      vec3.set(p, this.pos_vec3);
+      vec3.normalize(this.pos_vec3, this.pos_vec3_normalized);
+      this.orbit_correct_degrees = Math.acos(vec3.dot([0, this.pos_vec3_normalized[1], -1], earth_pos_jun_normalized_vec3)) * rad2deg;
+      this.orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, this.orbit_correction_degrees);
+      quat4.toMat4(this.orbit_correction_quat, this.orbit_correction_mat4);
+      this.day_of_year_angle = modulo(this.yawedOrbitAngle()-180, 360);
+    },
+    updatePosition: function(p) {
+      var a;
+      this.calculatePosition(p);
+      orbit_matrix_node.set("elements", this.orbit_correction_mat4);
+      a = this.orbitAngle();
+      sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
+      sunrise_set_mon_rotation.set({ angle: this.yawedOrbitAngle(), x: 0, y: 1.0, z: 0.0 });
+      day_of_year_angle_node.set({ angle: this.day_of_year_angle, x: 0, y: 1, z: 0 });
+      day_of_year_grid_angle_node.set({ angle: this.day_of_year_angle, x: 0, y: 1, z: 0 });
+    },
+    updatePositionByMonth: function(m) {
+      this.month = m;
+      this.day_number = day_number_by_month[m];
+      this.updatePosition(earth_ephemerides_location_by_day_number(this.day_number));
+    },
+    positionByMonth: function(m) {
+      return earth_ephemerides_location_by_day_number(day_number_by_month[m]);
+    }
 };
+
+earth.calculatePosition(earth_pos_jun_normalized_vec3);
+
+earth.yaw = earth.yawedOrbitAngle();
+
+function getSunEarthLinePositions(month) {
+  var ep = earth.positionByMonth(month);
+  return [
+    sun.pos.x, sun.pos.y, sun.pos.z,
+    ep[0], ep[1], ep[2]
+  ];
+}
 
 var earthOrbitData = {
   aphelion: 1.01671388,
@@ -210,79 +228,12 @@ var surface = {
     }
 };
 
-
 var bubble_gnomon_radius = 40000 * surface.flagpole.radius;
 var bubble_gnomon_length = bubble_gnomon_radius * 2.5;
 var bubble_gnomon_width  = bubble_gnomon_radius / 10;
 var gnomon_label_size = bubble_gnomon_width * surface_earth_scale_factor * 0.001;
 
-
 var earth_tilt_quat = quat4.axisVecAngleDegreesCreate(earth_tilt_axis,  earth.tilt);
-
-// var earth_tilt_quat = quat4.axisAngleDegreesCreate(0, 0, 1,  earth.tilt);
-// var earth_tilt_quat_sjs = SceneJS._math_angleAxisQuaternion(0, 0, 1,  earth.tilt);
-
-// var earth_tilt_axis = []; vec3.cross(earth_pos_jun_normalized_vec3, up, earth_tilt_axis);
-
-var jun_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_jun_normalized_vec3)) * rad2deg;
-var jun_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, jun_orbit_correction_degrees);
-var jun_orbit_correction_mat4 = [];
-quat4.toMat4(jun_orbit_correction_quat, jun_orbit_correction_mat4);
-
-var jul_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_jul_normalized_vec3)) * rad2deg;
-var jul_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, jul_orbit_correction_degrees);
-var jul_orbit_correction_mat4 = [];
-quat4.toMat4(jul_orbit_correction_quat, jul_orbit_correction_mat4);
-
-var aug_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_aug_normalized_vec3)) * rad2deg;
-var aug_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, aug_orbit_correction_degrees);
-var aug_orbit_correction_mat4 = [];
-quat4.toMat4(aug_orbit_correction_quat, aug_orbit_correction_mat4);
-
-var sep_orbit_correction_degrees = Math.acos(vec3.dot([1, earth_pos_sep_normalized_vec3[1], 0], earth_pos_sep_normalized_vec3)) * rad2deg;
-var sep_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, sep_orbit_correction_degrees);
-var sep_orbit_correction_mat4 = [];
-quat4.toMat4(sep_orbit_correction_quat, sep_orbit_correction_mat4);
-
-var oct_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_oct_normalized_vec3)) * rad2deg;
-var oct_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, oct_orbit_correction_degrees);
-var oct_orbit_correction_mat4 = [];
-quat4.toMat4(oct_orbit_correction_quat, oct_orbit_correction_mat4);
-
-var nov_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_nov_normalized_vec3)) * rad2deg;
-var nov_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, nov_orbit_correction_degrees);
-var nov_orbit_correction_mat4 = [];
-quat4.toMat4(nov_orbit_correction_quat, nov_orbit_correction_mat4);
-
-var dec_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_dec_normalized_vec3[1], 1], earth_pos_dec_normalized_vec3)) * rad2deg;
-var dec_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, -dec_orbit_correction_degrees);
-var dec_orbit_correction_mat4 = [];
-quat4.toMat4(dec_orbit_correction_quat, dec_orbit_correction_mat4);
-
-var jan_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_jan_normalized_vec3)) * rad2deg;
-var jan_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, jan_orbit_correction_degrees);
-var jan_orbit_correction_mat4 = [];
-quat4.toMat4(jan_orbit_correction_quat, jan_orbit_correction_mat4);
-
-var feb_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_feb_normalized_vec3)) * rad2deg;
-var feb_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, feb_orbit_correction_degrees);
-var feb_orbit_correction_mat4 = [];
-quat4.toMat4(feb_orbit_correction_quat, feb_orbit_correction_mat4);
-
-var mar_orbit_correction_degrees = Math.acos(vec3.dot([-1, earth_pos_mar_normalized_vec3[1], 0], earth_pos_mar_normalized_vec3)) * rad2deg;
-var mar_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, -mar_orbit_correction_degrees);
-var mar_orbit_correction_mat4 = [];
-quat4.toMat4(mar_orbit_correction_quat, mar_orbit_correction_mat4);
-
-var apr_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_apr_normalized_vec3)) * rad2deg;
-var apr_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, apr_orbit_correction_degrees);
-var apr_orbit_correction_mat4 = [];
-quat4.toMat4(apr_orbit_correction_quat, apr_orbit_correction_mat4);
-
-var may_orbit_correction_degrees = Math.acos(vec3.dot([0, earth_pos_sep_normalized_vec3[1], -1], earth_pos_may_normalized_vec3)) * rad2deg;
-var may_orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, may_orbit_correction_degrees);
-var may_orbit_correction_mat4 = [];
-quat4.toMat4(may_orbit_correction_quat, may_orbit_correction_mat4);
 
 var dark_side_light = 0.1;
 var max_pitch = 85;
@@ -290,7 +241,6 @@ var max_pitch = 85;
 var distance = earth.radius * 3;
 // var distance = 9.6;
 
-var yaw      =  270;
 var pitch    = -1;
 
 var lookat_yaw = 0;
@@ -942,57 +892,97 @@ SceneJS.createNode({
                                         {
                                             type: "geometry",
                                             primitive: "lines",
-
-                                            positions: [
-                                                sun.pos.x, sun.pos.y, sun.pos.z,
-                                                earth_pos_jun_vec3[0], earth_pos_jun_vec3[1], earth_pos_jun_vec3[2]
-                                            ],
-
+                                            positions: getSunEarthLinePositions('jun'),
                                             indices : [ 0, 1 ]
+                                        },
 
+                                        // 1: July
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+                                            positions: getSunEarthLinePositions('jul'),
+                                            indices : [ 0, 1 ]
+                                        },
+
+                                        // 1: August
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+                                            positions: getSunEarthLinePositions('aug'),
+                                            indices : [ 0, 1 ]
                                         },
 
                                         // 2: Sep 21
                                         {
                                             type: "geometry",
                                             primitive: "lines",
-
-                                            positions: [
-                                                sun.pos.x, sun.pos.y, sun.pos.z,
-                                                earth_pos_sep_vec3[0], earth_pos_sep_vec3[1], earth_pos_sep_vec3[2]
-                                            ],
-
+                                            positions: getSunEarthLinePositions('sep'),
                                             indices : [ 0, 1 ]
+                                        },
 
+                                        // 1: October
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+                                            positions: getSunEarthLinePositions('oct'),
+                                            indices : [ 0, 1 ]
+                                        },
+
+                                        // 1: November
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+                                            positions: getSunEarthLinePositions('nov'),
+                                            indices : [ 0, 1 ]
                                         },
 
                                         // 3: Dec 21
                                         {
                                             type: "geometry",
                                             primitive: "lines",
-
-                                            positions: [
-                                                sun.pos.x, sun.pos.y, sun.pos.z,
-                                                earth_pos_dec_vec3[0], earth_pos_dec_vec3[1], earth_pos_dec_vec3[2]
-                                            ],
-
+                                            positions: getSunEarthLinePositions('dec'),
                                             indices : [ 0, 1 ]
+                                        },
 
+                                        // 1: January
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+                                            positions: getSunEarthLinePositions('jan'),
+                                            indices : [ 0, 1 ]
+                                        },
+
+                                        // 1: February
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+                                            positions: getSunEarthLinePositions('feb'),
+                                            indices : [ 0, 1 ]
                                         },
 
                                         // 4: Mar 21
                                         {
                                             type: "geometry",
                                             primitive: "lines",
-
-                                            positions: [
-                                                sun.pos.x, sun.pos.y, sun.pos.z,
-                                                earth_pos_mar_vec3[0], earth_pos_mar_vec3[1], earth_pos_mar_vec3[2]
-                                            ],
-
+                                            positions: getSunEarthLinePositions('mar'),
                                             indices : [ 0, 1 ]
-
                                         },
+
+                                        // 1: April
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+                                            positions: getSunEarthLinePositions('apr'),
+                                            indices : [ 0, 1 ]
+                                        },
+
+                                        // 1: May
+                                        {
+                                            type: "geometry",
+                                            primitive: "lines",
+                                            positions: getSunEarthLinePositions('may'),
+                                            indices : [ 0, 1 ]
+                                        }
 
                                     ]
                                 },
@@ -1096,7 +1086,7 @@ SceneJS.createNode({
                                         {
                                             type: "matrix",
                                             id: "orbit-matrix-node",
-                                            elements: jun_orbit_correction_mat4,
+                                            elements: earth.orbit_correction_mat4,
 
                                             nodes: [
 
@@ -1120,36 +1110,40 @@ SceneJS.createNode({
                                                             nodes: [
 
                                                                 {
+                                                                    type: "rotate",
+                                                                    id: "day-of-year-grid-angle-node",
+                                                                    angle: 90,
+                                                                    x: 0.0,
+                                                                    y: 1.0,
+                                                                    z: 0.0,
 
-                                                                    type: "selector",
-                                                                    id: "earth-grid-selector",
-                                                                    selection: [1],
                                                                     nodes: [
-
-                                                                        // 0: off
-
-                                                                        {  },
-
-                                                                        // 1: on: square grid for Earth view
-
                                                                         {
+                                                                            type: "selector",
+                                                                            id: "earth-grid-selector",
+                                                                            selection: [1],
                                                                             nodes: [
-
+                                                                                // 0: off
+                                                                                {  },
+                                                                                // 1: on: square grid for Earth view
                                                                                 {
-                                                                                    type: "geometry",
-                                                                                    primitive: "lines",
+                                                                                    nodes: [
+                                                                                        {
+                                                                                            type: "geometry",
+                                                                                            primitive: "lines",
 
-                                                                                    positions: earth_grid_positions,
-                                                                                    indices : earth_grid_indices
-                                                                                },
-
-                                                                                // Latitude-like line in the ecliptic plane
-                                                                                {
-                                                                                    type: "disk",
-                                                                                    radius: earth.radius + surface_line_width,
-                                                                                    innerRadius: earth.radius,
-                                                                                    height: surface_line_width,
-                                                                                    rings: 128
+                                                                                            positions: earth_grid_positions,
+                                                                                            indices : earth_grid_indices
+                                                                                        },
+                                                                                        // Latitude-like line in the ecliptic plane
+                                                                                        {
+                                                                                            type: "disk",
+                                                                                            radius: earth.radius + surface_line_width,
+                                                                                            innerRadius: earth.radius,
+                                                                                            height: surface_line_width,
+                                                                                            rings: 128
+                                                                                        }
+                                                                                    ]
                                                                                 }
                                                                             ]
                                                                         }
@@ -1323,6 +1317,7 @@ SceneJS.createNode({
 
                                                                         {
                                                                             type: "rotate",
+                                                                            id: "sunrise-set-mon-rotation",
                                                                             x: 0.0,
                                                                             z: 0.0,
                                                                             y: 1.0,
@@ -2314,14 +2309,38 @@ function sunEarthLineHandler() {
         case day_number_by_month.jun:
             sun_earth_line_selector.set("selection", [1]);
             break;
-        case day_number_by_month.sep:
+        case day_number_by_month.jul:
             sun_earth_line_selector.set("selection", [2]);
             break;
-        case day_number_by_month.dec:
+        case day_number_by_month.aug:
             sun_earth_line_selector.set("selection", [3]);
             break;
-        case day_number_by_month.mar:
+        case day_number_by_month.sep:
             sun_earth_line_selector.set("selection", [4]);
+            break;
+        case day_number_by_month.oct:
+            sun_earth_line_selector.set("selection", [5]);
+            break;
+        case day_number_by_month.nov:
+            sun_earth_line_selector.set("selection", [6]);
+            break;
+        case day_number_by_month.dec:
+            sun_earth_line_selector.set("selection", [7]);
+            break;
+        case day_number_by_month.jan:
+            sun_earth_line_selector.set("selection", [8]);
+            break;
+        case day_number_by_month.feb:
+            sun_earth_line_selector.set("selection", [9]);
+            break;
+        case day_number_by_month.mar:
+            sun_earth_line_selector.set("selection", [10]);
+            break;
+        case day_number_by_month.apr:
+            sun_earth_line_selector.set("selection", [11]);
+            break;
+        case day_number_by_month.may:
+            sun_earth_line_selector.set("selection", [12]);
             break;
         default:
             sun_earth_line_selector.set("selection", [0]);
@@ -2357,6 +2376,7 @@ sunEarthLineHandler();
 //
 var sunrise_set_selector =  SceneJS.withNode("sunrise-set-selector");
 var sunrise_set_rotation =  SceneJS.withNode("sunrise-set-rotation");
+var sunrise_set_mon_rotation =  SceneJS.withNode("sunrise-set-mon-rotation");
 
 function sunRiseSetHandler() {
     if (sunrise_set.checked) {
@@ -2426,214 +2446,17 @@ sunRaysHandler();
 var earth_sub_graph = SceneJS.withNode("earth-sub-graph");
 var earth_sub_graph_scale = SceneJS.withNode("earth-sub-graph-scale");
 
-var day_of_year_angle_by_mon = {
-    jun: 90,
-    jul: 60,
-    aug: 30,
-    sep: 0,
-    oct: 330,
-    nov: 300,
-    dec: 270,
-    jan: 240,
-    feb: 210,
-    mar: 180,
-    apr: 150,
-    may: 120
-};
-
-var yaw_angle_by_mon = {
-    jun: 270,
-    jul: 240,
-    aug: 210,
-    sep: 180,
-    oct: 150,
-    nov: 120,
-    dec: 90,
-    jan: 60,
-    feb: 30,
-    mar: 0,
-    apr: 330,
-    may: 310
-};
-
-var day_of_year_angle = day_of_year_angle_by_mon['jun'];
 var day_of_year_angle_node = SceneJS.withNode("day-of-year-angle-node");
-
-var earth_pos_normalized_vec3 = [];
+var day_of_year_grid_angle_node = SceneJS.withNode("day-of-year-grid-angle-node");
 
 var orbit_matrix_node = SceneJS.withNode("orbit-matrix-node");
 
 function setEarthPositionByMon(mon) {
-    var yaw_difference = yaw - yaw_angle_by_mon[earth.month];
-    earth.month = mon;
-    var day_number = day_number_by_month[mon];
-    earth.day_number = day_number;
-
-    switch (mon) {
-        case 'jun':
-            pos = earth_pos_jun_vec3;
-            vec3.set(earth_pos_jun_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", jun_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 90;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'jul':
-            pos = earth_pos_jul_vec3;
-            vec3.set(earth_pos_jul_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", jul_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 60;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'aug':
-            pos = earth_pos_aug_vec3;
-            vec3.set(earth_pos_aug_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", aug_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 30;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'sep':
-            pos = earth_pos_sep_vec3;
-            vec3.set(earth_pos_sep_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", sep_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 1, y: 0, z: 0 });
-            day_of_year_angle = 0;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'oct':
-            pos = earth_pos_oct_vec3;
-            vec3.set(earth_pos_oct_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", oct_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 330;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'nov':
-            pos = earth_pos_nov_vec3;
-            vec3.set(earth_pos_nov_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", nov_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 300;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-
-        case 'dec':
-            pos = earth_pos_dec_vec3;
-            vec3.set(earth_pos_dec_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = 360 - (Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg);
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", dec_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 270;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'jan':
-            pos = earth_pos_jan_vec3;
-            vec3.set(earth_pos_jan_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", jan_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 240;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'feb':
-            pos = earth_pos_feb_vec3;
-            vec3.set(earth_pos_feb_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", feb_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 210;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'mar':
-            pos = earth_pos_mar_vec3;
-            vec3.set(earth_pos_mar_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = (Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg);
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", mar_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 1, y: 0, z: 0 });
-            day_of_year_angle = 180;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'apr':
-            pos = earth_pos_apr_vec3;
-            vec3.set(earth_pos_apr_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", apr_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 150;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-        case 'may':
-            pos = earth_pos_may_vec3;
-            vec3.set(earth_pos_may_normalized_vec3, earth_pos_normalized_vec3);
-            orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], earth_pos_normalized_vec3)) * rad2deg;
-            orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, orbit_correction_degrees);
-            orbit_correction_mat4 = [];
-            quat4.toMat4(orbit_correction_quat, orbit_correction_mat4);
-            orbit_matrix_node.set("elements", may_orbit_correction_mat4);
-            sunrise_set_rotation.set({ angle: 90, x: 0, y: 0, z: -1 });
-            day_of_year_angle = 120;
-            day_of_year_angle_node.set({ angle: day_of_year_angle, x: 0, y: 1, z: 0 });
-            break;
-
-    };
-    earth.pos = { x: pos[0], y: pos[1], z: pos[2] };
+    var yaw_difference = earth.yawOffset();
+    earth.updatePositionByMonth(mon);
     earth_sub_graph.set(earth.pos);
-
-    backlight_quaternion.set("rotation", { x:0, y:1, z: 0, angle: yaw_angle_by_mon[mon] - 135 });
-
-    yaw = yaw_angle_by_mon[mon];
+    backlight_quaternion.set("rotation", { x:0, y:1, z: 0, angle: earth.yawedOrbitAngle() - 135 });
+    earth.yaw = earth.yawedOrbitAngle();
     incrementYaw(yaw_difference);
     sunEarthLineHandler();
 };
@@ -2716,7 +2539,7 @@ function updateEarthInSpaceLookAt() {
     // background: http://rainwarrior.thenoos.net/dragon/arcball.html
 
 
-    var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, yaw);
+    var yaw_quat =  quat4.axisAngleDegreesCreate(0, 1, 0, earth.yaw);
     var yaw_mat4 = quat4.toMat4(yaw_quat);
 
     var pitch_quat =  quat4.axisAngleDegreesCreate(yaw_mat4[0], yaw_mat4[1], yaw_mat4[2], pitch);
@@ -3058,7 +2881,6 @@ function setupViewHandler() {
     };
 };
 
-setEarthPositionByMon('jun');
 surface_view.onchange = setupViewHandler;
 setupViewHandler();
 
@@ -3118,9 +2940,9 @@ function decrementLongitude() {
 };
 
 function incrementYaw(num) {
-    yaw += num;
-    yaw = modulo(yaw, 360);
-    return yaw;
+    earth.yaw += num;
+    earth.yaw = modulo(earth.yaw, 360);
+    return earth.yaw;
 };
 
 function incrementPitch(num) {
@@ -3187,7 +3009,7 @@ function mouseMove(event) {
             surface.yaw   += (event.clientX - lastX) * -0.2;
             surface.pitch += (event.clientY - lastY) * -0.2;
         } else {
-            yaw   += (event.clientX - lastX) * -0.2;
+            earth.yaw   += (event.clientX - lastX) * -0.2;
             pitch += (event.clientY - lastY) * -0.2;
         };
         lastX = event.clientX;
@@ -3496,9 +3318,9 @@ function debugLabel() {
 
         labelStr += "<b>Earth</b><br />";
         labelStr += sprintf("Pos:  x: %4.1f y: %4.1f z: %4.1f<br>", earth.pos.x, earth.pos.y, earth.pos.z);
-        labelStr += sprintf("Yaw:  %3.0f, Pitch: %4.1f<br>", yaw, pitch);
+        labelStr += sprintf("Yaw:  %3.0f, Pitch: %4.1f<br>", earth.yaw, pitch);
         labelStr += sprintf("LookAt Yaw:  %4.1f<br>", lookat_yaw);
-        labelStr += sprintf("Rot:  %4.1f, Day angle: %3.3f<br>", earth.rotation, day_of_year_angle);
+        labelStr += sprintf("Rot:  %4.1f, Day angle: %3.3f<br>", earth.rotation, earth.day_of_year_angle);
         labelStr += sprintf("Angle: %4.1f, Radius: %4.1f, Dist: %4.1f<br>", angle.get().angle, earth.radius, distance);
         labelStr += "<br><hr><br>";
 
@@ -3582,7 +3404,7 @@ var info_view   = document.getElementById("info-view");
 var info_content = document.getElementById("info-content");
 
 function solar_altitude(lat, lon) {
-    var corrected_tilt = Math.sin(day_of_year_angle * deg2rad) * earth.tilt;
+    var corrected_tilt = Math.sin(earth.day_of_year_angle * deg2rad) * earth.tilt;
     var center   = lat_long_to_cartesian(corrected_tilt, earth.rotation);
 
     var loc      = lat_long_to_cartesian(lat, lon);
@@ -4250,7 +4072,6 @@ function chooseMonthHandler(event) {
 };
 
 choose_month.onchange = chooseMonthHandler;
-chooseMonthHandler();
 
 var choose_tilt = document.getElementById("choose-tilt");
 var earth_tilt_quaternion = SceneJS.withNode("earth-tilt-quaternion");
@@ -4277,7 +4098,10 @@ function chooseTiltHandler() {
 };
 
 choose_tilt.onchange = chooseTiltHandler;
-chooseTiltHandler();
+
+// 
+// earth.updatePosition(initial_earth_pos_vec3);
+// 
 
 //
 // Animation
@@ -4313,6 +4137,9 @@ var displayed = false;
 SceneJS.bind("canvas-activated", function() {
     if (!displayed) {
         displayed = true;
+        earth.updatePosition(initial_earth_pos_vec3);
+        chooseTiltHandler();
+        chooseMonthHandler();
         setLongitude(surface.longitude);
         debugLabel();
         controlsLabel();
