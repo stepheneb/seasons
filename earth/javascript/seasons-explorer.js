@@ -4255,7 +4255,7 @@ choose_month.onchange = chooseMonthHandler;
 previous_month.addEventListener('click', function () {
   var index = monthData[earth.month].index,
       mon;
-  index = modulo(++index, 12);
+  index = modulo(--index, 12);
   mon = monthNames[index];
   choose_month.value = mon;
   setEarthPositionByMon(mon);
@@ -4264,7 +4264,7 @@ previous_month.addEventListener('click', function () {
 next_month.addEventListener('click', function () {
   var index = monthData[earth.month].index,
       mon;
-  index = modulo(--index, 12);
+  index = modulo(++index, 12);
   mon = monthNames[index];
   choose_month.value = mon;
   setEarthPositionByMon(mon);
