@@ -4157,7 +4157,7 @@ function drawSolarRadiationLongitudeGraph() {
     rad_lon_ctx.fillText(sprintf("Lat: %3.0f ", surface.latitude) + ", Time: " + earthRotationToTimeStr(earth.rotation - surface.longitude), 0, 12);
     rad_lon_ctx.fillText(sprintf("Solar Rad: %3.0f  W/m2", solar_rad), 0, 26);
     rad_lon_ctx.fillText("equator", graph_width / 2 - 18, graph_base+16);
-    rad_lon_ctx.fillText("Solar radiation right now", 0, graph_base+28);
+    rad_lon_ctx.fillText("Solar radiation right now", graph_width / 2 - 70, graph_base+28);
 };
 
 function updateSolarRadiationLongitudeGraph() {
