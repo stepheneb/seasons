@@ -3759,8 +3759,11 @@ function controlsLabel() {
 //
 var info_graph   = document.getElementById("info-graph");
 
-var graph_width = 150;
-var graph_height = 120;
+var graph_width = 180;
+var graph_height = 150;
+var graph_base_offset = 30;
+var graph_base = graph_height - graph_base_offset;
+
 
 //
 // Graph Dom Elements ...
@@ -3802,8 +3805,7 @@ function drawSolarAltitudeGraph() {
     var alt_ctx = altitude_graph_canvas.getContext('2d');
     alt_ctx.clearRect(0,0,graph_width,graph_height);
 
-    var graph_base = graph_height - 15;
-    var graph_y_range = graph_base - 20;
+    var graph_y_range = graph_base - 18;
 
     var radius = graph_y_range - 20;
     var indicator_radius = graph_y_range - 10;
@@ -3839,6 +3841,7 @@ function drawSolarAltitudeGraph() {
     alt_ctx.fillStyle = "rgb(255,255,255)";
     alt_ctx.fillText(sprintf("Lat: %3.0f ", surface.latitude) + ", Time: " + earthRotationToTimeStr(earth.rotation - surface.longitude), 0, 12);
     alt_ctx.fillText(sprintf("Solar Altitude: %2.0f degrees", solar_alt), 0, 26);
+    alt_ctx.fillText("Height of Sun in sky", 0, graph_base+28);
 };
 
 function updateSolarAltitudeGraph() {
@@ -3897,7 +3900,6 @@ function drawSolarRadiationLatitudeGraph() {
     rad_lat_ctx.clearRect(0,0,graph_width,graph_height);
 
     var data_length = solar_radiation_latitude_data.length;
-    var graph_base = graph_height - 15;
     var graph_y_range = graph_base - 30;
 
     var x_factor = graph_width / data_length;
@@ -3909,7 +3911,7 @@ function drawSolarRadiationLatitudeGraph() {
     for (var x = 0; x < data_length; x++) {
         x0 = x * x_factor;
         y0 = graph_base;
-        y1 = solar_radiation_latitude_data[x] * -y_factor + graph_height - 15;
+        y1 = solar_radiation_latitude_data[x] * -y_factor + graph_height - graph_base_offset;
         if (x == index) {
             rad_lat_ctx.strokeStyle = "rgba(255,0,0, 1.0)";
         } else {
@@ -3930,11 +3932,11 @@ function drawSolarRadiationLatitudeGraph() {
     rad_lat_ctx.strokeStyle = "rgba(200, 200, 200, 0.5)";
     var y_grid_value, y_grid_px;
     for (y_grid_value = 250; y_grid_value <= 1000; y_grid_value += 250) {
-        y_grid_px = y_grid_value * -y_factor + graph_height - 15;
+        y_grid_px = y_grid_value * -y_factor + graph_height - graph_base_offset;
         rad_lat_ctx.moveTo(0, y_grid_px);
         rad_lat_ctx.lineTo(graph_width, y_grid_px);
     };
-    y_grid_px = 1000 * -y_factor + graph_height - (15 + 2);
+    y_grid_px = 1000 * -y_factor + graph_height - (graph_base_offset + 2);
     for (x = x_tic_increment * 2; x <= graph_width; x += x_tic_increment * 2) {
         rad_lat_ctx.moveTo(x, graph_base);
         rad_lat_ctx.lineTo(x, y_grid_px);
@@ -3965,10 +3967,10 @@ function drawSolarRadiationLatitudeGraph() {
     rad_lat_ctx.strokeStyle = "rgba(0,255,0, 1.0)";
     rad_lat_ctx.beginPath();
     rad_lat_ctx.moveTo(1, graph_base);
-    rad_lat_ctx.lineTo(1, 1000 * -y_factor + graph_height - (15 + 6));
+    rad_lat_ctx.lineTo(1, 1000 * -y_factor + graph_height - (graph_base_offset + 6));
     rad_lat_ctx.stroke();
     for (y_grid_value = 250; y_grid_value <= 1000; y_grid_value += 250) {
-        y_grid_px = y_grid_value * -y_factor + graph_height - 15;
+        y_grid_px = y_grid_value * -y_factor + graph_height - graph_base_offset;
         rad_lat_ctx.moveTo(0, y_grid_px);
         rad_lat_ctx.lineTo(4, y_grid_px);
     };
@@ -3979,7 +3981,8 @@ function drawSolarRadiationLatitudeGraph() {
     rad_lat_ctx.fillText(sprintf("Lat: %3.0f ", surface.latitude) + ", Time: " + earthRotationToTimeStr(earth.rotation - surface.longitude), 4, 12);
     rad_lat_ctx.fillText(sprintf("Solar Rad: %3.0f  W/m2", solar_rad), 4, 26);
     rad_lat_ctx.fillText(sprintf("total: %3.1f kWh/m2", total_solar_radiation_latitude_data() / 1000), 4, 40);
-    rad_lat_ctx.fillText("noon", graph_width / 2 - 14, graph_height);
+    rad_lat_ctx.fillText("noon", graph_width / 2 - 14, graph_base+16);
+    rad_lat_ctx.fillText("Solar radiation over 24 hours", 0, graph_base+28);
 };
 
 function updateSolarRadiationLatitudeGraph() {
@@ -4055,7 +4058,6 @@ function drawSolarRadiationLongitudeGraph() {
     rad_lon_ctx.clearRect(0,0,graph_width,graph_height);
 
     var data_length = solar_radiation_longitude_data.length;
-    var graph_base = graph_height - 15;
     var graph_y_range = graph_base - 30;
 
     var x_factor = graph_width / data_length;
@@ -4068,7 +4070,7 @@ function drawSolarRadiationLongitudeGraph() {
         for (x = 0; x < data_length; x++) {
             x0 = x * x_factor;
             y0 = graph_base;
-            y1 = solar_radiation_longitude_old_data[x] * -y_factor + graph_height - 15;
+            y1 = solar_radiation_longitude_old_data[x] * -y_factor + graph_height - graph_base_offset;
             rad_lon_ctx.moveTo(x0, y1 - 1);
             rad_lon_ctx.lineTo(x0, y1 + 1);
         };
@@ -4081,7 +4083,7 @@ function drawSolarRadiationLongitudeGraph() {
     for (x = 0; x < data_length; x++) {
         x0 = x * x_factor;
         y0 = graph_base;
-        y1 = solar_radiation_longitude_data[x] * -y_factor + graph_height - 15;
+        y1 = solar_radiation_longitude_data[x] * -y_factor + graph_height - graph_base_offset;
         if (x == index) {
             rad_lon_ctx.beginPath();
             rad_lon_ctx.strokeStyle = "rgba(255,0,0, 1.0)";
@@ -4105,11 +4107,11 @@ function drawSolarRadiationLongitudeGraph() {
     rad_lon_ctx.strokeStyle = "rgba(200, 200, 200, 0.5)";
     var y_grid_value, y_grid_px;
     for (y_grid_value = 250; y_grid_value <= 1000; y_grid_value += 250) {
-        y_grid_px = y_grid_value * -y_factor + graph_height - 15;
+        y_grid_px = y_grid_value * -y_factor + graph_height - graph_base_offset;
         rad_lon_ctx.moveTo(0, y_grid_px);
         rad_lon_ctx.lineTo(graph_width, y_grid_px);
     };
-    y_grid_px = 1000 * -y_factor + graph_height - (15 + 2);
+    y_grid_px = 1000 * -y_factor + graph_height - (graph_base_offset + 2);
     for (x = x_tic_increment * 2; x <= graph_width; x += x_tic_increment * 2) {
         rad_lon_ctx.moveTo(x, graph_base);
         rad_lon_ctx.lineTo(x, y_grid_px);
@@ -4140,10 +4142,10 @@ function drawSolarRadiationLongitudeGraph() {
     rad_lon_ctx.strokeStyle = "rgba(0,255,0, 1.0)";
     rad_lon_ctx.beginPath();
     rad_lon_ctx.moveTo(1, graph_base);
-    rad_lon_ctx.lineTo(1, 1000 * -y_factor + graph_height - (15 + 6));
+    rad_lon_ctx.lineTo(1, 1000 * -y_factor + graph_height - (graph_base_offset + 6));
     rad_lon_ctx.stroke();
     for (y_grid_value = 250; y_grid_value <= 1000; y_grid_value += 250) {
-        y_grid_px = y_grid_value * -y_factor + graph_height - 15;
+        y_grid_px = y_grid_value * -y_factor + graph_height - graph_base_offset;
         rad_lon_ctx.moveTo(0, y_grid_px);
         rad_lon_ctx.lineTo(4, y_grid_px);
     };
@@ -4154,7 +4156,8 @@ function drawSolarRadiationLongitudeGraph() {
     rad_lon_ctx.fillStyle = "rgb(255,255,255)";
     rad_lon_ctx.fillText(sprintf("Lat: %3.0f ", surface.latitude) + ", Time: " + earthRotationToTimeStr(earth.rotation - surface.longitude), 0, 12);
     rad_lon_ctx.fillText(sprintf("Solar Rad: %3.0f  W/m2", solar_rad), 0, 26);
-    rad_lon_ctx.fillText("equator", graph_width / 2 - 18, graph_height);
+    rad_lon_ctx.fillText("equator", graph_width / 2 - 18, graph_base+16);
+    rad_lon_ctx.fillText("Solar radiation right now", 0, graph_base+28);
 };
 
 function updateSolarRadiationLongitudeGraph() {
