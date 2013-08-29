@@ -3771,6 +3771,7 @@ var radiation_lat_graph_canvas = document.getElementById("radiation-lat-graph-ca
 var radiation_lon_graph_canvas = document.getElementById("radiation-lon-graph-canvas");
 
 function infoGraph() {
+    var startingXpos = LITE_VERSION ? 15 : 260;
     if (info_graph) {
         if (graph_view.checked) {
             info_graph.style.opacity = 1.0;
@@ -3787,7 +3788,7 @@ function infoGraph() {
         var container_properties = container.getBoundingClientRect();
         // info_graph.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
         info_graph.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - info_graph.offsetHeight - 10 + "px"
-        info_graph.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 260 + "px";
+        info_graph.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + startingXpos + "px";
     };
 };
 
@@ -4202,7 +4203,7 @@ function getRadioSelection(form_element) {
 
 var earth_texture_selector = SceneJS.withNode("earthTextureSelector");
 
-if (typeof LITE_VERSION !== 'undefined') {
+if (LITE_VERSION) {
   earth_texture_selector.set("selection", [1]);
 } else {
   earth_texture_selector.set("selection", [2]);
@@ -4215,7 +4216,7 @@ var active_cities = [];
 var city, city_location;
 
 for (var c = 0; c < cities.length; c++) {
-    if (typeof LITE_VERSION !== 'undefined') {
+    if (LITE_VERSION) {
       if (cities[c].active) active_cities.push(cities[c]);
     } else {
       active_cities.push(cities[c]);
