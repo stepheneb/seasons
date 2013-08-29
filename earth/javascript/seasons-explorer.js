@@ -3787,7 +3787,7 @@ function infoGraph() {
         var container_properties = container.getBoundingClientRect();
         // info_graph.style.top = canvas_properties.top + window.pageYOffset + 5 + "px";
         info_graph.style.top = canvas_properties.top + window.pageYOffset + canvas_properties.height - info_graph.offsetHeight - 10 + "px"
-        info_graph.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 15 + "px";
+        info_graph.style.left = elementGetX(the_canvas) - elementGetX(document.getElementById("content")) + 260 + "px";
     };
 };
 
@@ -4269,6 +4269,38 @@ next_month.addEventListener('click', function () {
   choose_month.value = mon;
   setEarthPositionByMon(mon);
 });
+
+var lookat_sunrise_button = document.getElementById("lookat-sunrise");
+var lookat_noon_button = document.getElementById("lookat-noon");
+var lookat_sunset_button = document.getElementById("lookat-sunset");
+var lookat_northpole_button = document.getElementById("lookat-northpole");
+
+modulo(earth.orbitAngle()-90, 360);
+
+lookat_sunrise_button.addEventListener('click', function () {
+  earthInSpaceLookAt.yaw = modulo(earth.orbitAngle()-90, 360);
+  earthInSpaceLookAt.pitch = -1;
+  earthInSpaceLookAt.update();
+});
+
+lookat_noon_button.addEventListener('click', function () {
+  earthInSpaceLookAt.yaw = modulo(earth.orbitAngle(), 360);
+  earthInSpaceLookAt.pitch = -1;
+  earthInSpaceLookAt.update();
+});
+
+lookat_sunset_button.addEventListener('click', function () {
+  earthInSpaceLookAt.yaw = modulo(earth.orbitAngle()+90, 360);
+  earthInSpaceLookAt.pitch = -1;
+  earthInSpaceLookAt.update();
+});
+
+lookat_northpole_button.addEventListener('click', function () {
+  earthInSpaceLookAt.yaw = modulo(earth.orbitAngle()-180, 360);
+  earthInSpaceLookAt.pitch = -85;
+  earthInSpaceLookAt.update();
+});
+
 
 var choose_tilt = document.getElementById("choose-tilt");
 var earth_tilt_quaternion = SceneJS.withNode("earth-tilt-quaternion");

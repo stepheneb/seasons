@@ -89,7 +89,6 @@
             <label><input id="earth-rotation" type="checkbox" checked/> enable rotation</label><br />
             <label style="display:none;"><input id="surface-view" type="checkbox"/> Surface View</label>
           </fieldset>
-          <br />
           <fieldset style="display:none;">
             <legend>Ecliptic Grids</legend>
             <label><input id="earth-grid" type="checkbox"/> Earth Square</label><br />
@@ -138,6 +137,14 @@
               <label><input type="radio" name="tilt" value="no"> No</input></label>
             </fieldset>
           </form>
+          <fieldset>
+            <legend>Jump to view:</legend>
+            <button id="lookat-sunrise">&nbsp;&nbsp;Sunrise&nbsp;&nbsp;</button>
+            <button id="lookat-noon">&nbsp;&nbsp;Noon&nbsp;&nbsp;</button>
+            <br />
+            <button id="lookat-sunset">&nbsp;&nbsp;Sunset&nbsp;&nbsp;</button>
+            <button id="lookat-northpole">&nbsp;&nbsp;North Pole&nbsp;&nbsp;</button>
+          </fieldset>
           <br />
           <fieldset>
             <legend>Show graphs</legend>

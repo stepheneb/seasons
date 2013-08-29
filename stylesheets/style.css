@@ -16,6 +16,10 @@ body {
     background-color: #d4e0eb;
 }
 
+button {
+  margin: 2px 1px;
+}
+
 a {
     color: #1170A3 !important;
     text-decoration: none;
