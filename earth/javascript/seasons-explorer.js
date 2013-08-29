@@ -58,17 +58,10 @@ var initial_earth_pos_vec3 = earth_ephemerides_location_by_day_number(initial_da
 var earth_pos_normalized_vec3 = vec3.normalize(initial_earth_pos_vec3);
 var earth_pos_jun_normalized_vec3 = initial_earth_pos_vec3;
 
-// var up = []; vec3.cross(earth_pos_jun_normalized_vec3, earth_pos_mar_normalized_vec3, up);
-var up = [0, 1, 0]
-
-var earth_tilt_axis = [1, 0, 0];
-// var earth_tilt_axis = vec3.normalize(earth_ephemerides_location_by_month('sep'));
-
 var sun = {
     pos: { x: 0, y: 0, z: 0 },
     radius: sun_diameter / 2
 };
-
 
 function copyVec3ToObj(v3, obj) {
   obj.x = v3[0];
@@ -85,11 +78,6 @@ function copyObjToVec3(obj, v3) {
 var initial_earth_rotation = 0;
 
 var earth = {
-    pos: {
-      x: initial_earth_pos_vec3[0],
-      y: initial_earth_pos_vec3[1],
-      z: initial_earth_pos_vec3[2]
-    },
     getYaw: function() {
       if(typeof earthInSpaceLookAt === 'undefined') {
         return 0;
@@ -102,6 +90,13 @@ var earth = {
         earthInSpaceLookAt.yaw = y;
       }
     },
+    pos: {
+      x: initial_earth_pos_vec3[0],
+      y: initial_earth_pos_vec3[1],
+      z: initial_earth_pos_vec3[2]
+    },
+    up: { x: 0, y: 1, z: 0 },
+    up_vec3: vec3.create([0, 1, 0]),
     orbit_correction_degrees: 0,
     orbit_correction_quat: quat4.create(),
     orbit_correction_mat4: mat4.create(),
@@ -109,14 +104,12 @@ var earth = {
     pos_vec3_normalized: vec3.create(),
     distanceFromSun: earth_ephemerides_distance_from_sun_by_day_number(initial_day_number),
     radius:  earth_diameter / 2,
+    radius_km: earth_diameter / 2 * 1000,
 
     // tilt_axis = vec3.normalize(earth_ephemerides_location_by_month('sep'));
     tilt: {
-      x: 1,
-      y: 0,
-      z: 0,
-      axis_vec3: vec3.create([1, 0, 0
-        ]),
+      x: 1, y: 0, z: 0,
+      axis_vec3: vec3.create([1, 0, 0]),
       angle: orbitalTilt
     },
 
@@ -154,7 +147,7 @@ var earth = {
       orbit_correction_degrees = Math.acos(vec3.dot([1, 0, 0], this.pos_vec3_normalized)) * rad2deg
       // this.orbit_correct_degrees = Math.acos(vec3.dot(earth_pos_jun_normalized_vec3, this.pos_vec3_normalized)) * rad2deg;
       // this.orbit_correct_degrees = Math.acos(vec3.dot([0, this.pos_vec3_normalized[1], -1], earth_pos_jun_normalized_vec3)) * rad2deg;
-      this.orbit_correction_quat = quat4.axisVecAngleDegreesCreate(up, this.orbit_correction_degrees);
+      this.orbit_correction_quat = quat4.axisVecAngleDegreesCreate(this.up_vec3, this.orbit_correction_degrees);
       quat4.toMat4(this.orbit_correction_quat, this.orbit_correction_mat4);
       this.day_of_year_angle = modulo(this.orbitAngle()-270, 360);
       this.setYaw(this.orbitAngle()-90);
@@ -647,7 +640,7 @@ SceneJS.createNode({
             id: "lookAt",
             eye:  initial_eye,
             look: earth.pos,
-            up:   { x: up[0], y: up[1], z: up[2] },
+            up:   earth.up,
 
             nodes: [
 
@@ -1457,6 +1450,68 @@ SceneJS.createNode({
                                                                                             innerRadius: earth.radius + surface_line_width,
                                                                                             height: surface_line_width,
                                                                                             rings: 128
+                                                                                        },
+                                                                                        {
+                                                                                            type: "material",
+                                                                                            baseColor:      { r: 1.0, g: 0.1, b: 0.9 },
+                                                                                            specularColor:  { r: 1.0, g: 0.1, b: 0.9 },
+                                                                                            specular:       1.0,
+                                                                                            shine:          1.0,
+                                                                                            emit:           3.0,
+                                                                                            nodes: [
+                                                                                                {
+                                                                                                    type: "translate",
+                                                                                                    x: earth.radius * 0,
+                                                                                                    y: earth.radius * -0.2,
+                                                                                                    z: earth.radius * 1.2,
+                                                                                                    nodes: [
+                                                                                                        {
+                                                                                                            type: "billboard",
+                                                                                                            nodes: [
+                                                                                                                {
+                                                                                                                    type: "scale",
+                                                                                                                    x: 0.2,
+                                                                                                                    y: 0.2,
+                                                                                                                    z: 0.2,
+                                                                                                                    nodes: [
+                                                                                                                        {
+                                                                                                                            type: "text",
+                                                                                                                            mode: "vector",
+                                                                                                                            text: "Sunset"
+                                                                                                                        }
+                                                                                                                    ]
+                                                                                                                }
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ]
+                                                                                                },
+                                                                                                {
+                                                                                                    type: "translate",
+                                                                                                    x: earth.radius * 0,
+                                                                                                    y: earth.radius * 0.2,
+                                                                                                    z: earth.radius * -1.2,
+                                                                                                    nodes: [
+                                                                                                        {
+                                                                                                            type: "billboard",
+                                                                                                            nodes: [
+                                                                                                                {
+                                                                                                                    type: "scale",
+                                                                                                                    x: 0.2,
+                                                                                                                    y: 0.2,
+                                                                                                                    z: 0.2,
+                                                                                                                    nodes: [
+                                                                                                                        {
+                                                                                                                            type: "text",
+                                                                                                                            mode: "vector",
+                                                                                                                            text: "Sunrise"
+                                                                                                                        }
+                                                                                                                    ]
+                                                                                                                }
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ]
+                                                                                                }
+                                                                                            ]
                                                                                         }
                                                                                     ]
                                                                                 }
@@ -1848,7 +1903,7 @@ SceneJS.createNode({
 
                                                                                                         },
 
-                                                                                                        // selection [10], NOvember
+                                                                                                        // selection [10], November
                                                                                                         {
                                                                                                             type: "texture",
                                                                                                             layers: [
@@ -1872,6 +1927,67 @@ SceneJS.createNode({
 
                                                                                                         }
                                                                                                     ]
+                                                                                                },
+
+                                                                                                {
+
+                                                                                                    id: "earth-monochrome-texture",
+                                                                                                    type: "texture",
+                                                                                                    layers: [
+
+                                                                                                        {
+                                                                                                           uri:"images/lat-long-grid-invert-units-1440x720-15.png",
+                                                                                                           blendMode: "add",
+
+                                                                                                        },
+                                                                                                        {
+                                                                                                            uri:"images/earth3-monochrome.jpg",
+
+                                                                                                            minFilter: "linear",
+                                                                                                            magFilter: "linear",
+                                                                                                            wrapS: "repeat",
+                                                                                                            wrapT: "repeat",
+                                                                                                            isDepth: false,
+                                                                                                            depthMode:"luminance",
+                                                                                                            depthCompareMode: "compareRToTexture",
+                                                                                                            depthCompareFunc: "lequal",
+                                                                                                            flipY: false,
+                                                                                                            width: 1,
+                                                                                                            height: 1,
+                                                                                                            internalFormat:"lequal",
+                                                                                                            sourceFormat:"alpha",
+                                                                                                            sourceType: "unsignedByte",
+                                                                                                            applyTo:"baseColor",
+                                                                                                            blendMode: "multiply",
+
+                                                                                                            /* Texture rotation angle in degrees
+                                                                                                             */
+                                                                                                            rotate: 180.0,
+
+                                                                                                            /* Texture translation offset
+                                                                                                             */
+                                                                                                            translate : {
+                                                                                                                x: 0,
+                                                                                                                y: 0
+                                                                                                            },
+
+                                                                                                            /* Texture scale factors
+                                                                                                             */
+                                                                                                            scale : {
+                                                                                                                x: -1.0,
+                                                                                                                y: 1.0
+                                                                                                            }
+                                                                                                        }
+                                                                                                    ],
+
+                                                                                                    nodes: [
+                                                                                                        {
+                                                                                                            type: "sphere",
+                                                                                                            slices: 256, rings: 128
+                                                                                                        }
+                                                                                                    ]
+
+                                                                                                    // nodes: [ { type : "instance", target : "earth-sphere"  } ]
                                                                                                 },
 
                                                                                                 {
@@ -1934,70 +2050,9 @@ SceneJS.createNode({
 
                                                                                                     // nodes: [ { type : "instance", target : "earth-sphere"  } ]
                                                                                                 }
+
                                                                                             ]
                                                                                         },
-
-                                                                                        //
-                                                                                        // {
-                                                                                        //
-                                                                                        //     id: "earth-terrain-texture",
-                                                                                        //     type: "texture",
-                                                                                        //     layers: [
-                                                                                        //
-                                                                                        //         {
-                                                                                        //            uri:"images/lat-long-grid-invert-units-1440x720-15.png",
-                                                                                        //            blendMode: "add",
-                                                                                        //
-                                                                                        //         },
-                                                                                        //
-                                                                                        //         {
-                                                                                        //             uri:"images/earth3.jpg",
-                                                                                        //
-                                                                                        //             minFilter: "linear",
-                                                                                        //             magFilter: "linear",
-                                                                                        //             wrapS: "repeat",
-                                                                                        //             wrapT: "repeat",
-                                                                                        //             isDepth: false,
-                                                                                        //             depthMode:"luminance",
-                                                                                        //             depthCompareMode: "compareRToTexture",
-                                                                                        //             depthCompareFunc: "lequal",
-                                                                                        //             flipY: false,
-                                                                                        //             width: 1,
-                                                                                        //             height: 1,
-                                                                                        //             internalFormat:"lequal",
-                                                                                        //             sourceFormat:"alpha",
-                                                                                        //             sourceType: "unsignedByte",
-                                                                                        //             applyTo:"baseColor",
-                                                                                        //             blendMode: "multiply",
-                                                                                        //
-                                                                                        //             /* Texture rotation angle in degrees
-                                                                                        //              */
-                                                                                        //             rotate: 180.0,
-                                                                                        //
-                                                                                        //             /* Texture translation offset
-                                                                                        //              */
-                                                                                        //             translate : {
-                                                                                        //                 x: 0,
-                                                                                        //                 y: 0
-                                                                                        //             },
-                                                                                        //
-                                                                                        //             /* Texture scale factors
-                                                                                        //              */
-                                                                                        //             scale : {
-                                                                                        //                 x: -1.0,
-                                                                                        //                 y: 1.0
-                                                                                        //             }
-                                                                                        //         }
-                                                                                        //     ],
-                                                                                        //
-                                                                                        //     nodes: [
-                                                                                        //         {
-                                                                                        //             type: "sphere",
-                                                                                        //             slices: 256, rings: 128
-                                                                                        //         }
-                                                                                        //     ]
-                                                                                        // },
-
 
                                                                                         // Earth Surface Indicator
                                                                                         {
@@ -2714,8 +2769,6 @@ function lat_long_to_cartesian_corrected_for_tilt(lat, lon, r) {
     };
 
     // var q2 = quat4.axisVecAngleDegreesCreate(earth_tilt_axis, earth.tilt);
-
-    // var q2 = quat4.axisVecAngleDegreesCreate([0, 0, 1], earth.tilt);
 
     quat4.multiplyVec3(q2, lat_lon, v2)
 
@@ -4119,10 +4172,6 @@ SolarRadiationLatitudeGraphHandler();
 solar_radiation_longitude_graph.onchange = SolarRadiationLongitudeGraphHandler;
 SolarRadiationLongitudeGraphHandler();
 
-//
-//
-//
-
 function getRadioSelection(form_element) {
     for(var i = 0; i < form_element.elements.length; i++) {
         if (form_element.elements[i].checked) {
@@ -4131,6 +4180,15 @@ function getRadioSelection(form_element) {
     }
     return false;
 };
+
+
+var earth_texture_selector = SceneJS.withNode("earthTextureSelector");
+
+if (typeof LITE_VERSION !== 'undefined') {
+  earth_texture_selector.set("selection", [1]);
+} else {
+  earth_texture_selector.set("selection", [2]);
+}
 
 
 var selected_city = document.getElementById("selected-city");

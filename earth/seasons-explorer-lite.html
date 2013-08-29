@@ -82,20 +82,14 @@
         <canvas id="radiation-lon-graph-canvas" width="1" height="1"></canvas>
         <canvas id="radiation-lat-graph-canvas" width="1" height="1"></canvas>
       </div>
-      <div id="controls-label" class="webgl-canvas-label">
+      <div id="controls-label" class="webgl-canvas-label transparent-ui">
         <form id="show-me">
           <fieldset>
             <legend>Controls</legend>
-            <label><input id="earth-rotation" type="checkbox"/> enable rotation</label><br />
+            <label><input id="earth-rotation" type="checkbox" checked/> enable rotation</label><br />
             <label style="display:none;"><input id="surface-view" type="checkbox"/> Surface View</label>
           </fieldset>
           <br />
-          <fieldset>
-            <legend>Display graphs</legend>
-            <label><input id="solar-altitude-graph" type="checkbox"/> solar altitude</label><br />
-            <label><input id="solar-radiation-latitude-graph" type="checkbox"/> solar radiation (one day)</label><br />
-            <label><input id="solar-radiation-longitude-graph" type="checkbox"/> solar radiation (one time)</label><br />
-          </fieldset>
           <fieldset style="display:none;">
             <legend>Ecliptic Grids</legend>
             <label><input id="earth-grid" type="checkbox"/> Earth Square</label><br />
@@ -104,10 +98,10 @@
           </fieldset>
           <br />
           <fieldset>
-            <legend>Display markers</legend>
+            <legend>Show markers</legend>
             <label style="display:none;"><input id="sun-earth-line" type="checkbox"/> Center Ray</label>
-            <label><input id="sun-rise-set" type="checkbox" /> sunrise/sunset</label><br />
-            <label><input id="lat-hour-markers" type="checkbox"/> hours of day</label><br />
+            <label><input id="sun-rise-set" type="checkbox" checked/> sunrise/sunset line</label><br />
+            <label><input id="lat-hour-markers" type="checkbox" checked/> 24 hours of day</label><br />
           </fieldset>
           <br />
           <form id="select-city">
@@ -145,6 +139,13 @@
             </fieldset>
           </form>
           <br />
+          <fieldset>
+            <legend>Show graphs</legend>
+            <label><input id="solar-altitude-graph" type="checkbox"/> height of Sun in sky</label><br />
+            <label>Amount of solar radiation:</label><br />
+            <label><input id="solar-radiation-longitude-graph" type="checkbox"/> right now</label><br />
+            <label><input id="solar-radiation-latitude-graph" type="checkbox"/> collected over a day</label><br />
+          </fieldset>
           <fieldset style="display:none;">
             <legend>Settings</legend>
             <label><input id="back-light" type="checkbox" /> Back Lighting</label><br />

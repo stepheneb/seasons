@@ -190,11 +190,11 @@ h4 {
 }
 
 .transparent-ui {
-    opacity: 0.15;
+    opacity: 0.35;
 }
 
 .transparent-ui:hover {
-    opacity: 0.5;
+    opacity: 0.8;
 }
 
 .label-container {
