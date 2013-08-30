@@ -2116,17 +2116,17 @@ SceneJS.createNode({
                                                                                                                                         {
                                                                                                                                             type: "material",
                                                                                                                                             id:   "surface-disk-material",
-                                                                                                                                            baseColor:      { r: 0.1, g: 0.6, b: 0.0 },
-                                                                                                                                            specularColor:  { r: 0.1, g: 0.6, b: 0.0 },
+                                                                                                                                            baseColor:      { r: 0.3, g: 0.6, b: 0.5 },
+                                                                                                                                            specularColor:  { r: 0.3, g: 0.6, b: 0.5 },
 
                                                                                                                                             specular:       0.05,
                                                                                                                                             shine:          0.01,
-                                                                                                                                            emit:           0.5,
+                                                                                                                                            emit:           1.0,
 
                                                                                                                                             nodes: [
                                                                                                                                                 {
                                                                                                                                                     type: "disk",
-                                                                                                                                                    radius: earth.radius / 400,
+                                                                                                                                                    radius: earth.radius / 300,
                                                                                                                                                     height: surface.disk.height,
                                                                                                                                                     rings: 24
                                                                                                                                                 }
