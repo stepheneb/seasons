@@ -94,16 +94,9 @@
       <div id="controls-label" class="webgl-canvas-label transparent-ui">
         <form id="show-me">
           <fieldset>
-            <legend>Controls</legend>
-            <label><input id="earth-rotation" type="checkbox"/> Rotation</label><br />
-            <label><input id="surface-view" type="checkbox"/> Surface View</label><br />
-          </fieldset>
-          <br />
-          <fieldset>
-            <legend>Display</legend>
-            <label><input id="solar-altitude-graph" type="checkbox" checked/> Solar Altitude</label><br />
-            <label><input id="solar-radiation-latitude-graph" type="checkbox" /> Solar Rad (one day)</label><br />
-            <label><input id="solar-radiation-longitude-graph" type="checkbox" /> Solar Rad (one time)</label><br />
+            <legend>Start/Stop:</legend>
+            <label><input id="earth-rotation" type="checkbox" checked/> Earth rotation</label><br />
+            <label style="display:none;"><input id="surface-view" type="checkbox"/> Surface View</label>
           </fieldset>
           <br />
           <fieldset>
@@ -153,7 +146,7 @@
             </fieldset>
           </form>
           <fieldset>
-            <legend>Jump to view:</legend>
+            <legend>Jump to point of view:</legend>
             <button id="lookat-sunrise">&nbsp;&nbsp;Sunrise&nbsp;&nbsp;</button>
             <button id="lookat-noon">&nbsp;&nbsp;Noon&nbsp;&nbsp;</button>
             <button id="lookat-sunset">&nbsp;&nbsp;Sunset&nbsp;&nbsp;</button>
@@ -162,6 +155,16 @@
             <button id="lookat-southpole">&nbsp;&nbsp;South Pole&nbsp;&nbsp;</button>
           </fieldset>
           <br />
+          <fieldset>
+            <legend>Graphs:</legend>
+            <label><input id="solar-altitude-graph" type="checkbox" /> Solar altitude</label><br />
+            <label><input id="solar-radiation-latitude-graph" type="checkbox" /> Solar rad: 24 hours</label><br />
+            <label><input id="solar-radiation-longitude-graph" type="checkbox" /> Solar rad: one time </label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Amount of solar radiation:</legend>
+          </fieldset>
           <br />
           <fieldset>
             <legend>Settings</legend>

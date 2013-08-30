@@ -206,7 +206,7 @@ earthInSpaceLookAt = {
   yaw: 0,
   lookAtYaw: 0,
   pitch: -1,
-  distance: earth.radius * 3,
+  distance: earth.radius * 4,
   eye: {},
   eye_vec3: vec3.create(),
   initial_eye: {},
@@ -266,7 +266,7 @@ earthInSpaceLookAt = {
     copyVec3ToObj(this.initial_eye_vec3, this.initial_eye)
   },
   initialize: function(scenejs_element) {
-    this.calculateInitialEye(earth.radius * 3);
+    this.calculateInitialEye(earth.radius * 4);
     this.lookAt = SceneJS.withNode(scenejs_element);
     this.update();
   }
