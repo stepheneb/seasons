@@ -3,6 +3,8 @@ Seasons visualizations using WebGL
 
 These are deployed here: http://stepheneb.github.io/seasons/index.html
 
+To run locally: ```ruby -run -e httpd . -p 9090``` and open http://localhost:9090/index.html
+
 The code for integrating this work as a WISE4 step is located here: wise4/node.
 
 There are rake tasks for generating and locally deploying the WISE4 step version of seasons.
